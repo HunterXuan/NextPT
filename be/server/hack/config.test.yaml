@@ -1,0 +1,7 @@
+iam:
+  cacheMode: 1
+  cachePreKey: "nextpt:test:iam:"
+  timeout: "10d"
+  maxRefresh: "5d"
+  multiLogin: true
+  tokenDelimiter: "_"

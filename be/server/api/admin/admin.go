@@ -1,0 +1,53 @@
+// =================================================================================
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// =================================================================================
+
+package admin
+
+import (
+	"context"
+
+	"server/api/admin/v1"
+)
+
+type IAdminV1 interface {
+	CatalogTorrentDelete(ctx context.Context, req *v1.CatalogTorrentDeleteReq) (res *v1.CatalogTorrentDeleteRes, err error)
+	ForumCategoryCreate(ctx context.Context, req *v1.ForumCategoryCreateReq) (res *v1.ForumCategoryCreateRes, err error)
+	ForumCategoryUpdate(ctx context.Context, req *v1.ForumCategoryUpdateReq) (res *v1.ForumCategoryUpdateRes, err error)
+	ForumCategoryDelete(ctx context.Context, req *v1.ForumCategoryDeleteReq) (res *v1.ForumCategoryDeleteRes, err error)
+	ForumCategoryList(ctx context.Context, req *v1.ForumCategoryListReq) (res *v1.ForumCategoryListRes, err error)
+	ForumNodeCreate(ctx context.Context, req *v1.ForumNodeCreateReq) (res *v1.ForumNodeCreateRes, err error)
+	ForumNodeUpdate(ctx context.Context, req *v1.ForumNodeUpdateReq) (res *v1.ForumNodeUpdateRes, err error)
+	ForumNodeDelete(ctx context.Context, req *v1.ForumNodeDeleteReq) (res *v1.ForumNodeDeleteRes, err error)
+	ForumNodeList(ctx context.Context, req *v1.ForumNodeListReq) (res *v1.ForumNodeListRes, err error)
+	ForumTopicLock(ctx context.Context, req *v1.ForumTopicLockReq) (res *v1.ForumTopicLockRes, err error)
+	ForumTopicUnlock(ctx context.Context, req *v1.ForumTopicUnlockReq) (res *v1.ForumTopicUnlockRes, err error)
+	ForumTopicPin(ctx context.Context, req *v1.ForumTopicPinReq) (res *v1.ForumTopicPinRes, err error)
+	ForumTopicUnpin(ctx context.Context, req *v1.ForumTopicUnpinReq) (res *v1.ForumTopicUnpinRes, err error)
+	ForumTopicMove(ctx context.Context, req *v1.ForumTopicMoveReq) (res *v1.ForumTopicMoveRes, err error)
+	IamInviteGrant(ctx context.Context, req *v1.IamInviteGrantReq) (res *v1.IamInviteGrantRes, err error)
+	IamPermissionList(ctx context.Context, req *v1.IamPermissionListReq) (res *v1.IamPermissionListRes, err error)
+	IamRoleList(ctx context.Context, req *v1.IamRoleListReq) (res *v1.IamRoleListRes, err error)
+	IamRoleCreate(ctx context.Context, req *v1.IamRoleCreateReq) (res *v1.IamRoleCreateRes, err error)
+	IamRoleUpdate(ctx context.Context, req *v1.IamRoleUpdateReq) (res *v1.IamRoleUpdateRes, err error)
+	IamRoleDelete(ctx context.Context, req *v1.IamRoleDeleteReq) (res *v1.IamRoleDeleteRes, err error)
+	IamSessionDelete(ctx context.Context, req *v1.IamSessionDeleteReq) (res *v1.IamSessionDeleteRes, err error)
+	IamUserList(ctx context.Context, req *v1.IamUserListReq) (res *v1.IamUserListRes, err error)
+	IamUserUpdate(ctx context.Context, req *v1.IamUserUpdateReq) (res *v1.IamUserUpdateRes, err error)
+	IamUserStatDetail(ctx context.Context, req *v1.IamUserStatDetailReq) (res *v1.IamUserStatDetailRes, err error)
+	IamUserStatUpdate(ctx context.Context, req *v1.IamUserStatUpdateReq) (res *v1.IamUserStatUpdateRes, err error)
+	IamUserBan(ctx context.Context, req *v1.IamUserBanReq) (res *v1.IamUserBanRes, err error)
+	IamUserPermissionGrant(ctx context.Context, req *v1.IamUserPermissionGrantReq) (res *v1.IamUserPermissionGrantRes, err error)
+	IamUserPermissionRevoke(ctx context.Context, req *v1.IamUserPermissionRevokeReq) (res *v1.IamUserPermissionRevokeRes, err error)
+	ModCheaterList(ctx context.Context, req *v1.ModCheaterListReq) (res *v1.ModCheaterListRes, err error)
+	ModCheaterResolve(ctx context.Context, req *v1.ModCheaterResolveReq) (res *v1.ModCheaterResolveRes, err error)
+	ModReportList(ctx context.Context, req *v1.ModReportListReq) (res *v1.ModReportListRes, err error)
+	ModReportResolve(ctx context.Context, req *v1.ModReportResolveReq) (res *v1.ModReportResolveRes, err error)
+	ModUserApply(ctx context.Context, req *v1.ModUserApplyReq) (res *v1.ModUserApplyRes, err error)
+	ModUserRemove(ctx context.Context, req *v1.ModUserRemoveReq) (res *v1.ModUserRemoveRes, err error)
+	SiteAuditList(ctx context.Context, req *v1.SiteAuditListReq) (res *v1.SiteAuditListRes, err error)
+	SiteConfigList(ctx context.Context, req *v1.SiteConfigListReq) (res *v1.SiteConfigListRes, err error)
+	SiteConfigUpdate(ctx context.Context, req *v1.SiteConfigUpdateReq) (res *v1.SiteConfigUpdateRes, err error)
+	SysCronList(ctx context.Context, req *v1.SysCronListReq) (res *v1.SysCronListRes, err error)
+	SysCronLogList(ctx context.Context, req *v1.SysCronLogListReq) (res *v1.SysCronLogListRes, err error)
+}

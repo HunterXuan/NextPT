@@ -1,0 +1,42 @@
+iam.general.no_permission: 无权执行此操作
+iam.general.unauthorized: 未授权或登录已过期
+
+iam.invite.count_min: 发放数量最小为1
+iam.invite.count_req: 请输入发放数量
+iam.invite.email_fmt: 邮箱格式不正确
+iam.invite.email_mismatch: 注册邮箱与受邀邮箱不一致
+iam.invite.email_req: 请输入受邀邮箱
+iam.invite.expire_days_min: 有效天数最小为1
+iam.invite.expired: 邀请码已过期
+iam.invite.grant_failed: 发放邀请码失败
+iam.invite.hash_len: 邀请码长度应为32位
+iam.invite.hash_req: 请输入邀请码
+iam.invite.invalid_status: 邀请码状态无效
+iam.invite.not_found: 邀请码不存在
+iam.invite.page_min: 页码最小为1
+iam.invite.register_disabled: 全站开放注册已关闭，必须使用邀请码
+iam.invite.size_max: 单页条数最大为100
+iam.invite.user_id_req: 请指定用户ID
+
+iam.session.account_banned: 账号已被禁用或封禁
+iam.session.invalid_credentials: 账号或密码错误
+iam.session.invalid_passkey: Passkey无效或账号被禁用
+iam.session.password_req: 请输入密码
+iam.session.role_missing: 获取用户角色失败
+iam.session.username_req: 请输入用户名或邮箱
+
+iam.user.avatar_len: 头像地址不能超过500个字符
+iam.user.email_exists: 邮箱已被注册
+iam.user.email_fmt: 邮箱格式不正确
+iam.user.email_req: 请输入邮箱
+iam.user.info_len: 个人简介不能超过5000个字符
+iam.user.new_password_req: 请输入新密码
+iam.user.new_password_same: 新密码不能与旧密码相同
+iam.user.old_password_invalid: 旧密码不正确
+iam.user.old_password_req: 请输入旧密码
+iam.user.password_len: 密码长度至少6位
+iam.user.password_req: 请输入密码
+iam.user.signature_len: 签名不能超过500个字符
+iam.user.username_exists: 用户名已存在
+iam.user.username_len: 用户名长度应为3到20位
+iam.user.username_req: 请输入用户名

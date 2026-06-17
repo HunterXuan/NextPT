@@ -1,0 +1,42 @@
+catalog.category.invalid: 无效的分类ID
+
+catalog.general.unauthorized: 请先登录
+catalog.general.user_stat_error: 获取用户统计信息失败
+
+catalog.reward.amount_min: 赞赏金额至少为1
+catalog.reward.amount_req: 请输入赞赏金额
+catalog.reward.insufficient_balance: 魔力值余额不足
+catalog.reward.self_denied: 不能赞赏自己的种子
+
+catalog.subtitle.download_s3_failed: 下载字幕文件失败
+catalog.subtitle.open_upload_failed: 打开上传字幕文件失败
+catalog.subtitle.read_temp_failed: 读取临时字幕文件失败
+catalog.subtitle.read_upload_failed: 读取上传字幕文件失败
+catalog.subtitle.upload_s3_failed: 上传字幕文件失败
+
+catalog.torrent.category_req: 请选择分类
+catalog.torrent.count_failed: 获取种子总数失败
+catalog.torrent.duplicate: 系统中已存在完全相同的种子
+catalog.torrent.file_req: 上传的种子文件不能为空
+catalog.torrent.generate_final_failed: 生成最终种子文件失败
+catalog.torrent.generate_specific_failed: 生成用户专属种子失败
+catalog.torrent.get_reward_count_failed: 获取赞赏总数失败
+catalog.torrent.get_reward_list_failed: 获取赞赏列表失败
+catalog.torrent.id_req: 缺少种子ID参数
+catalog.torrent.invalid_cache: 无效的本地种子缓存文件
+catalog.torrent.invalid_format: 无效的种子文件格式
+catalog.torrent.load_failed: 加载种子文件失败
+catalog.torrent.not_found: 种子不存在
+catalog.torrent.open_upload_failed: 打开上传文件失败
+catalog.torrent.passkey_not_found: 未找到用户密钥
+catalog.torrent.query_failed: 获取种子列表失败
+catalog.torrent.read_cache_failed: 读取本地种子缓存失败
+catalog.torrent.read_upload_failed: 读取上传文件失败
+catalog.torrent.reencode_info_failed: 重新编码种子 Info 字典失败
+catalog.torrent.transaction_failed: 数据库事务或存储上传失败
+catalog.torrent.unmarshal_info_failed: 解析种子 Info 字典失败
+catalog.torrent.upload_storage_failed: 上传种子到存储失败
+catalog.torrent.write_reward_failed: 写入赞赏记录失败
+catalog.comment.not_found: 未找到评论
+catalog.general.forbidden: 无权进行此操作
+catalog.subtitle.not_found: 未找到字幕

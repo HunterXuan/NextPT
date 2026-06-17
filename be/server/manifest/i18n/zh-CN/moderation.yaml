@@ -1,0 +1,4 @@
+mod.user.record_not_found: 未找到惩罚记录
+mod.user.mismatch: 惩罚记录用户不匹配
+moderation.report.already_resolved: 举报已处理
+moderation.report.not_found: 未找到举报信息

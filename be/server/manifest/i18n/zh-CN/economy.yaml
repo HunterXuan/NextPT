@@ -1,0 +1,10 @@
+economy.bonus.add_failed: 增加魔力值失败
+economy.bonus.calc_hourly_failed: 计算每小时魔力值失败
+economy.bonus.deduct_failed: 扣除魔力值失败
+economy.bonus.get_log_count_failed: 获取魔力值流水总数失败
+economy.bonus.get_log_list_failed: 获取魔力值流水失败
+economy.bonus.insufficient_balance: 魔力值余额不足
+economy.bonus.invalid_amount: 转账金额无效，必须大于 0
+economy.bonus.update_failed: 修改魔力值失败
+economy.bonus.user_stat_error: 获取用户统计信息失败
+economy.bonus.write_log_failed: 写入魔力值流水失败

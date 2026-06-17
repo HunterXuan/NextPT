@@ -1,0 +1,20 @@
+forum.general.unauthorized: 未授權或登入已過期
+
+forum.node.create_permission_denied: 無權在該板塊建立主題
+forum.node.not_found: 板塊不存在
+forum.node.query_categories_failed: 查詢分類失敗
+forum.node.query_nodes_failed: 查詢板塊失敗
+forum.node.read_permission_denied: 無權讀取該板塊內容
+forum.node.write_permission_denied: 無權在該板塊發布內容
+
+forum.reply.create_failed: 創建回覆失敗
+forum.reply.not_found: 回覆不存在
+
+forum.topic.append_author_only: 僅作者可以追加內容
+forum.topic.append_limit_exceeded: 已超過最大追加次數限制（3次）
+forum.topic.create_failed: 創建主題失敗
+forum.topic.is_locked: 話題已鎖定
+forum.topic.not_found: 話題不存在
+forum.topic.query_node_failed: 查詢板塊信息失敗
+forum.reply.reward_self_not_allowed: 不能打赏自己的回复
+forum.topic.reward_self_not_allowed: 不能打赏自己的主题

@@ -1,0 +1,20 @@
+forum.general.unauthorized: Unauthorized
+
+forum.node.create_permission_denied: Insufficient permission to create topics in this node
+forum.node.not_found: Node not found
+forum.node.query_categories_failed: failed to query categories
+forum.node.query_nodes_failed: failed to query nodes
+forum.node.read_permission_denied: Insufficient permission to read this node
+forum.node.write_permission_denied: Insufficient permission to post in this node
+
+forum.reply.create_failed: failed to create reply
+forum.reply.not_found: Reply not found
+
+forum.topic.append_author_only: Only author can append content
+forum.topic.append_limit_exceeded: Exceeded maximum number of appends (3)
+forum.topic.create_failed: failed to create topic
+forum.topic.is_locked: Topic is locked
+forum.topic.not_found: Topic not found
+forum.topic.query_node_failed: failed to query node
+forum.reply.reward_self_not_allowed: You cannot reward your own reply
+forum.topic.reward_self_not_allowed: You cannot reward your own topic

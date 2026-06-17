@@ -1,0 +1,42 @@
+iam.general.no_permission: Permission Denied
+iam.general.unauthorized: Unauthorized
+
+iam.invite.count_min: Count must be at least 1
+iam.invite.count_req: Please enter count
+iam.invite.email_fmt: Invalid email format
+iam.invite.email_mismatch: Registration email does not match the invited email
+iam.invite.email_req: Please enter invited email
+iam.invite.expire_days_min: Expire days must be at least 1
+iam.invite.expired: Invite code has expired
+iam.invite.grant_failed: Failed to grant invite code
+iam.invite.hash_len: Invite code length must be 32 characters
+iam.invite.hash_req: Please enter invite code
+iam.invite.invalid_status: Invalid invite code status
+iam.invite.not_found: Invite code not found
+iam.invite.page_min: Page number must be at least 1
+iam.invite.register_disabled: Registration is invite-only, but no invite code was provided
+iam.invite.size_max: Page size cannot exceed 100
+iam.invite.user_id_req: Please specify user ID
+
+iam.session.account_banned: Account disabled or banned
+iam.session.invalid_credentials: Invalid username or password
+iam.session.invalid_passkey: Invalid passkey or account disabled
+iam.session.password_req: Please enter your password
+iam.session.role_missing: failed to get user role
+iam.session.username_req: Please enter your username or email
+
+iam.user.avatar_len: Avatar URL cannot exceed 500 characters
+iam.user.email_exists: Email is already registered
+iam.user.email_fmt: Invalid email format
+iam.user.email_req: Please enter your email
+iam.user.info_len: Profile bio cannot exceed 5000 characters
+iam.user.new_password_req: Please enter your new password
+iam.user.new_password_same: New password cannot be the same as old password
+iam.user.old_password_invalid: Old password is incorrect
+iam.user.old_password_req: Please enter your old password
+iam.user.password_len: Password length must be between 6 and 30 characters
+iam.user.password_req: Please enter a password
+iam.user.signature_len: Signature cannot exceed 500 characters
+iam.user.username_exists: Username already exists
+iam.user.username_len: Username length must be between 3 and 20 characters
+iam.user.username_req: Please enter a username

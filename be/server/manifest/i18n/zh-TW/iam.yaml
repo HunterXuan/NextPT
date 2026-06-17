@@ -1,0 +1,42 @@
+iam.general.no_permission: 無權執行此操作
+iam.general.unauthorized: 未授權或登入已過期
+
+iam.invite.count_min: 發放數量最小为1
+iam.invite.count_req: 請輸入發放數量
+iam.invite.email_fmt: 信箱格式不正確
+iam.invite.email_mismatch: 註冊信箱與受邀信箱不一致
+iam.invite.email_req: 請輸入受邀信箱
+iam.invite.expire_days_min: 有效天數最小為1
+iam.invite.expired: 邀請碼已過期
+iam.invite.grant_failed: 發放邀請碼失敗
+iam.invite.hash_len: 邀請碼長度應為32位
+iam.invite.hash_req: 請輸入邀請碼
+iam.invite.invalid_status: 邀請碼狀態無效
+iam.invite.not_found: 邀請碼不存在
+iam.invite.page_min: 頁碼最小為1
+iam.invite.register_disabled: 全站開放註冊已關閉，必須使用邀請碼
+iam.invite.size_max: 單頁條數最大為100
+iam.invite.user_id_req: 請指定用戶ID
+
+iam.session.account_banned: 賬號已被禁用或封禁
+iam.session.invalid_credentials: 帳號或密碼錯誤
+iam.session.invalid_passkey: Passkey無效或賬號被禁用
+iam.session.password_req: 請輸入密碼
+iam.session.role_missing: 獲取用戶角色失敗
+iam.session.username_req: 請輸入用戶名或信箱
+
+iam.user.avatar_len: 頭像地址不能超過500個字元
+iam.user.email_exists: 信箱已被註冊
+iam.user.email_fmt: 信箱格式不正確
+iam.user.email_req: 請輸入信箱
+iam.user.info_len: 個人簡介不能超過5000個字元
+iam.user.new_password_req: 請輸入新密碼
+iam.user.new_password_same: 新密碼不能與舊密碼相同
+iam.user.old_password_invalid: 舊密碼不正確
+iam.user.old_password_req: 請輸入舊密碼
+iam.user.password_len: 密碼長度至少6位
+iam.user.password_req: 請輸入密碼
+iam.user.signature_len: 簽名不能超過500個字元
+iam.user.username_exists: 用戶名已存在
+iam.user.username_len: 用戶名長度應為3到20位
+iam.user.username_req: 請輸入用戶名

@@ -1,0 +1,5 @@
+mod.report.duplicate: 您已經檢舉過該目標，目前正在等待審核
+mod.report.already_resolved: 檢舉已處理
+mod.report.not_found: 未找到檢舉資訊
+mod.user.record_not_found: 未找到版務處理記錄
+mod.user.mismatch: 使用者名稱和版務記錄不符

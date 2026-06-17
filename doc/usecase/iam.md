@@ -1,0 +1,49 @@
+# IAM (身份与访问管理) 域设计
+
+## 核心实体 (Domain Entities)
+- `User` (用户)
+- `Role` (角色)
+- `Permission` (权限)
+- `Invite` (邀请码)
+- `Session` / `LoginLog` (会话与登录记录)
+
+## Usecase 划分及 RESTful 接口设计
+
+> **路由前缀约定**: `/api/v1/iam`
+
+### 1. SessionUsecase (会话与认证应用服务)
+* **登录 (Login)**
+  * **Method/Path**: `POST /sessions`
+  * **参数概述**: `username`, `password`
+  * **核心逻辑**: 密码验证 -> 签发 JWT/创建 Session 记录。
+* **登出 (Logout)**
+  * **Method/Path**: `DELETE /sessions`
+
+### 2. UserUsecase (用户应用服务)
+* **注册 (Register)**
+  * **Method/Path**: `POST /users`
+  * **参数概述**: `username`, `password`, `email`, `invite_token`
+  * **核心逻辑**: 校验邀请码 -> 创建用户记录 -> 分配默认角色 -> 调用 Economy 初始化基础魔力值 -> 标记 invite 已使用。
+* **获取当前用户资料 (GetMyProfile)**
+  * **Method/Path**: `GET /users/me`
+* **更新当前用户资料 (UpdateMyProfile)**
+  * **Method/Path**: `PATCH /users/me`
+  * **参数概述**: `avatar`, `signature` (支持局部更新)
+* **修改密码 (ChangePassword)**
+  * **Method/Path**: `POST /users/me:changePassword`
+  * **参数概述**: `old_password`, `new_password`
+
+### 3. InviteUsecase (邀请应用服务)
+* **发送/生成邀请 (CreateInvite)**
+  * **Method/Path**: `POST /invites`
+  * **参数概述**: `email`
+  * **核心逻辑**: 调用 Economy 扣除发送者魔力值 -> 生成 `invite` -> 发送邮件。
+* **获取我的邀请记录 (ListInvites)**
+  * **Method/Path**: `GET /invites`
+* **核验邀请码有效性 (CheckInvite)**
+  * **Method/Path**: `GET /invites/{token}:check`
+
+### 4. PermissionDomain (内部权限域)
+* **核心职责**：
+  * **GetAllPermissions()**：暴露 `consts.IamPermissionAll` 的常量列表，供 Admin 域在呈现权限树时跨域调用。
+  * **CheckPermission(ctx, userId, roleId, permKey)**：进行基于 Role 和 UserPermission ACL 结合通配符规则的鉴权。

@@ -1,0 +1,4 @@
+mod.user.record_not_found: Mod record not found
+mod.user.mismatch: User mismatch for mod record
+moderation.report.already_resolved: Report is already resolved
+moderation.report.not_found: Report not found

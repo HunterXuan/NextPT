@@ -1,0 +1,22 @@
+admin.config.group_req: Configuration group is required
+admin.config.key_req: Configuration key is required
+admin.config.value_req: Configuration value is required
+
+admin.forum.category_has_nodes: "cannot delete category: it still contains nodes"
+admin.forum.new_node_not_found: new node not found
+admin.forum.node_has_topics: "cannot delete node: it still contains topics"
+admin.forum.topic_not_found: topic not found
+
+admin.role.check_users_failed: failed to check associated users
+
+admin.user.count_failed: failed to count users
+admin.user.fetch_failed: failed to fetch users
+admin.user.fetch_stat_failed: failed to fetch user stat
+admin.user.stat_no_changes: user stat not found or no changes made
+admin.user.stat_not_found: user stat not found
+admin.user.update_failed: failed to update user
+admin.user.update_stat_failed: failed to update user stat
+admin.invite.grant_failed: Failed to grant invites
+admin.role.delete_has_users: Cannot delete role: %d users are currently assigned to this role
+admin.user.ban_failed_iam: Failed to ban user in IAM
+admin.user.ban_failed_mod: Failed to ban user in Mod

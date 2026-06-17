@@ -1,0 +1,20 @@
+forum.general.unauthorized: 未授权或登录已过期
+
+forum.node.create_permission_denied: 无权在该板块创建主题
+forum.node.not_found: 板块不存在
+forum.node.query_categories_failed: 查询分类失败
+forum.node.query_nodes_failed: 查询板块失败
+forum.node.read_permission_denied: 无权读取该板块内容
+forum.node.write_permission_denied: 无权在该板块发布内容
+
+forum.reply.create_failed: 创建回复失败
+forum.reply.not_found: 回复不存在
+
+forum.topic.append_author_only: 仅作者可以追加内容
+forum.topic.append_limit_exceeded: 已超过最大追加次数限制（3次）
+forum.topic.create_failed: 创建主题失败
+forum.topic.is_locked: 话题已锁定
+forum.topic.not_found: 话题不存在
+forum.topic.query_node_failed: 查询板块信息失败
+forum.reply.reward_self_not_allowed: 不能打赏自己的回复
+forum.topic.reward_self_not_allowed: 不能打赏自己的主题
