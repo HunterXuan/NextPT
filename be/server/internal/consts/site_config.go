@@ -63,7 +63,7 @@ const (
 var SiteConfigDefaults = map[string]any{
 	SiteConfigTrackerAnnounceInterval:    1800,
 	SiteConfigTrackerAnnounceMinInterval: 900,
-	SiteConfigTrackerUrl:                 "http://127.0.0.1/api/tracker/announce",
+	SiteConfigTrackerUrl:                 "http://127.0.0.1:8000/api/tracker/announce",
 	SiteConfigTrackerBonusT0:             8.0,
 	SiteConfigTrackerBonusN0:             7.0,
 	SiteConfigTrackerBonusB0:             100.0,
@@ -72,5 +72,5 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigIamDefaultRole:             "user",
 	SiteConfigIamDefaultRegisterRole:     1,
 	SiteConfigIamRegisterEnabled:         true,
-	SiteConfigCatalogTorrentSource:       "[NextPT]",
+	SiteConfigCatalogTorrentSource:       "NextPT",
 }

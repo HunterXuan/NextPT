@@ -203,29 +203,45 @@ func (s *sCatalogTorrentDomain) QueryBookmarkedTorrents(ctx context.Context, act
 }
 
 func (s *sCatalogTorrentDomain) ToggleLike(ctx context.Context, torrentId uint64, userId uint64) (bool, error) {
-	var like entity.CatalogTorrentLike
-	err := dao.CatalogTorrentLike.Ctx(ctx).Where(dao.CatalogTorrentLike.Columns().TorrentId, torrentId).Where(dao.CatalogTorrentLike.Columns().UserId, userId).Scan(&like)
-	if err != nil {
-		return false, err
-	}
+	likeColumns := dao.CatalogTorrentLike.Columns()
+	torrentColumns := dao.CatalogTorrent.Columns()
 
-	if like.Id > 0 {
-		_, err = dao.CatalogTorrentLike.Ctx(ctx).Where(dao.CatalogTorrentLike.Columns().Id, like.Id).Delete()
-		if err == nil {
-			_, _ = dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, torrentId).Decrement(dao.CatalogTorrent.Columns().LikeCount, 1)
+	isLiked := false
+	err := dao.CatalogTorrentLike.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		m := dao.CatalogTorrentLike.Ctx(ctx).
+			Where(likeColumns.TorrentId, torrentId).
+			Where(likeColumns.UserId, userId)
+
+		count, err := m.Count()
+		if err != nil {
+			return err
 		}
-		return false, err
-	} else {
-		_, err = dao.CatalogTorrentLike.Ctx(ctx).Data(g.Map{
-			dao.CatalogTorrentLike.Columns().TorrentId: torrentId,
-			dao.CatalogTorrentLike.Columns().UserId:    userId,
-			dao.CatalogTorrentLike.Columns().CreatedAt: gtime.Now(),
-		}).Insert()
-		if err == nil {
-			_, _ = dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, torrentId).Increment(dao.CatalogTorrent.Columns().LikeCount, 1)
+
+		if count > 0 {
+			if _, err = m.Delete(); err != nil {
+				return err
+			}
+			if _, err = dao.CatalogTorrent.Ctx(ctx).Where(torrentColumns.Id, torrentId).Decrement(torrentColumns.LikeCount, 1); err != nil {
+				return err
+			}
+			isLiked = false
+			return nil
 		}
-		return true, err
-	}
+
+		if _, err = dao.CatalogTorrentLike.Ctx(ctx).Data(g.Map{
+			likeColumns.TorrentId: torrentId,
+			likeColumns.UserId:    userId,
+			likeColumns.CreatedAt: gtime.Now(),
+		}).Insert(); err != nil {
+			return err
+		}
+		if _, err = dao.CatalogTorrent.Ctx(ctx).Where(torrentColumns.Id, torrentId).Increment(torrentColumns.LikeCount, 1); err != nil {
+			return err
+		}
+		isLiked = true
+		return nil
+	})
+	return isLiked, err
 }
 
 func (s *sCatalogTorrentDomain) QueryTorrentLikes(ctx context.Context, torrentId uint64, page, size int) ([]entity.CatalogTorrentLike, int, error) {

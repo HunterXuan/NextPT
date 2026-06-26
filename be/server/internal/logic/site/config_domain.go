@@ -10,8 +10,11 @@ import (
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/container/gvar"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/os/gcache"
 )
+
+const siteConfigValueField = "val"
 
 type sSiteConfigDomain struct{}
 
@@ -43,7 +46,13 @@ func (s *sSiteConfigDomain) Get(ctx context.Context, group, key string, def ...a
 		return gvar.New(nil)
 	}
 
-	return cfg.Value.Var()
+	if value := cfg.Value.Get(siteConfigValueField); value != nil {
+		return value
+	}
+	if len(def) > 0 {
+		return gvar.New(def[0])
+	}
+	return gvar.New(nil)
 }
 
 // GetByPath 模仿 GF 官方 gcfg 行为，通过 "group.key" 的格式获取后台业务配置项
@@ -75,8 +84,9 @@ func (s *sSiteConfigDomain) AdminListConfigs(ctx context.Context, group string) 
 }
 
 func (s *sSiteConfigDomain) AdminUpdateConfig(ctx context.Context, group string, key string, value string) error {
+	valueJson := s.encodeConfigValue(value)
 	_, err := dao.SiteConfig.Ctx(ctx).
-		Data(dao.SiteConfig.Columns().Value, value).
+		Data(dao.SiteConfig.Columns().Value, valueJson).
 		Where(dao.SiteConfig.Columns().Group, group).
 		Where(dao.SiteConfig.Columns().Key, key).
 		Update()
@@ -87,4 +97,18 @@ func (s *sSiteConfigDomain) AdminUpdateConfig(ctx context.Context, group string,
 	_, _ = gcache.Remove(ctx, cacheKey)
 	_ = service.SysCache().PublishInvalidate(ctx, cacheKey)
 	return nil
+}
+
+func (s *sSiteConfigDomain) encodeConfigValue(value string) string {
+	return gjson.MustEncodeString(map[string]any{
+		siteConfigValueField: s.convertConfigValue(value),
+	})
+}
+
+func (s *sSiteConfigDomain) convertConfigValue(value string) any {
+	value = strings.TrimSpace(value)
+	if decoded, err := gjson.Decode(value); err == nil {
+		return decoded
+	}
+	return value
 }

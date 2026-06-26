@@ -291,7 +291,10 @@ func (s *sCatalogTorrentUsecase) parseAndModifyTorrent(ctx context.Context, in c
 
 	sourceFlag := s.getCatalogConfigCache(ctx, consts.SiteConfigCatalogTorrentSource).String()
 	if sourceFlag == "" {
-		sourceFlag = "[NextPT]"
+		sourceFlag, _ = consts.SiteConfigDefaults[consts.SiteConfigCatalogTorrentSource].(string)
+	}
+	if sourceFlag == "" {
+		sourceFlag = "NextPT"
 	}
 	info.Source = sourceFlag
 

@@ -699,7 +699,7 @@ CREATE TABLE `site_config` (
     `id`              INT UNSIGNED    NOT NULL AUTO_INCREMENT,
     `group`           VARCHAR(30)     NOT NULL DEFAULT 'general',
     `key`             VARCHAR(64)     NOT NULL,
-    `value`           JSON            NOT NULL COMMENT '支持存 boolean/number/array',
+    `value`           JSON            NOT NULL COMMENT '配置值(JSON: {"val": ...})',
     `description`     VARCHAR(255)    NOT NULL DEFAULT '',
     `created_at`      DATETIME        NULL,
     `updated_at`      DATETIME        NULL,
