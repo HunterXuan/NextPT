@@ -9,6 +9,7 @@ type UserMeOut struct {
 	Passkey    string      `json:"passkey"`
 	Status     int         `json:"status"`
 	Role       uint        `json:"role"`
+	RoleName   string      `json:"roleName"`
 	RoleLevel  int         `json:"roleLevel"`
 	IsStaff    bool        `json:"isStaff"`
 	VipUntil   *gtime.Time `json:"vipUntil"`

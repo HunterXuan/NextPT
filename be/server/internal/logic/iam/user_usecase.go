@@ -346,12 +346,18 @@ func (s *sIamUserUsecase) Me(ctx context.Context, actor *model.Actor) (*iamout.U
 		stat = &entity.IamUserStat{}
 	}
 
+	role, err := service.IamRoleDomain().GetRoleById(ctx, user.Role)
+	if err != nil || role == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
+	}
+
 	return &iamout.UserMeOut{
 		Id:         user.Id,
 		Username:   user.Username,
 		Email:      user.Email,
 		Passkey:    user.Passkey,
 		Role:       user.Role,
+		RoleName:   s.localizeRoleName(ctx, role),
 		RoleLevel:  actor.RoleLevel,
 		IsStaff:    actor.IsStaff,
 		Status:     user.Status,
@@ -365,6 +371,34 @@ func (s *sIamUserUsecase) Me(ctx context.Context, actor *model.Actor) (*iamout.U
 		ShareRatio: s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
 		CreatedAt:  user.CreatedAt,
 	}, nil
+}
+
+func (s *sIamUserUsecase) localizeRoleName(ctx context.Context, role *entity.IamRole) string {
+	if role == nil || role.NameI18N == nil {
+		return ""
+	}
+
+	var names map[string]string
+	if err := role.NameI18N.Scan(&names); err != nil || len(names) == 0 {
+		return ""
+	}
+
+	lang := gi18n.LanguageFromCtx(ctx)
+	if lang != "" && names[lang] != "" {
+		return names[lang]
+	}
+
+	defaultLang := g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String()
+	if defaultLang != "" && names[defaultLang] != "" {
+		return names[defaultLang]
+	}
+
+	for _, name := range names {
+		if name != "" {
+			return name
+		}
+	}
+	return ""
 }
 
 func (s *sIamUserUsecase) UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error {
