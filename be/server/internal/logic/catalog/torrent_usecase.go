@@ -40,7 +40,7 @@ func NewCatalogTorrentUsecase() *sCatalogTorrentUsecase {
 
 // List 获取种子分页列表
 func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, in catalogin.TorrentListInp) (*catalogout.TorrentListOut, error) {
-	entities, total, err := service.CatalogTorrentDomain().QueryTorrentsByConditions(ctx, actor, in.CategoryId, in.Type, in.Page, in.Size)
+	entities, total, err := service.CatalogTorrentDomain().QueryTorrentsByConditions(ctx, actor, in.Keyword, in.CategoryIds, in.Page, in.Size)
 	if err != nil {
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
 	}

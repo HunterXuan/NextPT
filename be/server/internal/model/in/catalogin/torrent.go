@@ -12,10 +12,10 @@ type TorrentUploadInp struct {
 }
 
 type TorrentListInp struct {
-	Page       int  `json:"page" d:"1" v:"min:1" description:"页码"`
-	Size       int  `json:"size" d:"20" v:"min:1|max:100" description:"每页数量"`
-	CategoryId uint `json:"categoryId" description:"分类ID(可选)"`
-	Type       *int `json:"type" description:"文件类型: 0=单文件, 1=多文件(可选)"`
+	Page        int    `json:"page" d:"1" v:"min:1" description:"页码"`
+	Size        int    `json:"size" d:"50" v:"min:1|max:100" description:"每页数量"`
+	Keyword     string `json:"keyword" v:"max-length:100" description:"标题关键词"`
+	CategoryIds []uint `json:"categoryIds" description:"分类ID列表(可选)"`
 }
 
 type TorrentDownloadInp struct {

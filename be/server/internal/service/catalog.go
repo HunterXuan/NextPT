@@ -85,7 +85,7 @@ type (
 		IncrementTorrentStats(ctx context.Context, torrentId uint64, field string, amount float64) error
 		UpdateTorrentStatsFromSync(ctx context.Context, updates g.Map) error
 		GetTorrentsByHashes(ctx context.Context, hashes []string) ([]entity.CatalogTorrent, error)
-		QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, categoryId uint, torrentType *int, page int, size int) ([]entity.CatalogTorrent, int, error)
+		QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page int, size int) ([]entity.CatalogTorrent, int, error)
 		CheckTorrentBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		CheckTorrentLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		IncrementTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error

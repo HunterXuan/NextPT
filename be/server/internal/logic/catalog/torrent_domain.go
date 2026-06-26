@@ -2,6 +2,8 @@ package catalog
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"server/internal/dao"
 	"server/internal/model"
@@ -384,22 +386,49 @@ func (s *sCatalogTorrentDomain) GetTorrentsByHashes(ctx context.Context, hashes 
 	return torrents, err
 }
 
-func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, categoryId uint, torrentType *int, page, size int) ([]entity.CatalogTorrent, int, error) {
+func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page, size int) ([]entity.CatalogTorrent, int, error) {
 	m := dao.CatalogTorrent.Ctx(ctx)
 	m = s.ApplyTorrentVisibleScope(m, actor)
-	if categoryId > 0 {
-		m = m.Where(dao.CatalogTorrent.Columns().CategoryId, categoryId)
+
+	columns := dao.CatalogTorrent.Columns()
+	categoryIds = s.normalizeTorrentCategoryIds(categoryIds)
+	if len(categoryIds) > 0 {
+		m = m.WhereIn(columns.CategoryId, categoryIds)
 	}
-	if torrentType != nil {
-		m = m.Where(dao.CatalogTorrent.Columns().Type, *torrentType)
+
+	keyword = strings.TrimSpace(keyword)
+	if keyword != "" {
+		like := "%" + keyword + "%"
+		m = m.Where(fmt.Sprintf("(%s LIKE ? OR %s LIKE ?)", columns.Name, columns.SubTitle), like, like)
 	}
+
 	total, err := m.Count()
 	if err != nil {
 		return nil, 0, err
 	}
 	var entities []entity.CatalogTorrent
-	err = m.Page(page, size).OrderDesc(dao.CatalogTorrent.Columns().CreatedAt).Scan(&entities)
+	err = m.Page(page, size).OrderDesc(columns.CreatedAt).Scan(&entities)
 	return entities, total, err
+}
+
+func (s *sCatalogTorrentDomain) normalizeTorrentCategoryIds(categoryIds []uint) []uint {
+	if len(categoryIds) == 0 {
+		return nil
+	}
+
+	seen := make(map[uint]struct{}, len(categoryIds))
+	list := make([]uint, 0, len(categoryIds))
+	for _, id := range categoryIds {
+		if id == 0 {
+			continue
+		}
+		if _, ok := seen[id]; ok {
+			continue
+		}
+		seen[id] = struct{}{}
+		list = append(list, id)
+	}
+	return list
 }
 
 func (s *sCatalogTorrentDomain) CheckTorrentBookmarked(ctx context.Context, torrentId, userId uint64) (bool, error) {
@@ -488,4 +517,3 @@ func (s *sCatalogTorrentDomain) LoadVisibleTorrent(ctx context.Context, actor *m
 	}
 	return torrent, nil
 }
-
