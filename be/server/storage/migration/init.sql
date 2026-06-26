@@ -142,36 +142,22 @@ CREATE TABLE `iam_login_log` (
     KEY `idx_created` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户登录日志';
 
--- 用户每日统计增量（建议只保留最近 7 天，用于展示前端趋势图）
-CREATE TABLE `iam_user_daily_stat` (
-    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id`         BIGINT UNSIGNED NOT NULL,
-    `date`            DATE            NOT NULL COMMENT '统计日期 YYYY-MM-DD',
-    `uploaded`        BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当日新增上传量 (bytes)',
-    `downloaded`      BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当日新增下载量 (bytes)',
-    `seed_time`       BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当日新增做种时间 (秒)',
-    `leech_time`      BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当日新增下载时间 (秒)',
-    `bonus`      DECIMAL(12,1)   NOT NULL DEFAULT 0.0 COMMENT '当日获得魔力值',
-    `created_at`      DATETIME        NULL,
+-- 用户周期统计增量（period_type: 1=每日, 2=每月；period_key: YYYY-MM-DD 或 YYYY-MM）
+CREATE TABLE `iam_user_period_stat` (
+    `id`              BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT,
+    `user_id`         BIGINT UNSIGNED     NOT NULL,
+    `period_type`     TINYINT UNSIGNED    NOT NULL COMMENT '1=每日 2=每月',
+    `period_key`      VARCHAR(10)         NOT NULL COMMENT 'YYYY-MM-DD 或 YYYY-MM',
+    `uploaded`        BIGINT UNSIGNED     NOT NULL DEFAULT 0   COMMENT '周期新增上传量 (bytes)',
+    `downloaded`      BIGINT UNSIGNED     NOT NULL DEFAULT 0   COMMENT '周期新增下载量 (bytes)',
+    `seed_time`       BIGINT UNSIGNED     NOT NULL DEFAULT 0   COMMENT '周期新增做种时间 (秒)',
+    `leech_time`      BIGINT UNSIGNED     NOT NULL DEFAULT 0   COMMENT '周期新增下载时间 (秒)',
+    `bonus`           DECIMAL(12,1)       NOT NULL DEFAULT 0.0 COMMENT '周期获得魔力值',
+    `created_at`      DATETIME            NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_user_date` (`user_id`, `date`),
-    KEY `idx_date` (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户每日统计增量（保留7天）';
-
--- 用户月度统计增量
-CREATE TABLE `iam_user_monthly_stat` (
-    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id`         BIGINT UNSIGNED NOT NULL,
-    `year_month`      CHAR(7)         NOT NULL COMMENT 'YYYY-MM',
-    `uploaded`        BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当月新增上传量 (bytes)',
-    `downloaded`      BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当月新增下载量 (bytes)',
-    `seed_time`       BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当月新增做种时间 (秒)',
-    `leech_time`      BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '当月新增下载时间 (秒)',
-    `bonus`      DECIMAL(12,1)   NOT NULL DEFAULT 0.0 COMMENT '当月获得魔力值',
-    `created_at`      DATETIME        NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_user_month` (`user_id`, `year_month`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户月度统计增量（替代 speeders/salary）';
+    UNIQUE KEY `uk_user_period` (`user_id`, `period_type`, `period_key`),
+    KEY `idx_period` (`period_type`, `period_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户周期统计增量';
 
 -- ============================================================
 -- 模块: 邀请系统

@@ -8,15 +8,15 @@ import (
 	"server/internal/dao/internal"
 )
 
-// iamUserDailyStatDao is the data access object for the table iam_user_daily_stat.
+// iamUserPeriodStatDao is the data access object for the table iam_user_period_stat.
 // You can define custom methods on it to extend its functionality as needed.
-type iamUserDailyStatDao struct {
-	*internal.IamUserDailyStatDao
+type iamUserPeriodStatDao struct {
+	*internal.IamUserPeriodStatDao
 }
 
 var (
-	// IamUserDailyStat is a globally accessible object for table iam_user_daily_stat operations.
-	IamUserDailyStat = iamUserDailyStatDao{internal.NewIamUserDailyStatDao()}
+	// IamUserPeriodStat is a globally accessible object for table iam_user_period_stat operations.
+	IamUserPeriodStat = iamUserPeriodStatDao{internal.NewIamUserPeriodStatDao()}
 )
 
 // Add your custom methods and functionality below.

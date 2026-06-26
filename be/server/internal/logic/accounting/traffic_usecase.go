@@ -3,6 +3,7 @@ package accounting
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/accountingin"
 	"server/internal/model/out/accountingout"
@@ -58,42 +59,26 @@ func (s *sAccountingTrafficUsecase) ListMyTrafficHistory(ctx context.Context, ac
 		return nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
 	}
 
-	var outList []accountingout.TrafficHistoryItem
-
+	periodType := consts.AccountingStatPeriodDaily
 	if in.Period == "monthly" {
-		list, err := service.AccountingTrafficDomain().QueryMonthlyStats(ctx, actor.Id, in.StartDate, in.EndDate)
-		if err != nil {
-			return nil, err
-		}
-		for _, item := range list {
-			outList = append(outList, accountingout.TrafficHistoryItem{
-				Date:       item.YearMonth,
-				Uploaded:   item.Uploaded,
-				Downloaded: item.Downloaded,
-				SeedTime:   item.SeedTime,
-				LeechTime:  item.LeechTime,
-				Bonus:      gconv.String(item.Bonus),
-			})
-		}
-	} else {
-		list, err := service.AccountingTrafficDomain().QueryDailyStats(ctx, actor.Id, in.StartDate, in.EndDate)
-		if err != nil {
-			return nil, err
-		}
-		for _, item := range list {
-			outList = append(outList, accountingout.TrafficHistoryItem{
-				Date:       item.Date.Format("Y-m-d"),
-				Uploaded:   item.Uploaded,
-				Downloaded: item.Downloaded,
-				SeedTime:   item.SeedTime,
-				LeechTime:  item.LeechTime,
-				Bonus:      gconv.String(item.Bonus),
-			})
-		}
+		periodType = consts.AccountingStatPeriodMonthly
 	}
 
-	if outList == nil {
-		outList = []accountingout.TrafficHistoryItem{}
+	list, err := service.AccountingTrafficDomain().QueryPeriodStats(ctx, actor.Id, periodType, in.StartDate, in.EndDate)
+	if err != nil {
+		return nil, err
+	}
+
+	outList := make([]accountingout.TrafficHistoryItem, 0, len(list))
+	for _, item := range list {
+		outList = append(outList, accountingout.TrafficHistoryItem{
+			Date:       item.PeriodKey,
+			Uploaded:   item.Uploaded,
+			Downloaded: item.Downloaded,
+			SeedTime:   item.SeedTime,
+			LeechTime:  item.LeechTime,
+			Bonus:      gconv.String(item.Bonus),
+		})
 	}
 
 	return &accountingout.TrafficHistoryListOut{List: outList}, nil
