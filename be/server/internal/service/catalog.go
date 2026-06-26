@@ -13,7 +13,6 @@ import (
 	"server/internal/model/out/catalogout"
 
 	"github.com/gogf/gf/v2/database/gdb"
-	"github.com/gogf/gf/v2/frame/g"
 )
 
 type (
@@ -81,9 +80,8 @@ type (
 		UpdateTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
 		CheckBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		CheckLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
-		BatchUpdateTorrents(ctx context.Context, updates []g.Map) error
+		UpdateTorrentPeerStats(ctx context.Context, torrentId uint64, seeders int, leechers int) error
 		IncrementTorrentStats(ctx context.Context, torrentId uint64, field string, amount float64) error
-		UpdateTorrentStatsFromSync(ctx context.Context, updates g.Map) error
 		GetTorrentsByHashes(ctx context.Context, hashes []string) ([]entity.CatalogTorrent, error)
 		QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page int, size int) ([]entity.CatalogTorrent, int, error)
 		CheckTorrentBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)

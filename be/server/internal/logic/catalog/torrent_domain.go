@@ -378,18 +378,23 @@ func (s *sCatalogTorrentDomain) CheckLiked(ctx context.Context, torrentId, userI
 	return count > 0, err
 }
 
-func (s *sCatalogTorrentDomain) BatchUpdateTorrents(ctx context.Context, updates []g.Map) error {
-	_, err := dao.CatalogTorrent.Ctx(ctx).Data(updates).Batch(1000).Save()
+func (s *sCatalogTorrentDomain) UpdateTorrentPeerStats(ctx context.Context, torrentId uint64, seeders int, leechers int) error {
+	if torrentId == 0 {
+		return nil
+	}
+	columns := dao.CatalogTorrent.Columns()
+	_, err := dao.CatalogTorrent.Ctx(ctx).
+		Where(columns.Id, torrentId).
+		Data(g.Map{
+			columns.Seeders:  seeders,
+			columns.Leechers: leechers,
+		}).
+		Update()
 	return err
 }
 
 func (s *sCatalogTorrentDomain) IncrementTorrentStats(ctx context.Context, torrentId uint64, field string, amount float64) error {
-	_, err := dao.CatalogTorrent.Ctx(ctx).Where("id", torrentId).Increment(field, amount)
-	return err
-}
-
-func (s *sCatalogTorrentDomain) UpdateTorrentStatsFromSync(ctx context.Context, updates g.Map) error {
-	_, err := dao.CatalogTorrent.Ctx(ctx).Data(updates).Save()
+	_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, torrentId).Increment(field, amount)
 	return err
 }
 

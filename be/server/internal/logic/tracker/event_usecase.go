@@ -251,6 +251,11 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 	if event.Now == nil {
 		return fmt.Errorf("announce event missing event time")
 	}
+	if !service.TrackerPeerUsecase().CheckClientWhitelist(ctx, event.PeerId, event.UserAgent) {
+		glog.Warningf(ctx, "announce event dropped for banned client [torrent:%d, user:%d, peer:%s, user_agent:%s]",
+			event.TorrentId, event.UserId, event.PeerId, event.UserAgent)
+		return nil
+	}
 
 	// 0. 获取 Redis 分布式锁，防止并发刷流双花攻击
 	// 锁冲突时必须返回 error，让消息留在 pending 中，等锁释放后由 XAUTOCLAIM 重新认领处理

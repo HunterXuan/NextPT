@@ -15,7 +15,6 @@ func Tracker(_ context.Context, group *ghttp.RouterGroup) {
 		group.Middleware(
 			service.Middleware().SetTrackerResponseType,
 			service.Middleware().CheckTrackerAuth,
-			service.Middleware().CheckTrackerClient,
 			service.Middleware().RBAC,
 		)
 		group.Bind(tracker.NewV1())

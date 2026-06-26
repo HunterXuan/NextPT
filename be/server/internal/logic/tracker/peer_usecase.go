@@ -54,6 +54,9 @@ func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, 
 	if len(infoHash) != 20 || len(peerId) != 20 {
 		return nil, errors.New("invalid info_hash or peer_id")
 	}
+	if !s.CheckClientWhitelist(ctx, peerId, r.Header.Get("User-Agent")) {
+		return nil, errors.New("Client banned. Please use a permitted client.")
+	}
 
 	// 1. 获取种子信息 (带10分钟缓存)
 	torrent, err := s.getTorrentByInfoHashCache(ctx, req.InfoHash)

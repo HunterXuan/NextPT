@@ -277,19 +277,6 @@ func (s *sMiddleware) CheckTrackerAuth(r *ghttp.Request) {
 	r.Middleware.Next()
 }
 
-// CheckTrackerClient 校验 BT 客户端是否合法
-func (s *sMiddleware) CheckTrackerClient(r *ghttp.Request) {
-	peerId := r.GetQuery("peer_id").String()
-	userAgent := r.Header.Get("User-Agent")
-
-	if !service.TrackerPeerUsecase().CheckClientWhitelist(r.Context(), peerId, userAgent) {
-		s.writeBencodeError(r, "Client banned. Please use a permitted client.")
-		return
-	}
-
-	r.Middleware.Next()
-}
-
 // writeBencodeError 写入标准 BitTorrent 错误格式并中断请求
 func (s *sMiddleware) writeBencodeError(r *ghttp.Request, msg string) {
 	r.Response.ClearBuffer()

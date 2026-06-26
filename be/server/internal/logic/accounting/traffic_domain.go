@@ -2,6 +2,7 @@ package accounting
 
 import (
 	"context"
+	"fmt"
 
 	"server/internal/dao"
 	"server/internal/model/entity"
@@ -15,6 +16,32 @@ import (
 )
 
 type sAccountingTrafficDomain struct{}
+
+type trafficStatColumns struct {
+	userId     string
+	period     string
+	uploaded   string
+	downloaded string
+	seedTime   string
+	leechTime  string
+	bonus      string
+	createdAt  string
+}
+
+type trafficStatTarget struct {
+	model   *gdb.Model
+	period  string
+	columns trafficStatColumns
+}
+
+type trafficStatChange struct {
+	userId        uint64
+	diffUp        int64
+	diffDn        int64
+	seedTimeDiff  int
+	leechTimeDiff int
+	eventTime     *gtime.Time
+}
 
 func init() {
 	service.RegisterAccountingTrafficDomain(NewAccountingTrafficDomain())
@@ -54,7 +81,7 @@ func (s *sAccountingTrafficDomain) RecordTraffic(ctx context.Context, userId uin
 		return gerror.Newf("user stat record missing for user_id: %d", userId)
 	}
 
-	// 2. Update daily and monthly stat (Raw SQL for ON DUPLICATE KEY UPDATE)
+	// 2. Update daily and monthly stat.
 	if eventTime == nil {
 		eventTime = gtime.Now()
 	}
@@ -68,56 +95,110 @@ func (s *sAccountingTrafficDomain) RecordTraffic(ctx context.Context, userId uin
 		leechTimeDiff = timeDiff
 	}
 
-	// Update daily stat
-	_, err = g.DB().Exec(ctx, `
-		INSERT INTO iam_user_daily_stat (user_id, date, uploaded, downloaded, seed_time, leech_time, bonus, created_at) 
-		VALUES (?, ?, ?, ?, ?, ?, 0, ?)
-		ON DUPLICATE KEY UPDATE 
-			uploaded = uploaded + VALUES(uploaded),
-			downloaded = downloaded + VALUES(downloaded),
-			seed_time = seed_time + VALUES(seed_time),
-			leech_time = leech_time + VALUES(leech_time)
-	`, userId, dateStr, diffUp, diffDn, seedTimeDiff, leechTimeDiff, eventTime)
-	if err != nil {
+	change := trafficStatChange{
+		userId:        userId,
+		diffUp:        diffUp,
+		diffDn:        diffDn,
+		seedTimeDiff:  seedTimeDiff,
+		leechTimeDiff: leechTimeDiff,
+		eventTime:     eventTime,
+	}
+
+	if err = s.upsertTrafficStat(s.dailyTrafficStatTarget(ctx, dateStr), change); err != nil {
 		return err
 	}
 
-	// Update monthly stat
-	_, err = g.DB().Exec(ctx, `
-		INSERT INTO iam_user_monthly_stat (user_id, year_month, uploaded, downloaded, seed_time, leech_time, bonus, created_at) 
-		VALUES (?, ?, ?, ?, ?, ?, 0, ?)
-		ON DUPLICATE KEY UPDATE 
-			uploaded = uploaded + VALUES(uploaded),
-			downloaded = downloaded + VALUES(downloaded),
-			seed_time = seed_time + VALUES(seed_time),
-			leech_time = leech_time + VALUES(leech_time)
-	`, userId, monthStr, diffUp, diffDn, seedTimeDiff, leechTimeDiff, eventTime)
+	return s.upsertTrafficStat(s.monthlyTrafficStatTarget(ctx, monthStr), change)
+}
 
+func (s *sAccountingTrafficDomain) dailyTrafficStatTarget(ctx context.Context, period string) trafficStatTarget {
+	columns := dao.IamUserDailyStat.Columns()
+	return trafficStatTarget{
+		model:  dao.IamUserDailyStat.Ctx(ctx),
+		period: period,
+		columns: trafficStatColumns{
+			userId:     columns.UserId,
+			period:     columns.Date,
+			uploaded:   columns.Uploaded,
+			downloaded: columns.Downloaded,
+			seedTime:   columns.SeedTime,
+			leechTime:  columns.LeechTime,
+			bonus:      columns.Bonus,
+			createdAt:  columns.CreatedAt,
+		},
+	}
+}
+
+func (s *sAccountingTrafficDomain) monthlyTrafficStatTarget(ctx context.Context, period string) trafficStatTarget {
+	columns := dao.IamUserMonthlyStat.Columns()
+	return trafficStatTarget{
+		model:  dao.IamUserMonthlyStat.Ctx(ctx),
+		period: period,
+		columns: trafficStatColumns{
+			userId:     columns.UserId,
+			period:     columns.YearMonth,
+			uploaded:   columns.Uploaded,
+			downloaded: columns.Downloaded,
+			seedTime:   columns.SeedTime,
+			leechTime:  columns.LeechTime,
+			bonus:      columns.Bonus,
+			createdAt:  columns.CreatedAt,
+		},
+	}
+}
+
+func (s *sAccountingTrafficDomain) upsertTrafficStat(target trafficStatTarget, change trafficStatChange) error {
+	columns := target.columns
+	_, err := target.model.
+		Data(g.Map{
+			columns.userId:     change.userId,
+			columns.period:     target.period,
+			columns.uploaded:   change.diffUp,
+			columns.downloaded: change.diffDn,
+			columns.seedTime:   change.seedTimeDiff,
+			columns.leechTime:  change.leechTimeDiff,
+			columns.bonus:      0,
+			columns.createdAt:  change.eventTime,
+		}).
+		OnDuplicate(g.Map{
+			columns.uploaded:   s.incrementByInsertedValue(target.model, columns.uploaded),
+			columns.downloaded: s.incrementByInsertedValue(target.model, columns.downloaded),
+			columns.seedTime:   s.incrementByInsertedValue(target.model, columns.seedTime),
+			columns.leechTime:  s.incrementByInsertedValue(target.model, columns.leechTime),
+		}).
+		Insert()
 	return err
 }
 
+func (s *sAccountingTrafficDomain) incrementByInsertedValue(m *gdb.Model, column string) gdb.Raw {
+	column = m.QuoteWord(column)
+	return gdb.Raw(fmt.Sprintf("%s + VALUES(%s)", column, column))
+}
+
 func (s *sAccountingTrafficDomain) QueryDailyStats(ctx context.Context, userId uint64, startDate, endDate *gtime.Time) ([]entity.IamUserDailyStat, error) {
-	q := dao.IamUserDailyStat.Ctx(ctx).Where(dao.IamUserDailyStat.Columns().UserId, userId)
+	columns := dao.IamUserDailyStat.Columns()
+	q := dao.IamUserDailyStat.Ctx(ctx).Where(columns.UserId, userId)
 	if startDate != nil {
-		q = q.Where("date >= ?", startDate.Format("Y-m-d"))
+		q = q.WhereGTE(columns.Date, startDate.Format("Y-m-d"))
 	}
 	if endDate != nil {
-		q = q.Where("date <= ?", endDate.Format("Y-m-d"))
+		q = q.WhereLTE(columns.Date, endDate.Format("Y-m-d"))
 	}
 	var list []entity.IamUserDailyStat
-	err := q.OrderDesc(dao.IamUserDailyStat.Columns().Date).Limit(100).Scan(&list)
+	err := q.OrderDesc(columns.Date).Limit(100).Scan(&list)
 	return list, err
 }
 
 func (s *sAccountingTrafficDomain) QueryMonthlyStats(ctx context.Context, userId uint64, startDate, endDate *gtime.Time) ([]entity.IamUserMonthlyStat, error) {
-	q := dao.IamUserMonthlyStat.Ctx(ctx).Where(dao.IamUserMonthlyStat.Columns().UserId, userId)
+	columns := dao.IamUserMonthlyStat.Columns()
+	q := dao.IamUserMonthlyStat.Ctx(ctx).Where(columns.UserId, userId)
 	if startDate != nil {
-		q = q.Where("year_month >= ?", startDate.Format("Y-m"))
+		q = q.WhereGTE(columns.YearMonth, startDate.Format("Y-m"))
 	}
 	if endDate != nil {
-		q = q.Where("year_month <= ?", endDate.Format("Y-m"))
+		q = q.WhereLTE(columns.YearMonth, endDate.Format("Y-m"))
 	}
 	var list []entity.IamUserMonthlyStat
-	err := q.OrderDesc(dao.IamUserMonthlyStat.Columns().YearMonth).Limit(100).Scan(&list)
+	err := q.OrderDesc(columns.YearMonth).Limit(100).Scan(&list)
 	return list, err
 }

@@ -165,7 +165,7 @@ func (s *sTrackerSyncUsecase) SyncTorrentData(ctx context.Context) error {
 	}
 
 	now := time.Now().Unix()
-	var updates []g.Map
+	updatedCount := 0
 
 	for torrentId := range activeTorrentIds {
 		seedersKey := service.SysCache().KeyTrackerTorrentSeeders(ctx, torrentId)
@@ -180,22 +180,14 @@ func (s *sTrackerSyncUsecase) SyncTorrentData(ctx context.Context) error {
 			continue
 		}
 
-		updates = append(updates, g.Map{
-			"id":       torrentId,
-			"seeders":  sCountVal.Int(),
-			"leechers": lCountVal.Int(),
-		})
-	}
-
-	if len(updates) > 0 {
-		err = service.CatalogTorrentDomain().BatchUpdateTorrents(ctx, updates)
-		if err != nil {
-			glog.Error(ctx, "[Cron] Sync torrent data batch save failed:", err)
+		if err = service.CatalogTorrentDomain().UpdateTorrentPeerStats(ctx, torrentId, sCountVal.Int(), lCountVal.Int()); err != nil {
+			glog.Errorf(ctx, "[Cron] Sync torrent data update failed for torrent %d: %v", torrentId, err)
 			return err
 		}
+		updatedCount++
 	}
 
-	glog.Infof(ctx, "[Cron] Sync torrent data completed for %d torrents.", len(updates))
+	glog.Infof(ctx, "[Cron] Sync torrent data completed for %d torrents.", updatedCount)
 	return nil
 }
 

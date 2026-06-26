@@ -28,8 +28,6 @@ type (
 		SetTrackerResponseType(r *ghttp.Request)
 		// CheckTrackerAuth Tracker 的 Passkey 鉴权
 		CheckTrackerAuth(r *ghttp.Request)
-		// CheckTrackerClient 校验 BT 客户端是否合法
-		CheckTrackerClient(r *ghttp.Request)
 	}
 )
 
