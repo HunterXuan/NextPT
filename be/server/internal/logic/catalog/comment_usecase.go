@@ -184,7 +184,7 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 	}
 
 	if comment.UserId == actor.Id {
-		return gerror.New(gi18n.T(ctx, "catalog.reward.self_denied"))
+		return gerror.New(gi18n.T(ctx, "catalog.comment.reward_self_denied"))
 	}
 
 	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
