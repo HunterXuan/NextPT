@@ -134,26 +134,32 @@ func (s *sMiddleware) CheckAuth(r *ghttp.Request) {
 		return
 	}
 
-	service.IamSessionDomain().GetGFMiddleware().Auth(r)
-	if r.IsExited() {
+	token, err := gtoken.GetRequestToken(r)
+	if err != nil {
+		service.IamSessionDomain().GetGFMiddleware().ResFun(r, err)
 		return
 	}
 
-	userKey := gtoken.GetUserKey(r.Context())
-	if userKey != "" {
-		actor, err := service.IamUserUsecase().LoadActor(r.Context(), gconv.Uint64(userKey))
-		if err != nil || actor == nil {
-			_ = service.IamSessionDomain().RemoveToken(r.Context(), userKey)
-			r.Response.WriteJson(ghttp.DefaultHandlerResponse{
-				Code:    401,
-				Message: gi18n.T(r.Context(), "iam.general.unauthorized"),
-				Data:    nil,
-			})
-			r.ExitAll()
-			return
-		}
-		contexts.SetActor(r.Context(), actor)
+	userKey, err := service.IamSessionDomain().GetGFToken().Validate(r.Context(), token)
+	if err != nil {
+		service.IamSessionDomain().GetGFMiddleware().ResFun(r, err)
+		return
 	}
+	r.SetCtxVar(gtoken.KeyUserKey, userKey)
+
+	actor, err := service.IamUserUsecase().LoadActor(r.Context(), gconv.Uint64(userKey))
+	if err != nil || actor == nil {
+		_ = service.IamSessionDomain().RemoveToken(r.Context(), userKey)
+		r.Response.WriteJson(ghttp.DefaultHandlerResponse{
+			Code:    401,
+			Message: gi18n.T(r.Context(), "iam.general.unauthorized"),
+			Data:    nil,
+		})
+		r.ExitAll()
+		return
+	}
+	contexts.SetActor(r.Context(), actor)
+
 	r.Middleware.Next()
 }
 
