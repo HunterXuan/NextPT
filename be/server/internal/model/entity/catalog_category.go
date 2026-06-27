@@ -12,7 +12,6 @@ import (
 // CatalogCategory is the golang structure for table catalog_category.
 type CatalogCategory struct {
 	Id        uint        `json:"id"        orm:"id"         description:""`
-	ParentId  uint        `json:"parentId"  orm:"parent_id"  description:"父分类 (0=顶级)"`
 	NameI18N  *gjson.Json `json:"nameI18N"  orm:"name_i18n"  description:"多语言名称映射"`
 	Slug      string      `json:"slug"      orm:"slug"       description:"URL-friendly"`
 	SortOrder int         `json:"sortOrder" orm:"sort_order" description:""`

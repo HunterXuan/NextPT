@@ -11,6 +11,10 @@ import (
 )
 
 type IAdminV1 interface {
+	CatalogCategoryCreate(ctx context.Context, req *v1.CatalogCategoryCreateReq) (res *v1.CatalogCategoryCreateRes, err error)
+	CatalogCategoryUpdate(ctx context.Context, req *v1.CatalogCategoryUpdateReq) (res *v1.CatalogCategoryUpdateRes, err error)
+	CatalogCategoryDelete(ctx context.Context, req *v1.CatalogCategoryDeleteReq) (res *v1.CatalogCategoryDeleteRes, err error)
+	CatalogCategoryList(ctx context.Context, req *v1.CatalogCategoryListReq) (res *v1.CatalogCategoryListRes, err error)
 	CatalogTorrentDelete(ctx context.Context, req *v1.CatalogTorrentDeleteReq) (res *v1.CatalogTorrentDeleteRes, err error)
 	ForumCategoryCreate(ctx context.Context, req *v1.ForumCategoryCreateReq) (res *v1.ForumCategoryCreateRes, err error)
 	ForumCategoryUpdate(ctx context.Context, req *v1.ForumCategoryUpdateReq) (res *v1.ForumCategoryUpdateRes, err error)

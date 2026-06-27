@@ -14,6 +14,12 @@ import (
 )
 
 type (
+	IAdminCatalogCategoryUsecase interface {
+		Create(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryCreateInp) error
+		Update(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryUpdateInp) error
+		Delete(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryDeleteInp) error
+		List(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryListInp) (*adminout.CatalogCategoryListOut, error)
+	}
 	IAdminCatalogTorrentUsecase interface {
 		Delete(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentDeleteInp) error
 	}
@@ -86,22 +92,34 @@ type (
 )
 
 var (
-	localAdminCatalogTorrentUsecase IAdminCatalogTorrentUsecase
-	localAdminForumCategoryUsecase  IAdminForumCategoryUsecase
-	localAdminForumNodeUsecase      IAdminForumNodeUsecase
-	localAdminForumTopicUsecase     IAdminForumTopicUsecase
-	localAdminIamInviteUsecase      IAdminIamInviteUsecase
-	localAdminIamPermissionUsecase  IAdminIamPermissionUsecase
-	localAdminIamRoleUsecase        IAdminIamRoleUsecase
-	localAdminIamSessionUsecase     IAdminIamSessionUsecase
-	localAdminIamUserUsecase        IAdminIamUserUsecase
-	localAdminModCheaterUsecase     IAdminModCheaterUsecase
-	localAdminModReportUsecase      IAdminModReportUsecase
-	localAdminModUserUsecase        IAdminModUserUsecase
-	localAdminSiteAuditUsecase      IAdminSiteAuditUsecase
-	localAdminSiteConfigUsecase     IAdminSiteConfigUsecase
-	localAdminSysCronUsecase        IAdminSysCronUsecase
+	localAdminCatalogCategoryUsecase IAdminCatalogCategoryUsecase
+	localAdminCatalogTorrentUsecase  IAdminCatalogTorrentUsecase
+	localAdminForumCategoryUsecase   IAdminForumCategoryUsecase
+	localAdminForumNodeUsecase       IAdminForumNodeUsecase
+	localAdminForumTopicUsecase      IAdminForumTopicUsecase
+	localAdminIamInviteUsecase       IAdminIamInviteUsecase
+	localAdminIamPermissionUsecase   IAdminIamPermissionUsecase
+	localAdminIamRoleUsecase         IAdminIamRoleUsecase
+	localAdminIamSessionUsecase      IAdminIamSessionUsecase
+	localAdminIamUserUsecase         IAdminIamUserUsecase
+	localAdminModCheaterUsecase      IAdminModCheaterUsecase
+	localAdminModReportUsecase       IAdminModReportUsecase
+	localAdminModUserUsecase         IAdminModUserUsecase
+	localAdminSiteAuditUsecase       IAdminSiteAuditUsecase
+	localAdminSiteConfigUsecase      IAdminSiteConfigUsecase
+	localAdminSysCronUsecase         IAdminSysCronUsecase
 )
+
+func AdminCatalogCategoryUsecase() IAdminCatalogCategoryUsecase {
+	if localAdminCatalogCategoryUsecase == nil {
+		panic("implement not found for interface IAdminCatalogCategoryUsecase, forgot register?")
+	}
+	return localAdminCatalogCategoryUsecase
+}
+
+func RegisterAdminCatalogCategoryUsecase(i IAdminCatalogCategoryUsecase) {
+	localAdminCatalogCategoryUsecase = i
+}
 
 func AdminCatalogTorrentUsecase() IAdminCatalogTorrentUsecase {
 	if localAdminCatalogTorrentUsecase == nil {

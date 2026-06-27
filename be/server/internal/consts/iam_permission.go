@@ -38,6 +38,7 @@ const (
 	IamPermissionAdminForumReplyManage    = "admin:forum/reply:*"
 
 	// Catalog Management
+	IamPermissionAdminCatalogCategoryManage = "admin:catalog/category:*"
 	IamPermissionAdminCatalogTorrentManage  = "admin:catalog/torrent:*"
 	IamPermissionAdminCatalogSubtitleManage = "admin:catalog/subtitle:*"
 	IamPermissionAdminCatalogCommentManage  = "admin:catalog/comment:*"
@@ -88,6 +89,7 @@ var (
 		IamPermissionAdminForumTopicManage,
 		IamPermissionAdminForumReplyManage,
 
+		IamPermissionAdminCatalogCategoryManage,
 		IamPermissionAdminCatalogTorrentManage,
 		IamPermissionAdminCatalogSubtitleManage,
 		IamPermissionAdminCatalogCommentManage,

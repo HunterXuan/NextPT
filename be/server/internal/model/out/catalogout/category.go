@@ -1,10 +1,9 @@
 package catalogout
 
 type CategoryItem struct {
-	Id       uint           `json:"id"`
-	ParentId uint           `json:"parentId"`
-	Name     map[string]any `json:"name"`
-	Slug     string         `json:"slug"`
+	Id   uint           `json:"id"`
+	Name map[string]any `json:"name"`
+	Slug string         `json:"slug"`
 }
 
 type CategoryListOut struct {

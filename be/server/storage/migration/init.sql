@@ -187,7 +187,6 @@ CREATE TABLE `iam_invite` (
 -- 种子分类
 CREATE TABLE `catalog_category` (
     `id`              INT UNSIGNED    NOT NULL AUTO_INCREMENT,
-    `parent_id`       INT UNSIGNED    NOT NULL DEFAULT 0 COMMENT '父分类 (0=顶级)',
     `name_i18n`       JSON            NOT NULL COMMENT '多语言名称映射',
     `slug`            VARCHAR(60)     NOT NULL DEFAULT '' COMMENT 'URL-friendly',
     `sort_order`      SMALLINT        NOT NULL DEFAULT 0,
@@ -196,7 +195,7 @@ CREATE TABLE `catalog_category` (
     `updated_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_slug` (`slug`),
-    KEY `idx_parent_sort` (`parent_id`, `sort_order`)
+    KEY `idx_sort` (`sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子分类表';
 
 -- 标签分组 (例如: 分辨率、视频编码)

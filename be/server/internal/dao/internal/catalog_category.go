@@ -22,7 +22,6 @@ type CatalogCategoryDao struct {
 // CatalogCategoryColumns defines and stores column names for the table catalog_category.
 type CatalogCategoryColumns struct {
 	Id        string //
-	ParentId  string // 父分类 (0=顶级)
 	NameI18N  string // 多语言名称映射
 	Slug      string // URL-friendly
 	SortOrder string //
@@ -34,7 +33,6 @@ type CatalogCategoryColumns struct {
 // catalogCategoryColumns holds the columns for the table catalog_category.
 var catalogCategoryColumns = CatalogCategoryColumns{
 	Id:        "id",
-	ParentId:  "parent_id",
 	NameI18N:  "name_i18n",
 	Slug:      "slug",
 	SortOrder: "sort_order",

@@ -28,9 +28,8 @@ func (s *sCatalogCategoryUsecase) ListCategories(ctx context.Context, actor *mod
 	var list []catalogout.CategoryItem
 	for _, e := range entities {
 		item := catalogout.CategoryItem{
-			Id:       e.Id,
-			ParentId: e.ParentId,
-			Slug:     e.Slug,
+			Id:   e.Id,
+			Slug: e.Slug,
 		}
 		_ = e.NameI18N.Scan(&item.Name)
 		list = append(list, item)

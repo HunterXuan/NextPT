@@ -2,6 +2,8 @@ admin.config.group_req: 配置组不能为空
 admin.config.key_req: 配置项键名不能为空
 admin.config.value_req: 配置项值不能为空
 
+admin.catalog.category_has_torrents: 无法删除：该分类下仍有种子
+
 admin.forum.category_has_nodes: 无法删除：该分类下仍有板块
 admin.forum.new_node_not_found: 目标板块不存在
 admin.forum.node_has_topics: 无法删除：该板块下仍有主题

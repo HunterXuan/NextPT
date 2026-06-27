@@ -59,6 +59,10 @@ func (s *sCatalogTorrentDomain) CheckCategoryExists(ctx context.Context, categor
 	return nil
 }
 
+func (s *sCatalogTorrentDomain) CountTorrentsByCategory(ctx context.Context, categoryId uint) (int, error) {
+	return dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().CategoryId, categoryId).Count()
+}
+
 func (s *sCatalogTorrentDomain) CheckInfoHashExists(ctx context.Context, infoHashBytes []byte) error {
 	count, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().InfoHash, infoHashBytes).Count()
 	if err != nil {

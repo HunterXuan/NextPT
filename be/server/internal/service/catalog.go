@@ -18,6 +18,10 @@ import (
 type (
 	ICatalogCategoryDomain interface {
 		ListCategories(ctx context.Context) ([]entity.CatalogCategory, error)
+		AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool) error
+		AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool) error
+		AdminDeleteCategory(ctx context.Context, id uint) error
+		AdminListCategories(ctx context.Context) ([]entity.CatalogCategory, error)
 		ListTagGroups(ctx context.Context) ([]entity.CatalogTagGroup, []entity.CatalogTag, error)
 	}
 	ICatalogCategoryUsecase interface {
@@ -64,6 +68,7 @@ type (
 		GetTorrentById(ctx context.Context, id uint64) (*entity.CatalogTorrent, error)
 		GetTorrentByInfoHash(ctx context.Context, infoHash string) (*entity.CatalogTorrent, error)
 		CheckCategoryExists(ctx context.Context, categoryId uint) error
+		CountTorrentsByCategory(ctx context.Context, categoryId uint) (int, error)
 		CheckInfoHashExists(ctx context.Context, infoHashBytes []byte) error
 		SaveTorrent(ctx context.Context, torrentInsert *entity.CatalogTorrent, filesToInsert []entity.CatalogTorrentFile) (uint64, error)
 		Bookmark(ctx context.Context, userId uint64, torrentId uint64) error

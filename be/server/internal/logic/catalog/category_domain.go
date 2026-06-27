@@ -6,6 +6,8 @@ import (
 	"server/internal/dao"
 	"server/internal/model/entity"
 	"server/internal/service"
+
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type sCatalogCategoryDomain struct{}
@@ -21,6 +23,51 @@ func NewCatalogCategoryDomain() *sCatalogCategoryDomain {
 func (s *sCatalogCategoryDomain) ListCategories(ctx context.Context) ([]entity.CatalogCategory, error) {
 	var categories []entity.CatalogCategory
 	err := dao.CatalogCategory.Ctx(ctx).Where(dao.CatalogCategory.Columns().Enabled, 1).OrderAsc(dao.CatalogCategory.Columns().SortOrder).Scan(&categories)
+	return categories, err
+}
+
+func (s *sCatalogCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool) error {
+	_, err := dao.CatalogCategory.Ctx(ctx).Data(g.Map{
+		dao.CatalogCategory.Columns().NameI18N:  nameI18N,
+		dao.CatalogCategory.Columns().Slug:      slug,
+		dao.CatalogCategory.Columns().SortOrder: sortOrder,
+		dao.CatalogCategory.Columns().Enabled:   enabled,
+	}).Insert()
+	return err
+}
+
+func (s *sCatalogCategoryDomain) AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool) error {
+	data := g.Map{}
+	if nameI18N != nil {
+		data[dao.CatalogCategory.Columns().NameI18N] = nameI18N
+	}
+	if slug != nil {
+		data[dao.CatalogCategory.Columns().Slug] = *slug
+	}
+	if sortOrder != nil {
+		data[dao.CatalogCategory.Columns().SortOrder] = *sortOrder
+	}
+	if enabled != nil {
+		data[dao.CatalogCategory.Columns().Enabled] = *enabled
+	}
+	if len(data) == 0 {
+		return nil
+	}
+	_, err := dao.CatalogCategory.Ctx(ctx).Where(dao.CatalogCategory.Columns().Id, id).Data(data).Update()
+	return err
+}
+
+func (s *sCatalogCategoryDomain) AdminDeleteCategory(ctx context.Context, id uint) error {
+	_, err := dao.CatalogCategory.Ctx(ctx).Where(dao.CatalogCategory.Columns().Id, id).Delete()
+	return err
+}
+
+func (s *sCatalogCategoryDomain) AdminListCategories(ctx context.Context) ([]entity.CatalogCategory, error) {
+	var categories []entity.CatalogCategory
+	err := dao.CatalogCategory.Ctx(ctx).
+		OrderAsc(dao.CatalogCategory.Columns().SortOrder).
+		OrderAsc(dao.CatalogCategory.Columns().Id).
+		Scan(&categories)
 	return categories, err
 }
 

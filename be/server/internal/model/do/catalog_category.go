@@ -14,7 +14,6 @@ import (
 type CatalogCategory struct {
 	g.Meta    `orm:"table:catalog_category, do:true"`
 	Id        any         //
-	ParentId  any         // 父分类 (0=顶级)
 	NameI18N  *gjson.Json // 多语言名称映射
 	Slug      any         // URL-friendly
 	SortOrder any         //

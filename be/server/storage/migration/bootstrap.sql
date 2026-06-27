@@ -158,15 +158,14 @@ ON DUPLICATE KEY UPDATE
 -- ------------------------------------------------------------
 
 INSERT INTO `catalog_category`
-    (`id`, `parent_id`, `name_i18n`, `slug`, `sort_order`, `enabled`, `created_at`, `updated_at`)
+    (`id`, `name_i18n`, `slug`, `sort_order`, `enabled`, `created_at`, `updated_at`)
 VALUES
-    (1, 0, '{"zh-CN":"电影","zh-TW":"電影","en-US":"Movies"}', 'movies', 10, b'1', NOW(), NOW()),
-    (2, 0, '{"zh-CN":"剧集","zh-TW":"劇集","en-US":"TV"}', 'tv', 20, b'1', NOW(), NOW()),
-    (3, 0, '{"zh-CN":"音乐","zh-TW":"音樂","en-US":"Music"}', 'music', 30, b'1', NOW(), NOW()),
-    (4, 0, '{"zh-CN":"软件","zh-TW":"軟體","en-US":"Software"}', 'software', 40, b'1', NOW(), NOW()),
-    (5, 0, '{"zh-CN":"其他","zh-TW":"其他","en-US":"Other"}', 'other', 90, b'1', NOW(), NOW())
+    (1, '{"zh-CN":"电影","zh-TW":"電影","en-US":"Movies"}', 'movies', 10, b'1', NOW(), NOW()),
+    (2, '{"zh-CN":"剧集","zh-TW":"劇集","en-US":"TV"}', 'tv', 20, b'1', NOW(), NOW()),
+    (3, '{"zh-CN":"音乐","zh-TW":"音樂","en-US":"Music"}', 'music', 30, b'1', NOW(), NOW()),
+    (4, '{"zh-CN":"软件","zh-TW":"軟體","en-US":"Software"}', 'software', 40, b'1', NOW(), NOW()),
+    (5, '{"zh-CN":"其他","zh-TW":"其他","en-US":"Other"}', 'other', 90, b'1', NOW(), NOW())
 ON DUPLICATE KEY UPDATE
-    `parent_id` = VALUES(`parent_id`),
     `name_i18n` = VALUES(`name_i18n`),
     `slug` = VALUES(`slug`),
     `sort_order` = VALUES(`sort_order`),
