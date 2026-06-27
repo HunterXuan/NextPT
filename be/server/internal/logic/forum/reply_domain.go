@@ -12,6 +12,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sForumReplyDomain struct{}
@@ -64,44 +65,42 @@ func (s *sForumReplyDomain) GetReplyById(ctx context.Context, replyId uint64) (*
 }
 
 func (s *sForumReplyDomain) ToggleLike(ctx context.Context, actor *model.Actor, replyId uint64) (bool, error) {
-	var likeRecord entity.ForumReplyLike
-	err := dao.ForumReplyLike.Ctx(ctx).Where(g.Map{
-		dao.ForumReplyLike.Columns().UserId:  actor.Id,
-		dao.ForumReplyLike.Columns().ReplyId: replyId,
-	}).Scan(&likeRecord)
-
+	likeColumns := dao.ForumReplyLike.Columns()
+	replyColumns := dao.ForumReply.Columns()
+	likeModel := dao.ForumReplyLike.Ctx(ctx).Where(g.Map{
+		likeColumns.UserId:  actor.Id,
+		likeColumns.ReplyId: replyId,
+	})
+	count, err := likeModel.Count()
 	if err != nil {
 		return false, err
 	}
 
-	isLiked := false
-	if likeRecord.Id > 0 {
-		// Already liked, so unlike
-		_, err := dao.ForumReplyLike.Ctx(ctx).Where(dao.ForumReplyLike.Columns().Id, likeRecord.Id).Delete()
+	if count > 0 {
+		_, err := likeModel.Delete()
 		if err != nil {
 			return false, err
 		}
-		_, err = dao.ForumReply.Ctx(ctx).Where(dao.ForumReply.Columns().Id, replyId).Decrement(dao.ForumReply.Columns().LikeCount, 1)
+		_, err = dao.ForumReply.Ctx(ctx).Where(replyColumns.Id, replyId).Decrement(replyColumns.LikeCount, 1)
 		if err != nil {
 			return false, err
 		}
-		isLiked = false
-	} else {
-		// Not liked, so like
-		_, err := dao.ForumReplyLike.Ctx(ctx).Data(entity.ForumReplyLike{
-			UserId:  actor.Id,
-			ReplyId: replyId,
-		}).Insert()
-		if err != nil {
-			return false, err
-		}
-		_, err = dao.ForumReply.Ctx(ctx).Where(dao.ForumReply.Columns().Id, replyId).Increment(dao.ForumReply.Columns().LikeCount, 1)
-		if err != nil {
-			return false, err
-		}
-		isLiked = true
+		return false, nil
 	}
-	return isLiked, err
+
+	_, err = dao.ForumReplyLike.Ctx(ctx).Data(g.Map{
+		likeColumns.UserId:    actor.Id,
+		likeColumns.ReplyId:   replyId,
+		likeColumns.CreatedAt: gtime.Now(),
+	}).Insert()
+	if err != nil {
+		return false, err
+	}
+	_, err = dao.ForumReply.Ctx(ctx).Where(replyColumns.Id, replyId).Increment(replyColumns.LikeCount, 1)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func (s *sForumReplyDomain) GetReplyLikesByUser(ctx context.Context, userId uint64, replyIds []uint64) ([]entity.ForumReplyLike, error) {

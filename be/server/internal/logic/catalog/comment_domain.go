@@ -57,33 +57,35 @@ func (s *sCatalogCommentDomain) QueryCommentsByTarget(ctx context.Context, targe
 }
 
 func (s *sCatalogCommentDomain) ToggleLike(ctx context.Context, userId uint64, commentId uint64) (bool, error) {
-	var isLiked bool
-	var like entity.CatalogCommentLike
-	err := dao.CatalogCommentLike.Ctx(ctx).Where(dao.CatalogCommentLike.Columns().UserId, userId).
-		Where(dao.CatalogCommentLike.Columns().CommentId, commentId).Scan(&like)
+	likeColumns := dao.CatalogCommentLike.Columns()
+	commentColumns := dao.CatalogComment.Columns()
+	likeModel := dao.CatalogCommentLike.Ctx(ctx).
+		Where(likeColumns.UserId, userId).
+		Where(likeColumns.CommentId, commentId)
 
-	if err == nil && like.Id > 0 {
-		// Unlike
-		_, err = dao.CatalogCommentLike.Ctx(ctx).Where(dao.CatalogCommentLike.Columns().Id, like.Id).Delete()
-		if err != nil {
-			return false, err
-		}
-		_, err = dao.CatalogComment.Ctx(ctx).Where(dao.CatalogComment.Columns().Id, commentId).Decrement(dao.CatalogComment.Columns().LikeCount, 1)
-		isLiked = false
-		return isLiked, err
-	}
-
-	// Like
-	_, err = dao.CatalogCommentLike.Ctx(ctx).Insert(&entity.CatalogCommentLike{
-		UserId:    userId,
-		CommentId: commentId,
-	})
+	count, err := likeModel.Count()
 	if err != nil {
 		return false, err
 	}
-	_, err = dao.CatalogComment.Ctx(ctx).Where(dao.CatalogComment.Columns().Id, commentId).Increment(dao.CatalogComment.Columns().LikeCount, 1)
-	isLiked = true
-	return isLiked, err
+
+	if count > 0 {
+		_, err = likeModel.Delete()
+		if err != nil {
+			return false, err
+		}
+		_, err = dao.CatalogComment.Ctx(ctx).Where(commentColumns.Id, commentId).Decrement(commentColumns.LikeCount, 1)
+		return false, err
+	}
+
+	_, err = dao.CatalogCommentLike.Ctx(ctx).Data(&entity.CatalogCommentLike{
+		UserId:    userId,
+		CommentId: commentId,
+	}).Insert()
+	if err != nil {
+		return false, err
+	}
+	_, err = dao.CatalogComment.Ctx(ctx).Where(commentColumns.Id, commentId).Increment(commentColumns.LikeCount, 1)
+	return true, err
 }
 
 func (s *sCatalogCommentDomain) GetCommentLikesByUser(ctx context.Context, userId uint64, commentIds []uint64) ([]entity.CatalogCommentLike, error) {

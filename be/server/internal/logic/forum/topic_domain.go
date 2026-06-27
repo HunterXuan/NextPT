@@ -111,44 +111,42 @@ func (s *sForumTopicDomain) ToggleLike(ctx context.Context, actor *model.Actor, 
 }
 
 func (s *sForumTopicDomain) toggleLikeInternal(ctx context.Context, userId uint64, topicId uint64) (bool, error) {
-	var likeRecord entity.ForumTopicLike
-	err := dao.ForumTopicLike.Ctx(ctx).Where(g.Map{
-		dao.ForumTopicLike.Columns().UserId:  userId,
-		dao.ForumTopicLike.Columns().TopicId: topicId,
-	}).Scan(&likeRecord)
-
+	likeColumns := dao.ForumTopicLike.Columns()
+	topicColumns := dao.ForumTopic.Columns()
+	likeModel := dao.ForumTopicLike.Ctx(ctx).Where(g.Map{
+		likeColumns.UserId:  userId,
+		likeColumns.TopicId: topicId,
+	})
+	count, err := likeModel.Count()
 	if err != nil {
 		return false, err
 	}
 
-	isLiked := false
-	if likeRecord.Id > 0 {
-		// Already liked, so unlike
-		_, err := dao.ForumTopicLike.Ctx(ctx).Where(dao.ForumTopicLike.Columns().Id, likeRecord.Id).Delete()
+	if count > 0 {
+		_, err := likeModel.Delete()
 		if err != nil {
 			return false, err
 		}
-		_, err = dao.ForumTopic.Ctx(ctx).Where(dao.ForumTopic.Columns().Id, topicId).Decrement(dao.ForumTopic.Columns().LikeCount, 1)
+		_, err = dao.ForumTopic.Ctx(ctx).Where(topicColumns.Id, topicId).Decrement(topicColumns.LikeCount, 1)
 		if err != nil {
 			return false, err
 		}
-		isLiked = false
-	} else {
-		// Not liked, so like
-		_, err := dao.ForumTopicLike.Ctx(ctx).Data(entity.ForumTopicLike{
-			UserId:  userId,
-			TopicId: topicId,
-		}).Insert()
-		if err != nil {
-			return false, err
-		}
-		_, err = dao.ForumTopic.Ctx(ctx).Where(dao.ForumTopic.Columns().Id, topicId).Increment(dao.ForumTopic.Columns().LikeCount, 1)
-		if err != nil {
-			return false, err
-		}
-		isLiked = true
+		return false, nil
 	}
-	return isLiked, err
+
+	_, err = dao.ForumTopicLike.Ctx(ctx).Data(g.Map{
+		likeColumns.UserId:    userId,
+		likeColumns.TopicId:   topicId,
+		likeColumns.CreatedAt: gtime.Now(),
+	}).Insert()
+	if err != nil {
+		return false, err
+	}
+	_, err = dao.ForumTopic.Ctx(ctx).Where(topicColumns.Id, topicId).Increment(topicColumns.LikeCount, 1)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func (s *sForumTopicDomain) Bookmark(ctx context.Context, actor *model.Actor, topicId uint64) error {
