@@ -45,7 +45,7 @@ func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, i
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
 	}
 
-	list := s.formatTorrentListItems(ctx, entities)
+	list := s.formatTorrentListItems(ctx, actor, entities)
 
 	return &catalogout.TorrentListOut{
 		List:  list,
@@ -480,7 +480,7 @@ func (s *sCatalogTorrentUsecase) ListBookmarkedTorrents(ctx context.Context, act
 		return nil, err
 	}
 
-	list := s.formatTorrentListItems(ctx, torrents)
+	list := s.formatTorrentListItems(ctx, actor, torrents)
 
 	return &catalogout.TorrentBookmarkListOut{
 		List:  list,
@@ -488,10 +488,10 @@ func (s *sCatalogTorrentUsecase) ListBookmarkedTorrents(ctx context.Context, act
 	}, nil
 }
 
-func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, entities []entity.CatalogTorrent) []catalogout.TorrentListItem {
+func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, actor *model.Actor, entities []entity.CatalogTorrent) []catalogout.TorrentListItem {
 	var ownerIds []uint64
 	for _, e := range entities {
-		if !e.Anonymous && e.OwnerId > 0 {
+		if !s.shouldHideTorrentOwner(actor, e) && e.OwnerId > 0 {
 			ownerIds = append(ownerIds, e.OwnerId)
 		}
 	}
@@ -508,7 +508,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, ent
 	for _, e := range entities {
 		ownerId := e.OwnerId
 		ownerName := userMap[e.OwnerId]
-		if e.Anonymous {
+		if s.shouldHideTorrentOwner(actor, e) {
 			ownerId = 0
 			ownerName = ""
 		}
@@ -532,6 +532,13 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, ent
 	return list
 }
 
+func (s *sCatalogTorrentUsecase) shouldHideTorrentOwner(actor *model.Actor, torrent entity.CatalogTorrent) bool {
+	if !torrent.Anonymous {
+		return false
+	}
+	return actor == nil || (!actor.IsStaff && actor.Id != torrent.OwnerId)
+}
+
 func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Actor, in catalogin.TorrentGetInp) (*catalogout.TorrentDetailOut, error) {
 	torrent, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
 	if err != nil {
@@ -545,7 +552,7 @@ func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Ac
 		isLiked, _ = service.CatalogTorrentDomain().CheckTorrentLiked(ctx, in.Id, actor.Id)
 	}
 
-	listItems := s.formatTorrentListItems(ctx, []entity.CatalogTorrent{*torrent})
+	listItems := s.formatTorrentListItems(ctx, actor, []entity.CatalogTorrent{*torrent})
 	var item catalogout.TorrentListItem
 	if len(listItems) > 0 {
 		item = listItems[0]
@@ -628,8 +635,7 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.not_found"))
 	}
 
-	// Only owner can update
-	if torrent.OwnerId != actor.Id {
+	if !s.canEditTorrent(actor, torrent) {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.forbidden"))
 	}
 
@@ -645,6 +651,10 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 	}
 
 	return &catalogout.TorrentUpdateOut{Success: true}, nil
+}
+
+func (s *sCatalogTorrentUsecase) canEditTorrent(actor *model.Actor, torrent *entity.CatalogTorrent) bool {
+	return actor != nil && torrent != nil && (actor.IsStaff || torrent.OwnerId == actor.Id)
 }
 
 func (s *sCatalogTorrentUsecase) ListFiles(ctx context.Context, actor *model.Actor, in catalogin.TorrentFileListInp) (*catalogout.TorrentFileListOut, error) {
