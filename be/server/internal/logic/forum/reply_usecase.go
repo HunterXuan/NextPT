@@ -3,6 +3,7 @@ package forum
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/forumin"
@@ -229,7 +230,7 @@ func (s *sForumReplyUsecase) RewardReply(ctx context.Context, actor *model.Actor
 	if reply.UserId == actor.Id {
 		return gerror.New(gi18n.T(ctx, "forum.reply.reward_self_not_allowed"))
 	}
-	err = service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, reply.UserId, in.Amount, "forum_reply", in.Id, "Reward reply", "Reply rewarded")
+	err = service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, reply.UserId, in.Amount, consts.EconomyBonusTargetTypeForumReply, in.Id, "Reward reply", "Reply rewarded")
 	return err
 }
 

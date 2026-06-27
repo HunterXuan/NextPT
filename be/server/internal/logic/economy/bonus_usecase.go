@@ -107,7 +107,7 @@ func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, to
 				UserId:       fromUserId,
 				Amount:       -amount,
 				BalanceAfter: newSenderBonus,
-				Action:       "transfer_sent",
+				Action:       consts.EconomyBonusActionTransferSent,
 				TargetType:   targetType,
 				TargetId:     targetId,
 				Remark:       remarkFrom,
@@ -116,7 +116,7 @@ func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, to
 				UserId:       toUserId,
 				Amount:       amount,
 				BalanceAfter: newReceiverBonus,
-				Action:       "transfer_received",
+				Action:       consts.EconomyBonusActionTransferReceived,
 				TargetType:   targetType,
 				TargetId:     targetId,
 				Remark:       remarkTo,
@@ -243,7 +243,7 @@ func (s *sEconomyBonusUsecase) DistributeBonusPoints(ctx context.Context) error 
 		for userId, userPeers := range userPeersMap {
 			totalBonus := service.EconomyBonusDomain().CalculateBonusForPeers(userPeers, torrentMap, config, now)
 
-			err := s.AddBonus(ctx, userId, totalBonus, "bonus", "", 0, "System hourly seeding bonus distribution", period)
+			err := s.AddBonus(ctx, userId, totalBonus, consts.EconomyBonusActionSeedBonus, "", 0, "System hourly seeding bonus distribution", period)
 			if err != nil {
 				if strings.Contains(err.Error(), "1062") {
 					glog.Warningf(ctx, "[Cron] Bonus already distributed for user %d at period %s, skipping", userId, period)

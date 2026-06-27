@@ -395,7 +395,7 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 		// 调用 Economy Bonus 域的 TransferBonus 方法
 		remarkFrom := fmt.Sprintf("Reward torrent #%d", in.Id)
 		remarkTo := fmt.Sprintf("Received reward for torrent #%d", in.Id)
-		err = service.EconomyBonusUsecase().TransferBonus(ctx, userId, torrent.OwnerId, in.Amount, "torrent", in.Id, remarkFrom, remarkTo)
+		err = service.EconomyBonusUsecase().TransferBonus(ctx, userId, torrent.OwnerId, in.Amount, consts.EconomyBonusTargetTypeTorrent, in.Id, remarkFrom, remarkTo)
 		if err != nil {
 			return err
 		}

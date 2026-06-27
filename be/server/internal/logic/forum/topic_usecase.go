@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/forumin"
@@ -231,7 +232,7 @@ func (s *sForumTopicUsecase) RewardTopic(ctx context.Context, actor *model.Actor
 	if topic.UserId == actor.Id {
 		return gerror.New(gi18n.T(ctx, "forum.topic.reward_self_not_allowed"))
 	}
-	err = service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, "forum_topic", in.Id, "Reward topic", "Topic rewarded")
+	err = service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, consts.EconomyBonusTargetTypeForumTopic, in.Id, "Reward topic", "Topic rewarded")
 	return err
 }
 
