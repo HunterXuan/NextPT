@@ -1,0 +1,1091 @@
+{
+  "common": {
+    "brand": "NextPT",
+    "cancel": "取消",
+    "copy": "複製",
+    "next": "下一頁",
+    "previous": "上一頁",
+    "refresh": "重新整理",
+    "retry": "重試",
+    "save": "儲存",
+    "requestFailed": "請求失敗，請稍後再試",
+    "switchLanguage": "切換語言"
+  },
+  "nav": {
+    "home": "首頁",
+    "catalog": "資源庫",
+    "forum": "論壇",
+    "uploadTorrent": "發布種子",
+    "subtitles": "字幕",
+    "bookmarks": "我的收藏",
+    "user": "使用者中心",
+    "admin": "管理後台"
+  },
+  "footer": {
+    "tagline": "面向私有資源社群的 tracker 與協作系統。"
+  },
+  "home": {
+    "metaTitle": "首頁",
+    "metaDescription": "NextPT 私有資源社群前端。",
+    "eyebrow": "私有 Tracker 社群",
+    "title": "NextPT",
+    "description": "圍繞種子發布、Tracker 統計、論壇討論和使用者權限構建的私有資源社群。",
+    "openCenter": "進入使用者中心",
+    "stats": {
+      "tracker": "Tracker",
+      "ratio": "分享率",
+      "community": "社群"
+    },
+    "panel": {
+      "title": "站點工作台",
+      "subtitle": "首批頁面先覆蓋帳號和個人資料流程",
+      "badge": "開發中"
+    },
+    "modules": {
+      "catalog": {
+        "title": "資源庫",
+        "description": "後續接入種子列表、詳情、上傳、下載和收藏等核心流程。",
+        "meta": "Catalog"
+      },
+      "tracker": {
+        "title": "Tracker",
+        "description": "已具備 announce、download、passkey 和權限校驗基礎。",
+        "meta": "Live"
+      },
+      "forum": {
+        "title": "論壇",
+        "description": "站點公告、綜合討論和資源交流會逐步接入前端。",
+        "meta": "Forum"
+      }
+    },
+    "workflow": {
+      "profile": {
+        "title": "帳號資料",
+        "description": "註冊、登入、資料修改和改密碼先完成，便於後續頁面共享身份狀態。"
+      },
+      "passkey": {
+        "title": "Tracker 憑證",
+        "description": "使用者中心展示 passkey，後續種子下載和客戶端配置會繼續圍繞它展開。"
+      },
+      "next": {
+        "title": "下一階段",
+        "description": "帳號流程穩定後，可以繼續推進種子列表、詳情頁、論壇和管理後台。"
+      }
+    }
+  },
+  "auth": {
+    "logout": "登出",
+    "fields": {
+      "username": "使用者名稱",
+      "email": "信箱",
+      "password": "密碼",
+      "inviteHash": "邀請碼"
+    },
+    "login": {
+      "action": "登入",
+      "title": "登入",
+      "subtitle": "使用站點帳號進入 NextPT。",
+      "heroTitle": "回到你的 PT 帳號",
+      "heroDescription": "登入後可以查看個人流量、分享率、魔力值、passkey，並繼續使用後續接入的種子和論壇功能。",
+      "submit": "登入",
+      "success": "登入成功",
+      "noAccount": "還沒有帳號？",
+      "highlights": {
+        "identity": {
+          "title": "統一身份",
+          "description": "Web 頁面、Tracker 和權限系統共用同一套使用者身份。"
+        },
+        "tracker": {
+          "title": "Tracker 權限",
+          "description": "下載權限會直接影響 announce 與種子下載。"
+        }
+      }
+    },
+    "register": {
+      "action": "註冊",
+      "title": "註冊",
+      "subtitle": "建立 NextPT 帳號。",
+      "heroTitle": "從帳號開始進入社群",
+      "heroDescription": "目前階段先完成帳號和使用者中心。資源庫、論壇和管理後台會沿用同一套登入態繼續開發。",
+      "submit": "建立帳號",
+      "success": "註冊成功",
+      "hasAccount": "已經有帳號？",
+      "policies": {
+        "identity": {
+          "title": "帳號資料",
+          "description": "使用者名稱、信箱和密碼會用於站點登入。"
+        },
+        "ratio": {
+          "title": "分享率",
+          "description": "後續下載和做種統計會沉澱到個人資料。"
+        },
+        "community": {
+          "title": "社群交流",
+          "description": "論壇權限會跟隨使用者角色和管理操作變化。"
+        },
+        "security": {
+          "title": "安全憑證",
+          "description": "註冊後系統會生成用於 Tracker 的 passkey。"
+        }
+      }
+    }
+  },
+  "catalog": {
+    "torrents": {
+      "metaTitle": "種子",
+      "eyebrow": "資源庫 / 種子",
+      "title": "種子",
+      "anonymous": "匿名發布",
+      "anonymousOwner": "匿名（{name}）",
+      "unknownCategory": "未分類",
+      "fileCount": "{count} 個檔案",
+      "search": {
+        "placeholder": "搜尋種子標題或副標題",
+        "submit": "搜尋",
+        "advanced": "進階搜尋"
+      },
+      "summary": {
+        "total": "種子",
+        "categories": "分類"
+      },
+      "filters": {
+        "category": "分類",
+        "allCategories": "全部分類",
+        "clearCategories": "清除分類",
+        "noCategories": "暫無可選分類"
+      },
+      "types": {
+        "single": "單檔案",
+        "multi": "多檔案"
+      },
+      "table": {
+        "torrent": "種子",
+        "size": "大小",
+        "activity": "活躍",
+        "completed": "完成",
+        "createdAt": "發布時間"
+      },
+      "empty": {
+        "title": "暫無種子",
+        "description": "目前篩選條件下還沒有可顯示的種子。"
+      },
+      "pagination": {
+        "summary": "第 {page} / {pages} 頁",
+        "pageSize": "每頁"
+      },
+      "detail": {
+        "metaTitle": "種子詳情",
+        "back": "返回種子列表",
+        "titleFallback": "種子 #{id}",
+        "invalidId": "無效的種子 ID",
+        "actions": {
+          "title": "種子操作",
+          "download": "下載種子",
+          "like": "感謝",
+          "liked": "已感謝",
+          "bookmark": "收藏",
+        "bookmarked": "已收藏",
+        "edit": "編輯種子",
+        "report": "檢舉",
+        "adminDelete": "刪除種子",
+        "confirmAdminDelete": "確認刪除種子「{name}」？",
+        "adminDeleted": "種子已刪除"
+      },
+        "stats": {
+          "seeders": "做種",
+          "leechers": "下載",
+          "completed": "完成",
+          "size": "大小"
+        },
+        "description": {
+          "title": "詳情描述",
+          "empty": "暫無詳情描述"
+        },
+        "files": {
+          "title": "檔案列表",
+          "root": "全部檔案",
+          "empty": "暫無檔案資訊",
+          "expandAll": "展開全部",
+          "collapseAll": "收起全部"
+        },
+        "peers": {
+          "title": "線上狀態",
+          "seedersTitle": "目前做種",
+          "leechersTitle": "目前下載",
+          "completedTitle": "完成記錄",
+          "summary": "{seeders} 做種 / {leechers} 下載",
+          "completedSummary": "累計完成 {count} 次",
+          "completedUnavailable": "目前僅顯示完成總數，完成使用者列表暫未開放。",
+          "empty": "暫無線上 Peer",
+          "seeder": "做種",
+          "leecher": "下載",
+          "uploaded": "上傳",
+          "downloaded": "下載"
+        },
+        "subtitles": {
+          "title": "字幕",
+          "summary": "{count} 條字幕",
+          "choose": "選擇字幕檔案",
+          "upload": "上傳字幕",
+          "uploaded": "字幕已上傳",
+          "download": "下載",
+          "empty": "暫無字幕"
+        },
+        "comments": {
+          "title": "評論",
+          "summary": "{count} 條評論",
+          "placeholder": "寫下你的評論",
+          "submit": "發表評論",
+          "created": "評論已發布",
+          "empty": "暫無評論",
+          "reward": "讚賞 {count}"
+        },
+        "reward": {
+          "title": "讚賞種子",
+          "summary": "{count} 條讚賞記錄",
+          "amount": "金額",
+          "submit": "讚賞",
+          "success": "讚賞成功",
+          "empty": "暫無讚賞記錄"
+        },
+        "report": {
+          "reason": "填寫檢舉原因",
+          "submit": "提交檢舉",
+          "success": "檢舉已提交"
+        },
+        "info": {
+          "title": "種子資訊",
+          "category": "分類",
+          "publisher": "發布者",
+          "publishedAt": "發布時間",
+          "type": "類型",
+          "fileCount": "檔案數",
+          "torrentId": "種子 ID"
+        }
+      },
+      "upload": {
+        "metaTitle": "發布種子",
+        "title": "發布種子",
+        "action": "發布種子",
+        "back": "返回種子列表",
+        "submit": "發布",
+        "success": "種子 #{id} 已發布",
+        "sections": {
+          "file": "種子檔案",
+          "info": "基本資訊",
+          "publish": "發布"
+        },
+        "file": {
+          "choose": "選擇 .torrent 檔案",
+          "invalid": "請選擇 .torrent 檔案"
+        },
+        "fields": {
+          "category": "分類",
+          "categoryPlaceholder": "選擇分類",
+          "name": "標題",
+          "subTitle": "副標題",
+          "description": "詳情描述",
+          "anonymous": "匿名發布"
+        },
+        "summary": {
+          "file": "檔案",
+          "category": "分類"
+        }
+      },
+      "edit": {
+        "metaTitle": "編輯種子",
+        "title": "編輯種子",
+        "back": "返回種子詳情",
+        "submit": "儲存修改",
+        "saved": "種子已更新",
+        "forbidden": "你沒有權限編輯這個種子",
+        "sections": {
+          "info": "基本資訊",
+          "publish": "發布設定"
+        },
+        "summary": {
+          "torrentId": "種子 ID",
+          "category": "分類"
+        }
+      }
+    },
+    "bookmarks": {
+      "metaTitle": "收藏種子",
+      "title": "收藏種子",
+      "pageSummary": "第 {page} / {pages} 頁",
+      "empty": {
+        "title": "暫無收藏種子",
+        "description": "你收藏的種子會顯示在這裡。"
+      }
+    },
+    "subtitles": {
+      "metaTitle": "字幕",
+      "eyebrow": "資源庫 / 字幕",
+      "title": "字幕",
+      "summary": {
+        "total": "字幕"
+      },
+      "table": {
+        "file": "字幕檔案",
+        "torrent": "種子",
+        "uploader": "上傳者",
+        "size": "大小",
+        "createdAt": "上傳時間",
+        "actions": "操作"
+      },
+      "actions": {
+        "download": "下載",
+        "report": "檢舉"
+      },
+      "empty": {
+        "title": "暫無字幕",
+        "description": "使用者上傳的字幕會顯示在這裡。"
+      },
+      "pagination": {
+        "summary": "第 {page} / {pages} 頁",
+        "pageSize": "每頁"
+      },
+      "report": {
+        "reason": "填寫檢舉原因",
+        "submit": "提交檢舉",
+        "success": "檢舉已提交"
+      }
+    }
+  },
+  "forum": {
+    "metaTitle": "論壇",
+    "eyebrow": "社群 / 論壇",
+    "title": "論壇",
+    "summary": {
+      "nodes": "節點",
+      "topics": "主題"
+    },
+    "fields": {
+      "topics": "主題",
+      "replies": "回覆"
+    },
+    "nodeStats": {
+      "topics": "{count} 主題",
+      "replies": "{count} 回覆"
+    },
+    "sidebar": {
+      "title": "論壇工具",
+      "bookmarks": "主題收藏",
+      "quickNodes": "常用節點"
+    },
+    "fallback": {
+      "category": "分區",
+      "node": "節點"
+    },
+    "actions": {
+      "createTopic": "發布主題"
+    },
+    "empty": {
+      "title": "暫無論壇節點",
+      "description": "目前帳號還沒有可訪問的論壇節點。",
+      "nodes": "該分區暫無節點"
+    },
+    "pagination": {
+      "summary": "第 {page} / {pages} 頁",
+      "pageSize": "每頁"
+    },
+    "topicList": {
+      "back": "返回論壇",
+      "byline": "{user} 發布於 {time}",
+      "nodeStats": "節點統計",
+      "meta": {
+        "created": "發布",
+        "lastReply": "最後回覆",
+        "views": "{count} 瀏覽"
+      },
+      "table": {
+        "topic": "主題",
+        "replies": "回覆",
+        "views": "瀏覽",
+        "lastReply": "最後回覆"
+      },
+      "badges": {
+        "sticky": "置頂",
+        "locked": "鎖定"
+      },
+      "empty": {
+        "title": "暫無主題",
+        "description": "這個節點還沒有主題。"
+      }
+    },
+    "bookmarks": {
+      "metaTitle": "主題收藏",
+      "title": "主題收藏",
+      "empty": {
+        "title": "暫無收藏主題",
+        "description": "你收藏的論壇主題會顯示在這裡。"
+      }
+    },
+    "create": {
+      "metaTitle": "發布主題",
+      "title": "發布主題",
+      "back": "返回論壇",
+      "submit": "發布",
+      "success": "主題 #{id} 已發布",
+      "sections": {
+        "topic": "主題內容",
+        "publish": "發布"
+      },
+      "fields": {
+        "node": "節點",
+        "nodePlaceholder": "選擇節點",
+        "subject": "標題",
+        "content": "正文"
+      },
+      "placeholders": {
+        "subject": "寫一個清楚的主題標題",
+        "content": "寫下你想討論的內容"
+      },
+      "summary": {
+        "node": "節點",
+        "subjectLength": "標題長度"
+      }
+    },
+    "detail": {
+      "metaTitle": "主題詳情",
+      "back": "返回論壇",
+      "titleFallback": "主題 #{id}",
+      "invalidId": "無效的主題 ID",
+      "topicId": "主題 #{id}",
+      "actions": {
+        "title": "主題操作",
+        "like": "點讚",
+        "liked": "已點讚",
+        "bookmark": "收藏",
+        "bookmarked": "已收藏",
+        "append": "追加附言",
+        "reward": "打賞",
+        "report": "檢舉"
+      },
+      "admin": {
+        "title": "管理操作",
+        "lock": "鎖定主題",
+        "unlock": "解鎖主題",
+        "pin": "置頂主題",
+        "unpin": "取消置頂",
+        "moveTo": "移動到板塊",
+        "move": "移動主題",
+        "saved": "主題已更新"
+      },
+      "append": {
+        "index": "附言 #{index}",
+        "placeholder": "追加一段附言",
+        "submit": "追加",
+        "success": "附言已追加"
+      },
+      "replies": {
+        "title": "回覆",
+        "summary": "{count} 條回覆",
+        "empty": "暫無回覆",
+        "floor": "#{floor} 樓"
+      },
+      "reward": {
+        "amount": "金額",
+        "submit": "打賞",
+        "success": "打賞成功"
+      },
+      "report": {
+        "reason": "填寫檢舉原因",
+        "submit": "提交檢舉",
+        "success": "檢舉已提交"
+      },
+      "replyForm": {
+        "title": "發表回覆",
+        "placeholder": "寫下你的回覆",
+        "submit": "回覆",
+        "success": "回覆已發布"
+      },
+      "info": {
+        "title": "主題資訊",
+        "author": "作者",
+        "createdAt": "發布時間",
+        "views": "瀏覽",
+        "replies": "回覆"
+      }
+    }
+  },
+  "admin": {
+    "eyebrow": "管理後台",
+    "title": "管理後台",
+    "comingSoon": "待開發",
+    "pageSize": "每頁",
+    "pagination": {
+      "summary": "第 {page} / {pages} 頁"
+    },
+    "nav": {
+      "overview": "總覽",
+      "catalog": "資源庫",
+      "forum": "論壇",
+      "iam": "使用者權限",
+      "moderation": "審核風控",
+      "site": "站點",
+      "system": "系統"
+    },
+    "dashboard": {
+      "title": "後台總覽",
+      "stats": {
+        "users": "使用者總數",
+        "reports": "待處理檢舉",
+        "cheaters": "待處理作弊",
+        "crons": "排程任務"
+      }
+    },
+    "actions": {
+      "new": "新增",
+      "edit": "編輯",
+      "delete": "刪除",
+      "reset": "重置"
+    },
+    "status": {
+      "enabled": "啟用",
+      "disabled": "停用"
+    },
+    "catalog": {
+      "eyebrow": "管理後台 / 資源庫",
+      "title": "資源庫管理",
+      "categories": {
+        "title": "種子分類",
+        "list": "分類列表",
+        "empty": "暫無分類",
+        "saved": "分類已儲存",
+        "deleted": "分類已刪除",
+        "confirmDelete": "確認刪除分類「{name}」？",
+        "stats": {
+          "total": "全部",
+          "enabled": "啟用",
+          "disabled": "停用"
+        },
+        "table": {
+          "name": "名稱",
+          "slug": "標識",
+          "sort": "排序",
+          "status": "狀態",
+          "actions": "操作"
+        },
+        "form": {
+          "create": "新增分類",
+          "edit": "編輯分類",
+          "nameZhCN": "簡體中文名稱",
+          "nameZhTW": "繁體中文名稱",
+          "nameEnUS": "英文名稱",
+          "slug": "標識",
+          "sortOrder": "排序",
+          "enabled": "啟用"
+        }
+      }
+    },
+    "forum": {
+      "eyebrow": "管理後台 / 論壇",
+      "title": "論壇管理",
+      "entryDescription": "管理論壇分類與板塊",
+      "categories": {
+        "title": "論壇分類",
+        "list": "分類列表",
+        "empty": "暫無論壇分類",
+        "saved": "論壇分類已儲存",
+        "deleted": "論壇分類已刪除",
+        "confirmDelete": "確認刪除論壇分類「{name}」？",
+        "table": {
+          "name": "名稱",
+          "description": "描述",
+          "sort": "排序",
+          "minRoleView": "可見等級",
+          "actions": "操作"
+        },
+        "form": {
+          "create": "新增分類",
+          "edit": "編輯分類",
+          "nameZhCN": "簡體中文名稱",
+          "nameZhTW": "繁體中文名稱",
+          "nameEnUS": "英文名稱",
+          "descZhCN": "簡體中文描述",
+          "descZhTW": "繁體中文描述",
+          "descEnUS": "英文描述",
+          "sortOrder": "排序",
+          "minRoleView": "最低可見等級"
+        }
+      },
+      "nodes": {
+        "title": "論壇板塊",
+        "list": "板塊列表",
+        "empty": "暫無論壇板塊",
+        "saved": "論壇板塊已儲存",
+        "deleted": "論壇板塊已刪除",
+        "confirmDelete": "確認刪除論壇板塊「{name}」？",
+        "table": {
+          "name": "名稱",
+          "category": "分類",
+          "slug": "標識",
+          "permissions": "讀/寫/發",
+          "counts": "主題/回覆",
+          "actions": "操作"
+        },
+        "form": {
+          "create": "新增板塊",
+          "edit": "編輯板塊",
+          "category": "所屬分類",
+          "selectCategory": "選擇分類",
+          "slug": "標識",
+          "nameZhCN": "簡體中文名稱",
+          "nameZhTW": "繁體中文名稱",
+          "nameEnUS": "英文名稱",
+          "descZhCN": "簡體中文描述",
+          "descZhTW": "繁體中文描述",
+          "descEnUS": "英文描述",
+          "sortOrder": "排序",
+          "minRoleRead": "閱讀等級",
+          "minRoleWrite": "回覆等級",
+          "minRoleCreate": "發文等級",
+          "moderators": "版主使用者 ID"
+        }
+      }
+    },
+    "iam": {
+      "eyebrow": "管理後台 / 權限",
+      "title": "權限與使用者",
+      "entryDescription": "管理使用者、角色和權限",
+      "users": {
+        "title": "使用者管理",
+        "searchPlaceholder": "搜尋使用者名稱或信箱",
+        "search": "搜尋",
+        "list": "使用者列表",
+        "empty": "暫無使用者",
+        "pageSize": "每頁",
+        "pageSummary": "第 {page} / {pages} 頁",
+        "stats": {
+          "total": "全部",
+          "current": "目前頁"
+        },
+        "table": {
+          "user": "使用者",
+          "role": "角色",
+          "status": "狀態",
+          "lastLogin": "最後登入",
+          "createdAt": "註冊時間",
+          "actions": "操作"
+        },
+        "orders": {
+          "newest": "最新註冊",
+          "oldest": "最早註冊",
+          "lastLogin": "最近登入",
+          "roleDesc": "角色等級"
+        },
+        "status": {
+          "pending": "待確認",
+          "confirmed": "正常",
+          "disabled": "停用"
+        },
+        "form": {
+          "empty": "選擇使用者",
+          "status": "狀態",
+          "role": "角色",
+          "passkey": "Passkey",
+          "passkeyRequired": "Passkey 不可為空",
+          "noChanges": "沒有需要儲存的改動",
+          "saved": "使用者已更新",
+          "kick": "踢下線",
+          "confirmKick": "確認踢下線「{name}」？",
+          "kicked": "使用者會話已清理"
+        },
+        "ban": {
+          "title": "封禁",
+          "reason": "原因",
+          "durationDays": "天數",
+          "submit": "封禁使用者",
+          "success": "封禁已生效"
+        },
+        "mod": {
+          "title": "使用者限制",
+          "activeSummary": "目前生效 {count} 條",
+          "type": "限制類型",
+          "reason": "原因",
+          "durationDays": "天數",
+          "permanentHint": "0 表示永久",
+          "permanent": "永久",
+          "expireAt": "到期",
+          "submit": "新增限制",
+          "applied": "限制已生效",
+          "remove": "解除",
+          "removed": "限制已解除",
+          "confirmRemove": "確認解除「{type}」限制？",
+          "empty": "暫無限制記錄",
+          "status": {
+            "active": "生效中",
+            "inactive": "已結束"
+          },
+          "types": {
+            "warned": "警告",
+            "banned": "封禁",
+            "leechWarned": "吸血警告",
+            "uploadBanned": "禁上傳",
+            "downloadBanned": "禁下載",
+            "forumBanned": "禁論壇"
+          }
+        },
+      "permission": {
+        "title": "手動權限",
+        "key": "權限",
+        "deny": "作為拒絕權限",
+        "grant": "新增",
+        "revoke": "撤銷",
+        "granted": "權限已新增",
+        "revoked": "權限已撤銷"
+      },
+      "stat": {
+        "title": "使用者統計",
+        "uploaded": "上傳量",
+        "downloaded": "下載量",
+        "seedTime": "做種時間",
+        "bonus": "魔力值",
+        "uploadedDiff": "上傳增量",
+        "downloadedDiff": "下載增量",
+        "bonusDiff": "魔力增量",
+        "submit": "調整統計",
+        "saved": "統計已更新"
+      }
+    },
+      "roles": {
+        "title": "角色管理",
+        "list": "角色列表",
+        "empty": "暫無角色",
+        "saved": "角色已儲存",
+        "deleted": "角色已刪除",
+        "confirmDelete": "確認刪除角色「{name}」？",
+        "stats": {
+          "total": "全部",
+          "staff": "管理組"
+        },
+        "table": {
+          "name": "名稱",
+          "level": "等級",
+          "staff": "管理組",
+          "permissions": "權限數",
+          "updatedAt": "更新時間",
+          "actions": "操作"
+        },
+        "staff": {
+          "yes": "是",
+          "no": "否"
+        },
+        "form": {
+          "create": "新增角色",
+          "edit": "編輯角色",
+          "nameZhCN": "簡體中文名稱",
+          "nameZhTW": "繁體中文名稱",
+          "nameEnUS": "英文名稱",
+          "level": "等級",
+          "isStaff": "管理組",
+          "permissions": "權限",
+          "noPermissions": "暫無可選權限",
+          "customPermission": "自訂權限",
+          "addPermission": "新增",
+        "rules": "規則 JSON",
+        "rulesInvalid": "規則必須是 JSON 物件"
+      }
+    },
+    "invites": {
+      "title": "邀請名額",
+      "form": {
+        "title": "發放邀請名額",
+        "amount": "數量",
+        "isTemp": "臨時邀請",
+        "expireAt": "過期時間",
+        "submit": "發放",
+        "success": "邀請名額已發放"
+      }
+    }
+  },
+    "site": {
+      "eyebrow": "管理後台 / 站點",
+      "title": "站點管理",
+      "entryDescription": "管理站點配置和系統參數",
+      "configs": {
+        "title": "站點配置",
+        "list": "配置列表",
+        "empty": "暫無配置",
+        "saved": "配置已儲存",
+        "noChanges": "沒有需要儲存的改動",
+        "groups": {
+          "tracker": "Tracker",
+          "iam": "使用者",
+          "catalog": "資源庫"
+        },
+        "stats": {
+          "group": "目前分組",
+          "total": "配置項"
+        },
+        "table": {
+          "key": "配置項",
+          "value": "目前值",
+          "description": "說明",
+          "updatedAt": "更新時間",
+          "actions": "操作"
+        },
+        "form": {
+          "empty": "選擇配置項",
+          "group": "分組",
+          "key": "配置項",
+          "type": "類型",
+          "value": "配置值",
+          "booleanValue": "啟用",
+          "intInvalid": "請輸入整數",
+          "numberInvalid": "請輸入有效數字",
+          "jsonInvalid": "JSON 格式不正確"
+        },
+        "types": {
+          "string": "文字",
+          "int": "整數",
+          "float": "小數",
+          "number": "數字",
+          "boolean": "布林值",
+          "json": "JSON"
+        },
+        "boolean": {
+          "true": "是",
+          "false": "否"
+        }
+      },
+      "audits": {
+      "title": "稽核日誌",
+      "entryDescription": "查看後台關鍵操作記錄",
+      "list": "日誌列表",
+      "empty": "暫無稽核日誌",
+      "total": "共 {total} 筆記錄",
+      "table": {
+        "user": "使用者",
+        "action": "操作",
+        "target": "目標",
+        "detail": "詳情",
+        "level": "級別",
+        "time": "時間"
+      },
+      "level": {
+        "normal": "普通",
+        "mod": "審核",
+        "admin": "管理"
+      }
+      }
+    },
+    "mod": {
+    "eyebrow": "管理後台 / 審核風控",
+    "title": "審核風控",
+    "entryDescription": "處理檢舉和異常客戶端行為",
+    "actions": {
+      "filter": "篩選",
+      "resolve": "處理",
+      "submitResolve": "提交處理"
+    },
+    "stats": {
+      "total": "記錄數"
+    },
+    "table": {
+      "target": "目標",
+      "reason": "原因",
+      "status": "狀態",
+      "createdAt": "建立時間",
+      "actions": "操作"
+    },
+    "status": {
+      "all": "全部",
+      "pending": "待處理",
+      "accepted": "有效",
+      "rejected": "無效",
+      "resolved": "已處理"
+    },
+    "targetTypes": {
+      "all": "全部類型",
+      "torrent": "種子",
+      "comment": "評論",
+      "subtitle": "字幕",
+      "forumTopic": "論壇主題",
+      "forumReply": "論壇回覆"
+    },
+    "form": {
+      "result": "處理結果",
+      "comment": "處理備註"
+    },
+    "reports": {
+      "title": "檢舉處理",
+      "list": "檢舉列表",
+      "empty": "暫無檢舉",
+      "select": "選擇一筆檢舉",
+      "resolveTitle": "處理檢舉 #{id}",
+      "reporter": "檢舉人 #{id}",
+      "resolved": "檢舉已處理"
+    },
+    "cheaters": {
+      "title": "作弊記錄",
+      "list": "作弊記錄",
+      "empty": "暫無作弊記錄",
+      "select": "選擇一筆記錄",
+      "resolveTitle": "處理記錄 #{id}",
+      "resolved": "作弊記錄已處理",
+      "userId": "使用者 #{id}",
+      "torrentId": "種子 #{id}",
+      "uploaded": "上傳 {value}",
+      "downloaded": "下載 {value}",
+      "announceTime": "間隔 {value}s",
+      "swarm": "做種 {seeders} / 下載 {leechers} / 命中 {hits}",
+      "table": {
+        "user": "使用者/種子",
+        "traffic": "流量",
+        "swarm": "集群"
+      }
+    }
+  },
+    "sys": {
+    "eyebrow": "管理後台 / 系統",
+    "entryDescription": "查看排程任務和執行日誌",
+    "crons": {
+      "title": "排程任務",
+      "list": "任務列表",
+      "empty": "暫無排程任務",
+      "select": "選擇一個任務",
+      "logsTitle": "任務日誌",
+      "logsEmpty": "暫無任務日誌",
+      "logsTotal": "共 {total} 筆日誌",
+      "status": {
+        "runnable": "可執行",
+        "running": "執行中",
+        "stopped": "已停止",
+        "closed": "已關閉"
+      },
+      "logStatus": {
+        "running": "執行中",
+        "success": "成功",
+        "failed": "失敗"
+      },
+      "table": {
+        "status": "狀態",
+        "duration": "耗時",
+        "node": "節點",
+        "error": "錯誤",
+        "time": "時間"
+      }
+    }
+    }
+  },
+  "user": {
+    "metaTitle": "使用者中心",
+    "fallbackName": "使用者",
+    "eyebrow": "使用者中心",
+    "staff": "Staff",
+    "member": "Member",
+    "status": {
+      "normal": "正常"
+    },
+    "fields": {
+      "id": "使用者 ID",
+      "role": "角色",
+      "createdAt": "註冊時間"
+    },
+    "stats": {
+      "uploaded": "總上傳",
+      "downloaded": "總下載",
+      "ratio": "分享率",
+      "bonus": "魔力值"
+    },
+    "duration": {
+      "seconds": "{count} 秒",
+      "minutes": "{count} 分鐘",
+      "hours": "{count} 小時",
+      "days": "{count} 天"
+    },
+    "trafficHistory": {
+      "title": "流量趨勢",
+      "subtitle": "按天或按月查看上傳、下載和活躍時長。",
+      "empty": "暫無統計資料",
+      "uploaded": "上傳",
+      "downloaded": "下載",
+      "seedTime": "做種時長",
+      "leechTime": "下載時長",
+      "activeTime": "活躍時長",
+      "bonus": "魔力值",
+      "periods": {
+        "daily": "按天",
+        "monthly": "按月"
+      },
+      "modes": {
+        "traffic": "流量",
+        "time": "時長",
+        "bonus": "魔力值"
+      }
+    },
+    "bonusLogs": {
+      "title": "魔力值流水",
+      "summary": "共 {total} 條記錄，預計時產 {hourly}",
+      "hourly": "預計時產",
+      "balance": "目前餘額",
+      "empty": "暫無魔力值流水",
+      "after": "餘額 {balance}",
+      "pageSummary": "第 {page} / {pages} 頁",
+      "actions": {
+        "transfer_sent": "支出轉帳",
+        "transfer_received": "收到轉帳",
+        "seed_bonus": "做種獎勵",
+        "forum_topic": "論壇主題",
+        "forum_reply": "論壇回覆"
+      }
+    },
+    "invites": {
+      "title": "邀請碼",
+      "summary": "{available} 個可發送 / 共 {total} 個",
+      "email": "受邀信箱",
+      "code": "邀請碼",
+      "selectCode": "選擇邀請碼",
+      "send": "發送邀請",
+      "sent": "邀請已發送",
+      "empty": "暫無邀請碼",
+      "status": {
+        "0": "未發送",
+        "1": "已發送",
+        "2": "已使用",
+        "3": "已過期",
+        "4": "已回收"
+      }
+    },
+    "snatches": {
+      "title": "下載與做種歷史",
+      "summary": "共 {total} 條記錄",
+      "empty": "暫無下載或做種記錄",
+      "finished": "已完成",
+      "unfinished": "未完成",
+      "uploaded": "上傳",
+      "downloaded": "下載",
+      "seedTime": "做種時長",
+      "leechTime": "下載時長",
+      "lastAction": "最後活動",
+      "pageSummary": "第 {page} / {pages} 頁",
+      "filters": {
+        "all": "全部",
+        "finished": "已完成",
+        "unfinished": "未完成"
+      }
+    },
+    "passkey": {
+      "title": "Passkey",
+      "copied": "Passkey 已複製"
+    },
+    "profile": {
+      "title": "個人資料",
+      "subtitle": "更新頭像、簽名和個人介紹。",
+      "avatar": "頭像 URL",
+      "signature": "簽名",
+      "info": "個人介紹",
+      "saved": "資料已更新"
+    },
+    "security": {
+      "title": "帳號安全",
+      "subtitle": "修改密碼後需要重新登入。",
+      "oldPassword": "目前密碼",
+      "newPassword": "新密碼",
+      "submit": "修改密碼",
+      "changed": "密碼已修改，請重新登入"
+    }
+  }
+}

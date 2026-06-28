@@ -1,0 +1,1091 @@
+{
+  "common": {
+    "brand": "NextPT",
+    "cancel": "Cancel",
+    "copy": "Copy",
+    "next": "Next",
+    "previous": "Previous",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "save": "Save",
+    "requestFailed": "Request failed. Please try again later.",
+    "switchLanguage": "Switch language"
+  },
+  "nav": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "forum": "Forum",
+    "uploadTorrent": "Upload torrent",
+    "subtitles": "Subtitles",
+    "bookmarks": "My Bookmarks",
+    "user": "User Center",
+    "admin": "Admin"
+  },
+  "footer": {
+    "tagline": "Tracker and collaboration system for a private resource community."
+  },
+  "home": {
+    "metaTitle": "Home",
+    "metaDescription": "NextPT private tracker frontend.",
+    "eyebrow": "Private tracker community",
+    "title": "NextPT",
+    "description": "A private resource community built around torrent publishing, tracker accounting, forum discussion, and user permissions.",
+    "openCenter": "Open user center",
+    "stats": {
+      "tracker": "Tracker",
+      "ratio": "Ratio",
+      "community": "Community"
+    },
+    "panel": {
+      "title": "Site workspace",
+      "subtitle": "The first screens cover account and profile flows",
+      "badge": "In development"
+    },
+    "modules": {
+      "catalog": {
+        "title": "Catalog",
+        "description": "Torrent lists, detail pages, upload, download, and bookmarks will be connected next.",
+        "meta": "Catalog"
+      },
+      "tracker": {
+        "title": "Tracker",
+        "description": "Announce, download, passkey, and permission checks already have backend foundations.",
+        "meta": "Live"
+      },
+      "forum": {
+        "title": "Forum",
+        "description": "Announcements, general discussion, and resource conversations will be wired into the frontend.",
+        "meta": "Forum"
+      }
+    },
+    "workflow": {
+      "profile": {
+        "title": "Account profile",
+        "description": "Registration, login, profile updates, and password changes come first so later pages can share auth state."
+      },
+      "passkey": {
+        "title": "Tracker credential",
+        "description": "The user center exposes the passkey that torrent download and client setup will build on."
+      },
+      "next": {
+        "title": "Next stage",
+        "description": "Once account flows are stable, torrent lists, details, forums, and admin screens can follow."
+      }
+    }
+  },
+  "auth": {
+    "logout": "Log out",
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "inviteHash": "Invite code"
+    },
+    "login": {
+      "action": "Log in",
+      "title": "Log in",
+      "subtitle": "Use your site account to enter NextPT.",
+      "heroTitle": "Return to your PT account",
+      "heroDescription": "After logging in, you can view traffic, ratio, bonus, passkey, and continue into torrent and forum features as they land.",
+      "submit": "Log in",
+      "success": "Logged in",
+      "noAccount": "No account yet?",
+      "highlights": {
+        "identity": {
+          "title": "Unified identity",
+          "description": "Web pages, tracker requests, and permission checks use the same user identity."
+        },
+        "tracker": {
+          "title": "Tracker permissions",
+          "description": "Download permission directly affects announce and torrent download access."
+        }
+      }
+    },
+    "register": {
+      "action": "Register",
+      "title": "Register",
+      "subtitle": "Create a NextPT account.",
+      "heroTitle": "Start with a community account",
+      "heroDescription": "This stage completes account and user center flows first. Catalog, forum, and admin pages will reuse the same session state.",
+      "submit": "Create account",
+      "success": "Account created",
+      "hasAccount": "Already have an account?",
+      "policies": {
+        "identity": {
+          "title": "Account profile",
+          "description": "Username, email, and password are used for site login."
+        },
+        "ratio": {
+          "title": "Share ratio",
+          "description": "Download and seeding activity will accumulate into your personal stats."
+        },
+        "community": {
+          "title": "Community access",
+          "description": "Forum access follows role permissions and moderation actions."
+        },
+        "security": {
+          "title": "Secure credential",
+          "description": "A tracker passkey is generated after registration."
+        }
+      }
+    }
+  },
+  "catalog": {
+    "torrents": {
+      "metaTitle": "Torrents",
+      "eyebrow": "Catalog / Torrents",
+      "title": "Torrents",
+      "anonymous": "Anonymous",
+      "anonymousOwner": "Anonymous ({name})",
+      "unknownCategory": "Uncategorized",
+      "fileCount": "{count} files",
+      "search": {
+        "placeholder": "Search torrent titles or subtitles",
+        "submit": "Search",
+        "advanced": "Advanced"
+      },
+      "summary": {
+        "total": "Torrents",
+        "categories": "Categories"
+      },
+      "filters": {
+        "category": "Category",
+        "allCategories": "All categories",
+        "clearCategories": "Clear categories",
+        "noCategories": "No categories available"
+      },
+      "types": {
+        "single": "Single file",
+        "multi": "Multi-file"
+      },
+      "table": {
+        "torrent": "Torrent",
+        "size": "Size",
+        "activity": "Activity",
+        "completed": "Completed",
+        "createdAt": "Published"
+      },
+      "empty": {
+        "title": "No torrents",
+        "description": "No torrents match the current filters."
+      },
+      "pagination": {
+        "summary": "Page {page} / {pages}",
+        "pageSize": "Per page"
+      },
+      "detail": {
+        "metaTitle": "Torrent Detail",
+        "back": "Back to torrents",
+        "titleFallback": "Torrent #{id}",
+        "invalidId": "Invalid torrent ID",
+        "actions": {
+          "title": "Torrent Actions",
+          "download": "Download torrent",
+          "like": "Thank",
+          "liked": "Thanked",
+          "bookmark": "Bookmark",
+        "bookmarked": "Bookmarked",
+        "edit": "Edit torrent",
+        "report": "Report",
+        "adminDelete": "Delete torrent",
+        "confirmAdminDelete": "Delete torrent \"{name}\"?",
+        "adminDeleted": "Torrent deleted"
+      },
+        "stats": {
+          "seeders": "Seeders",
+          "leechers": "Leechers",
+          "completed": "Completed",
+          "size": "Size"
+        },
+        "description": {
+          "title": "Description",
+          "empty": "No description yet"
+        },
+        "files": {
+          "title": "Files",
+          "root": "All files",
+          "empty": "No file information",
+          "expandAll": "Expand all",
+          "collapseAll": "Collapse all"
+        },
+        "peers": {
+          "title": "Online Peers",
+          "seedersTitle": "Current seeders",
+          "leechersTitle": "Current leechers",
+          "completedTitle": "Completed history",
+          "summary": "{seeders} seeders / {leechers} leechers",
+          "completedSummary": "{count} completions total",
+          "completedUnavailable": "Only the total completion count is shown for now. The completed-user list is not available yet.",
+          "empty": "No online peers",
+          "seeder": "Seeding",
+          "leecher": "Downloading",
+          "uploaded": "Uploaded",
+          "downloaded": "Downloaded"
+        },
+        "subtitles": {
+          "title": "Subtitles",
+          "summary": "{count} subtitles",
+          "choose": "Choose subtitle file",
+          "upload": "Upload subtitle",
+          "uploaded": "Subtitle uploaded",
+          "download": "Download",
+          "empty": "No subtitles yet"
+        },
+        "comments": {
+          "title": "Comments",
+          "summary": "{count} comments",
+          "placeholder": "Write a comment",
+          "submit": "Post comment",
+          "created": "Comment posted",
+          "empty": "No comments yet",
+          "reward": "Reward {count}"
+        },
+        "reward": {
+          "title": "Reward torrent",
+          "summary": "{count} reward records",
+          "amount": "Amount",
+          "submit": "Reward",
+          "success": "Reward sent",
+          "empty": "No rewards yet"
+        },
+        "report": {
+          "reason": "Describe the issue",
+          "submit": "Submit report",
+          "success": "Report submitted"
+        },
+        "info": {
+          "title": "Torrent Info",
+          "category": "Category",
+          "publisher": "Publisher",
+          "publishedAt": "Published",
+          "type": "Type",
+          "fileCount": "Files",
+          "torrentId": "Torrent ID"
+        }
+      },
+      "upload": {
+        "metaTitle": "Upload Torrent",
+        "title": "Upload Torrent",
+        "action": "Upload torrent",
+        "back": "Back to torrents",
+        "submit": "Publish",
+        "success": "Torrent #{id} published",
+        "sections": {
+          "file": "Torrent file",
+          "info": "Basic info",
+          "publish": "Publish"
+        },
+        "file": {
+          "choose": "Choose a .torrent file",
+          "invalid": "Choose a .torrent file"
+        },
+        "fields": {
+          "category": "Category",
+          "categoryPlaceholder": "Choose category",
+          "name": "Title",
+          "subTitle": "Subtitle",
+          "description": "Description",
+          "anonymous": "Anonymous"
+        },
+        "summary": {
+          "file": "File",
+          "category": "Category"
+        }
+      },
+      "edit": {
+        "metaTitle": "Edit Torrent",
+        "title": "Edit Torrent",
+        "back": "Back to torrent",
+        "submit": "Save changes",
+        "saved": "Torrent updated",
+        "forbidden": "You do not have permission to edit this torrent",
+        "sections": {
+          "info": "Basic info",
+          "publish": "Publish settings"
+        },
+        "summary": {
+          "torrentId": "Torrent ID",
+          "category": "Category"
+        }
+      }
+    },
+    "bookmarks": {
+      "metaTitle": "Bookmarked Torrents",
+      "title": "Bookmarked Torrents",
+      "pageSummary": "Page {page} / {pages}",
+      "empty": {
+        "title": "No bookmarked torrents",
+        "description": "Torrents you bookmark will appear here."
+      }
+    },
+    "subtitles": {
+      "metaTitle": "Subtitles",
+      "eyebrow": "Catalog / Subtitles",
+      "title": "Subtitles",
+      "summary": {
+        "total": "Subtitles"
+      },
+      "table": {
+        "file": "Subtitle file",
+        "torrent": "Torrent",
+        "uploader": "Uploader",
+        "size": "Size",
+        "createdAt": "Uploaded",
+        "actions": "Actions"
+      },
+      "actions": {
+        "download": "Download",
+        "report": "Report"
+      },
+      "empty": {
+        "title": "No subtitles",
+        "description": "User-uploaded subtitles will appear here."
+      },
+      "pagination": {
+        "summary": "Page {page} / {pages}",
+        "pageSize": "Per page"
+      },
+      "report": {
+        "reason": "Describe the issue",
+        "submit": "Submit report",
+        "success": "Report submitted"
+      }
+    }
+  },
+  "forum": {
+    "metaTitle": "Forum",
+    "eyebrow": "Community / Forum",
+    "title": "Forum",
+    "summary": {
+      "nodes": "Nodes",
+      "topics": "Topics"
+    },
+    "fields": {
+      "topics": "Topics",
+      "replies": "Replies"
+    },
+    "nodeStats": {
+      "topics": "{count} topics",
+      "replies": "{count} replies"
+    },
+    "sidebar": {
+      "title": "Forum Tools",
+      "bookmarks": "Bookmarked topics",
+      "quickNodes": "Quick nodes"
+    },
+    "fallback": {
+      "category": "Category",
+      "node": "Node"
+    },
+    "actions": {
+      "createTopic": "New topic"
+    },
+    "empty": {
+      "title": "No forum nodes",
+      "description": "Your account cannot access any forum nodes yet.",
+      "nodes": "No nodes in this category"
+    },
+    "pagination": {
+      "summary": "Page {page} / {pages}",
+      "pageSize": "Per page"
+    },
+    "topicList": {
+      "back": "Back to forum",
+      "byline": "{user} posted at {time}",
+      "nodeStats": "Node Stats",
+      "meta": {
+        "created": "Posted",
+        "lastReply": "Last reply",
+        "views": "{count} views"
+      },
+      "table": {
+        "topic": "Topic",
+        "replies": "Replies",
+        "views": "Views",
+        "lastReply": "Last reply"
+      },
+      "badges": {
+        "sticky": "Sticky",
+        "locked": "Locked"
+      },
+      "empty": {
+        "title": "No topics",
+        "description": "No topics have been posted in this node yet."
+      }
+    },
+    "bookmarks": {
+      "metaTitle": "Bookmarked Topics",
+      "title": "Bookmarked Topics",
+      "empty": {
+        "title": "No bookmarked topics",
+        "description": "Forum topics you bookmark will appear here."
+      }
+    },
+    "create": {
+      "metaTitle": "New Topic",
+      "title": "New Topic",
+      "back": "Back to forum",
+      "submit": "Publish",
+      "success": "Topic #{id} published",
+      "sections": {
+        "topic": "Topic Content",
+        "publish": "Publish"
+      },
+      "fields": {
+        "node": "Node",
+        "nodePlaceholder": "Choose node",
+        "subject": "Title",
+        "content": "Content"
+      },
+      "placeholders": {
+        "subject": "Write a clear topic title",
+        "content": "Write what you want to discuss"
+      },
+      "summary": {
+        "node": "Node",
+        "subjectLength": "Title length"
+      }
+    },
+    "detail": {
+      "metaTitle": "Topic Detail",
+      "back": "Back to forum",
+      "titleFallback": "Topic #{id}",
+      "invalidId": "Invalid topic ID",
+      "topicId": "Topic #{id}",
+      "actions": {
+        "title": "Topic Actions",
+        "like": "Like",
+        "liked": "Liked",
+        "bookmark": "Bookmark",
+        "bookmarked": "Bookmarked",
+        "append": "Append",
+        "reward": "Reward",
+        "report": "Report"
+      },
+      "admin": {
+        "title": "Admin actions",
+        "lock": "Lock topic",
+        "unlock": "Unlock topic",
+        "pin": "Pin topic",
+        "unpin": "Unpin topic",
+        "moveTo": "Move to node",
+        "move": "Move topic",
+        "saved": "Topic updated"
+      },
+      "append": {
+        "index": "Append #{index}",
+        "placeholder": "Add an appendix",
+        "submit": "Append",
+        "success": "Append added"
+      },
+      "replies": {
+        "title": "Replies",
+        "summary": "{count} replies",
+        "empty": "No replies yet",
+        "floor": "#{floor}"
+      },
+      "reward": {
+        "amount": "Amount",
+        "submit": "Reward",
+        "success": "Reward sent"
+      },
+      "report": {
+        "reason": "Describe the issue",
+        "submit": "Submit report",
+        "success": "Report submitted"
+      },
+      "replyForm": {
+        "title": "Post Reply",
+        "placeholder": "Write your reply",
+        "submit": "Reply",
+        "success": "Reply posted"
+      },
+      "info": {
+        "title": "Topic Info",
+        "author": "Author",
+        "createdAt": "Published",
+        "views": "Views",
+        "replies": "Replies"
+      }
+    }
+  },
+  "admin": {
+    "eyebrow": "Admin",
+    "title": "Admin",
+    "comingSoon": "Coming soon",
+    "pageSize": "Per page",
+    "pagination": {
+      "summary": "Page {page} / {pages}"
+    },
+    "nav": {
+      "overview": "Overview",
+      "catalog": "Catalog",
+      "forum": "Forum",
+      "iam": "IAM",
+      "moderation": "Moderation",
+      "site": "Site",
+      "system": "System"
+    },
+    "dashboard": {
+      "title": "Admin Overview",
+      "stats": {
+        "users": "Users",
+        "reports": "Pending reports",
+        "cheaters": "Pending cheaters",
+        "crons": "Cron jobs"
+      }
+    },
+    "actions": {
+      "new": "New",
+      "edit": "Edit",
+      "delete": "Delete",
+      "reset": "Reset"
+    },
+    "status": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "catalog": {
+      "eyebrow": "Admin / Catalog",
+      "title": "Catalog Admin",
+      "categories": {
+        "title": "Torrent Categories",
+        "list": "Category list",
+        "empty": "No categories",
+        "saved": "Category saved",
+        "deleted": "Category deleted",
+        "confirmDelete": "Delete category \"{name}\"?",
+        "stats": {
+          "total": "Total",
+          "enabled": "Enabled",
+          "disabled": "Disabled"
+        },
+        "table": {
+          "name": "Name",
+          "slug": "Slug",
+          "sort": "Sort",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "form": {
+          "create": "New category",
+          "edit": "Edit category",
+          "nameZhCN": "Simplified Chinese name",
+          "nameZhTW": "Traditional Chinese name",
+          "nameEnUS": "English name",
+          "slug": "Slug",
+          "sortOrder": "Sort",
+          "enabled": "Enabled"
+        }
+      }
+    },
+    "forum": {
+      "eyebrow": "Admin / Forum",
+      "title": "Forum Admin",
+      "entryDescription": "Manage forum categories and nodes",
+      "categories": {
+        "title": "Forum Categories",
+        "list": "Category list",
+        "empty": "No forum categories",
+        "saved": "Forum category saved",
+        "deleted": "Forum category deleted",
+        "confirmDelete": "Delete forum category \"{name}\"?",
+        "table": {
+          "name": "Name",
+          "description": "Description",
+          "sort": "Sort",
+          "minRoleView": "View level",
+          "actions": "Actions"
+        },
+        "form": {
+          "create": "New category",
+          "edit": "Edit category",
+          "nameZhCN": "Simplified Chinese name",
+          "nameZhTW": "Traditional Chinese name",
+          "nameEnUS": "English name",
+          "descZhCN": "Simplified Chinese description",
+          "descZhTW": "Traditional Chinese description",
+          "descEnUS": "English description",
+          "sortOrder": "Sort",
+          "minRoleView": "Minimum view level"
+        }
+      },
+      "nodes": {
+        "title": "Forum Nodes",
+        "list": "Node list",
+        "empty": "No forum nodes",
+        "saved": "Forum node saved",
+        "deleted": "Forum node deleted",
+        "confirmDelete": "Delete forum node \"{name}\"?",
+        "table": {
+          "name": "Name",
+          "category": "Category",
+          "slug": "Slug",
+          "permissions": "Read/Write/Post",
+          "counts": "Topics/Replies",
+          "actions": "Actions"
+        },
+        "form": {
+          "create": "New node",
+          "edit": "Edit node",
+          "category": "Category",
+          "selectCategory": "Select category",
+          "slug": "Slug",
+          "nameZhCN": "Simplified Chinese name",
+          "nameZhTW": "Traditional Chinese name",
+          "nameEnUS": "English name",
+          "descZhCN": "Simplified Chinese description",
+          "descZhTW": "Traditional Chinese description",
+          "descEnUS": "English description",
+          "sortOrder": "Sort",
+          "minRoleRead": "Read level",
+          "minRoleWrite": "Reply level",
+          "minRoleCreate": "Topic level",
+          "moderators": "Moderator user IDs"
+        }
+      }
+    },
+    "iam": {
+      "eyebrow": "Admin / IAM",
+      "title": "IAM",
+      "entryDescription": "Manage users, roles, and permissions",
+      "users": {
+        "title": "User Admin",
+        "searchPlaceholder": "Search username or email",
+        "search": "Search",
+        "list": "User list",
+        "empty": "No users",
+        "pageSize": "Per page",
+        "pageSummary": "Page {page} / {pages}",
+        "stats": {
+          "total": "Total",
+          "current": "Current page"
+        },
+        "table": {
+          "user": "User",
+          "role": "Role",
+          "status": "Status",
+          "lastLogin": "Last login",
+          "createdAt": "Joined",
+          "actions": "Actions"
+        },
+        "orders": {
+          "newest": "Newest",
+          "oldest": "Oldest",
+          "lastLogin": "Last login",
+          "roleDesc": "Role level"
+        },
+        "status": {
+          "pending": "Pending",
+          "confirmed": "Active",
+          "disabled": "Disabled"
+        },
+        "form": {
+          "empty": "Select a user",
+          "status": "Status",
+          "role": "Role",
+          "passkey": "Passkey",
+          "passkeyRequired": "Passkey is required",
+          "noChanges": "No changes to save",
+          "saved": "User updated",
+          "kick": "Kick sessions",
+          "confirmKick": "Kick sessions for \"{name}\"?",
+          "kicked": "User sessions cleared"
+        },
+        "ban": {
+          "title": "Ban",
+          "reason": "Reason",
+          "durationDays": "Days",
+          "submit": "Ban user",
+          "success": "Ban applied"
+        },
+        "mod": {
+          "title": "User moderation",
+          "activeSummary": "{count} active",
+          "type": "Moderation type",
+          "reason": "Reason",
+          "durationDays": "Days",
+          "permanentHint": "0 means permanent",
+          "permanent": "Permanent",
+          "expireAt": "Expires",
+          "submit": "Apply moderation",
+          "applied": "Moderation applied",
+          "remove": "Remove",
+          "removed": "Moderation removed",
+          "confirmRemove": "Remove \"{type}\" moderation?",
+          "empty": "No moderation records",
+          "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+          },
+          "types": {
+            "warned": "Warning",
+            "banned": "Ban",
+            "leechWarned": "Leech warning",
+            "uploadBanned": "Upload banned",
+            "downloadBanned": "Download banned",
+            "forumBanned": "Forum banned"
+          }
+        },
+      "permission": {
+        "title": "Manual permission",
+        "key": "Permission",
+        "deny": "Deny permission",
+        "grant": "Add",
+        "revoke": "Revoke",
+        "granted": "Permission added",
+        "revoked": "Permission revoked"
+      },
+      "stat": {
+        "title": "User stats",
+        "uploaded": "Uploaded",
+        "downloaded": "Downloaded",
+        "seedTime": "Seed time",
+        "bonus": "Bonus",
+        "uploadedDiff": "Uploaded diff",
+        "downloadedDiff": "Downloaded diff",
+        "bonusDiff": "Bonus diff",
+        "submit": "Adjust stats",
+        "saved": "Stats updated"
+      }
+    },
+      "roles": {
+        "title": "Role Admin",
+        "list": "Role list",
+        "empty": "No roles",
+        "saved": "Role saved",
+        "deleted": "Role deleted",
+        "confirmDelete": "Delete role \"{name}\"?",
+        "stats": {
+          "total": "Total",
+          "staff": "Staff"
+        },
+        "table": {
+          "name": "Name",
+          "level": "Level",
+          "staff": "Staff",
+          "permissions": "Permissions",
+          "updatedAt": "Updated",
+          "actions": "Actions"
+        },
+        "staff": {
+          "yes": "Yes",
+          "no": "No"
+        },
+        "form": {
+          "create": "New role",
+          "edit": "Edit role",
+          "nameZhCN": "Simplified Chinese name",
+          "nameZhTW": "Traditional Chinese name",
+          "nameEnUS": "English name",
+          "level": "Level",
+          "isStaff": "Staff",
+          "permissions": "Permissions",
+          "noPermissions": "No permissions available",
+          "customPermission": "Custom permission",
+          "addPermission": "Add",
+        "rules": "Rules JSON",
+        "rulesInvalid": "Rules must be a JSON object"
+      }
+    },
+    "invites": {
+      "title": "Invite credits",
+      "form": {
+        "title": "Grant invite credits",
+        "amount": "Amount",
+        "isTemp": "Temporary invite",
+        "expireAt": "Expires at",
+        "submit": "Grant",
+        "success": "Invite credits granted"
+      }
+    }
+  },
+    "site": {
+      "eyebrow": "Admin / Site",
+      "title": "Site Admin",
+      "entryDescription": "Manage site configs and system parameters",
+      "configs": {
+        "title": "Site Configs",
+        "list": "Config list",
+        "empty": "No configs",
+        "saved": "Config saved",
+        "noChanges": "No changes to save",
+        "groups": {
+          "tracker": "Tracker",
+          "iam": "Users",
+          "catalog": "Catalog"
+        },
+        "stats": {
+          "group": "Current group",
+          "total": "Configs"
+        },
+        "table": {
+          "key": "Key",
+          "value": "Current value",
+          "description": "Description",
+          "updatedAt": "Updated",
+          "actions": "Actions"
+        },
+        "form": {
+          "empty": "Select a config",
+          "group": "Group",
+          "key": "Key",
+          "type": "Type",
+          "value": "Value",
+          "booleanValue": "Enabled",
+          "intInvalid": "Enter an integer",
+          "numberInvalid": "Enter a valid number",
+          "jsonInvalid": "Invalid JSON"
+        },
+        "types": {
+          "string": "Text",
+          "int": "Integer",
+          "float": "Decimal",
+          "number": "Number",
+          "boolean": "Boolean",
+          "json": "JSON"
+        },
+        "boolean": {
+          "true": "Yes",
+          "false": "No"
+        }
+      },
+      "audits": {
+      "title": "Audit Logs",
+      "entryDescription": "Review important admin actions",
+      "list": "Audit log",
+      "empty": "No audit logs",
+      "total": "{total} records",
+      "table": {
+        "user": "User",
+        "action": "Action",
+        "target": "Target",
+        "detail": "Detail",
+        "level": "Level",
+        "time": "Time"
+      },
+      "level": {
+        "normal": "Normal",
+        "mod": "Mod",
+        "admin": "Admin"
+      }
+      }
+    },
+    "mod": {
+    "eyebrow": "Admin / Moderation",
+    "title": "Moderation",
+    "entryDescription": "Handle reports and suspicious client activity",
+    "actions": {
+      "filter": "Filter",
+      "resolve": "Resolve",
+      "submitResolve": "Submit"
+    },
+    "stats": {
+      "total": "Records"
+    },
+    "table": {
+      "target": "Target",
+      "reason": "Reason",
+      "status": "Status",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "status": {
+      "all": "All",
+      "pending": "Pending",
+      "accepted": "Valid",
+      "rejected": "Invalid",
+      "resolved": "Resolved"
+    },
+    "targetTypes": {
+      "all": "All types",
+      "torrent": "Torrent",
+      "comment": "Comment",
+      "subtitle": "Subtitle",
+      "forumTopic": "Forum topic",
+      "forumReply": "Forum reply"
+    },
+    "form": {
+      "result": "Result",
+      "comment": "Comment"
+    },
+    "reports": {
+      "title": "Reports",
+      "list": "Report list",
+      "empty": "No reports",
+      "select": "Select a report",
+      "resolveTitle": "Resolve report #{id}",
+      "reporter": "Reporter #{id}",
+      "resolved": "Report resolved"
+    },
+    "cheaters": {
+      "title": "Cheater Logs",
+      "list": "Cheater log list",
+      "empty": "No cheater logs",
+      "select": "Select a log",
+      "resolveTitle": "Resolve log #{id}",
+      "resolved": "Cheater log resolved",
+      "userId": "User #{id}",
+      "torrentId": "Torrent #{id}",
+      "uploaded": "Uploaded {value}",
+      "downloaded": "Downloaded {value}",
+      "announceTime": "Interval {value}s",
+      "swarm": "Seeders {seeders} / Leechers {leechers} / Hits {hits}",
+      "table": {
+        "user": "User/Torrent",
+        "traffic": "Traffic",
+        "swarm": "Swarm"
+      }
+    }
+  },
+    "sys": {
+    "eyebrow": "Admin / System",
+    "entryDescription": "Inspect cron jobs and execution logs",
+    "crons": {
+      "title": "Cron Jobs",
+      "list": "Job list",
+      "empty": "No cron jobs",
+      "select": "Select a job",
+      "logsTitle": "Job logs",
+      "logsEmpty": "No job logs",
+      "logsTotal": "{total} logs",
+      "status": {
+        "runnable": "Runnable",
+        "running": "Running",
+        "stopped": "Stopped",
+        "closed": "Closed"
+      },
+      "logStatus": {
+        "running": "Running",
+        "success": "Success",
+        "failed": "Failed"
+      },
+      "table": {
+        "status": "Status",
+        "duration": "Duration",
+        "node": "Node",
+        "error": "Error",
+        "time": "Time"
+      }
+    }
+    }
+  },
+  "user": {
+    "metaTitle": "User Center",
+    "fallbackName": "User",
+    "eyebrow": "User Center",
+    "staff": "Staff",
+    "member": "Member",
+    "status": {
+      "normal": "Normal"
+    },
+    "fields": {
+      "id": "User ID",
+      "role": "Role",
+      "createdAt": "Joined"
+    },
+    "stats": {
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded",
+      "ratio": "Ratio",
+      "bonus": "Bonus"
+    },
+    "duration": {
+      "seconds": "{count}s",
+      "minutes": "{count}m",
+      "hours": "{count}h",
+      "days": "{count}d"
+    },
+    "trafficHistory": {
+      "title": "Traffic trend",
+      "subtitle": "View uploaded, downloaded, and active time by day or month.",
+      "empty": "No statistics yet",
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded",
+      "seedTime": "Seed time",
+      "leechTime": "Leech time",
+      "activeTime": "Active time",
+      "bonus": "Bonus",
+      "periods": {
+        "daily": "Daily",
+        "monthly": "Monthly"
+      },
+      "modes": {
+        "traffic": "Traffic",
+        "time": "Time",
+        "bonus": "Bonus"
+      }
+    },
+    "bonusLogs": {
+      "title": "Bonus logs",
+      "summary": "{total} records, hourly estimate {hourly}",
+      "hourly": "Hourly estimate",
+      "balance": "Current balance",
+      "empty": "No bonus logs yet",
+      "after": "Balance {balance}",
+      "pageSummary": "Page {page} / {pages}",
+      "actions": {
+        "transfer_sent": "Transfer sent",
+        "transfer_received": "Transfer received",
+        "seed_bonus": "Seeding bonus",
+        "forum_topic": "Forum topic",
+        "forum_reply": "Forum reply"
+      }
+    },
+    "invites": {
+      "title": "Invites",
+      "summary": "{available} available / {total} total",
+      "email": "Invitee email",
+      "code": "Invite code",
+      "selectCode": "Choose invite code",
+      "send": "Send invite",
+      "sent": "Invite sent",
+      "empty": "No invite codes",
+      "status": {
+        "0": "Unused",
+        "1": "Sent",
+        "2": "Used",
+        "3": "Expired",
+        "4": "Recycled"
+      }
+    },
+    "snatches": {
+      "title": "Download and seeding history",
+      "summary": "{total} records",
+      "empty": "No download or seeding records yet",
+      "finished": "Finished",
+      "unfinished": "Unfinished",
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded",
+      "seedTime": "Seed time",
+      "leechTime": "Leech time",
+      "lastAction": "Last active",
+      "pageSummary": "Page {page} / {pages}",
+      "filters": {
+        "all": "All",
+        "finished": "Finished",
+        "unfinished": "Unfinished"
+      }
+    },
+    "passkey": {
+      "title": "Passkey",
+      "copied": "Passkey copied"
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Update avatar, signature, and profile info.",
+      "avatar": "Avatar URL",
+      "signature": "Signature",
+      "info": "Bio",
+      "saved": "Profile updated"
+    },
+    "security": {
+      "title": "Account security",
+      "subtitle": "You need to log in again after changing password.",
+      "oldPassword": "Current password",
+      "newPassword": "New password",
+      "submit": "Change password",
+      "changed": "Password changed. Please log in again."
+    }
+  }
+}

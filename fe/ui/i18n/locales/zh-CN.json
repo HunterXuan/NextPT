@@ -1,0 +1,1091 @@
+{
+  "common": {
+    "brand": "NextPT",
+    "cancel": "取消",
+    "copy": "复制",
+    "next": "下一页",
+    "previous": "上一页",
+    "refresh": "刷新",
+    "retry": "重试",
+    "save": "保存",
+    "requestFailed": "请求失败，请稍后再试",
+    "switchLanguage": "切换语言"
+  },
+  "nav": {
+    "home": "首页",
+    "catalog": "资源库",
+    "forum": "论坛",
+    "uploadTorrent": "发布种子",
+    "subtitles": "字幕",
+    "bookmarks": "我的收藏",
+    "user": "用户中心",
+    "admin": "管理后台"
+  },
+  "footer": {
+    "tagline": "面向私有资源社区的 tracker 与协作系统。"
+  },
+  "home": {
+    "metaTitle": "首页",
+    "metaDescription": "NextPT 私有资源社区前端。",
+    "eyebrow": "私有 Tracker 社区",
+    "title": "NextPT",
+    "description": "围绕种子发布、Tracker 统计、论坛讨论和用户权限构建的私有资源社区。",
+    "openCenter": "进入用户中心",
+    "stats": {
+      "tracker": "Tracker",
+      "ratio": "分享率",
+      "community": "社区"
+    },
+    "panel": {
+      "title": "站点工作台",
+      "subtitle": "首批页面先覆盖账号和个人资料流程",
+      "badge": "开发中"
+    },
+    "modules": {
+      "catalog": {
+        "title": "资源库",
+        "description": "后续接入种子列表、详情、上传、下载和收藏等核心流程。",
+        "meta": "Catalog"
+      },
+      "tracker": {
+        "title": "Tracker",
+        "description": "已具备 announce、download、passkey 和权限校验基础。",
+        "meta": "Live"
+      },
+      "forum": {
+        "title": "论坛",
+        "description": "站点公告、综合讨论和资源交流会逐步接入前端。",
+        "meta": "Forum"
+      }
+    },
+    "workflow": {
+      "profile": {
+        "title": "账号资料",
+        "description": "注册、登录、资料修改和改密码先完成，便于后续页面共享身份状态。"
+      },
+      "passkey": {
+        "title": "Tracker 凭证",
+        "description": "用户中心展示 passkey，后续种子下载和客户端配置会继续围绕它展开。"
+      },
+      "next": {
+        "title": "下一阶段",
+        "description": "账号流程稳定后，可以继续推进种子列表、详情页、论坛和管理后台。"
+      }
+    }
+  },
+  "auth": {
+    "logout": "退出登录",
+    "fields": {
+      "username": "用户名",
+      "email": "邮箱",
+      "password": "密码",
+      "inviteHash": "邀请码"
+    },
+    "login": {
+      "action": "登录",
+      "title": "登录",
+      "subtitle": "使用站点账号进入 NextPT。",
+      "heroTitle": "回到你的 PT 账号",
+      "heroDescription": "登录后可以查看个人流量、分享率、魔力值、passkey，并继续使用后续接入的种子和论坛功能。",
+      "submit": "登录",
+      "success": "登录成功",
+      "noAccount": "还没有账号？",
+      "highlights": {
+        "identity": {
+          "title": "统一身份",
+          "description": "Web 页面、Tracker 和权限系统共用同一套用户身份。"
+        },
+        "tracker": {
+          "title": "Tracker 权限",
+          "description": "下载权限会直接影响 announce 与种子下载。"
+        }
+      }
+    },
+    "register": {
+      "action": "注册",
+      "title": "注册",
+      "subtitle": "创建 NextPT 账号。",
+      "heroTitle": "从账号开始进入社区",
+      "heroDescription": "当前阶段先完成账号和用户中心。资源库、论坛和管理后台会沿用同一套登录态继续开发。",
+      "submit": "创建账号",
+      "success": "注册成功",
+      "hasAccount": "已经有账号？",
+      "policies": {
+        "identity": {
+          "title": "账号资料",
+          "description": "用户名、邮箱和密码会用于站点登录。"
+        },
+        "ratio": {
+          "title": "分享率",
+          "description": "后续下载和做种统计会沉淀到个人数据。"
+        },
+        "community": {
+          "title": "社区交流",
+          "description": "论坛权限会跟随用户角色和管理操作变化。"
+        },
+        "security": {
+          "title": "安全凭证",
+          "description": "注册后系统会生成用于 Tracker 的 passkey。"
+        }
+      }
+    }
+  },
+  "catalog": {
+    "torrents": {
+      "metaTitle": "种子",
+      "eyebrow": "资源库 / 种子",
+      "title": "种子",
+      "anonymous": "匿名发布",
+      "anonymousOwner": "匿名（{name}）",
+      "unknownCategory": "未分类",
+      "fileCount": "{count} 个文件",
+      "search": {
+        "placeholder": "搜索种子标题或副标题",
+        "submit": "搜索",
+        "advanced": "高级搜索"
+      },
+      "summary": {
+        "total": "种子",
+        "categories": "分类"
+      },
+      "filters": {
+        "category": "分类",
+        "allCategories": "全部分类",
+        "clearCategories": "清除分类",
+        "noCategories": "暂无可选分类"
+      },
+      "types": {
+        "single": "单文件",
+        "multi": "多文件"
+      },
+      "table": {
+        "torrent": "种子",
+        "size": "大小",
+        "activity": "活跃",
+        "completed": "完成",
+        "createdAt": "发布时间"
+      },
+      "empty": {
+        "title": "暂无种子",
+        "description": "当前筛选条件下还没有可展示的种子。"
+      },
+      "pagination": {
+        "summary": "第 {page} / {pages} 页",
+        "pageSize": "每页"
+      },
+      "detail": {
+        "metaTitle": "种子详情",
+        "back": "返回种子列表",
+        "titleFallback": "种子 #{id}",
+        "invalidId": "无效的种子 ID",
+        "actions": {
+          "title": "种子操作",
+          "download": "下载种子",
+          "like": "感谢",
+        "liked": "已感谢",
+        "bookmark": "收藏",
+        "bookmarked": "已收藏",
+        "edit": "编辑种子",
+        "report": "举报",
+        "adminDelete": "删除种子",
+        "confirmAdminDelete": "确认删除种子「{name}」？",
+        "adminDeleted": "种子已删除"
+      },
+        "stats": {
+          "seeders": "做种",
+          "leechers": "下载",
+          "completed": "完成",
+          "size": "大小"
+        },
+        "description": {
+          "title": "详情描述",
+          "empty": "暂无详情描述"
+        },
+        "files": {
+          "title": "文件列表",
+          "root": "全部文件",
+          "empty": "暂无文件信息",
+          "expandAll": "展开全部",
+          "collapseAll": "收起全部"
+        },
+        "peers": {
+          "title": "在线状态",
+          "seedersTitle": "当前做种",
+          "leechersTitle": "当前下载",
+          "completedTitle": "完成记录",
+          "summary": "{seeders} 做种 / {leechers} 下载",
+          "completedSummary": "累计完成 {count} 次",
+          "completedUnavailable": "当前仅显示完成总数，完成用户列表暂未开放。",
+          "empty": "暂无在线 Peer",
+          "seeder": "做种",
+          "leecher": "下载",
+          "uploaded": "上传",
+          "downloaded": "下载"
+        },
+        "subtitles": {
+          "title": "字幕",
+          "summary": "{count} 条字幕",
+          "choose": "选择字幕文件",
+          "upload": "上传字幕",
+          "uploaded": "字幕已上传",
+          "download": "下载",
+          "empty": "暂无字幕"
+        },
+        "comments": {
+          "title": "评论",
+          "summary": "{count} 条评论",
+          "placeholder": "写下你的评论",
+          "submit": "发表评论",
+          "created": "评论已发布",
+          "empty": "暂无评论",
+          "reward": "赞赏 {count}"
+        },
+        "reward": {
+          "title": "赞赏种子",
+          "summary": "{count} 条赞赏记录",
+          "amount": "金额",
+          "submit": "赞赏",
+          "success": "赞赏成功",
+          "empty": "暂无赞赏记录"
+        },
+        "report": {
+          "reason": "填写举报原因",
+          "submit": "提交举报",
+          "success": "举报已提交"
+        },
+        "info": {
+          "title": "种子信息",
+          "category": "分类",
+          "publisher": "发布者",
+          "publishedAt": "发布时间",
+          "type": "类型",
+          "fileCount": "文件数",
+          "torrentId": "种子 ID"
+        }
+      },
+      "upload": {
+        "metaTitle": "发布种子",
+        "title": "发布种子",
+        "action": "发布种子",
+        "back": "返回种子列表",
+        "submit": "发布",
+        "success": "种子 #{id} 已发布",
+        "sections": {
+          "file": "种子文件",
+          "info": "基础信息",
+          "publish": "发布"
+        },
+        "file": {
+          "choose": "选择 .torrent 文件",
+          "invalid": "请选择 .torrent 文件"
+        },
+        "fields": {
+          "category": "分类",
+          "categoryPlaceholder": "选择分类",
+          "name": "标题",
+          "subTitle": "副标题",
+          "description": "详情描述",
+          "anonymous": "匿名发布"
+        },
+        "summary": {
+          "file": "文件",
+          "category": "分类"
+        }
+      },
+      "edit": {
+        "metaTitle": "编辑种子",
+        "title": "编辑种子",
+        "back": "返回种子详情",
+        "submit": "保存修改",
+        "saved": "种子已更新",
+        "forbidden": "你没有权限编辑这个种子",
+        "sections": {
+          "info": "基础信息",
+          "publish": "发布设置"
+        },
+        "summary": {
+          "torrentId": "种子 ID",
+          "category": "分类"
+        }
+      }
+    },
+    "bookmarks": {
+      "metaTitle": "收藏种子",
+      "title": "收藏种子",
+      "pageSummary": "第 {page} / {pages} 页",
+      "empty": {
+        "title": "暂无收藏种子",
+        "description": "你收藏的种子会显示在这里。"
+      }
+    },
+    "subtitles": {
+      "metaTitle": "字幕",
+      "eyebrow": "资源库 / 字幕",
+      "title": "字幕",
+      "summary": {
+        "total": "字幕"
+      },
+      "table": {
+        "file": "字幕文件",
+        "torrent": "种子",
+        "uploader": "上传者",
+        "size": "大小",
+        "createdAt": "上传时间",
+        "actions": "操作"
+      },
+      "actions": {
+        "download": "下载",
+        "report": "举报"
+      },
+      "empty": {
+        "title": "暂无字幕",
+        "description": "用户上传的字幕会显示在这里。"
+      },
+      "pagination": {
+        "summary": "第 {page} / {pages} 页",
+        "pageSize": "每页"
+      },
+      "report": {
+        "reason": "填写举报原因",
+        "submit": "提交举报",
+        "success": "举报已提交"
+      }
+    }
+  },
+  "forum": {
+    "metaTitle": "论坛",
+    "eyebrow": "社区 / 论坛",
+    "title": "论坛",
+    "summary": {
+      "nodes": "节点",
+      "topics": "主题"
+    },
+    "fields": {
+      "topics": "主题",
+      "replies": "回复"
+    },
+    "nodeStats": {
+      "topics": "{count} 主题",
+      "replies": "{count} 回复"
+    },
+    "sidebar": {
+      "title": "论坛工具",
+      "bookmarks": "主题收藏",
+      "quickNodes": "常用节点"
+    },
+    "fallback": {
+      "category": "分区",
+      "node": "节点"
+    },
+    "actions": {
+      "createTopic": "发布主题"
+    },
+    "empty": {
+      "title": "暂无论坛节点",
+      "description": "当前账号还没有可访问的论坛节点。",
+      "nodes": "该分区暂无节点"
+    },
+    "pagination": {
+      "summary": "第 {page} / {pages} 页",
+      "pageSize": "每页"
+    },
+    "topicList": {
+      "back": "返回论坛",
+      "byline": "{user} 发布于 {time}",
+      "nodeStats": "节点统计",
+      "meta": {
+        "created": "发布",
+        "lastReply": "最后回复",
+        "views": "{count} 浏览"
+      },
+      "table": {
+        "topic": "主题",
+        "replies": "回复",
+        "views": "浏览",
+        "lastReply": "最后回复"
+      },
+      "badges": {
+        "sticky": "置顶",
+        "locked": "锁定"
+      },
+      "empty": {
+        "title": "暂无主题",
+        "description": "这个节点还没有主题。"
+      }
+    },
+    "bookmarks": {
+      "metaTitle": "主题收藏",
+      "title": "主题收藏",
+      "empty": {
+        "title": "暂无收藏主题",
+        "description": "你收藏的论坛主题会显示在这里。"
+      }
+    },
+    "create": {
+      "metaTitle": "发布主题",
+      "title": "发布主题",
+      "back": "返回论坛",
+      "submit": "发布",
+      "success": "主题 #{id} 已发布",
+      "sections": {
+        "topic": "主题内容",
+        "publish": "发布"
+      },
+      "fields": {
+        "node": "节点",
+        "nodePlaceholder": "选择节点",
+        "subject": "标题",
+        "content": "正文"
+      },
+      "placeholders": {
+        "subject": "写一个清楚的主题标题",
+        "content": "写下你想讨论的内容"
+      },
+      "summary": {
+        "node": "节点",
+        "subjectLength": "标题长度"
+      }
+    },
+    "detail": {
+      "metaTitle": "主题详情",
+      "back": "返回论坛",
+      "titleFallback": "主题 #{id}",
+      "invalidId": "无效的主题 ID",
+      "topicId": "主题 #{id}",
+      "actions": {
+        "title": "主题操作",
+        "like": "点赞",
+        "liked": "已点赞",
+        "bookmark": "收藏",
+        "bookmarked": "已收藏",
+        "append": "追加附言",
+        "reward": "打赏",
+        "report": "举报"
+      },
+      "admin": {
+        "title": "管理操作",
+        "lock": "锁定主题",
+        "unlock": "解锁主题",
+        "pin": "置顶主题",
+        "unpin": "取消置顶",
+        "moveTo": "移动到板块",
+        "move": "移动主题",
+        "saved": "主题已更新"
+      },
+      "append": {
+        "index": "附言 #{index}",
+        "placeholder": "追加一段附言",
+        "submit": "追加",
+        "success": "附言已追加"
+      },
+      "replies": {
+        "title": "回复",
+        "summary": "{count} 条回复",
+        "empty": "暂无回复",
+        "floor": "#{floor} 楼"
+      },
+      "reward": {
+        "amount": "金额",
+        "submit": "打赏",
+        "success": "打赏成功"
+      },
+      "report": {
+        "reason": "填写举报原因",
+        "submit": "提交举报",
+        "success": "举报已提交"
+      },
+      "replyForm": {
+        "title": "发表回复",
+        "placeholder": "写下你的回复",
+        "submit": "回复",
+        "success": "回复已发布"
+      },
+      "info": {
+        "title": "主题信息",
+        "author": "作者",
+        "createdAt": "发布时间",
+        "views": "浏览",
+        "replies": "回复"
+      }
+    }
+  },
+  "admin": {
+    "eyebrow": "管理后台",
+    "title": "管理后台",
+    "comingSoon": "待开发",
+    "pageSize": "每页",
+    "pagination": {
+      "summary": "第 {page} / {pages} 页"
+    },
+    "nav": {
+      "overview": "总览",
+      "catalog": "资源库",
+      "forum": "论坛",
+      "iam": "用户权限",
+      "moderation": "审核风控",
+      "site": "站点",
+      "system": "系统"
+    },
+    "dashboard": {
+      "title": "后台总览",
+      "stats": {
+        "users": "用户总数",
+        "reports": "待处理举报",
+        "cheaters": "待处理作弊",
+        "crons": "定时任务"
+      }
+    },
+    "actions": {
+      "new": "新建",
+      "edit": "编辑",
+      "delete": "删除",
+      "reset": "重置"
+    },
+    "status": {
+      "enabled": "启用",
+      "disabled": "停用"
+    },
+    "catalog": {
+      "eyebrow": "管理后台 / 资源库",
+      "title": "资源库管理",
+      "categories": {
+        "title": "种子分类",
+        "list": "分类列表",
+        "empty": "暂无分类",
+        "saved": "分类已保存",
+        "deleted": "分类已删除",
+        "confirmDelete": "确认删除分类「{name}」？",
+        "stats": {
+          "total": "全部",
+          "enabled": "启用",
+          "disabled": "停用"
+        },
+        "table": {
+          "name": "名称",
+          "slug": "标识",
+          "sort": "排序",
+          "status": "状态",
+          "actions": "操作"
+        },
+        "form": {
+          "create": "新建分类",
+          "edit": "编辑分类",
+          "nameZhCN": "简体中文名称",
+          "nameZhTW": "繁体中文名称",
+          "nameEnUS": "英文名称",
+          "slug": "标识",
+          "sortOrder": "排序",
+          "enabled": "启用"
+        }
+      }
+    },
+    "forum": {
+      "eyebrow": "管理后台 / 论坛",
+      "title": "论坛管理",
+      "entryDescription": "管理论坛分类与板块",
+      "categories": {
+        "title": "论坛分类",
+        "list": "分类列表",
+        "empty": "暂无论坛分类",
+        "saved": "论坛分类已保存",
+        "deleted": "论坛分类已删除",
+        "confirmDelete": "确认删除论坛分类「{name}」？",
+        "table": {
+          "name": "名称",
+          "description": "描述",
+          "sort": "排序",
+          "minRoleView": "可见等级",
+          "actions": "操作"
+        },
+        "form": {
+          "create": "新建分类",
+          "edit": "编辑分类",
+          "nameZhCN": "简体中文名称",
+          "nameZhTW": "繁体中文名称",
+          "nameEnUS": "英文名称",
+          "descZhCN": "简体中文描述",
+          "descZhTW": "繁体中文描述",
+          "descEnUS": "英文描述",
+          "sortOrder": "排序",
+          "minRoleView": "最低可见等级"
+        }
+      },
+      "nodes": {
+        "title": "论坛板块",
+        "list": "板块列表",
+        "empty": "暂无论坛板块",
+        "saved": "论坛板块已保存",
+        "deleted": "论坛板块已删除",
+        "confirmDelete": "确认删除论坛板块「{name}」？",
+        "table": {
+          "name": "名称",
+          "category": "分类",
+          "slug": "标识",
+          "permissions": "读/写/发",
+          "counts": "主题/回复",
+          "actions": "操作"
+        },
+        "form": {
+          "create": "新建板块",
+          "edit": "编辑板块",
+          "category": "所属分类",
+          "selectCategory": "选择分类",
+          "slug": "标识",
+          "nameZhCN": "简体中文名称",
+          "nameZhTW": "繁体中文名称",
+          "nameEnUS": "英文名称",
+          "descZhCN": "简体中文描述",
+          "descZhTW": "繁体中文描述",
+          "descEnUS": "英文描述",
+          "sortOrder": "排序",
+          "minRoleRead": "阅读等级",
+          "minRoleWrite": "回复等级",
+          "minRoleCreate": "发帖等级",
+          "moderators": "版主用户 ID"
+        }
+      }
+    },
+    "iam": {
+      "eyebrow": "管理后台 / 权限",
+      "title": "权限与用户",
+      "entryDescription": "管理用户、角色和权限",
+      "users": {
+        "title": "用户管理",
+        "searchPlaceholder": "搜索用户名或邮箱",
+        "search": "搜索",
+        "list": "用户列表",
+        "empty": "暂无用户",
+        "pageSize": "每页",
+        "pageSummary": "第 {page} / {pages} 页",
+        "stats": {
+          "total": "全部",
+          "current": "当前页"
+        },
+        "table": {
+          "user": "用户",
+          "role": "角色",
+          "status": "状态",
+          "lastLogin": "最后登录",
+          "createdAt": "注册时间",
+          "actions": "操作"
+        },
+        "orders": {
+          "newest": "最新注册",
+          "oldest": "最早注册",
+          "lastLogin": "最近登录",
+          "roleDesc": "角色等级"
+        },
+        "status": {
+          "pending": "待确认",
+          "confirmed": "正常",
+          "disabled": "停用"
+        },
+        "form": {
+          "empty": "选择用户",
+          "status": "状态",
+          "role": "角色",
+          "passkey": "Passkey",
+          "passkeyRequired": "Passkey 不能为空",
+          "noChanges": "没有需要保存的改动",
+          "saved": "用户已更新",
+          "kick": "踢下线",
+          "confirmKick": "确认踢下线「{name}」？",
+          "kicked": "用户会话已清理"
+        },
+        "ban": {
+          "title": "封禁",
+          "reason": "原因",
+          "durationDays": "天数",
+          "submit": "封禁用户",
+          "success": "封禁已生效"
+        },
+        "mod": {
+          "title": "用户限制",
+          "activeSummary": "当前生效 {count} 条",
+          "type": "限制类型",
+          "reason": "原因",
+          "durationDays": "天数",
+          "permanentHint": "0 表示永久",
+          "permanent": "永久",
+          "expireAt": "到期",
+          "submit": "添加限制",
+          "applied": "限制已生效",
+          "remove": "解除",
+          "removed": "限制已解除",
+          "confirmRemove": "确认解除「{type}」限制？",
+          "empty": "暂无限制记录",
+          "status": {
+            "active": "生效中",
+            "inactive": "已结束"
+          },
+          "types": {
+            "warned": "警告",
+            "banned": "封禁",
+            "leechWarned": "吸血警告",
+            "uploadBanned": "禁上传",
+            "downloadBanned": "禁下载",
+            "forumBanned": "禁论坛"
+          }
+        },
+      "permission": {
+        "title": "手动权限",
+        "key": "权限",
+        "deny": "作为拒绝权限",
+        "grant": "添加",
+        "revoke": "撤销",
+        "granted": "权限已添加",
+        "revoked": "权限已撤销"
+      },
+      "stat": {
+        "title": "用户统计",
+        "uploaded": "上传量",
+        "downloaded": "下载量",
+        "seedTime": "做种时间",
+        "bonus": "魔力值",
+        "uploadedDiff": "上传增量",
+        "downloadedDiff": "下载增量",
+        "bonusDiff": "魔力增量",
+        "submit": "调整统计",
+        "saved": "统计已更新"
+      }
+    },
+      "roles": {
+        "title": "角色管理",
+        "list": "角色列表",
+        "empty": "暂无角色",
+        "saved": "角色已保存",
+        "deleted": "角色已删除",
+        "confirmDelete": "确认删除角色「{name}」？",
+        "stats": {
+          "total": "全部",
+          "staff": "管理组"
+        },
+        "table": {
+          "name": "名称",
+          "level": "等级",
+          "staff": "管理组",
+          "permissions": "权限数",
+          "updatedAt": "更新时间",
+          "actions": "操作"
+        },
+        "staff": {
+          "yes": "是",
+          "no": "否"
+        },
+        "form": {
+          "create": "新建角色",
+          "edit": "编辑角色",
+          "nameZhCN": "简体中文名称",
+          "nameZhTW": "繁体中文名称",
+          "nameEnUS": "英文名称",
+          "level": "等级",
+          "isStaff": "管理组",
+          "permissions": "权限",
+          "noPermissions": "暂无可选权限",
+          "customPermission": "自定义权限",
+          "addPermission": "添加",
+        "rules": "规则 JSON",
+        "rulesInvalid": "规则必须是 JSON 对象"
+      }
+    },
+    "invites": {
+      "title": "邀请名额",
+      "form": {
+        "title": "发放邀请名额",
+        "amount": "数量",
+        "isTemp": "临时邀请",
+        "expireAt": "过期时间",
+        "submit": "发放",
+        "success": "邀请名额已发放"
+      }
+    }
+  },
+    "site": {
+      "eyebrow": "管理后台 / 站点",
+      "title": "站点管理",
+      "entryDescription": "管理站点配置和系统参数",
+      "configs": {
+        "title": "站点配置",
+        "list": "配置列表",
+        "empty": "暂无配置",
+        "saved": "配置已保存",
+        "noChanges": "没有需要保存的改动",
+        "groups": {
+          "tracker": "Tracker",
+          "iam": "用户",
+          "catalog": "资源库"
+        },
+        "stats": {
+          "group": "当前分组",
+          "total": "配置项"
+        },
+        "table": {
+          "key": "配置项",
+          "value": "当前值",
+          "description": "说明",
+          "updatedAt": "更新时间",
+          "actions": "操作"
+        },
+        "form": {
+          "empty": "选择配置项",
+          "group": "分组",
+          "key": "配置项",
+          "type": "类型",
+          "value": "配置值",
+          "booleanValue": "启用",
+          "intInvalid": "请输入整数",
+          "numberInvalid": "请输入有效数字",
+          "jsonInvalid": "JSON 格式不正确"
+        },
+        "types": {
+          "string": "文本",
+          "int": "整数",
+          "float": "小数",
+          "number": "数字",
+          "boolean": "布尔值",
+          "json": "JSON"
+        },
+        "boolean": {
+          "true": "是",
+          "false": "否"
+        }
+      },
+      "audits": {
+      "title": "审计日志",
+      "entryDescription": "查看后台关键操作记录",
+      "list": "日志列表",
+      "empty": "暂无审计日志",
+      "total": "共 {total} 条记录",
+      "table": {
+        "user": "用户",
+        "action": "操作",
+        "target": "目标",
+        "detail": "详情",
+        "level": "级别",
+        "time": "时间"
+      },
+      "level": {
+        "normal": "普通",
+        "mod": "审核",
+        "admin": "管理"
+      }
+      }
+    },
+    "mod": {
+    "eyebrow": "管理后台 / 审核风控",
+    "title": "审核风控",
+    "entryDescription": "处理举报和异常客户端行为",
+    "actions": {
+      "filter": "筛选",
+      "resolve": "处理",
+      "submitResolve": "提交处理"
+    },
+    "stats": {
+      "total": "记录数"
+    },
+    "table": {
+      "target": "目标",
+      "reason": "原因",
+      "status": "状态",
+      "createdAt": "创建时间",
+      "actions": "操作"
+    },
+    "status": {
+      "all": "全部",
+      "pending": "待处理",
+      "accepted": "有效",
+      "rejected": "无效",
+      "resolved": "已处理"
+    },
+    "targetTypes": {
+      "all": "全部类型",
+      "torrent": "种子",
+      "comment": "评论",
+      "subtitle": "字幕",
+      "forumTopic": "论坛主题",
+      "forumReply": "论坛回复"
+    },
+    "form": {
+      "result": "处理结果",
+      "comment": "处理备注"
+    },
+    "reports": {
+      "title": "举报处理",
+      "list": "举报列表",
+      "empty": "暂无举报",
+      "select": "选择一条举报",
+      "resolveTitle": "处理举报 #{id}",
+      "reporter": "举报人 #{id}",
+      "resolved": "举报已处理"
+    },
+    "cheaters": {
+      "title": "作弊记录",
+      "list": "作弊记录",
+      "empty": "暂无作弊记录",
+      "select": "选择一条记录",
+      "resolveTitle": "处理记录 #{id}",
+      "resolved": "作弊记录已处理",
+      "userId": "用户 #{id}",
+      "torrentId": "种子 #{id}",
+      "uploaded": "上传 {value}",
+      "downloaded": "下载 {value}",
+      "announceTime": "间隔 {value}s",
+      "swarm": "做种 {seeders} / 下载 {leechers} / 命中 {hits}",
+      "table": {
+        "user": "用户/种子",
+        "traffic": "流量",
+        "swarm": "集群"
+      }
+    }
+  },
+    "sys": {
+    "eyebrow": "管理后台 / 系统",
+    "entryDescription": "查看定时任务和运行日志",
+    "crons": {
+      "title": "定时任务",
+      "list": "任务列表",
+      "empty": "暂无定时任务",
+      "select": "选择一个任务",
+      "logsTitle": "任务日志",
+      "logsEmpty": "暂无任务日志",
+      "logsTotal": "共 {total} 条日志",
+      "status": {
+        "runnable": "可运行",
+        "running": "运行中",
+        "stopped": "已停止",
+        "closed": "已关闭"
+      },
+      "logStatus": {
+        "running": "执行中",
+        "success": "成功",
+        "failed": "失败"
+      },
+      "table": {
+        "status": "状态",
+        "duration": "耗时",
+        "node": "节点",
+        "error": "错误",
+        "time": "时间"
+      }
+    }
+    }
+  },
+  "user": {
+    "metaTitle": "用户中心",
+    "fallbackName": "用户",
+    "eyebrow": "用户中心",
+    "staff": "Staff",
+    "member": "Member",
+    "status": {
+      "normal": "正常"
+    },
+    "fields": {
+      "id": "用户 ID",
+      "role": "角色",
+      "createdAt": "注册时间"
+    },
+    "stats": {
+      "uploaded": "总上传",
+      "downloaded": "总下载",
+      "ratio": "分享率",
+      "bonus": "魔力值"
+    },
+    "duration": {
+      "seconds": "{count} 秒",
+      "minutes": "{count} 分钟",
+      "hours": "{count} 小时",
+      "days": "{count} 天"
+    },
+    "trafficHistory": {
+      "title": "流量趋势",
+      "subtitle": "按天或按月查看上传、下载和活跃时长。",
+      "empty": "暂无统计数据",
+      "uploaded": "上传",
+      "downloaded": "下载",
+      "seedTime": "做种时长",
+      "leechTime": "下载时长",
+      "activeTime": "活跃时长",
+      "bonus": "魔力值",
+      "periods": {
+        "daily": "按天",
+        "monthly": "按月"
+      },
+      "modes": {
+        "traffic": "流量",
+        "time": "时长",
+        "bonus": "魔力值"
+      }
+    },
+    "bonusLogs": {
+      "title": "魔力值流水",
+      "summary": "共 {total} 条记录，预计时产 {hourly}",
+      "hourly": "预计时产",
+      "balance": "当前余额",
+      "empty": "暂无魔力值流水",
+      "after": "余额 {balance}",
+      "pageSummary": "第 {page} / {pages} 页",
+      "actions": {
+        "transfer_sent": "支出转账",
+        "transfer_received": "收到转账",
+        "seed_bonus": "做种奖励",
+        "forum_topic": "论坛主题",
+        "forum_reply": "论坛回复"
+      }
+    },
+    "invites": {
+      "title": "邀请码",
+      "summary": "{available} 个可发送 / 共 {total} 个",
+      "email": "受邀邮箱",
+      "code": "邀请码",
+      "selectCode": "选择邀请码",
+      "send": "发送邀请",
+      "sent": "邀请已发送",
+      "empty": "暂无邀请码",
+      "status": {
+        "0": "未发送",
+        "1": "已发送",
+        "2": "已使用",
+        "3": "已过期",
+        "4": "已回收"
+      }
+    },
+    "snatches": {
+      "title": "下载与做种历史",
+      "summary": "共 {total} 条记录",
+      "empty": "暂无下载或做种记录",
+      "finished": "已完成",
+      "unfinished": "未完成",
+      "uploaded": "上传",
+      "downloaded": "下载",
+      "seedTime": "做种时长",
+      "leechTime": "下载时长",
+      "lastAction": "最后活动",
+      "pageSummary": "第 {page} / {pages} 页",
+      "filters": {
+        "all": "全部",
+        "finished": "已完成",
+        "unfinished": "未完成"
+      }
+    },
+    "passkey": {
+      "title": "Passkey",
+      "copied": "Passkey 已复制"
+    },
+    "profile": {
+      "title": "个人资料",
+      "subtitle": "更新头像、签名和个人介绍。",
+      "avatar": "头像 URL",
+      "signature": "签名",
+      "info": "个人介绍",
+      "saved": "资料已更新"
+    },
+    "security": {
+      "title": "账号安全",
+      "subtitle": "修改密码后需要重新登录。",
+      "oldPassword": "当前密码",
+      "newPassword": "新密码",
+      "submit": "修改密码",
+      "changed": "密码已修改，请重新登录"
+    }
+  }
+}

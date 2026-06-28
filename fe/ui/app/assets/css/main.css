@@ -1,0 +1,79 @@
+@import "@fontsource/inter/300.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: 0;
+}
+
+.app-surface {
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 16px 40px rgb(15 23 42 / 0.06);
+}
+
+.dark .app-surface {
+  border-color: rgb(51 65 85);
+  background: rgb(15 23 42 / 0.72);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.26);
+}
+
+.app-grid-bg {
+  background-image:
+    linear-gradient(rgb(148 163 184 / 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(148 163 184 / 0.14) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.page-enter-active,
+.page-leave-active,
+.layout-enter-active,
+.layout-leave-active {
+  transition: opacity 0.18s ease-in-out;
+}
+
+.page-enter-from,
+.page-leave-to,
+.layout-enter-from,
+.layout-leave-to {
+  opacity: 0;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999999;
+}
