@@ -2,15 +2,20 @@ package site
 
 import (
 	"context"
+	"math"
+	"strconv"
 	"strings"
 
 	"server/internal/consts"
 	"server/internal/dao"
 	"server/internal/model/entity"
+	"server/internal/model/in/sitein"
+	"server/internal/model/out/siteout"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gcache"
 )
 
@@ -26,7 +31,17 @@ func init() {
 	service.RegisterSiteConfigDomain(NewSiteConfigDomain())
 }
 
-func (s *sSiteConfigDomain) GetConfigByGroupAndKey(ctx context.Context, group, key string) (*entity.SiteConfig, error) {
+// Get 获取后台业务配置项，支持传入默认值兜底（直接查库，无缓存）
+func (s *sSiteConfigDomain) Get(ctx context.Context, group, key string, def ...any) *gvar.Var {
+	cfg, err := s.getConfigByGroupAndKey(ctx, group, key)
+
+	if err != nil {
+		return gvar.New(s.defaultConfigValue(def...))
+	}
+	return gvar.New(s.getConfigValue(cfg, def...))
+}
+
+func (s *sSiteConfigDomain) getConfigByGroupAndKey(ctx context.Context, group, key string) (*entity.SiteConfig, error) {
 	var cfg *entity.SiteConfig
 	err := dao.SiteConfig.Ctx(ctx).
 		Where(dao.SiteConfig.Columns().Group, group).
@@ -35,24 +50,21 @@ func (s *sSiteConfigDomain) GetConfigByGroupAndKey(ctx context.Context, group, k
 	return cfg, err
 }
 
-// Get 获取后台业务配置项，支持传入默认值兜底（直接查库，无缓存）
-func (s *sSiteConfigDomain) Get(ctx context.Context, group, key string, def ...any) *gvar.Var {
-	cfg, err := s.GetConfigByGroupAndKey(ctx, group, key)
-
-	if err != nil || cfg == nil || cfg.Value == nil || cfg.Value.IsNil() {
-		if len(def) > 0 {
-			return gvar.New(def[0])
-		}
-		return gvar.New(nil)
+func (s *sSiteConfigDomain) getConfigValue(cfg *entity.SiteConfig, def ...any) any {
+	if cfg == nil || cfg.Value == nil || cfg.Value.IsNil() {
+		return s.defaultConfigValue(def...)
 	}
-
 	if value := cfg.Value.Get(siteConfigValueField); value != nil {
-		return value
+		return value.Val()
 	}
+	return s.defaultConfigValue(def...)
+}
+
+func (s *sSiteConfigDomain) defaultConfigValue(def ...any) any {
 	if len(def) > 0 {
-		return gvar.New(def[0])
+		return def[0]
 	}
-	return gvar.New(nil)
+	return nil
 }
 
 // GetByPath 模仿 GF 官方 gcfg 行为，通过 "group.key" 的格式获取后台业务配置项
@@ -73,42 +85,135 @@ func (s *sSiteConfigDomain) GetByPath(ctx context.Context, path string, customDe
 	return s.Get(ctx, parts[0], parts[1], def)
 }
 
-func (s *sSiteConfigDomain) AdminListConfigs(ctx context.Context, group string) ([]*entity.SiteConfig, error) {
+func (s *sSiteConfigDomain) AdminListConfigs(ctx context.Context, in sitein.SiteConfigListInp) (*siteout.SiteConfigListOut, error) {
 	m := dao.SiteConfig.Ctx(ctx)
-	if group != "" {
-		m = m.Where(dao.SiteConfig.Columns().Group, group)
+	if in.Group != "" {
+		m = m.Where(dao.SiteConfig.Columns().Group, in.Group)
 	}
 	var configs []*entity.SiteConfig
 	err := m.Scan(&configs)
-	return configs, err
+	if err != nil {
+		return nil, err
+	}
+
+	items := make([]*siteout.SiteConfigItem, 0, len(configs))
+	for _, cfg := range configs {
+		if cfg == nil {
+			continue
+		}
+		items = append(items, s.buildSiteConfigItem(cfg))
+	}
+	return &siteout.SiteConfigListOut{Configs: items}, nil
 }
 
-func (s *sSiteConfigDomain) AdminUpdateConfig(ctx context.Context, group string, key string, value string) error {
-	valueJson := s.encodeConfigValue(value)
-	_, err := dao.SiteConfig.Ctx(ctx).
+func (s *sSiteConfigDomain) buildSiteConfigItem(cfg *entity.SiteConfig) *siteout.SiteConfigItem {
+	return &siteout.SiteConfigItem{
+		Id:          cfg.Id,
+		Group:       cfg.Group,
+		Key:         cfg.Key,
+		Value:       s.getConfigValue(cfg),
+		ValueType:   string(s.getConfigValueType(cfg.Group, cfg.Key)),
+		Description: cfg.Description,
+		CreatedAt:   cfg.CreatedAt,
+		UpdatedAt:   cfg.UpdatedAt,
+	}
+}
+
+func (s *sSiteConfigDomain) AdminUpdateConfig(ctx context.Context, in sitein.SiteConfigUpdateInp) error {
+	normalizedValue, err := s.normalizeConfigValue(in.Group, in.Key, in.Value)
+	if err != nil {
+		return err
+	}
+	valueJson := s.encodeConfigValue(normalizedValue)
+	_, err = dao.SiteConfig.Ctx(ctx).
 		Data(dao.SiteConfig.Columns().Value, valueJson).
-		Where(dao.SiteConfig.Columns().Group, group).
-		Where(dao.SiteConfig.Columns().Key, key).
+		Where(dao.SiteConfig.Columns().Group, in.Group).
+		Where(dao.SiteConfig.Columns().Key, in.Key).
 		Update()
 	if err != nil {
 		return err
 	}
-	cacheKey := service.SysCache().KeySiteConfigFullPath(ctx, group+"."+key)
+	cacheKey := service.SysCache().KeySiteConfigFullPath(ctx, in.Group+"."+in.Key)
 	_, _ = gcache.Remove(ctx, cacheKey)
 	_ = service.SysCache().PublishInvalidate(ctx, cacheKey)
 	return nil
 }
 
-func (s *sSiteConfigDomain) encodeConfigValue(value string) string {
+func (s *sSiteConfigDomain) encodeConfigValue(value any) string {
 	return gjson.MustEncodeString(map[string]any{
-		siteConfigValueField: s.convertConfigValue(value),
+		siteConfigValueField: value,
 	})
 }
 
-func (s *sSiteConfigDomain) convertConfigValue(value string) any {
-	value = strings.TrimSpace(value)
-	if decoded, err := gjson.Decode(value); err == nil {
-		return decoded
+func (s *sSiteConfigDomain) getConfigValueType(group, key string) consts.SiteConfigValueType {
+	value, ok := consts.SiteConfigDefaults[group+"."+key]
+	if !ok {
+		return consts.SiteConfigValueTypeJSON
 	}
-	return value
+
+	switch value.(type) {
+	case bool:
+		return consts.SiteConfigValueTypeBoolean
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+		return consts.SiteConfigValueTypeInt
+	case float32, float64:
+		return consts.SiteConfigValueTypeFloat
+	case string:
+		return consts.SiteConfigValueTypeString
+	default:
+		return consts.SiteConfigValueTypeJSON
+	}
+}
+
+func (s *sSiteConfigDomain) normalizeConfigValue(group, key string, value any) (any, error) {
+	switch s.getConfigValueType(group, key) {
+	case consts.SiteConfigValueTypeBoolean:
+		return s.normalizeConfigBool(value)
+	case consts.SiteConfigValueTypeInt:
+		return s.normalizeConfigInt(value)
+	case consts.SiteConfigValueTypeFloat:
+		return s.normalizeConfigFloat(value)
+	default:
+		return value, nil
+	}
+}
+
+func (s *sSiteConfigDomain) normalizeConfigBool(value any) (bool, error) {
+	valueVar := s.configValueVar(value)
+	if _, err := strconv.ParseBool(valueVar.String()); err != nil {
+		return false, gerror.New("invalid boolean config value")
+	}
+	return valueVar.Bool(), nil
+}
+
+func (s *sSiteConfigDomain) normalizeConfigInt(value any) (int64, error) {
+	valueVar := s.configValueVar(value)
+	if _, err := strconv.ParseInt(valueVar.String(), 10, 64); err != nil {
+		return 0, gerror.New("invalid integer config value")
+	}
+	return valueVar.Int64(), nil
+}
+
+func (s *sSiteConfigDomain) normalizeConfigFloat(value any) (float64, error) {
+	valueVar, _, err := s.configNumberVar(value, "invalid float config value")
+	if err != nil {
+		return 0, err
+	}
+	return valueVar.Float64(), nil
+}
+
+func (s *sSiteConfigDomain) configValueVar(value any) *gvar.Var {
+	if text, ok := value.(string); ok {
+		return gvar.New(strings.TrimSpace(text))
+	}
+	return gvar.New(value)
+}
+
+func (s *sSiteConfigDomain) configNumberVar(value any, errorMessage string) (*gvar.Var, float64, error) {
+	valueVar := s.configValueVar(value)
+	number, err := strconv.ParseFloat(valueVar.String(), 64)
+	if err != nil || math.IsNaN(number) || math.IsInf(number, 0) {
+		return nil, 0, gerror.New(errorMessage)
+	}
+	return valueVar, number, nil
 }

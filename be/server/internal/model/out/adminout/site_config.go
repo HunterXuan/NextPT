@@ -1,7 +1,9 @@
 package adminout
 
-import "server/internal/model/entity"
+import "server/internal/model/out/siteout"
+
+type SiteConfigItem = siteout.SiteConfigItem
 
 type SiteConfigListOut struct {
-	Configs []*entity.SiteConfig `json:"configs"`
+	Configs []*SiteConfigItem `json:"configs"`
 }

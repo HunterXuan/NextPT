@@ -1,5 +1,15 @@
 package consts
 
+type SiteConfigValueType string
+
+const (
+	SiteConfigValueTypeString  SiteConfigValueType = "string"
+	SiteConfigValueTypeInt     SiteConfigValueType = "int"
+	SiteConfigValueTypeFloat   SiteConfigValueType = "float"
+	SiteConfigValueTypeBoolean SiteConfigValueType = "boolean"
+	SiteConfigValueTypeJSON    SiteConfigValueType = "json"
+)
+
 // ==============================================================================
 // 1. Tracker 相关系统配置 (Group: tracker)
 // 格式: group.key
