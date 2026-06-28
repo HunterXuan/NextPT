@@ -47,6 +47,7 @@ type IAdminV1 interface {
 	ModCheaterResolve(ctx context.Context, req *v1.ModCheaterResolveReq) (res *v1.ModCheaterResolveRes, err error)
 	ModReportList(ctx context.Context, req *v1.ModReportListReq) (res *v1.ModReportListRes, err error)
 	ModReportResolve(ctx context.Context, req *v1.ModReportResolveReq) (res *v1.ModReportResolveRes, err error)
+	ModUserList(ctx context.Context, req *v1.ModUserListReq) (res *v1.ModUserListRes, err error)
 	ModUserApply(ctx context.Context, req *v1.ModUserApplyReq) (res *v1.ModUserApplyRes, err error)
 	ModUserRemove(ctx context.Context, req *v1.ModUserRemoveReq) (res *v1.ModUserRemoveRes, err error)
 	SiteAuditList(ctx context.Context, req *v1.SiteAuditListReq) (res *v1.SiteAuditListRes, err error)

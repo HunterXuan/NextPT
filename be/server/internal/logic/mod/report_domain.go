@@ -47,7 +47,7 @@ func (s *sModReportDomain) Update(ctx context.Context, id uint64, data interface
 
 func (s *sModReportDomain) QueryReports(ctx context.Context, status int, targetType string, page, size int) ([]entity.ModReport, int, error) {
 	m := dao.ModReport.Ctx(ctx)
-	if status != 0 {
+	if status >= 0 {
 		m = m.Where(dao.ModReport.Columns().Status, status)
 	}
 	if targetType != "" {

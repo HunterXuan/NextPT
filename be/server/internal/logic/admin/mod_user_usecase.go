@@ -6,6 +6,7 @@ import (
 	"server/internal/model"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/modin"
+	"server/internal/model/out/modout"
 	"server/internal/service"
 )
 
@@ -17,6 +18,12 @@ func init() {
 
 func NewAdminModUserUsecase() *sAdminModUserUsecase {
 	return &sAdminModUserUsecase{}
+}
+
+func (s *sAdminModUserUsecase) List(ctx context.Context, actor *model.Actor, in adminin.ModUserListInp) (*modout.ListUserOut, error) {
+	return service.ModUserUsecase().List(ctx, actor, modin.ListUserInp{
+		UserId: in.Id,
+	})
 }
 
 func (s *sAdminModUserUsecase) Apply(ctx context.Context, actor *model.Actor, in adminin.ModUserApplyInp) error {

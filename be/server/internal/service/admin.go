@@ -75,6 +75,7 @@ type (
 		Resolve(ctx context.Context, actor *model.Actor, in adminin.ModReportResolveInp) error
 	}
 	IAdminModUserUsecase interface {
+		List(ctx context.Context, actor *model.Actor, in adminin.ModUserListInp) (*modout.ListUserOut, error)
 		Apply(ctx context.Context, actor *model.Actor, in adminin.ModUserApplyInp) error
 		Remove(ctx context.Context, actor *model.Actor, in adminin.ModUserRemoveInp) error
 	}

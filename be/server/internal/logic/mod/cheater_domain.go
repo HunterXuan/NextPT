@@ -30,7 +30,7 @@ func (s *sModCheaterDomain) Update(ctx context.Context, id uint64, data interfac
 
 func (s *sModCheaterDomain) QueryCheaterLogs(ctx context.Context, isDealt *int, page, size int) ([]entity.ModCheaterLog, int, error) {
 	m := dao.ModCheaterLog.Ctx(ctx)
-	if isDealt != nil {
+	if isDealt != nil && *isDealt >= 0 {
 		m = m.Where(dao.ModCheaterLog.Columns().IsDealt, *isDealt)
 	}
 	total, err := m.Count()
