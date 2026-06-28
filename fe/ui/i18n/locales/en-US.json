@@ -9,7 +9,11 @@
     "retry": "Retry",
     "save": "Save",
     "requestFailed": "Request failed. Please try again later.",
-    "switchLanguage": "Switch language"
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
+    "switchLanguage": "Switch language",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "nav": {
     "home": "Home",
@@ -26,50 +30,144 @@
   },
   "home": {
     "metaTitle": "Home",
-    "metaDescription": "NextPT private tracker frontend.",
-    "eyebrow": "Private tracker community",
-    "title": "NextPT",
-    "description": "A private resource community built around torrent publishing, tracker accounting, forum discussion, and user permissions.",
-    "openCenter": "Open user center",
-    "stats": {
-      "tracker": "Tracker",
-      "ratio": "Ratio",
-      "community": "Community"
-    },
-    "panel": {
-      "title": "Site workspace",
-      "subtitle": "The first screens cover account and profile flows",
-      "badge": "In development"
-    },
-    "modules": {
-      "catalog": {
-        "title": "Catalog",
-        "description": "Torrent lists, detail pages, upload, download, and bookmarks will be connected next.",
-        "meta": "Catalog"
+    "metaDescription": "NextPT is a private resource community built around quality releases, long-term seeding, and member discussion.",
+    "guest": {
+      "eyebrow": "A private community for careful collecting and sharing",
+      "title": "NextPT",
+      "description": "Resources here are not only downloaded. They are organized, supplemented, and kept alive through seeding. Find what you want, then leave something useful for the next member.",
+      "primaryAction": "Request access",
+      "secondaryAction": "Log in",
+      "stats": {
+        "privacy": "Curated library",
+        "privacyValue": "Organized releases",
+        "ratio": "Long-lived access",
+        "ratioValue": "Sustained seeding",
+        "community": "Member help",
+        "communityValue": "Discussion"
       },
-      "tracker": {
-        "title": "Tracker",
-        "description": "Announce, download, passkey, and permission checks already have backend foundations.",
-        "meta": "Live"
+      "features": {
+        "eyebrow": "Community experience",
+        "title": "More than downloading. A place to keep good resources alive.",
+        "description": "A good PT community should make quality easier to judge, context easier to find, and seeding after completion feel worth doing."
       },
-      "forum": {
-        "title": "Forum",
-        "description": "Announcements, general discussion, and resource conversations will be wired into the frontend.",
-        "meta": "Forum"
+      "featureItems": {
+        "catalog": {
+          "title": "Find the right resource faster",
+          "description": "Filter by category and keyword, then check descriptions, file trees, size, and activity before downloading."
+        },
+        "tracker": {
+          "title": "Older resources still matter",
+          "description": "The community encourages long-term seeding and reseeds so useful releases can stay available after the initial rush."
+        },
+        "ratio": {
+          "title": "Sharing has feedback",
+          "description": "Upload, download, seed time, and bonus history are reflected in the user center, so steady contribution is visible."
+        },
+        "forum": {
+          "title": "Discussion around resources",
+          "description": "When versions, subtitles, reseeds, or usage questions come up, the forum gives members a place to add context."
+        },
+        "subtitle": {
+          "title": "Subtitles and notes stay visible",
+          "description": "Browse, download, and report subtitles separately, while descriptions and issue notes stay easier for later members to find."
+        },
+        "account": {
+          "title": "A quieter sharing environment",
+          "description": "Clear rules for joining, publishing, downloading, and interaction reduce noise and make the community easier to use long-term."
+        }
+      },
+      "flow": {
+        "eyebrow": "How it works",
+        "title": "From joining to contributing",
+        "description": "The everyday path is simple: join the site, find resources, keep seeding, and participate in the community.",
+        "items": {
+          "invite": {
+            "title": "Join the community",
+            "description": "Enter through an invite or open registration, learn the rules, then start browsing and saving resources."
+          },
+          "discover": {
+            "title": "Find resources",
+            "description": "Search the catalog, filter categories, and inspect descriptions, file trees, and interactions."
+          },
+          "seed": {
+            "title": "Download and seed",
+            "description": "Connect your torrent client to the tracker, then keep seeding after completion to build contribution."
+          },
+          "discuss": {
+            "title": "Join the community",
+            "description": "Ask questions, report issues, add subtitles, and take part in forum discussions."
+          }
+        }
+      },
+      "faq": {
+        "eyebrow": "FAQ",
+        "title": "Common questions",
+        "items": {
+          "invite": {
+            "question": "Do I need an invite code?",
+            "answer": "That depends on the current site configuration. If the registration page asks for an invite code, enter one if you have it; otherwise you can submit according to the site rules."
+          },
+          "ratio": {
+            "question": "Why does ratio matter?",
+            "answer": "Private trackers depend on users continuing to upload and seed. Ratio helps keep resources available and gives users a clear view of their contribution."
+          },
+          "passkey": {
+            "question": "Can I share download links with others?",
+            "answer": "You should not share personal download links or torrent files outside the site. Private trackers rely on account-based activity, and leaking links can affect your account and sharing data."
+        },
+        "forum": {
+            "question": "Can I request resources or report issues?",
+            "answer": "Yes. The forum is a good place for requests, resource feedback, subtitle notes, and rule discussion. Good feedback helps resources stay useful longer."
+          }
+        }
+      },
+      "cta": {
+        "title": "Ready to enter the community?",
+        "description": "After creating an account, you can browse resources, save favorites, join discussions, and become part of the sharing cycle from your first download."
       }
     },
-    "workflow": {
-      "profile": {
-        "title": "Account profile",
-        "description": "Registration, login, profile updates, and password changes come first so later pages can share auth state."
-      },
-      "passkey": {
-        "title": "Tracker credential",
-        "description": "The user center exposes the passkey that torrent download and client setup will build on."
+    "member": {
+      "eyebrow": "Site workspace",
+      "title": "Welcome back, {name}",
+      "description": "This is your signed-in home for jumping into resources, forums, and your user center.",
+      "actions": {
+        "catalog": {
+          "title": "Browse torrents",
+          "description": "Search resources, inspect details, download torrents, and save bookmarks."
+        },
+        "upload": {
+          "title": "Upload torrent",
+          "description": "Publish a new torrent with description, category, and anonymous options."
+        },
+        "forum": {
+          "title": "Open forum",
+          "description": "Browse nodes, topics, and replies, then join site discussions."
+        },
+        "profile": {
+          "title": "User center",
+          "description": "View sharing data, invites, profile details, and account security settings."
+        }
       },
       "next": {
-        "title": "Next stage",
-        "description": "Once account flows are stable, torrent lists, details, forums, and admin screens can follow."
+        "title": "What to do today",
+        "items": {
+          "search": {
+            "title": "Find a resource",
+            "description": "Start with categories and keywords to see what recently matches your needs."
+          },
+          "passkey": {
+            "title": "Check your seeding",
+            "description": "Keep seeding after completion so resources stay available and your sharing data keeps growing."
+          },
+          "community": {
+            "title": "Add feedback",
+            "description": "For resource issues, subtitle additions, or rule questions, join the forum discussion."
+          }
+        }
+      },
+      "account": {
+        "title": "Account overview",
+        "action": "Open user center"
       }
     }
   },
@@ -83,49 +181,56 @@
     },
     "login": {
       "action": "Log in",
-      "title": "Log in",
-      "subtitle": "Use your site account to enter NextPT.",
-      "heroTitle": "Return to your PT account",
-      "heroDescription": "After logging in, you can view traffic, ratio, bonus, passkey, and continue into torrent and forum features as they land.",
+      "eyebrow": "Welcome back",
+      "title": "Log in to NextPT",
+      "subtitle": "Return to the catalog, bookmarks, and discussions, then continue browsing and sharing.",
+      "heroTitle": "Return to your private resource community",
+      "heroDescription": "Keep following resources you care about, maintain your seeding and sharing history, and see what members have added, requested, or discussed recently.",
       "submit": "Log in",
       "success": "Logged in",
       "noAccount": "No account yet?",
-      "highlights": {
-        "identity": {
-          "title": "Unified identity",
-          "description": "Web pages, tracker requests, and permission checks use the same user identity."
+      "benefits": {
+        "passkey": {
+          "title": "Keep finding resources",
+          "description": "Return to bookmarks and recent interests, then keep filtering, downloading, or waiting for a better release."
         },
-        "tracker": {
-          "title": "Tracker permissions",
-          "description": "Download permission directly affects announce and torrent download access."
+        "stats": {
+          "title": "See your contribution",
+          "description": "Upload, download, seed time, and bonus history are recorded so you can understand your participation."
+        },
+        "community": {
+          "title": "Join member discussions",
+          "description": "Bookmark releases, add subtitles, report issues, or talk with other members in the forum."
         }
       }
     },
     "register": {
       "action": "Register",
-      "title": "Register",
-      "subtitle": "Create a NextPT account.",
-      "heroTitle": "Start with a community account",
-      "heroDescription": "This stage completes account and user center flows first. Catalog, forum, and admin pages will reuse the same session state.",
+      "eyebrow": "Join the community",
+      "title": "Create a NextPT account",
+      "subtitle": "Create a profile and join a resource community sustained by curation, seeding, and member help.",
+      "heroTitle": "Join a community that keeps good resources alive",
+      "heroDescription": "Downloading is only the beginning. Seeding, adding context, reporting issues, and joining discussions all help resources remain useful for more members.",
       "submit": "Create account",
       "success": "Account created",
       "hasAccount": "Already have an account?",
+      "inviteHint": "If the site requires invites, enter your invite code. If you do not have one, leave it empty and submit according to site rules.",
       "policies": {
         "identity": {
-          "title": "Account profile",
-          "description": "Username, email, and password are used for site login."
+          "title": "Find what you want",
+          "description": "Use categories, search, and detail pages to judge whether a resource fits your needs."
         },
         "ratio": {
-          "title": "Share ratio",
-          "description": "Download and seeding activity will accumulate into your personal stats."
+          "title": "Keep sharing after download",
+          "description": "Seeding helps later members download and becomes part of your own sharing record."
         },
         "community": {
-          "title": "Community access",
-          "description": "Forum access follows role permissions and moderation actions."
+          "title": "Add context and discussion",
+          "description": "Report issues, add subtitles, or make requests so releases become more complete."
         },
         "security": {
-          "title": "Secure credential",
-          "description": "A tracker passkey is generated after registration."
+          "title": "Respect community rules",
+          "description": "Protect your account and download links, avoid leaking resources, and help keep sharing reliable."
         }
       }
     }
@@ -184,13 +289,13 @@
           "like": "Thank",
           "liked": "Thanked",
           "bookmark": "Bookmark",
-        "bookmarked": "Bookmarked",
-        "edit": "Edit torrent",
-        "report": "Report",
-        "adminDelete": "Delete torrent",
-        "confirmAdminDelete": "Delete torrent \"{name}\"?",
-        "adminDeleted": "Torrent deleted"
-      },
+          "bookmarked": "Bookmarked",
+          "edit": "Edit torrent",
+          "report": "Report",
+          "adminDelete": "Delete torrent",
+          "confirmAdminDelete": "Delete torrent \"{name}\"?",
+          "adminDeleted": "Torrent deleted"
+        },
         "stats": {
           "seeders": "Seeders",
           "leechers": "Leechers",
@@ -727,28 +832,28 @@
             "forumBanned": "Forum banned"
           }
         },
-      "permission": {
-        "title": "Manual permission",
-        "key": "Permission",
-        "deny": "Deny permission",
-        "grant": "Add",
-        "revoke": "Revoke",
-        "granted": "Permission added",
-        "revoked": "Permission revoked"
+        "permission": {
+          "title": "Manual permission",
+          "key": "Permission",
+          "deny": "Deny permission",
+          "grant": "Add",
+          "revoke": "Revoke",
+          "granted": "Permission added",
+          "revoked": "Permission revoked"
+        },
+        "stat": {
+          "title": "User stats",
+          "uploaded": "Uploaded",
+          "downloaded": "Downloaded",
+          "seedTime": "Seed time",
+          "bonus": "Bonus",
+          "uploadedDiff": "Uploaded diff",
+          "downloadedDiff": "Downloaded diff",
+          "bonusDiff": "Bonus diff",
+          "submit": "Adjust stats",
+          "saved": "Stats updated"
+        }
       },
-      "stat": {
-        "title": "User stats",
-        "uploaded": "Uploaded",
-        "downloaded": "Downloaded",
-        "seedTime": "Seed time",
-        "bonus": "Bonus",
-        "uploadedDiff": "Uploaded diff",
-        "downloadedDiff": "Downloaded diff",
-        "bonusDiff": "Bonus diff",
-        "submit": "Adjust stats",
-        "saved": "Stats updated"
-      }
-    },
       "roles": {
         "title": "Role Admin",
         "list": "Role list",
@@ -784,22 +889,22 @@
           "noPermissions": "No permissions available",
           "customPermission": "Custom permission",
           "addPermission": "Add",
-        "rules": "Rules JSON",
-        "rulesInvalid": "Rules must be a JSON object"
+          "rules": "Rules JSON",
+          "rulesInvalid": "Rules must be a JSON object"
+        }
+      },
+      "invites": {
+        "title": "Invite credits",
+        "form": {
+          "title": "Grant invite credits",
+          "amount": "Amount",
+          "isTemp": "Temporary invite",
+          "expireAt": "Expires at",
+          "submit": "Grant",
+          "success": "Invite credits granted"
+        }
       }
     },
-    "invites": {
-      "title": "Invite credits",
-      "form": {
-        "title": "Grant invite credits",
-        "amount": "Amount",
-        "isTemp": "Temporary invite",
-        "expireAt": "Expires at",
-        "submit": "Grant",
-        "success": "Invite credits granted"
-      }
-    }
-  },
     "site": {
       "eyebrow": "Admin / Site",
       "title": "Site Admin",
@@ -851,123 +956,123 @@
         }
       },
       "audits": {
-      "title": "Audit Logs",
-      "entryDescription": "Review important admin actions",
-      "list": "Audit log",
-      "empty": "No audit logs",
-      "total": "{total} records",
-      "table": {
-        "user": "User",
-        "action": "Action",
-        "target": "Target",
-        "detail": "Detail",
-        "level": "Level",
-        "time": "Time"
-      },
-      "level": {
-        "normal": "Normal",
-        "mod": "Mod",
-        "admin": "Admin"
-      }
+        "title": "Audit Logs",
+        "entryDescription": "Review important admin actions",
+        "list": "Audit log",
+        "empty": "No audit logs",
+        "total": "{total} records",
+        "table": {
+          "user": "User",
+          "action": "Action",
+          "target": "Target",
+          "detail": "Detail",
+          "level": "Level",
+          "time": "Time"
+        },
+        "level": {
+          "normal": "Normal",
+          "mod": "Mod",
+          "admin": "Admin"
+        }
       }
     },
     "mod": {
-    "eyebrow": "Admin / Moderation",
-    "title": "Moderation",
-    "entryDescription": "Handle reports and suspicious client activity",
-    "actions": {
-      "filter": "Filter",
-      "resolve": "Resolve",
-      "submitResolve": "Submit"
-    },
-    "stats": {
-      "total": "Records"
-    },
-    "table": {
-      "target": "Target",
-      "reason": "Reason",
-      "status": "Status",
-      "createdAt": "Created",
-      "actions": "Actions"
-    },
-    "status": {
-      "all": "All",
-      "pending": "Pending",
-      "accepted": "Valid",
-      "rejected": "Invalid",
-      "resolved": "Resolved"
-    },
-    "targetTypes": {
-      "all": "All types",
-      "torrent": "Torrent",
-      "comment": "Comment",
-      "subtitle": "Subtitle",
-      "forumTopic": "Forum topic",
-      "forumReply": "Forum reply"
-    },
-    "form": {
-      "result": "Result",
-      "comment": "Comment"
-    },
-    "reports": {
-      "title": "Reports",
-      "list": "Report list",
-      "empty": "No reports",
-      "select": "Select a report",
-      "resolveTitle": "Resolve report #{id}",
-      "reporter": "Reporter #{id}",
-      "resolved": "Report resolved"
-    },
-    "cheaters": {
-      "title": "Cheater Logs",
-      "list": "Cheater log list",
-      "empty": "No cheater logs",
-      "select": "Select a log",
-      "resolveTitle": "Resolve log #{id}",
-      "resolved": "Cheater log resolved",
-      "userId": "User #{id}",
-      "torrentId": "Torrent #{id}",
-      "uploaded": "Uploaded {value}",
-      "downloaded": "Downloaded {value}",
-      "announceTime": "Interval {value}s",
-      "swarm": "Seeders {seeders} / Leechers {leechers} / Hits {hits}",
-      "table": {
-        "user": "User/Torrent",
-        "traffic": "Traffic",
-        "swarm": "Swarm"
-      }
-    }
-  },
-    "sys": {
-    "eyebrow": "Admin / System",
-    "entryDescription": "Inspect cron jobs and execution logs",
-    "crons": {
-      "title": "Cron Jobs",
-      "list": "Job list",
-      "empty": "No cron jobs",
-      "select": "Select a job",
-      "logsTitle": "Job logs",
-      "logsEmpty": "No job logs",
-      "logsTotal": "{total} logs",
-      "status": {
-        "runnable": "Runnable",
-        "running": "Running",
-        "stopped": "Stopped",
-        "closed": "Closed"
+      "eyebrow": "Admin / Moderation",
+      "title": "Moderation",
+      "entryDescription": "Handle reports and suspicious client activity",
+      "actions": {
+        "filter": "Filter",
+        "resolve": "Resolve",
+        "submitResolve": "Submit"
       },
-      "logStatus": {
-        "running": "Running",
-        "success": "Success",
-        "failed": "Failed"
+      "stats": {
+        "total": "Records"
       },
       "table": {
+        "target": "Target",
+        "reason": "Reason",
         "status": "Status",
-        "duration": "Duration",
-        "node": "Node",
-        "error": "Error",
-        "time": "Time"
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "status": {
+        "all": "All",
+        "pending": "Pending",
+        "accepted": "Valid",
+        "rejected": "Invalid",
+        "resolved": "Resolved"
+      },
+      "targetTypes": {
+        "all": "All types",
+        "torrent": "Torrent",
+        "comment": "Comment",
+        "subtitle": "Subtitle",
+        "forumTopic": "Forum topic",
+        "forumReply": "Forum reply"
+      },
+      "form": {
+        "result": "Result",
+        "comment": "Comment"
+      },
+      "reports": {
+        "title": "Reports",
+        "list": "Report list",
+        "empty": "No reports",
+        "select": "Select a report",
+        "resolveTitle": "Resolve report #{id}",
+        "reporter": "Reporter #{id}",
+        "resolved": "Report resolved"
+      },
+      "cheaters": {
+        "title": "Cheater Logs",
+        "list": "Cheater log list",
+        "empty": "No cheater logs",
+        "select": "Select a log",
+        "resolveTitle": "Resolve log #{id}",
+        "resolved": "Cheater log resolved",
+        "userId": "User #{id}",
+        "torrentId": "Torrent #{id}",
+        "uploaded": "Uploaded {value}",
+        "downloaded": "Downloaded {value}",
+        "announceTime": "Interval {value}s",
+        "swarm": "Seeders {seeders} / Leechers {leechers} / Hits {hits}",
+        "table": {
+          "user": "User/Torrent",
+          "traffic": "Traffic",
+          "swarm": "Swarm"
+        }
       }
-    }
+    },
+    "sys": {
+      "eyebrow": "Admin / System",
+      "entryDescription": "Inspect cron jobs and execution logs",
+      "crons": {
+        "title": "Cron Jobs",
+        "list": "Job list",
+        "empty": "No cron jobs",
+        "select": "Select a job",
+        "logsTitle": "Job logs",
+        "logsEmpty": "No job logs",
+        "logsTotal": "{total} logs",
+        "status": {
+          "runnable": "Runnable",
+          "running": "Running",
+          "stopped": "Stopped",
+          "closed": "Closed"
+        },
+        "logStatus": {
+          "running": "Running",
+          "success": "Success",
+          "failed": "Failed"
+        },
+        "table": {
+          "status": "Status",
+          "duration": "Duration",
+          "node": "Node",
+          "error": "Error",
+          "time": "Time"
+        }
+      }
     }
   },
   "user": {

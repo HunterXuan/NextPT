@@ -9,7 +9,11 @@
     "retry": "重試",
     "save": "儲存",
     "requestFailed": "請求失敗，請稍後再試",
-    "switchLanguage": "切換語言"
+    "collapseSidebar": "收起側邊欄",
+    "expandSidebar": "展開側邊欄",
+    "switchLanguage": "切換語言",
+    "showPassword": "顯示密碼",
+    "hidePassword": "隱藏密碼"
   },
   "nav": {
     "home": "首頁",
@@ -26,50 +30,144 @@
   },
   "home": {
     "metaTitle": "首頁",
-    "metaDescription": "NextPT 私有資源社群前端。",
-    "eyebrow": "私有 Tracker 社群",
-    "title": "NextPT",
-    "description": "圍繞種子發布、Tracker 統計、論壇討論和使用者權限構建的私有資源社群。",
-    "openCenter": "進入使用者中心",
-    "stats": {
-      "tracker": "Tracker",
-      "ratio": "分享率",
-      "community": "社群"
-    },
-    "panel": {
-      "title": "站點工作台",
-      "subtitle": "首批頁面先覆蓋帳號和個人資料流程",
-      "badge": "開發中"
-    },
-    "modules": {
-      "catalog": {
-        "title": "資源庫",
-        "description": "後續接入種子列表、詳情、上傳、下載和收藏等核心流程。",
-        "meta": "Catalog"
+    "metaDescription": "NextPT 私有資源社群，圍繞高品質資源、長期做種和站內交流建立分享秩序。",
+    "guest": {
+      "eyebrow": "為認真收藏與分享而生的私有資源社群",
+      "title": "NextPT",
+      "description": "在這裡，資源不只是被下載，也會被整理、補充和長期保種。找到想看的內容，也把自己擁有的內容留給後來的人。",
+      "primaryAction": "申請加入",
+      "secondaryAction": "已有帳號登入",
+      "stats": {
+        "privacy": "資源沉澱",
+        "privacyValue": "精選整理",
+        "ratio": "長期可用",
+        "ratioValue": "持續做種",
+        "community": "站內互助",
+        "communityValue": "討論補充"
       },
-      "tracker": {
-        "title": "Tracker",
-        "description": "已具備 announce、download、passkey 和權限校驗基礎。",
-        "meta": "Live"
+      "features": {
+        "eyebrow": "社群體驗",
+        "title": "不只是下載，更是把好資源留住",
+        "description": "一個好的 PT 社群，應該讓使用者更容易判斷資源品質、找到補充資訊，並願意在下載完成後繼續分享。"
       },
-      "forum": {
-        "title": "論壇",
-        "description": "站點公告、綜合討論和資源交流會逐步接入前端。",
-        "meta": "Forum"
+      "featureItems": {
+        "catalog": {
+          "title": "更容易找到想要的內容",
+          "description": "按分類和關鍵字篩選資源，進入詳情頁查看簡介、檔案結構、體積和活躍狀態，再決定是否下載。"
+        },
+        "tracker": {
+          "title": "熱門之外，也照顧舊資源",
+          "description": "社群鼓勵長期做種和補檔，讓過了熱度的內容仍然有機會被後來的人找到。"
+        },
+        "ratio": {
+          "title": "分享有記錄，也有回饋",
+          "description": "上傳、下載、做種時長和魔力值會沉澱到個人中心，讓持續分享的人看見自己的貢獻。"
+        },
+        "forum": {
+          "title": "資源背後有人討論",
+          "description": "遇到版本差異、字幕問題、補檔請求或使用疑問時，可以在論壇裡找到上下文和回應。"
+        },
+        "subtitle": {
+          "title": "字幕和補充資訊不遺失",
+          "description": "字幕可以獨立瀏覽、下載和回饋，資源說明、補充資料和問題記錄也更容易被後來的人看到。"
+        },
+        "account": {
+          "title": "更安靜的分享環境",
+          "description": "註冊、發布、下載和互動都有清晰規則，減少噪音和濫用，讓社群更適合長期使用。"
+        }
+      },
+      "flow": {
+        "eyebrow": "如何開始",
+        "title": "從加入到參與分享",
+        "description": "普通使用者最常見的路徑很簡單：進入社群、找到資源、保持做種、參與討論。",
+        "items": {
+          "invite": {
+            "title": "加入社群",
+            "description": "透過邀請或開放註冊進入站點，先了解規則，再開始瀏覽和收藏資源。"
+          },
+          "discover": {
+            "title": "發現資源",
+            "description": "在資源庫中搜尋、篩選分類，進入詳情頁查看說明、檔案結構和互動資訊。"
+          },
+          "seed": {
+            "title": "下載並做種",
+            "description": "透過種子客戶端連接 Tracker，下載完成後繼續做種，累積分享數據。"
+          },
+          "discuss": {
+            "title": "參與社群",
+            "description": "在論壇中提問、回饋資源問題、補充字幕或參與站內討論。"
+          }
+        }
+      },
+      "faq": {
+        "eyebrow": "FAQ",
+        "title": "常見問題",
+        "items": {
+          "invite": {
+            "question": "註冊一定需要邀請碼嗎？",
+            "answer": "是否需要邀請碼取決於站點目前配置。如果註冊頁展示邀請碼欄位，可以填入已有邀請碼；沒有邀請碼時也可以先嘗試按站點規則註冊。"
+          },
+          "ratio": {
+            "question": "為什麼要關注分享率？",
+            "answer": "私有 Tracker 依賴使用者持續上傳和做種。分享率能幫助社群維持資源可用性，也能讓使用者了解自己的貢獻。"
+          },
+          "passkey": {
+            "question": "下載連結可以分享給別人嗎？",
+            "answer": "不建議分享個人下載連結或種子給站外使用者。私有 Tracker 依賴帳號行為記錄，隨意外傳可能影響自己的帳號安全和分享資料。"
+          },
+          "forum": {
+            "question": "可以求資源或回饋問題嗎？",
+            "answer": "可以。論壇適合發布求助、回饋資源問題、補充字幕資訊和參與規則討論；好的回饋也會幫助資源被維護得更久。"
+          }
+        }
+      },
+      "cta": {
+        "title": "準備進入社群？",
+        "description": "建立帳號後，你可以瀏覽資源、收藏內容、參與討論，並從第一次下載開始成為分享循環的一部分。"
       }
     },
-    "workflow": {
-      "profile": {
-        "title": "帳號資料",
-        "description": "註冊、登入、資料修改和改密碼先完成，便於後續頁面共享身份狀態。"
-      },
-      "passkey": {
-        "title": "Tracker 憑證",
-        "description": "使用者中心展示 passkey，後續種子下載和客戶端配置會繼續圍繞它展開。"
+    "member": {
+      "eyebrow": "站點工作台",
+      "title": "歡迎回來，{name}",
+      "description": "這裡是登入後的首頁，快速進入資源、論壇和個人中心。",
+      "actions": {
+        "catalog": {
+          "title": "瀏覽種子",
+          "description": "搜尋資源、查看詳情、下載種子和收藏內容。"
+        },
+        "upload": {
+          "title": "發布種子",
+          "description": "上傳新的種子檔案，補充說明、分類和匿名發布設定。"
+        },
+        "forum": {
+          "title": "進入論壇",
+          "description": "查看板塊、主題和回覆，參與站內討論。"
+        },
+        "profile": {
+          "title": "使用者中心",
+          "description": "查看分享資料、邀請、帳號資料和安全設定。"
+        }
       },
       "next": {
-        "title": "下一階段",
-        "description": "帳號流程穩定後，可以繼續推進種子列表、詳情頁、論壇和管理後台。"
+        "title": "今天可以做什麼",
+        "items": {
+          "search": {
+            "title": "找一個資源",
+            "description": "從分類和關鍵字開始，看看最近是否有你需要的內容。"
+          },
+          "passkey": {
+            "title": "看看做種狀態",
+            "description": "下載完成後繼續做種，讓資源保持可用，也讓分享資料慢慢累積。"
+          },
+          "community": {
+            "title": "補充回饋",
+            "description": "遇到資源問題、字幕補充或規則疑問時，可以到論壇參與討論。"
+          }
+        }
+      },
+      "account": {
+        "title": "帳號概覽",
+        "action": "打開使用者中心"
       }
     }
   },
@@ -83,49 +181,56 @@
     },
     "login": {
       "action": "登入",
-      "title": "登入",
-      "subtitle": "使用站點帳號進入 NextPT。",
-      "heroTitle": "回到你的 PT 帳號",
-      "heroDescription": "登入後可以查看個人流量、分享率、魔力值、passkey，並繼續使用後續接入的種子和論壇功能。",
+      "eyebrow": "歡迎回來",
+      "title": "登入 NextPT",
+      "subtitle": "回到資源庫、收藏夾和站內討論，繼續你的瀏覽與分享。",
+      "heroTitle": "回到你的私有資源社群",
+      "heroDescription": "繼續查看關注的資源、維護自己的做種和分享資料，也看看社群裡最近有哪些補充、求助和討論。",
       "submit": "登入",
       "success": "登入成功",
       "noAccount": "還沒有帳號？",
-      "highlights": {
-        "identity": {
-          "title": "統一身份",
-          "description": "Web 頁面、Tracker 和權限系統共用同一套使用者身份。"
+      "benefits": {
+        "passkey": {
+          "title": "接著找資源",
+          "description": "回到收藏和最近瀏覽的內容，繼續篩選、下載或等待更合適的版本。"
         },
-        "tracker": {
-          "title": "Tracker 權限",
-          "description": "下載權限會直接影響 announce 與種子下載。"
+        "stats": {
+          "title": "看見分享貢獻",
+          "description": "上傳、下載、做種時長和魔力值都會記錄下來，幫助你了解自己的參與情況。"
+        },
+        "community": {
+          "title": "參與站內交流",
+          "description": "收藏資源、補充字幕、回饋問題，或者在論壇裡和其他使用者交流使用體驗。"
         }
       }
     },
     "register": {
       "action": "註冊",
-      "title": "註冊",
-      "subtitle": "建立 NextPT 帳號。",
-      "heroTitle": "從帳號開始進入社群",
-      "heroDescription": "目前階段先完成帳號和使用者中心。資源庫、論壇和管理後台會沿用同一套登入態繼續開發。",
+      "eyebrow": "加入社群",
+      "title": "建立 NextPT 帳號",
+      "subtitle": "填寫基礎資料，加入一個靠整理、做種和互助維持運轉的資源社群。",
+      "heroTitle": "加入一個願意把好資源留住的社群",
+      "heroDescription": "在這裡，下載只是開始。持續做種、補充資訊、回饋問題和參與討論，都會讓資源對更多人保持可用。",
       "submit": "建立帳號",
       "success": "註冊成功",
       "hasAccount": "已經有帳號？",
+      "inviteHint": "如果站點開啟邀請制，請填寫邀請碼；沒有邀請碼時可留空後按站點規則提交。",
       "policies": {
         "identity": {
-          "title": "帳號資料",
-          "description": "使用者名稱、信箱和密碼會用於站點登入。"
+          "title": "找到想看的內容",
+          "description": "透過分類、搜尋和詳情資訊判斷資源是否適合自己。"
         },
         "ratio": {
-          "title": "分享率",
-          "description": "後續下載和做種統計會沉澱到個人資料。"
+          "title": "下載後繼續分享",
+          "description": "保持做種能幫助後來的人下載，也會沉澱為自己的分享記錄。"
         },
         "community": {
-          "title": "社群交流",
-          "description": "論壇權限會跟隨使用者角色和管理操作變化。"
+          "title": "參與補充和討論",
+          "description": "回饋資源問題、補充字幕或發布求助，讓內容更完整。"
         },
         "security": {
-          "title": "安全憑證",
-          "description": "註冊後系統會生成用於 Tracker 的 passkey。"
+          "title": "遵守社群規則",
+          "description": "保護帳號和下載連結，不外傳資源，共同維護安靜可靠的分享環境。"
         }
       }
     }
@@ -184,13 +289,13 @@
           "like": "感謝",
           "liked": "已感謝",
           "bookmark": "收藏",
-        "bookmarked": "已收藏",
-        "edit": "編輯種子",
-        "report": "檢舉",
-        "adminDelete": "刪除種子",
-        "confirmAdminDelete": "確認刪除種子「{name}」？",
-        "adminDeleted": "種子已刪除"
-      },
+          "bookmarked": "已收藏",
+          "edit": "編輯種子",
+          "report": "檢舉",
+          "adminDelete": "刪除種子",
+          "confirmAdminDelete": "確認刪除種子「{name}」？",
+          "adminDeleted": "種子已刪除"
+        },
         "stats": {
           "seeders": "做種",
           "leechers": "下載",
@@ -727,28 +832,28 @@
             "forumBanned": "禁論壇"
           }
         },
-      "permission": {
-        "title": "手動權限",
-        "key": "權限",
-        "deny": "作為拒絕權限",
-        "grant": "新增",
-        "revoke": "撤銷",
-        "granted": "權限已新增",
-        "revoked": "權限已撤銷"
+        "permission": {
+          "title": "手動權限",
+          "key": "權限",
+          "deny": "作為拒絕權限",
+          "grant": "新增",
+          "revoke": "撤銷",
+          "granted": "權限已新增",
+          "revoked": "權限已撤銷"
+        },
+        "stat": {
+          "title": "使用者統計",
+          "uploaded": "上傳量",
+          "downloaded": "下載量",
+          "seedTime": "做種時間",
+          "bonus": "魔力值",
+          "uploadedDiff": "上傳增量",
+          "downloadedDiff": "下載增量",
+          "bonusDiff": "魔力增量",
+          "submit": "調整統計",
+          "saved": "統計已更新"
+        }
       },
-      "stat": {
-        "title": "使用者統計",
-        "uploaded": "上傳量",
-        "downloaded": "下載量",
-        "seedTime": "做種時間",
-        "bonus": "魔力值",
-        "uploadedDiff": "上傳增量",
-        "downloadedDiff": "下載增量",
-        "bonusDiff": "魔力增量",
-        "submit": "調整統計",
-        "saved": "統計已更新"
-      }
-    },
       "roles": {
         "title": "角色管理",
         "list": "角色列表",
@@ -784,22 +889,22 @@
           "noPermissions": "暫無可選權限",
           "customPermission": "自訂權限",
           "addPermission": "新增",
-        "rules": "規則 JSON",
-        "rulesInvalid": "規則必須是 JSON 物件"
+          "rules": "規則 JSON",
+          "rulesInvalid": "規則必須是 JSON 物件"
+        }
+      },
+      "invites": {
+        "title": "邀請名額",
+        "form": {
+          "title": "發放邀請名額",
+          "amount": "數量",
+          "isTemp": "臨時邀請",
+          "expireAt": "過期時間",
+          "submit": "發放",
+          "success": "邀請名額已發放"
+        }
       }
     },
-    "invites": {
-      "title": "邀請名額",
-      "form": {
-        "title": "發放邀請名額",
-        "amount": "數量",
-        "isTemp": "臨時邀請",
-        "expireAt": "過期時間",
-        "submit": "發放",
-        "success": "邀請名額已發放"
-      }
-    }
-  },
     "site": {
       "eyebrow": "管理後台 / 站點",
       "title": "站點管理",
@@ -851,123 +956,123 @@
         }
       },
       "audits": {
-      "title": "稽核日誌",
-      "entryDescription": "查看後台關鍵操作記錄",
-      "list": "日誌列表",
-      "empty": "暫無稽核日誌",
-      "total": "共 {total} 筆記錄",
-      "table": {
-        "user": "使用者",
-        "action": "操作",
-        "target": "目標",
-        "detail": "詳情",
-        "level": "級別",
-        "time": "時間"
-      },
-      "level": {
-        "normal": "普通",
-        "mod": "審核",
-        "admin": "管理"
-      }
+        "title": "稽核日誌",
+        "entryDescription": "查看後台關鍵操作記錄",
+        "list": "日誌列表",
+        "empty": "暫無稽核日誌",
+        "total": "共 {total} 筆記錄",
+        "table": {
+          "user": "使用者",
+          "action": "操作",
+          "target": "目標",
+          "detail": "詳情",
+          "level": "級別",
+          "time": "時間"
+        },
+        "level": {
+          "normal": "普通",
+          "mod": "審核",
+          "admin": "管理"
+        }
       }
     },
     "mod": {
-    "eyebrow": "管理後台 / 審核風控",
-    "title": "審核風控",
-    "entryDescription": "處理檢舉和異常客戶端行為",
-    "actions": {
-      "filter": "篩選",
-      "resolve": "處理",
-      "submitResolve": "提交處理"
-    },
-    "stats": {
-      "total": "記錄數"
-    },
-    "table": {
-      "target": "目標",
-      "reason": "原因",
-      "status": "狀態",
-      "createdAt": "建立時間",
-      "actions": "操作"
-    },
-    "status": {
-      "all": "全部",
-      "pending": "待處理",
-      "accepted": "有效",
-      "rejected": "無效",
-      "resolved": "已處理"
-    },
-    "targetTypes": {
-      "all": "全部類型",
-      "torrent": "種子",
-      "comment": "評論",
-      "subtitle": "字幕",
-      "forumTopic": "論壇主題",
-      "forumReply": "論壇回覆"
-    },
-    "form": {
-      "result": "處理結果",
-      "comment": "處理備註"
-    },
-    "reports": {
-      "title": "檢舉處理",
-      "list": "檢舉列表",
-      "empty": "暫無檢舉",
-      "select": "選擇一筆檢舉",
-      "resolveTitle": "處理檢舉 #{id}",
-      "reporter": "檢舉人 #{id}",
-      "resolved": "檢舉已處理"
-    },
-    "cheaters": {
-      "title": "作弊記錄",
-      "list": "作弊記錄",
-      "empty": "暫無作弊記錄",
-      "select": "選擇一筆記錄",
-      "resolveTitle": "處理記錄 #{id}",
-      "resolved": "作弊記錄已處理",
-      "userId": "使用者 #{id}",
-      "torrentId": "種子 #{id}",
-      "uploaded": "上傳 {value}",
-      "downloaded": "下載 {value}",
-      "announceTime": "間隔 {value}s",
-      "swarm": "做種 {seeders} / 下載 {leechers} / 命中 {hits}",
-      "table": {
-        "user": "使用者/種子",
-        "traffic": "流量",
-        "swarm": "集群"
-      }
-    }
-  },
-    "sys": {
-    "eyebrow": "管理後台 / 系統",
-    "entryDescription": "查看排程任務和執行日誌",
-    "crons": {
-      "title": "排程任務",
-      "list": "任務列表",
-      "empty": "暫無排程任務",
-      "select": "選擇一個任務",
-      "logsTitle": "任務日誌",
-      "logsEmpty": "暫無任務日誌",
-      "logsTotal": "共 {total} 筆日誌",
-      "status": {
-        "runnable": "可執行",
-        "running": "執行中",
-        "stopped": "已停止",
-        "closed": "已關閉"
+      "eyebrow": "管理後台 / 審核風控",
+      "title": "審核風控",
+      "entryDescription": "處理檢舉和異常客戶端行為",
+      "actions": {
+        "filter": "篩選",
+        "resolve": "處理",
+        "submitResolve": "提交處理"
       },
-      "logStatus": {
-        "running": "執行中",
-        "success": "成功",
-        "failed": "失敗"
+      "stats": {
+        "total": "記錄數"
       },
       "table": {
+        "target": "目標",
+        "reason": "原因",
         "status": "狀態",
-        "duration": "耗時",
-        "node": "節點",
-        "error": "錯誤",
-        "time": "時間"
+        "createdAt": "建立時間",
+        "actions": "操作"
+      },
+      "status": {
+        "all": "全部",
+        "pending": "待處理",
+        "accepted": "有效",
+        "rejected": "無效",
+        "resolved": "已處理"
+      },
+      "targetTypes": {
+        "all": "全部類型",
+        "torrent": "種子",
+        "comment": "評論",
+        "subtitle": "字幕",
+        "forumTopic": "論壇主題",
+        "forumReply": "論壇回覆"
+      },
+      "form": {
+        "result": "處理結果",
+        "comment": "處理備註"
+      },
+      "reports": {
+        "title": "檢舉處理",
+        "list": "檢舉列表",
+        "empty": "暫無檢舉",
+        "select": "選擇一筆檢舉",
+        "resolveTitle": "處理檢舉 #{id}",
+        "reporter": "檢舉人 #{id}",
+        "resolved": "檢舉已處理"
+      },
+      "cheaters": {
+        "title": "作弊記錄",
+        "list": "作弊記錄",
+        "empty": "暫無作弊記錄",
+        "select": "選擇一筆記錄",
+        "resolveTitle": "處理記錄 #{id}",
+        "resolved": "作弊記錄已處理",
+        "userId": "使用者 #{id}",
+        "torrentId": "種子 #{id}",
+        "uploaded": "上傳 {value}",
+        "downloaded": "下載 {value}",
+        "announceTime": "間隔 {value}s",
+        "swarm": "做種 {seeders} / 下載 {leechers} / 命中 {hits}",
+        "table": {
+          "user": "使用者/種子",
+          "traffic": "流量",
+          "swarm": "集群"
+        }
       }
-    }
+    },
+    "sys": {
+      "eyebrow": "管理後台 / 系統",
+      "entryDescription": "查看排程任務和執行日誌",
+      "crons": {
+        "title": "排程任務",
+        "list": "任務列表",
+        "empty": "暫無排程任務",
+        "select": "選擇一個任務",
+        "logsTitle": "任務日誌",
+        "logsEmpty": "暫無任務日誌",
+        "logsTotal": "共 {total} 筆日誌",
+        "status": {
+          "runnable": "可執行",
+          "running": "執行中",
+          "stopped": "已停止",
+          "closed": "已關閉"
+        },
+        "logStatus": {
+          "running": "執行中",
+          "success": "成功",
+          "failed": "失敗"
+        },
+        "table": {
+          "status": "狀態",
+          "duration": "耗時",
+          "node": "節點",
+          "error": "錯誤",
+          "time": "時間"
+        }
+      }
     }
   },
   "user": {

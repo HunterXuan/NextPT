@@ -9,7 +9,11 @@
     "retry": "重试",
     "save": "保存",
     "requestFailed": "请求失败，请稍后再试",
-    "switchLanguage": "切换语言"
+    "collapseSidebar": "收起侧边栏",
+    "expandSidebar": "展开侧边栏",
+    "switchLanguage": "切换语言",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码"
   },
   "nav": {
     "home": "首页",
@@ -26,50 +30,144 @@
   },
   "home": {
     "metaTitle": "首页",
-    "metaDescription": "NextPT 私有资源社区前端。",
-    "eyebrow": "私有 Tracker 社区",
-    "title": "NextPT",
-    "description": "围绕种子发布、Tracker 统计、论坛讨论和用户权限构建的私有资源社区。",
-    "openCenter": "进入用户中心",
-    "stats": {
-      "tracker": "Tracker",
-      "ratio": "分享率",
-      "community": "社区"
-    },
-    "panel": {
-      "title": "站点工作台",
-      "subtitle": "首批页面先覆盖账号和个人资料流程",
-      "badge": "开发中"
-    },
-    "modules": {
-      "catalog": {
-        "title": "资源库",
-        "description": "后续接入种子列表、详情、上传、下载和收藏等核心流程。",
-        "meta": "Catalog"
+    "metaDescription": "NextPT 私有资源社区，围绕高质量资源、长期做种和站内交流建立分享秩序。",
+    "guest": {
+      "eyebrow": "为认真收藏与分享而生的私有资源社区",
+      "title": "NextPT",
+      "description": "在这里，资源不只是被下载，也会被整理、补充和长期保种。找到想看的内容，也把自己拥有的内容留给后来的人。",
+      "primaryAction": "申请加入",
+      "secondaryAction": "已有账号登录",
+      "stats": {
+        "privacy": "资源沉淀",
+        "privacyValue": "精选整理",
+        "ratio": "长期可用",
+        "ratioValue": "持续做种",
+        "community": "站内互助",
+        "communityValue": "讨论补充"
       },
-      "tracker": {
-        "title": "Tracker",
-        "description": "已具备 announce、download、passkey 和权限校验基础。",
-        "meta": "Live"
+      "features": {
+        "eyebrow": "社区体验",
+        "title": "不只是下载，更是把好资源留住",
+        "description": "一个好的 PT 社区，应该让用户更容易判断资源质量、找到补充信息，并愿意在下载完成后继续分享。"
       },
-      "forum": {
-        "title": "论坛",
-        "description": "站点公告、综合讨论和资源交流会逐步接入前端。",
-        "meta": "Forum"
+      "featureItems": {
+        "catalog": {
+          "title": "更容易找到想要的内容",
+          "description": "按分类和关键词筛选资源，进入详情页查看简介、文件结构、体积和活跃状态，再决定是否下载。"
+        },
+        "tracker": {
+          "title": "热门之外，也照顾旧资源",
+          "description": "社区鼓励长期做种和补档，让过了热度的内容仍然有机会被后来的人找到。"
+        },
+        "ratio": {
+          "title": "分享有记录，也有回馈",
+          "description": "上传、下载、做种时长和魔力值会沉淀到个人中心，让持续分享的人看见自己的贡献。"
+        },
+        "forum": {
+          "title": "资源背后有人讨论",
+          "description": "遇到版本差异、字幕问题、补档请求或使用疑问时，可以在论坛里找到上下文和回应。"
+        },
+        "subtitle": {
+          "title": "字幕和补充信息不丢失",
+          "description": "字幕可以独立浏览、下载和反馈，资源说明、补充资料和问题记录也更容易被后来的人看到。"
+        },
+        "account": {
+          "title": "更安静的分享环境",
+          "description": "注册、发布、下载和互动都有清晰规则，减少噪音和滥用，让社区更适合长期使用。"
+        }
+      },
+      "flow": {
+        "eyebrow": "如何开始",
+        "title": "从加入到参与分享",
+        "description": "普通用户最常见的路径很简单：进入社区、找到资源、保持做种、参与讨论。",
+        "items": {
+          "invite": {
+            "title": "加入社区",
+            "description": "通过邀请或开放注册进入站点，先了解规则，再开始浏览和收藏资源。"
+          },
+          "discover": {
+            "title": "发现资源",
+            "description": "在资源库中搜索、筛选分类，进入详情页查看说明、文件结构和互动信息。"
+          },
+          "seed": {
+            "title": "下载并做种",
+            "description": "通过种子客户端连接 Tracker，下载完成后继续做种，累积分享数据。"
+          },
+          "discuss": {
+            "title": "参与社区",
+            "description": "在论坛中提问、反馈资源问题、补充字幕或参与站内讨论。"
+          }
+        }
+      },
+      "faq": {
+        "eyebrow": "FAQ",
+        "title": "常见问题",
+        "items": {
+          "invite": {
+            "question": "注册一定需要邀请码吗？",
+            "answer": "是否需要邀请码取决于站点当前配置。如果注册页展示邀请码字段，可以填入已有邀请码；没有邀请码时也可以先尝试按站点规则注册。"
+          },
+          "ratio": {
+            "question": "为什么要关注分享率？",
+            "answer": "私有 Tracker 依赖用户持续上传和做种。分享率能帮助社区维持资源可用性，也能让用户了解自己的贡献。"
+          },
+          "passkey": {
+            "question": "下载链接可以分享给别人吗？",
+            "answer": "不建议分享个人下载链接或种子给站外用户。私有 Tracker 依赖账号行为记录，随意外传可能影响自己的账号安全和分享数据。"
+          },
+          "forum": {
+            "question": "可以求资源或反馈问题吗？",
+            "answer": "可以。论坛适合发布求助、反馈资源问题、补充字幕信息和参与规则讨论；好的反馈也会帮助资源被维护得更久。"
+          }
+        }
+      },
+      "cta": {
+        "title": "准备进入社区？",
+        "description": "创建账号后，你可以浏览资源、收藏内容、参与讨论，并从第一次下载开始成为分享循环的一部分。"
       }
     },
-    "workflow": {
-      "profile": {
-        "title": "账号资料",
-        "description": "注册、登录、资料修改和改密码先完成，便于后续页面共享身份状态。"
-      },
-      "passkey": {
-        "title": "Tracker 凭证",
-        "description": "用户中心展示 passkey，后续种子下载和客户端配置会继续围绕它展开。"
+    "member": {
+      "eyebrow": "站点工作台",
+      "title": "欢迎回来，{name}",
+      "description": "这里是登录后的首页，快速进入资源、论坛和个人中心。",
+      "actions": {
+        "catalog": {
+          "title": "浏览种子",
+          "description": "搜索资源、查看详情、下载种子和收藏内容。"
+        },
+        "upload": {
+          "title": "发布种子",
+          "description": "上传新的种子文件，补充说明、分类和匿名发布设置。"
+        },
+        "forum": {
+          "title": "进入论坛",
+          "description": "查看板块、主题和回复，参与站内讨论。"
+        },
+        "profile": {
+          "title": "用户中心",
+          "description": "查看分享数据、邀请、账号资料和安全设置。"
+        }
       },
       "next": {
-        "title": "下一阶段",
-        "description": "账号流程稳定后，可以继续推进种子列表、详情页、论坛和管理后台。"
+        "title": "今天可以做什么",
+        "items": {
+          "search": {
+            "title": "找一个资源",
+            "description": "从分类和关键词开始，看看最近是否有你需要的内容。"
+          },
+          "passkey": {
+            "title": "看看做种状态",
+            "description": "下载完成后继续做种，让资源保持可用，也让分享数据慢慢积累。"
+          },
+          "community": {
+            "title": "补充反馈",
+            "description": "遇到资源问题、字幕补充或规则疑问时，可以到论坛参与讨论。"
+          }
+        }
+      },
+      "account": {
+        "title": "账号概览",
+        "action": "打开用户中心"
       }
     }
   },
@@ -83,49 +181,56 @@
     },
     "login": {
       "action": "登录",
-      "title": "登录",
-      "subtitle": "使用站点账号进入 NextPT。",
-      "heroTitle": "回到你的 PT 账号",
-      "heroDescription": "登录后可以查看个人流量、分享率、魔力值、passkey，并继续使用后续接入的种子和论坛功能。",
+      "eyebrow": "欢迎回来",
+      "title": "登录 NextPT",
+      "subtitle": "回到资源库、收藏夹和站内讨论，继续你的浏览与分享。",
+      "heroTitle": "回到你的私有资源社区",
+      "heroDescription": "继续查看关注的资源、维护自己的做种和分享数据，也看看社区里最近有哪些补充、求助和讨论。",
       "submit": "登录",
       "success": "登录成功",
       "noAccount": "还没有账号？",
-      "highlights": {
-        "identity": {
-          "title": "统一身份",
-          "description": "Web 页面、Tracker 和权限系统共用同一套用户身份。"
+      "benefits": {
+        "passkey": {
+          "title": "接着找资源",
+          "description": "回到收藏和最近浏览的内容，继续筛选、下载或等待更合适的版本。"
         },
-        "tracker": {
-          "title": "Tracker 权限",
-          "description": "下载权限会直接影响 announce 与种子下载。"
+        "stats": {
+          "title": "看见分享贡献",
+          "description": "上传、下载、做种时长和魔力值都会记录下来，帮助你了解自己的参与情况。"
+        },
+        "community": {
+          "title": "参与站内交流",
+          "description": "收藏资源、补充字幕、反馈问题，或者在论坛里和其他用户交流使用体验。"
         }
       }
     },
     "register": {
       "action": "注册",
-      "title": "注册",
-      "subtitle": "创建 NextPT 账号。",
-      "heroTitle": "从账号开始进入社区",
-      "heroDescription": "当前阶段先完成账号和用户中心。资源库、论坛和管理后台会沿用同一套登录态继续开发。",
+      "eyebrow": "加入社区",
+      "title": "创建 NextPT 账号",
+      "subtitle": "填写基础资料，加入一个靠整理、做种和互助维持运转的资源社区。",
+      "heroTitle": "加入一个愿意把好资源留住的社区",
+      "heroDescription": "在这里，下载只是开始。持续做种、补充信息、反馈问题和参与讨论，都会让资源对更多人保持可用。",
       "submit": "创建账号",
       "success": "注册成功",
       "hasAccount": "已经有账号？",
+      "inviteHint": "如果站点开启邀请制，请填写邀请码；没有邀请码时可留空后按站点规则提交。",
       "policies": {
         "identity": {
-          "title": "账号资料",
-          "description": "用户名、邮箱和密码会用于站点登录。"
+          "title": "找到想看的内容",
+          "description": "通过分类、搜索和详情信息判断资源是否适合自己。"
         },
         "ratio": {
-          "title": "分享率",
-          "description": "后续下载和做种统计会沉淀到个人数据。"
+          "title": "下载后继续分享",
+          "description": "保持做种能帮助后来的人下载，也会沉淀为自己的分享记录。"
         },
         "community": {
-          "title": "社区交流",
-          "description": "论坛权限会跟随用户角色和管理操作变化。"
+          "title": "参与补充和讨论",
+          "description": "反馈资源问题、补充字幕或发布求助，让内容更完整。"
         },
         "security": {
-          "title": "安全凭证",
-          "description": "注册后系统会生成用于 Tracker 的 passkey。"
+          "title": "遵守社区规则",
+          "description": "保护账号和下载链接，不外传资源，共同维护安静可靠的分享环境。"
         }
       }
     }
@@ -182,15 +287,15 @@
           "title": "种子操作",
           "download": "下载种子",
           "like": "感谢",
-        "liked": "已感谢",
-        "bookmark": "收藏",
-        "bookmarked": "已收藏",
-        "edit": "编辑种子",
-        "report": "举报",
-        "adminDelete": "删除种子",
-        "confirmAdminDelete": "确认删除种子「{name}」？",
-        "adminDeleted": "种子已删除"
-      },
+          "liked": "已感谢",
+          "bookmark": "收藏",
+          "bookmarked": "已收藏",
+          "edit": "编辑种子",
+          "report": "举报",
+          "adminDelete": "删除种子",
+          "confirmAdminDelete": "确认删除种子「{name}」？",
+          "adminDeleted": "种子已删除"
+        },
         "stats": {
           "seeders": "做种",
           "leechers": "下载",
@@ -727,28 +832,28 @@
             "forumBanned": "禁论坛"
           }
         },
-      "permission": {
-        "title": "手动权限",
-        "key": "权限",
-        "deny": "作为拒绝权限",
-        "grant": "添加",
-        "revoke": "撤销",
-        "granted": "权限已添加",
-        "revoked": "权限已撤销"
+        "permission": {
+          "title": "手动权限",
+          "key": "权限",
+          "deny": "作为拒绝权限",
+          "grant": "添加",
+          "revoke": "撤销",
+          "granted": "权限已添加",
+          "revoked": "权限已撤销"
+        },
+        "stat": {
+          "title": "用户统计",
+          "uploaded": "上传量",
+          "downloaded": "下载量",
+          "seedTime": "做种时间",
+          "bonus": "魔力值",
+          "uploadedDiff": "上传增量",
+          "downloadedDiff": "下载增量",
+          "bonusDiff": "魔力增量",
+          "submit": "调整统计",
+          "saved": "统计已更新"
+        }
       },
-      "stat": {
-        "title": "用户统计",
-        "uploaded": "上传量",
-        "downloaded": "下载量",
-        "seedTime": "做种时间",
-        "bonus": "魔力值",
-        "uploadedDiff": "上传增量",
-        "downloadedDiff": "下载增量",
-        "bonusDiff": "魔力增量",
-        "submit": "调整统计",
-        "saved": "统计已更新"
-      }
-    },
       "roles": {
         "title": "角色管理",
         "list": "角色列表",
@@ -784,22 +889,22 @@
           "noPermissions": "暂无可选权限",
           "customPermission": "自定义权限",
           "addPermission": "添加",
-        "rules": "规则 JSON",
-        "rulesInvalid": "规则必须是 JSON 对象"
+          "rules": "规则 JSON",
+          "rulesInvalid": "规则必须是 JSON 对象"
+        }
+      },
+      "invites": {
+        "title": "邀请名额",
+        "form": {
+          "title": "发放邀请名额",
+          "amount": "数量",
+          "isTemp": "临时邀请",
+          "expireAt": "过期时间",
+          "submit": "发放",
+          "success": "邀请名额已发放"
+        }
       }
     },
-    "invites": {
-      "title": "邀请名额",
-      "form": {
-        "title": "发放邀请名额",
-        "amount": "数量",
-        "isTemp": "临时邀请",
-        "expireAt": "过期时间",
-        "submit": "发放",
-        "success": "邀请名额已发放"
-      }
-    }
-  },
     "site": {
       "eyebrow": "管理后台 / 站点",
       "title": "站点管理",
@@ -851,123 +956,123 @@
         }
       },
       "audits": {
-      "title": "审计日志",
-      "entryDescription": "查看后台关键操作记录",
-      "list": "日志列表",
-      "empty": "暂无审计日志",
-      "total": "共 {total} 条记录",
-      "table": {
-        "user": "用户",
-        "action": "操作",
-        "target": "目标",
-        "detail": "详情",
-        "level": "级别",
-        "time": "时间"
-      },
-      "level": {
-        "normal": "普通",
-        "mod": "审核",
-        "admin": "管理"
-      }
+        "title": "审计日志",
+        "entryDescription": "查看后台关键操作记录",
+        "list": "日志列表",
+        "empty": "暂无审计日志",
+        "total": "共 {total} 条记录",
+        "table": {
+          "user": "用户",
+          "action": "操作",
+          "target": "目标",
+          "detail": "详情",
+          "level": "级别",
+          "time": "时间"
+        },
+        "level": {
+          "normal": "普通",
+          "mod": "审核",
+          "admin": "管理"
+        }
       }
     },
     "mod": {
-    "eyebrow": "管理后台 / 审核风控",
-    "title": "审核风控",
-    "entryDescription": "处理举报和异常客户端行为",
-    "actions": {
-      "filter": "筛选",
-      "resolve": "处理",
-      "submitResolve": "提交处理"
-    },
-    "stats": {
-      "total": "记录数"
-    },
-    "table": {
-      "target": "目标",
-      "reason": "原因",
-      "status": "状态",
-      "createdAt": "创建时间",
-      "actions": "操作"
-    },
-    "status": {
-      "all": "全部",
-      "pending": "待处理",
-      "accepted": "有效",
-      "rejected": "无效",
-      "resolved": "已处理"
-    },
-    "targetTypes": {
-      "all": "全部类型",
-      "torrent": "种子",
-      "comment": "评论",
-      "subtitle": "字幕",
-      "forumTopic": "论坛主题",
-      "forumReply": "论坛回复"
-    },
-    "form": {
-      "result": "处理结果",
-      "comment": "处理备注"
-    },
-    "reports": {
-      "title": "举报处理",
-      "list": "举报列表",
-      "empty": "暂无举报",
-      "select": "选择一条举报",
-      "resolveTitle": "处理举报 #{id}",
-      "reporter": "举报人 #{id}",
-      "resolved": "举报已处理"
-    },
-    "cheaters": {
-      "title": "作弊记录",
-      "list": "作弊记录",
-      "empty": "暂无作弊记录",
-      "select": "选择一条记录",
-      "resolveTitle": "处理记录 #{id}",
-      "resolved": "作弊记录已处理",
-      "userId": "用户 #{id}",
-      "torrentId": "种子 #{id}",
-      "uploaded": "上传 {value}",
-      "downloaded": "下载 {value}",
-      "announceTime": "间隔 {value}s",
-      "swarm": "做种 {seeders} / 下载 {leechers} / 命中 {hits}",
-      "table": {
-        "user": "用户/种子",
-        "traffic": "流量",
-        "swarm": "集群"
-      }
-    }
-  },
-    "sys": {
-    "eyebrow": "管理后台 / 系统",
-    "entryDescription": "查看定时任务和运行日志",
-    "crons": {
-      "title": "定时任务",
-      "list": "任务列表",
-      "empty": "暂无定时任务",
-      "select": "选择一个任务",
-      "logsTitle": "任务日志",
-      "logsEmpty": "暂无任务日志",
-      "logsTotal": "共 {total} 条日志",
-      "status": {
-        "runnable": "可运行",
-        "running": "运行中",
-        "stopped": "已停止",
-        "closed": "已关闭"
+      "eyebrow": "管理后台 / 审核风控",
+      "title": "审核风控",
+      "entryDescription": "处理举报和异常客户端行为",
+      "actions": {
+        "filter": "筛选",
+        "resolve": "处理",
+        "submitResolve": "提交处理"
       },
-      "logStatus": {
-        "running": "执行中",
-        "success": "成功",
-        "failed": "失败"
+      "stats": {
+        "total": "记录数"
       },
       "table": {
+        "target": "目标",
+        "reason": "原因",
         "status": "状态",
-        "duration": "耗时",
-        "node": "节点",
-        "error": "错误",
-        "time": "时间"
+        "createdAt": "创建时间",
+        "actions": "操作"
+      },
+      "status": {
+        "all": "全部",
+        "pending": "待处理",
+        "accepted": "有效",
+        "rejected": "无效",
+        "resolved": "已处理"
+      },
+      "targetTypes": {
+        "all": "全部类型",
+        "torrent": "种子",
+        "comment": "评论",
+        "subtitle": "字幕",
+        "forumTopic": "论坛主题",
+        "forumReply": "论坛回复"
+      },
+      "form": {
+        "result": "处理结果",
+        "comment": "处理备注"
+      },
+      "reports": {
+        "title": "举报处理",
+        "list": "举报列表",
+        "empty": "暂无举报",
+        "select": "选择一条举报",
+        "resolveTitle": "处理举报 #{id}",
+        "reporter": "举报人 #{id}",
+        "resolved": "举报已处理"
+      },
+      "cheaters": {
+        "title": "作弊记录",
+        "list": "作弊记录",
+        "empty": "暂无作弊记录",
+        "select": "选择一条记录",
+        "resolveTitle": "处理记录 #{id}",
+        "resolved": "作弊记录已处理",
+        "userId": "用户 #{id}",
+        "torrentId": "种子 #{id}",
+        "uploaded": "上传 {value}",
+        "downloaded": "下载 {value}",
+        "announceTime": "间隔 {value}s",
+        "swarm": "做种 {seeders} / 下载 {leechers} / 命中 {hits}",
+        "table": {
+          "user": "用户/种子",
+          "traffic": "流量",
+          "swarm": "集群"
+        }
       }
-    }
+    },
+    "sys": {
+      "eyebrow": "管理后台 / 系统",
+      "entryDescription": "查看定时任务和运行日志",
+      "crons": {
+        "title": "定时任务",
+        "list": "任务列表",
+        "empty": "暂无定时任务",
+        "select": "选择一个任务",
+        "logsTitle": "任务日志",
+        "logsEmpty": "暂无任务日志",
+        "logsTotal": "共 {total} 条日志",
+        "status": {
+          "runnable": "可运行",
+          "running": "运行中",
+          "stopped": "已停止",
+          "closed": "已关闭"
+        },
+        "logStatus": {
+          "running": "执行中",
+          "success": "成功",
+          "failed": "失败"
+        },
+        "table": {
+          "status": "状态",
+          "duration": "耗时",
+          "node": "节点",
+          "error": "错误",
+          "time": "时间"
+        }
+      }
     }
   },
   "user": {
