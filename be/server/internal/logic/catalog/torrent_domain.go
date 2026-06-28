@@ -130,31 +130,35 @@ func (s *sCatalogTorrentDomain) QueryBookmarkedTorrents(ctx context.Context, act
 	userId := actor.Id
 
 	// 1. 获取用户收藏的所有种子 ID，按收藏时间倒序
-	var bookmarkIds []uint64
+	var bookmarks []entity.CatalogTorrentBookmark
 	err := dao.CatalogTorrentBookmark.Ctx(ctx).
-		Fields(dao.CatalogTorrentBookmark.Columns().TorrentId).
 		Where(dao.CatalogTorrentBookmark.Columns().UserId, userId).
 		OrderDesc(dao.CatalogTorrentBookmark.Columns().CreatedAt).
-		Scan(&bookmarkIds)
-	if err != nil || len(bookmarkIds) == 0 {
+		Scan(&bookmarks)
+	if err != nil || len(bookmarks) == 0 {
 		return nil, 0, err
 	}
 
+	bookmarkIds := make([]uint64, 0, len(bookmarks))
+	for _, bookmark := range bookmarks {
+		bookmarkIds = append(bookmarkIds, bookmark.TorrentId)
+	}
+
 	// 2. 批量查询这些种子中，当前用户可见的种子 ID
-	var visibleIds []uint64
+	var visibleTorrents []entity.CatalogTorrent
 	m := dao.CatalogTorrent.Ctx(ctx).
 		Fields(dao.CatalogTorrent.Columns().Id).
 		WhereIn(dao.CatalogTorrent.Columns().Id, bookmarkIds)
 	m = s.ApplyTorrentVisibleScope(m, actor)
-	err = m.Scan(&visibleIds)
-	if err != nil || len(visibleIds) == 0 {
+	err = m.Scan(&visibleTorrents)
+	if err != nil || len(visibleTorrents) == 0 {
 		return nil, 0, err
 	}
 
 	// 将可见种子 ID 转成 Map，方便快速检索
 	visibleMap := make(map[uint64]bool)
-	for _, id := range visibleIds {
-		visibleMap[id] = true
+	for _, torrent := range visibleTorrents {
+		visibleMap[torrent.Id] = true
 	}
 
 	// 3. 过滤出既被收藏又对当前用户可见的种子 ID（保持原收藏倒序）
