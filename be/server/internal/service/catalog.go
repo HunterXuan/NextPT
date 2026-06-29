@@ -80,7 +80,6 @@ type (
 		GetTorrentFiles(ctx context.Context, torrentId uint64) ([]entity.CatalogTorrentFile, error)
 		GetTorrentsByIds(ctx context.Context, ids []uint64) ([]*entity.CatalogTorrent, error)
 		DeleteTorrent(ctx context.Context, id uint64) error
-		QueryTorrents(ctx context.Context, actor *model.Actor, categoryId uint, torrentType *int, page int, size int) ([]entity.CatalogTorrent, int, error)
 		InsertTorrentReward(ctx context.Context, reward *entity.CatalogTorrentReward) error
 		UpdateTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
 		CheckBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)

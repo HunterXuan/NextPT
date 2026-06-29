@@ -20,7 +20,6 @@ type CatalogTorrent struct {
 	FileName       string      `json:"fileName"       orm:"file_name"       description:"种子文件名"`
 	Size           uint64      `json:"size"           orm:"size"            description:"总大小 (bytes)"`
 	FileCount      uint        `json:"fileCount"      orm:"file_count"      description:"文件数量"`
-	Type           int         `json:"type"           orm:"type"            description:"0=single 1=multi"`
 	OwnerId        uint64      `json:"ownerId"        orm:"owner_id"        description:"上传者"`
 	Anonymous      bool        `json:"anonymous"      orm:"anonymous"       description:"匿名上传"`
 	SpState        int         `json:"spState"        orm:"sp_state"        description:"0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom"`

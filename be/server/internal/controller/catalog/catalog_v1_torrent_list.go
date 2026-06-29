@@ -32,7 +32,6 @@ func (c *ControllerV1) TorrentList(ctx context.Context, req *v1.TorrentListReq) 
 			CategoryId: item.CategoryId,
 			Size:       item.Size,
 			FileCount:  item.FileCount,
-			Type:       item.Type,
 			Seeders:    item.Seeders,
 			Leechers:   item.Leechers,
 			Snatched:   item.Snatched,

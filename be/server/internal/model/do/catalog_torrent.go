@@ -22,7 +22,6 @@ type CatalogTorrent struct {
 	FileName       any         // 种子文件名
 	Size           any         // 总大小 (bytes)
 	FileCount      any         // 文件数量
-	Type           any         // 0=single 1=multi
 	OwnerId        any         // 上传者
 	Anonymous      any         // 匿名上传
 	SpState        any         // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom

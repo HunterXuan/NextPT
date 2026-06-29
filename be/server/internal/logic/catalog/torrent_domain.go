@@ -337,27 +337,6 @@ func (s *sCatalogTorrentDomain) DeleteTorrent(ctx context.Context, id uint64) er
 	return err
 }
 
-func (s *sCatalogTorrentDomain) QueryTorrents(ctx context.Context, actor *model.Actor, categoryId uint, torrentType *int, page, size int) ([]entity.CatalogTorrent, int, error) {
-	m := dao.CatalogTorrent.Ctx(ctx)
-	m = s.ApplyTorrentVisibleScope(m, actor)
-
-	if categoryId > 0 {
-		m = m.Where(dao.CatalogTorrent.Columns().CategoryId, categoryId)
-	}
-	if torrentType != nil {
-		m = m.Where(dao.CatalogTorrent.Columns().Type, *torrentType)
-	}
-
-	total, err := m.Count()
-	if err != nil {
-		return nil, 0, err
-	}
-
-	var entities []entity.CatalogTorrent
-	err = m.Page(page, size).OrderDesc(dao.CatalogTorrent.Columns().CreatedAt).Scan(&entities)
-	return entities, total, err
-}
-
 func (s *sCatalogTorrentDomain) InsertTorrentReward(ctx context.Context, reward *entity.CatalogTorrentReward) error {
 	_, err := dao.CatalogTorrentReward.Ctx(ctx).Data(reward).Insert()
 	return err

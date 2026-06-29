@@ -144,7 +144,7 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 		return nil, err
 	}
 
-	totalSize, fileCount, torrentType := s.extractTorrentMetadata(info)
+	totalSize, fileCount := s.extractTorrentMetadata(info)
 	torrentName := in.Name
 	if torrentName == "" {
 		torrentName = info.Name
@@ -157,7 +157,7 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 
 	var torrentId uint64
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, torrentName, totalSize, fileCount, torrentType, info)
+		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, torrentName, totalSize, fileCount, info)
 		if err != nil {
 			return err
 		}
@@ -322,13 +322,11 @@ func (s *sCatalogTorrentUsecase) calculateAndCheckInfoHash(ctx context.Context, 
 	return infoHashBytes, infoHashHex, nil
 }
 
-func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (uint64, uint, int) {
+func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (uint64, uint) {
 	var totalSize uint64
 	var fileCount uint = 0
-	var torrentType int = consts.ResourceTorrentTypeSingle
 
 	if len(info.Files) > 0 {
-		torrentType = consts.ResourceTorrentTypeMulti
 		for _, f := range info.Files {
 			totalSize += uint64(f.Length)
 			fileCount++
@@ -337,10 +335,10 @@ func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (ui
 		totalSize = uint64(info.Length)
 		fileCount = 1
 	}
-	return totalSize, fileCount, torrentType
+	return totalSize, fileCount
 }
 
-func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, torrentName string, totalSize uint64, fileCount uint, torrentType int, info *metainfo.Info) (uint64, error) {
+func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, torrentName string, totalSize uint64, fileCount uint, info *metainfo.Info) (uint64, error) {
 	torrentInsert := &entity.CatalogTorrent{
 		InfoHash:    infoHashBytes,
 		Name:        torrentName,
@@ -350,14 +348,13 @@ func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *mod
 		FileName:    in.File.Filename,
 		Size:        totalSize,
 		FileCount:   fileCount,
-		Type:        torrentType,
 		OwnerId:     actor.Id,
 		Anonymous:   in.Anonymous,
 		Visible:     true,
 	}
 
 	var filesToInsert []entity.CatalogTorrentFile
-	if torrentType == consts.ResourceTorrentTypeMulti {
+	if len(info.Files) > 0 {
 		for _, f := range info.Files {
 			filesToInsert = append(filesToInsert, entity.CatalogTorrentFile{
 				FilePath: filepath.Join(f.Path...),
@@ -519,7 +516,6 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			CategoryId: e.CategoryId,
 			Size:       e.Size,
 			FileCount:  e.FileCount,
-			Type:       e.Type,
 			Seeders:    e.Seeders,
 			Leechers:   e.Leechers,
 			Snatched:   e.TimesCompleted,

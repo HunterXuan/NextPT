@@ -235,7 +235,6 @@ CREATE TABLE `catalog_torrent` (
     `file_name`       VARCHAR(255)    NOT NULL DEFAULT '' COMMENT '种子文件名',
     `size`            BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '总大小 (bytes)',
     `file_count`      INT UNSIGNED    NOT NULL DEFAULT 0  COMMENT '文件数量',
-    `type`            TINYINT         NOT NULL DEFAULT 0  COMMENT '0=single 1=multi',
     `owner_id`        BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '上传者',
     `anonymous`       BIT(1)      NOT NULL DEFAULT 0  COMMENT '匿名上传',
 

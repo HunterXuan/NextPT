@@ -12,7 +12,6 @@ type TorrentListItem struct {
 	CategoryId uint   `json:"categoryId" description:"分类ID"`
 	Size       uint64 `json:"size" description:"总大小(字节)"`
 	FileCount  uint   `json:"fileCount" description:"文件数量"`
-	Type       int    `json:"type" description:"0=单文件, 1=多文件"`
 	Seeders    uint   `json:"seeders" description:"做种数"`
 	Leechers   uint   `json:"leechers" description:"下载数"`
 	Snatched   uint   `json:"snatched" description:"完成数"`

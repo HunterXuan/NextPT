@@ -31,7 +31,6 @@ type CatalogTorrentColumns struct {
 	FileName       string // 种子文件名
 	Size           string // 总大小 (bytes)
 	FileCount      string // 文件数量
-	Type           string // 0=single 1=multi
 	OwnerId        string // 上传者
 	Anonymous      string // 匿名上传
 	SpState        string // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom
@@ -67,7 +66,6 @@ var catalogTorrentColumns = CatalogTorrentColumns{
 	FileName:       "file_name",
 	Size:           "size",
 	FileCount:      "file_count",
-	Type:           "type",
 	OwnerId:        "owner_id",
 	Anonymous:      "anonymous",
 	SpState:        "sp_state",
