@@ -12,6 +12,10 @@ type TorrentListItem struct {
 	CategoryId uint   `json:"categoryId" description:"分类ID"`
 	Size       uint64 `json:"size" description:"总大小(字节)"`
 	FileCount  uint   `json:"fileCount" description:"文件数量"`
+	SpState    int    `json:"spState" description:"促销状态"`
+	SpExpireAt string `json:"spExpireAt" description:"促销到期时间"`
+	IsFeatured bool   `json:"isFeatured" description:"是否推荐"`
+	IsPinned   bool   `json:"isPinned" description:"是否置顶"`
 	Seeders    uint   `json:"seeders" description:"做种数"`
 	Leechers   uint   `json:"leechers" description:"下载数"`
 	Snatched   uint   `json:"snatched" description:"完成数"`

@@ -6,7 +6,6 @@ import (
 	v1 "server/api/catalog/v1"
 	"server/internal/library/contexts"
 	"server/internal/model/in/catalogin"
-	"server/internal/model/out/catalogout"
 	"server/internal/service"
 )
 
@@ -23,29 +22,7 @@ func (c *ControllerV1) TorrentList(ctx context.Context, req *v1.TorrentListReq) 
 		return nil, err
 	}
 
-	var list []catalogout.TorrentListItem
-	for _, item := range out.List {
-		list = append(list, catalogout.TorrentListItem{
-			Id:         item.Id,
-			Name:       item.Name,
-			SubTitle:   item.SubTitle,
-			CategoryId: item.CategoryId,
-			Size:       item.Size,
-			FileCount:  item.FileCount,
-			Seeders:    item.Seeders,
-			Leechers:   item.Leechers,
-			Snatched:   item.Snatched,
-			OwnerId:    item.OwnerId,
-			OwnerName:  item.OwnerName,
-			Anonymous:  item.Anonymous,
-			CreatedAt:  item.CreatedAt,
-		})
-	}
-
 	return &v1.TorrentListRes{
-		TorrentListOut: catalogout.TorrentListOut{
-			List:  list,
-			Total: out.Total,
-		},
+		TorrentListOut: *out,
 	}, nil
 }

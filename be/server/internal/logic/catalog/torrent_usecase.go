@@ -26,6 +26,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/os/gcache"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sCatalogTorrentUsecase struct{}
@@ -516,6 +517,10 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			CategoryId: e.CategoryId,
 			Size:       e.Size,
 			FileCount:  e.FileCount,
+			SpState:    e.SpState,
+			SpExpireAt: s.formatTime(e.SpExpireAt),
+			IsFeatured: e.IsFeatured,
+			IsPinned:   e.IsPinned,
 			Seeders:    e.Seeders,
 			Leechers:   e.Leechers,
 			Snatched:   e.TimesCompleted,
@@ -526,6 +531,13 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 		})
 	}
 	return list
+}
+
+func (s *sCatalogTorrentUsecase) formatTime(value *gtime.Time) string {
+	if value == nil {
+		return ""
+	}
+	return value.String()
 }
 
 func (s *sCatalogTorrentUsecase) shouldHideTorrentOwner(actor *model.Actor, torrent entity.CatalogTorrent) bool {

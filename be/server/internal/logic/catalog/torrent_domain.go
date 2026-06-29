@@ -415,7 +415,11 @@ func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, a
 		return nil, 0, err
 	}
 	var entities []entity.CatalogTorrent
-	err = m.Page(page, size).OrderDesc(columns.CreatedAt).Scan(&entities)
+	err = m.Page(page, size).
+		OrderDesc(columns.IsPinned).
+		OrderDesc(columns.PinWeight).
+		OrderDesc(columns.CreatedAt).
+		Scan(&entities)
 	return entities, total, err
 }
 
