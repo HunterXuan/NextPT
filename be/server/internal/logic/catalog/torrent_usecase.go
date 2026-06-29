@@ -524,6 +524,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			Seeders:    e.Seeders,
 			Leechers:   e.Leechers,
 			Snatched:   e.TimesCompleted,
+			LikeCount:  e.LikeCount,
 			OwnerId:    ownerId,
 			OwnerName:  ownerName,
 			Anonymous:  e.Anonymous,

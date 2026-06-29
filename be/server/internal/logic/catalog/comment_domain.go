@@ -52,7 +52,7 @@ func (s *sCatalogCommentDomain) QueryCommentsByTarget(ctx context.Context, targe
 	}
 
 	var comments []entity.CatalogComment
-	err = m.OrderDesc(dao.CatalogComment.Columns().Id).Page(page, size).Scan(&comments)
+	err = m.OrderAsc(dao.CatalogComment.Columns().Id).Page(page, size).Scan(&comments)
 	return comments, total, err
 }
 

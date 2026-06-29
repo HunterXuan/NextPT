@@ -19,6 +19,7 @@ type TorrentListItem struct {
 	Seeders    uint   `json:"seeders" description:"做种数"`
 	Leechers   uint   `json:"leechers" description:"下载数"`
 	Snatched   uint   `json:"snatched" description:"完成数"`
+	LikeCount  uint   `json:"likeCount" description:"感谢数"`
 	OwnerId    uint64 `json:"ownerId" description:"发布者ID"`
 	OwnerName  string `json:"ownerName" description:"发布者用户名"`
 	Anonymous  bool   `json:"anonymous" description:"是否匿名"`
