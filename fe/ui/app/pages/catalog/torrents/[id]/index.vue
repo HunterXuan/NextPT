@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] overflow-x-hidden bg-slate-50 py-6 lg:overflow-x-visible dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="pending" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div class="space-y-4">
@@ -17,8 +17,8 @@
         </UButton>
       </div>
 
-      <div v-else-if="torrent" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_44px_340px] lg:items-start">
-        <main class="space-y-6">
+      <div v-else-if="torrent" class="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_44px_340px] lg:items-start">
+        <main class="min-w-0 space-y-6">
           <section id="torrent-top" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="p-4 sm:p-5">
               <div class="space-y-4">
@@ -90,10 +90,10 @@
                 </div>
 
                 <div class="min-w-0">
-                  <h1 class="break-words text-xl font-semibold leading-7 text-slate-950 md:text-2xl dark:text-white">
+                  <h1 class="break-words [overflow-wrap:anywhere] text-xl font-semibold leading-7 text-slate-950 md:text-2xl dark:text-white">
                     {{ torrent.name || $t('catalog.torrents.detail.titleFallback', { id: torrent.id }) }}
                   </h1>
-                  <p v-if="torrent.subTitle" class="mt-2 break-words text-sm leading-6 text-slate-600 dark:text-slate-300">
+                  <p v-if="torrent.subTitle" class="mt-2 break-words [overflow-wrap:anywhere] text-sm leading-6 text-slate-600 dark:text-slate-300">
                     {{ torrent.subTitle }}
                   </p>
                 </div>
@@ -613,7 +613,7 @@
           </div>
         </nav>
 
-        <aside class="space-y-3 lg:sticky lg:top-[5.5rem]">
+        <aside class="min-w-0 space-y-3 lg:sticky lg:top-[5.5rem]">
           <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center justify-between gap-3">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
@@ -635,55 +635,57 @@
                 <dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(torrent.createdAt, locale) }}</dd>
               </div>
             </dl>
-            <div class="mt-3 border-t border-slate-100 pt-3 dark:border-slate-800">
-              <div class="grid grid-cols-2 gap-2">
-                <UButton
-                  v-if="canEditTorrent"
-                  color="neutral"
-                  variant="outline"
-                  size="sm"
-                  icon="i-lucide-pen-line"
-                  block
-                  :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
-                >
-                  {{ $t('catalog.torrents.detail.actions.edit') }}
-                </UButton>
-                <UButton
-                  color="neutral"
-                  variant="outline"
-                  size="sm"
-                  icon="i-lucide-flag"
-                  block
-                  :class="canEditTorrent ? '' : 'col-span-2'"
-                  @click="showTorrentReport = !showTorrentReport"
-                >
-                  {{ $t('catalog.torrents.detail.actions.report') }}
-                </UButton>
-                <UButton
-                  v-if="isStaff"
-                  class="col-span-2"
-                  color="error"
-                  variant="soft"
-                  size="sm"
-                  icon="i-lucide-trash-2"
-                  block
-                  :loading="adminActionPending === 'delete'"
-                  @click="handleAdminDeleteTorrent"
-                >
-                  {{ $t('catalog.torrents.detail.actions.adminDelete') }}
+          </section>
+
+          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.title') }}</h2>
+            <div class="mt-3 grid grid-cols-2 gap-2">
+              <UButton
+                v-if="canEditTorrent"
+                color="neutral"
+                variant="outline"
+                size="sm"
+                icon="i-lucide-pen-line"
+                block
+                :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
+              >
+                {{ $t('catalog.torrents.detail.actions.edit') }}
+              </UButton>
+              <UButton
+                color="neutral"
+                variant="outline"
+                size="sm"
+                icon="i-lucide-flag"
+                block
+                :class="canEditTorrent ? '' : 'col-span-2'"
+                @click="showTorrentReport = !showTorrentReport"
+              >
+                {{ $t('catalog.torrents.detail.actions.report') }}
+              </UButton>
+              <UButton
+                v-if="isStaff"
+                class="col-span-2"
+                color="error"
+                variant="soft"
+                size="sm"
+                icon="i-lucide-trash-2"
+                block
+                :loading="adminActionPending === 'delete'"
+                @click="handleAdminDeleteTorrent"
+              >
+                {{ $t('catalog.torrents.detail.actions.adminDelete') }}
+              </UButton>
+            </div>
+
+            <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
+              <UTextarea v-model="torrentReportReason" :rows="3" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
+              <div class="flex justify-end gap-2">
+                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="showTorrentReport = false">{{ $t('common.cancel') }}</UButton>
+                <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="torrentReportReason.trim().length < 5">
+                  {{ $t('catalog.torrents.detail.report.submit') }}
                 </UButton>
               </div>
-
-              <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
-                <UTextarea v-model="torrentReportReason" :rows="3" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
-                <div class="flex justify-end gap-2">
-                  <UButton color="neutral" variant="ghost" size="xs" type="button" @click="showTorrentReport = false">{{ $t('common.cancel') }}</UButton>
-                  <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="torrentReportReason.trim().length < 5">
-                    {{ $t('catalog.torrents.detail.report.submit') }}
-                  </UButton>
-                </div>
-              </form>
-            </div>
+            </form>
           </section>
 
           <RewardPanel
