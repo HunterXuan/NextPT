@@ -203,6 +203,16 @@
               </label>
             </div>
 
+            <label class="block">
+              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.catalog.categories.form.uploadConfig') }}</span>
+              <textarea
+                v-model="form.uploadConfigText"
+                class="mt-1 min-h-52 w-full rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-xs leading-5 text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                :placeholder="$t('admin.catalog.categories.form.uploadConfigPlaceholder')"
+                :disabled="saving"
+              />
+            </label>
+
             <p v-if="formError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
               {{ formError }}
             </p>
@@ -254,7 +264,8 @@ const form = reactive({
   nameEnUS: '',
   slug: '',
   sortOrder: 0,
-  enabled: true
+  enabled: true,
+  uploadConfigText: ''
 })
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
@@ -289,6 +300,7 @@ function selectCategory(category: AdminCatalogCategory) {
   form.slug = category.slug
   form.sortOrder = category.sortOrder
   form.enabled = category.enabled
+  form.uploadConfigText = category.uploadConfig ? JSON.stringify(category.uploadConfig, null, 2) : ''
   formError.value = ''
 }
 
@@ -300,6 +312,7 @@ function resetForm() {
   form.slug = ''
   form.sortOrder = 0
   form.enabled = true
+  form.uploadConfigText = ''
   formError.value = ''
 }
 
@@ -307,6 +320,8 @@ function buildInput(): AdminCatalogCategoryInput {
   const zhCN = form.nameZhCN.trim()
   const zhTW = form.nameZhTW.trim() || zhCN
   const enUS = form.nameEnUS.trim() || form.slug.trim()
+
+  const uploadConfig = parseUploadConfigText()
 
   return {
     nameI18N: {
@@ -316,7 +331,18 @@ function buildInput(): AdminCatalogCategoryInput {
     },
     slug: form.slug.trim(),
     sortOrder: Number(form.sortOrder || 0),
-    enabled: form.enabled
+    enabled: form.enabled,
+    uploadConfig
+  }
+}
+
+function parseUploadConfigText() {
+  const text = form.uploadConfigText.trim()
+  if (!text) return null
+  try {
+    return JSON.parse(text)
+  } catch {
+    throw new Error(t('admin.catalog.categories.form.uploadConfigInvalid'))
   }
 }
 
@@ -336,7 +362,7 @@ async function saveCategory() {
     resetForm()
     await loadCategories()
   } catch (error: unknown) {
-    formError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+    formError.value = error instanceof ApiError || error instanceof Error ? error.message : t('common.requestFailed')
   } finally {
     saving.value = false
   }

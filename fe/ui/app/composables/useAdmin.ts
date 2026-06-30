@@ -1,3 +1,4 @@
+import type { UploadConfig } from '~/composables/useCatalogTorrents'
 import type { I18nName } from '~/types/i18n'
 
 export interface AdminCatalogCategory {
@@ -6,6 +7,7 @@ export interface AdminCatalogCategory {
   slug: string
   sortOrder: number
   enabled: boolean
+  uploadConfig?: UploadConfig | null
   createdAt?: string | null
   updatedAt?: string | null
 }
@@ -19,6 +21,7 @@ export interface AdminCatalogCategoryInput {
   slug: string
   sortOrder: number
   enabled: boolean
+  uploadConfig?: UploadConfig | null
 }
 
 export interface AdminForumCategory {

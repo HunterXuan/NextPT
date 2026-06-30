@@ -435,6 +435,7 @@
         "sections": {
           "file": "種子檔案",
           "info": "基本資訊",
+          "release": "發布資訊",
           "publish": "發布"
         },
         "file": {
@@ -449,6 +450,9 @@
           "category": "分類",
           "categoryPlaceholder": "選擇分類",
           "name": "標題",
+          "titleOverride": "標題覆蓋",
+          "optionPlaceholder": "請選擇",
+          "noOptions": "暫無可選項",
           "subTitle": "副標題",
           "description": "詳情描述",
           "anonymous": "匿名發布"
@@ -468,7 +472,8 @@
           "write": "編輯",
           "preview": "預覽",
           "empty": "暫無內容"
-        }
+        },
+        "generatedTitle": "生成標題"
       },
       "edit": {
         "metaTitle": "編輯種子",
@@ -753,7 +758,10 @@
           "nameEnUS": "英文名稱",
           "slug": "標識",
           "sortOrder": "排序",
-          "enabled": "啟用"
+          "enabled": "啟用",
+          "uploadConfig": "發布配置 JSON",
+          "uploadConfigPlaceholder": "留空表示使用普通標題發布",
+          "uploadConfigInvalid": "發布配置不是有效的 JSON"
         }
       }
     },

@@ -4,6 +4,60 @@ export interface CatalogCategory {
   id: number
   name: I18nName
   slug: string
+  uploadConfig?: UploadConfig | null
+}
+
+export interface UploadConfig {
+  title?: UploadTitleConfig
+  fields?: UploadFieldConfig[]
+}
+
+export interface UploadTitleConfig {
+  mode?: 'manual' | 'generated' | string
+  allowManualOverride?: boolean
+  parts?: UploadTitlePart[]
+}
+
+export interface UploadTitlePart {
+  field: string
+  prefix?: string
+  suffix?: string
+  separator?: string
+}
+
+export interface UploadFieldConfig {
+  key: string
+  type?: 'text' | 'textarea' | 'select' | 'multiSelect' | string
+  label?: I18nName
+  description?: I18nName
+  placeholder?: I18nName
+  required?: boolean
+  options?: UploadFieldOptions
+}
+
+export interface UploadFieldOptions {
+  source?: 'static' | 'tagGroup' | string
+  slug?: string
+  items?: UploadOptionItem[]
+}
+
+export interface UploadOptionItem {
+  value: string
+  label?: I18nName
+}
+
+export interface CatalogTagItem {
+  id: number
+  name: I18nName
+  value: string
+}
+
+export interface CatalogTagGroup {
+  id: number
+  name: I18nName
+  slug: string
+  categories?: number[] | null
+  tags: CatalogTagItem[]
 }
 
 export interface TorrentListItem {
@@ -29,6 +83,7 @@ export interface TorrentListItem {
 
 export interface TorrentDetail extends TorrentListItem {
   description: string
+  releaseFields?: Record<string, unknown> | null
   isBookmarked: boolean
   isLiked: boolean
 }
@@ -95,6 +150,7 @@ export interface TorrentUploadInput {
   subTitle?: string
   categoryId: number
   description?: string
+  releaseFields?: Record<string, unknown>
   anonymous?: boolean
 }
 
@@ -108,6 +164,10 @@ export interface TorrentUpdateInput {
 
 export interface CatalogCategoryListOut {
   list: CatalogCategory[]
+}
+
+export interface CatalogTagGroupListOut {
+  list: CatalogTagGroup[]
 }
 
 export interface TorrentListOut {
@@ -167,6 +227,10 @@ export interface CommentToggleLikeOut {
 export function useCatalogTorrents() {
   async function listCategories() {
     return await fetchApi<CatalogCategoryListOut>('/api/catalog/categories')
+  }
+
+  async function listTagGroups() {
+    return await fetchApi<CatalogTagGroupListOut>('/api/catalog/tag-groups')
   }
 
   async function listTorrents(params: TorrentListParams) {
@@ -288,6 +352,9 @@ export function useCatalogTorrents() {
     if (input.name?.trim()) body.append('name', input.name.trim())
     if (input.subTitle?.trim()) body.append('subTitle', input.subTitle.trim())
     if (input.description?.trim()) body.append('description', input.description.trim())
+    if (input.releaseFields && Object.keys(input.releaseFields).length > 0) {
+      body.append('releaseFields', JSON.stringify(input.releaseFields))
+    }
 
     return await fetchApi<TorrentUploadOut>('/api/catalog/torrents', {
       method: 'POST',
@@ -347,6 +414,7 @@ export function useCatalogTorrents() {
     reportComment,
     listSubtitles,
     listAllSubtitles,
+    listTagGroups,
     uploadSubtitle,
     downloadSubtitle,
     reportSubtitle,

@@ -435,6 +435,7 @@
         "sections": {
           "file": "种子文件",
           "info": "基础信息",
+          "release": "发布信息",
           "publish": "发布"
         },
         "file": {
@@ -449,6 +450,9 @@
           "category": "分类",
           "categoryPlaceholder": "选择分类",
           "name": "标题",
+          "titleOverride": "标题覆盖",
+          "optionPlaceholder": "请选择",
+          "noOptions": "暂无可选项",
           "subTitle": "副标题",
           "description": "详情描述",
           "anonymous": "匿名发布"
@@ -468,7 +472,8 @@
           "write": "编辑",
           "preview": "预览",
           "empty": "暂无内容"
-        }
+        },
+        "generatedTitle": "生成标题"
       },
       "edit": {
         "metaTitle": "编辑种子",
@@ -753,7 +758,10 @@
           "nameEnUS": "英文名称",
           "slug": "标识",
           "sortOrder": "排序",
-          "enabled": "启用"
+          "enabled": "启用",
+          "uploadConfig": "发布配置 JSON",
+          "uploadConfigPlaceholder": "留空表示使用普通标题发布",
+          "uploadConfigInvalid": "发布配置不是有效的 JSON"
         }
       }
     },

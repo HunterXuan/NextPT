@@ -435,6 +435,7 @@
         "sections": {
           "file": "Torrent file",
           "info": "Basic info",
+          "release": "Release info",
           "publish": "Publish"
         },
         "file": {
@@ -449,6 +450,9 @@
           "category": "Category",
           "categoryPlaceholder": "Choose category",
           "name": "Title",
+          "titleOverride": "Title override",
+          "optionPlaceholder": "Choose one",
+          "noOptions": "No options",
           "subTitle": "Subtitle",
           "description": "Description",
           "anonymous": "Anonymous"
@@ -468,7 +472,8 @@
           "write": "Edit",
           "preview": "Preview",
           "empty": "No content"
-        }
+        },
+        "generatedTitle": "Generated title"
       },
       "edit": {
         "metaTitle": "Edit Torrent",
@@ -753,7 +758,10 @@
           "nameEnUS": "English name",
           "slug": "Slug",
           "sortOrder": "Sort",
-          "enabled": "Enabled"
+          "enabled": "Enabled",
+          "uploadConfig": "Upload config JSON",
+          "uploadConfigPlaceholder": "Leave empty to use plain title upload",
+          "uploadConfigInvalid": "Upload config is not valid JSON"
         }
       }
     },
