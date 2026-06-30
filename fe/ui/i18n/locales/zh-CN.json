@@ -13,16 +13,41 @@
     "expandSidebar": "展开侧边栏",
     "switchLanguage": "切换语言",
     "showPassword": "显示密码",
-    "hidePassword": "隐藏密码"
+    "hidePassword": "隐藏密码",
+    "pagination": {
+      "label": "分页",
+      "total": "共 {total} 条",
+      "pageSize": "每页",
+      "page": "第 {page} 页",
+      "first": "第一页",
+      "last": "最后一页"
+    },
+    "reward": {
+      "summary": "{count} 位赞赏者",
+      "confirmTitle": "将扣除 {amount} 魔力",
+      "confirm": "确认",
+      "success": "赞赏成功",
+      "empty": "暂无赞赏",
+      "preview": "前 {count} / {total} 位",
+      "viewAll": "查看全部",
+      "allTitle": "全部赞赏者",
+      "allDescription": "共 {count} 位赞赏者",
+      "once": "赞赏 1 次",
+      "times": "赞赏 {count} 次"
+    }
   },
   "nav": {
     "home": "首页",
+    "resources": "资源库",
     "catalog": "资源库",
+    "community": "论坛",
     "forum": "论坛",
     "uploadTorrent": "发布种子",
     "subtitles": "字幕",
-    "bookmarks": "我的收藏",
+    "bookmarks": "收藏",
+    "my": "我的",
     "user": "用户中心",
+    "backToUser": "返回用户端",
     "admin": "管理后台"
   },
   "footer": {
@@ -240,7 +265,7 @@
       "metaTitle": "种子",
       "eyebrow": "资源库 / 种子",
       "title": "种子",
-      "anonymous": "匿名发布",
+      "anonymous": "匿名",
       "anonymousOwner": "匿名（{name}）",
       "unknownCategory": "未分类",
       "fileCount": "{count} 个文件",
@@ -259,16 +284,31 @@
         "clearCategories": "清除分类",
         "noCategories": "暂无可选分类"
       },
-      "types": {
-        "single": "单文件",
-        "multi": "多文件"
+      "status": {
+        "pinned": "置顶",
+        "featured": "推荐",
+        "expiresAt": "促销至 {time}",
+        "promotion": {
+          "1": "免费",
+          "2": "2x",
+          "3": "2x 免费",
+          "4": "50%",
+          "5": "2x 50%",
+          "6": "30%",
+          "7": "促销"
+        }
       },
       "table": {
+        "category": "分类",
         "torrent": "种子",
         "size": "大小",
         "activity": "活跃",
+        "seeders": "做种",
+        "leechers": "下载",
         "completed": "完成",
-        "createdAt": "发布时间"
+        "uploader": "发布者",
+        "createdAt": "发布时间",
+        "actions": "操作"
       },
       "empty": {
         "title": "暂无种子",
@@ -283,6 +323,11 @@
         "back": "返回种子列表",
         "titleFallback": "种子 #{id}",
         "invalidId": "无效的种子 ID",
+        "navigation": {
+          "title": "页面目录",
+          "top": "顶部",
+          "bottom": "底部"
+        },
         "actions": {
           "title": "种子操作",
           "download": "下载种子",
@@ -300,7 +345,8 @@
           "seeders": "做种",
           "leechers": "下载",
           "completed": "完成",
-          "size": "大小"
+          "size": "大小",
+          "files": "文件"
         },
         "description": {
           "title": "详情描述",
@@ -340,18 +386,30 @@
           "title": "评论",
           "summary": "{count} 条评论",
           "placeholder": "写下你的评论",
+          "edit": "编辑",
+          "preview": "预览",
+          "previewEmpty": "写点内容后可以在这里预览",
           "submit": "发表评论",
           "created": "评论已发布",
           "empty": "暂无评论",
-          "reward": "赞赏 {count}"
+          "reward": "赞赏 {count}",
+          "quote": "引用"
         },
         "reward": {
           "title": "赞赏种子",
-          "summary": "{count} 条赞赏记录",
+          "summary": "{count} 位赞赏者",
           "amount": "金额",
           "submit": "赞赏",
+          "confirmTitle": "将扣除 {amount} 魔力",
+          "confirm": "确认",
           "success": "赞赏成功",
-          "empty": "暂无赞赏记录"
+          "empty": "暂无赞赏",
+          "preview": "前 {count} / {total} 位",
+          "viewAll": "查看全部",
+          "allTitle": "全部赞赏者",
+          "allDescription": "共 {count} 位赞赏者",
+          "once": "赞赏 1 次",
+          "times": "赞赏 {count} 次"
         },
         "report": {
           "reason": "填写举报原因",
@@ -363,7 +421,6 @@
           "category": "分类",
           "publisher": "发布者",
           "publishedAt": "发布时间",
-          "type": "类型",
           "fileCount": "文件数",
           "torrentId": "种子 ID"
         }
@@ -415,11 +472,11 @@
       }
     },
     "bookmarks": {
-      "metaTitle": "收藏种子",
-      "title": "收藏种子",
+      "metaTitle": "种子收藏",
+      "title": "种子收藏",
       "pageSummary": "第 {page} / {pages} 页",
       "empty": {
-        "title": "暂无收藏种子",
+        "title": "暂无种子收藏",
         "description": "你收藏的种子会显示在这里。"
       }
     },
@@ -459,7 +516,7 @@
   },
   "forum": {
     "metaTitle": "论坛",
-    "eyebrow": "社区 / 论坛",
+    "eyebrow": "论坛",
     "title": "论坛",
     "summary": {
       "nodes": "节点",
@@ -522,7 +579,7 @@
       "metaTitle": "主题收藏",
       "title": "主题收藏",
       "empty": {
-        "title": "暂无收藏主题",
+        "title": "暂无主题收藏",
         "description": "你收藏的论坛主题会显示在这里。"
       }
     },
@@ -626,10 +683,10 @@
       "overview": "总览",
       "catalog": "资源库",
       "forum": "论坛",
-      "iam": "用户权限",
-      "moderation": "审核风控",
+      "iam": "IAM",
+      "moderation": "Mod",
       "site": "站点",
-      "system": "系统"
+      "system": "Sys"
     },
     "dashboard": {
       "title": "后台总览",
@@ -805,20 +862,20 @@
           "success": "封禁已生效"
         },
         "mod": {
-          "title": "用户限制",
+          "title": "账号限制",
           "activeSummary": "当前生效 {count} 条",
-          "type": "限制类型",
+          "type": "账号限制类型",
           "reason": "原因",
           "durationDays": "天数",
           "permanentHint": "0 表示永久",
           "permanent": "永久",
           "expireAt": "到期",
-          "submit": "添加限制",
-          "applied": "限制已生效",
+          "submit": "添加账号限制",
+          "applied": "账号限制已生效",
           "remove": "解除",
-          "removed": "限制已解除",
-          "confirmRemove": "确认解除「{type}」限制？",
-          "empty": "暂无限制记录",
+          "removed": "账号限制已解除",
+          "confirmRemove": "确认解除「{type}」账号限制？",
+          "empty": "暂无账号限制记录",
           "status": {
             "active": "生效中",
             "inactive": "已结束"

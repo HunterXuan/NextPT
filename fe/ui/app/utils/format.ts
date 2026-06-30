@@ -27,6 +27,20 @@ export function formatDateTime(value?: string | null, locale?: string) {
   }
 }
 
+export function formatDateOnly(value?: string | null, locale?: string) {
+  if (!value) return '-'
+
+  try {
+    return new Intl.DateTimeFormat(locale || undefined, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date(value))
+  } catch {
+    return value
+  }
+}
+
 export function localizeI18nName(name: I18nName | null | undefined, locale: string, fallback = '-') {
   if (!name) return fallback
 

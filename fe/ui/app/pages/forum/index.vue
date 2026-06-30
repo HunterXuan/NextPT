@@ -1,25 +1,18 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('forum.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('forum.title') }}</h1>
+    <div class="w-full px-3 sm:px-4 lg:px-5">
+      <div class="mb-4 grid grid-cols-2 gap-3 sm:flex sm:items-center sm:justify-end">
+        <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+          <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('forum.summary.nodes') }}</p>
+          <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(nodeCount) }}</p>
         </div>
-
-        <div class="grid grid-cols-2 gap-3 sm:flex sm:items-center">
-          <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('forum.summary.nodes') }}</p>
-            <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(nodeCount) }}</p>
-          </div>
-          <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('forum.summary.topics') }}</p>
-            <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(topicCount) }}</p>
-          </div>
-          <UButton class="col-span-2 sm:col-span-1" color="primary" icon="i-lucide-square-pen" :to="localePath('/forum/topics/create')">
-            {{ $t('forum.actions.createTopic') }}
-          </UButton>
+        <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+          <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('forum.summary.topics') }}</p>
+          <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(topicCount) }}</p>
         </div>
+        <UButton class="col-span-2 sm:col-span-1" color="primary" icon="i-lucide-square-pen" :to="localePath('/forum/topics/create')">
+          {{ $t('forum.actions.createTopic') }}
+        </UButton>
       </div>
 
       <div v-if="pending" class="space-y-4">

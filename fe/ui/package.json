@@ -10,14 +10,19 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@bbob/parser": "^4.3.1",
     "@fontsource/inter": "^5.2.8",
     "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/lucide": "^1.2.15",
     "@nuxt/ui": "^4.3.0",
     "@nuxtjs/i18n": "^10.2.1",
+    "markdown-it": "^14.2.0",
     "nuxt": "^4.2.2",
     "typescript": "^5.9.3",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2"
   }
 }

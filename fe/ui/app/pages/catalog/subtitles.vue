@@ -1,24 +1,14 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" :to="localePath('/catalog/torrents')">
-            {{ $t('catalog.torrents.detail.back') }}
-          </UButton>
-          <p class="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.subtitles.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('catalog.subtitles.title') }}</h1>
+    <div class="w-full px-3 sm:px-4 lg:px-5">
+      <div class="mb-4 grid grid-cols-2 gap-3 sm:flex sm:items-center sm:justify-end">
+        <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+          <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.subtitles.summary.total') }}</p>
+          <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(total) }}</p>
         </div>
-
-        <div class="grid grid-cols-2 gap-3 sm:flex sm:items-center">
-          <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.subtitles.summary.total') }}</p>
-            <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(total) }}</p>
-          </div>
-          <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadSubtitles">
-            {{ $t('common.refresh') }}
-          </UButton>
-        </div>
+        <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadSubtitles">
+          {{ $t('common.refresh') }}
+        </UButton>
       </div>
 
       <div class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
@@ -108,32 +98,16 @@
         </div>
       </div>
 
-      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-sm text-slate-500 dark:text-slate-400">
-          {{ $t('catalog.subtitles.pagination.summary', { page: page, pages: totalPages }) }}
-        </p>
-        <div class="flex flex-wrap items-center gap-2">
-          <label class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-            <span>{{ $t('catalog.subtitles.pagination.pageSize') }}</span>
-            <select
-              v-model="selectedSize"
-              class="h-9 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-              :disabled="pending"
-              @change="handlePageSizeChange"
-            >
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </label>
-          <UButton color="neutral" variant="outline" icon="i-lucide-chevron-left" :disabled="page <= 1 || pending" @click="goToPage(page - 1)">
-            {{ $t('common.previous') }}
-          </UButton>
-          <UButton color="neutral" variant="outline" trailing-icon="i-lucide-chevron-right" :disabled="page >= totalPages || pending" @click="goToPage(page + 1)">
-            {{ $t('common.next') }}
-          </UButton>
-        </div>
-      </div>
+      <AppPager
+        class="mt-4"
+        :page="page"
+        :total="total"
+        :page-size="size"
+        :page-size-options="pageSizes"
+        :disabled="pending"
+        @page-change="goToPage"
+        @page-size-change="handlePageSizeChange"
+      />
     </div>
   </div>
 </template>
@@ -164,6 +138,7 @@ const downloadPendingId = ref(0)
 const activeReportId = ref(0)
 const reportPending = ref(false)
 const reportReason = ref('')
+const pageSizes = [20, 50, 100]
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const size = computed(() => Number(selectedSize.value))
@@ -219,7 +194,8 @@ function goToPage(nextPage: number) {
   loadSubtitles()
 }
 
-function handlePageSizeChange() {
+function handlePageSizeChange(nextSize: number) {
+  selectedSize.value = String(nextSize)
   page.value = 1
   loadSubtitles()
 }

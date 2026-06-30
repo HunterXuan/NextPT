@@ -1,19 +1,14 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.title') }}</h1>
-        </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
+      <div class="mb-4 flex justify-end">
         <div class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
           <UIcon name="i-lucide-shield-check" class="size-4 text-emerald-600 dark:text-emerald-400" />
           <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ user?.roleName || $t('user.staff') }}</span>
         </div>
       </div>
 
-      <div class="mb-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <div v-for="stat in dashboardStats" :key="stat.key" class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
           <div class="flex items-center justify-between gap-3">
             <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ stat.label }}</p>

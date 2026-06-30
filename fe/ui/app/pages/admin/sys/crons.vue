@@ -1,12 +1,7 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.sys.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.sys.crons.title') }}</h1>
-        </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
+      <div class="mb-4 flex justify-end">
         <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="cronsPending || logsPending" @click="reloadAll">
           {{ $t('common.refresh') }}
         </UButton>
@@ -86,17 +81,15 @@
             </table>
           </div>
 
-          <div class="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-            <span class="text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.pagination.summary', { page: logQuery.page, pages: logTotalPages }) }}</span>
-            <div class="flex items-center justify-end gap-2">
-              <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-left" :disabled="logQuery.page <= 1 || logsPending || !selectedName" @click="changeLogPage(logQuery.page - 1)">
-                {{ $t('common.previous') }}
-              </UButton>
-              <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-right" :disabled="logQuery.page >= logTotalPages || logsPending || !selectedName" @click="changeLogPage(logQuery.page + 1)">
-                {{ $t('common.next') }}
-              </UButton>
-            </div>
-          </div>
+          <AppPager
+            class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+            size="sm"
+            :page="logQuery.page"
+            :total="logTotal"
+            :page-size="logQuery.size"
+            :disabled="logsPending || !selectedName"
+            @page-change="changeLogPage"
+          />
         </section>
       </div>
     </div>

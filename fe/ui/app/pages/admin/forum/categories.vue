@@ -1,22 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.forum.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.categories.title') }}</h1>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <UButton color="primary" variant="soft" icon="i-lucide-folder-tree" :to="localePath('/admin/forum/categories')">
-            {{ $t('admin.forum.categories.title') }}
-          </UButton>
-          <UButton color="neutral" variant="outline" icon="i-lucide-panels-top-left" :to="localePath('/admin/forum/nodes')">
-            {{ $t('admin.forum.nodes.title') }}
-          </UButton>
-        </div>
-      </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
@@ -166,7 +150,6 @@ import { formatDateTime, localizeI18nName } from '~/utils/format'
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
 const toast = useToast()
 const adminApi = useAdmin()
 

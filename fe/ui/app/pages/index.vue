@@ -114,7 +114,7 @@
 
     <template v-else>
       <section class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-3 sm:px-4 lg:px-5">
           <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('home.member.eyebrow') }}</p>

@@ -13,10 +13,14 @@ export interface TorrentListItem {
   categoryId: number
   size: number
   fileCount: number
-  type: number
+  spState: number
+  spExpireAt: string
+  isFeatured: boolean
+  isPinned: boolean
   seeders: number
   leechers: number
   snatched: number
+  likeCount: number
   ownerId: number
   ownerName: string
   anonymous: boolean
@@ -44,16 +48,22 @@ export interface TorrentPeerItem {
 }
 
 export interface TorrentRewardItem {
-  id: number
   userId: number
+  username: string
   amount: number
-  createdAt: string
+  rewardCount: number
+  lastRewardAt: string
+}
+
+export interface UserSummary {
+  id: number
+  username: string
+  avatar: string
 }
 
 export interface CommentItem {
   id: number
-  userId: number
-  username: string
+  author: UserSummary
   content: string
   likeCount: number
   rewardCount: number

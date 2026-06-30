@@ -1,53 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div class="min-w-0">
-          <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" :to="localePath('/catalog/torrents')">
-            {{ $t('catalog.torrents.detail.back') }}
-          </UButton>
-          <p class="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.eyebrow') }}</p>
-          <h1 class="mt-1 break-words text-2xl font-semibold text-slate-950 dark:text-white">
-            {{ torrent?.name || $t('catalog.torrents.detail.titleFallback', { id: torrentId }) }}
-          </h1>
-          <p v-if="torrent?.subTitle" class="mt-2 break-words text-sm text-slate-500 dark:text-slate-400">
-            {{ torrent.subTitle }}
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:flex lg:items-center">
-          <UButton
-            color="primary"
-            icon="i-lucide-download"
-            :loading="downloadPending"
-            :disabled="!torrent || pending"
-            @click="handleDownload"
-          >
-            {{ $t('catalog.torrents.detail.actions.download') }}
-          </UButton>
-          <UButton
-            color="neutral"
-            :variant="torrent?.isLiked ? 'soft' : 'outline'"
-            :icon="torrent?.isLiked ? 'i-lucide-heart' : 'i-lucide-heart-plus'"
-            :loading="likePending"
-            :disabled="!torrent || pending"
-            @click="handleToggleLike"
-          >
-            {{ torrent?.isLiked ? $t('catalog.torrents.detail.actions.liked') : $t('catalog.torrents.detail.actions.like') }}
-          </UButton>
-          <UButton
-            color="neutral"
-            :variant="torrent?.isBookmarked ? 'soft' : 'outline'"
-            :icon="torrent?.isBookmarked ? 'i-lucide-bookmark-check' : 'i-lucide-bookmark-plus'"
-            :loading="bookmarkPending"
-            :disabled="!torrent || pending"
-            @click="handleToggleBookmark"
-          >
-            {{ torrent?.isBookmarked ? $t('catalog.torrents.detail.actions.bookmarked') : $t('catalog.torrents.detail.actions.bookmark') }}
-          </UButton>
-        </div>
-      </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="pending" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div class="space-y-4">
           <div class="h-44 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
@@ -64,83 +17,231 @@
         </UButton>
       </div>
 
-      <div v-else-if="torrent" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+      <div v-else-if="torrent" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_44px_340px] lg:items-start">
         <main class="space-y-6">
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-wrap items-center gap-2">
-              <UBadge color="neutral" variant="soft">{{ categoryName }}</UBadge>
-              <UBadge :color="torrent.type === 1 ? 'primary' : 'neutral'" variant="subtle">
-                {{ torrent.type === 1 ? $t('catalog.torrents.types.multi') : $t('catalog.torrents.types.single') }}
-              </UBadge>
-              <UBadge v-if="torrent.anonymous" color="neutral" variant="outline">
-                {{ torrentOwnerName(torrent) }}
-              </UBadge>
-            </div>
-
-            <div class="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-              <button
-                type="button"
-                :class="peerStatCardClass('seeders')"
-                :aria-pressed="activePeerView === 'seeders'"
-                @click="handlePeerStatClick('seeders')"
-              >
-                <div class="flex items-center justify-between gap-2">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.stats.seeders') }}</p>
-                  <UIcon name="i-lucide-users" class="size-4 shrink-0 text-emerald-500" />
-                </div>
-                <p class="mt-1 text-lg font-semibold text-emerald-600 dark:text-emerald-400">{{ numberFormatter.format(torrent.seeders) }}</p>
-              </button>
-              <button
-                type="button"
-                :class="peerStatCardClass('leechers')"
-                :aria-pressed="activePeerView === 'leechers'"
-                @click="handlePeerStatClick('leechers')"
-              >
-                <div class="flex items-center justify-between gap-2">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.stats.leechers') }}</p>
-                  <UIcon name="i-lucide-loader-circle" class="size-4 shrink-0 text-sky-500" />
-                </div>
-                <p class="mt-1 text-lg font-semibold text-sky-600 dark:text-sky-400">{{ numberFormatter.format(torrent.leechers) }}</p>
-              </button>
-              <button
-                type="button"
-                :class="peerStatCardClass('completed')"
-                :aria-pressed="activePeerView === 'completed'"
-                @click="handlePeerStatClick('completed')"
-              >
-                <div class="flex items-center justify-between gap-2">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.stats.completed') }}</p>
-                  <UIcon name="i-lucide-circle-check" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
-                </div>
-                <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(torrent.snatched) }}</p>
-              </button>
-              <div class="rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
-                <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.stats.size') }}</p>
-                <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ formatBytes(torrent.size) }}</p>
-              </div>
-            </div>
-
-            <div v-if="activePeerView" class="mt-4 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
-              <div class="flex items-start justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950">
+          <section id="torrent-top" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div class="p-4 sm:p-5">
+              <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
                 <div class="min-w-0">
-                  <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ activePeerPanelTitle }}</h2>
-                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ activePeerPanelSummary }}</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex h-6 max-w-full items-center rounded border border-slate-200 bg-slate-50 px-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+                      <span class="truncate">{{ categoryName }}</span>
+                    </span>
+                    <span
+                      v-for="badge in torrentStatusBadges(torrent)"
+                      :key="badge.key"
+                      class="inline-flex h-6 shrink-0 items-center rounded px-2 text-xs font-semibold leading-none"
+                      :class="badge.class"
+                      :title="badge.title"
+                    >
+                      {{ badge.label }}
+                    </span>
+                  </div>
+
+                  <h1 class="mt-3 break-words text-xl font-semibold leading-7 text-slate-950 md:text-2xl dark:text-white">
+                    {{ torrent.name || $t('catalog.torrents.detail.titleFallback', { id: torrent.id }) }}
+                  </h1>
+                  <p v-if="torrent.subTitle" class="mt-2 break-words text-sm leading-6 text-slate-600 dark:text-slate-300">
+                    {{ torrent.subTitle }}
+                  </p>
                 </div>
-                <div class="flex shrink-0 items-center gap-1">
+
+                <div class="flex flex-wrap items-center gap-2 xl:justify-end">
                   <UButton
-                    v-if="activePeerView !== 'completed'"
+                    class="shrink-0"
+                    color="primary"
+                    icon="i-lucide-download"
+                    :loading="downloadPending"
+                    :disabled="downloadPending"
+                    @click="handleDownload"
+                  >
+                    {{ $t('catalog.torrents.detail.actions.download') }}
+                  </UButton>
+                  <UButton
+                    :color="torrent.isLiked ? 'error' : 'neutral'"
+                    :variant="torrent.isLiked ? 'soft' : 'outline'"
+                    icon="i-lucide-heart"
+                    :loading="likePending"
+                    :disabled="likePending"
+                    :aria-label="$t('catalog.torrents.detail.actions.like')"
+                    :title="$t('catalog.torrents.detail.actions.like')"
+                    @click="handleToggleLike"
+                  >
+                    {{ numberFormatter.format(torrent.likeCount || 0) }}
+                  </UButton>
+                  <UButton
                     color="neutral"
-                    variant="ghost"
-                    size="xs"
-                    icon="i-lucide-refresh-cw"
-                    :aria-label="$t('common.refresh')"
-                    :loading="peersPending"
-                    @click="loadPeers(true)"
+                    :variant="torrent.isBookmarked ? 'soft' : 'outline'"
+                    :icon="torrent.isBookmarked ? 'i-lucide-bookmark-check' : 'i-lucide-bookmark'"
+                    :loading="bookmarkPending"
+                    :disabled="bookmarkPending"
+                    :aria-label="$t('catalog.torrents.detail.actions.bookmark')"
+                    :title="$t('catalog.torrents.detail.actions.bookmark')"
+                    @click="handleToggleBookmark"
                   />
-                  <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-x" :aria-label="$t('common.cancel')" @click="activePeerView = null" />
                 </div>
               </div>
+            </div>
 
+            <div class="border-t border-slate-200 bg-slate-50/70 dark:border-slate-800 dark:bg-slate-950/40">
+              <div class="grid grid-cols-2 divide-x divide-y divide-slate-200 sm:grid-cols-4 sm:divide-y-0 dark:divide-slate-800">
+                <button
+                  type="button"
+                  :class="fileStatCardClass()"
+                  :aria-pressed="filePanelOpen"
+                  @click="handleFileStatClick"
+                >
+                  <div class="flex min-w-0 items-center justify-between gap-3">
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <UIcon name="i-lucide-folder-tree" class="size-3.5 shrink-0 text-amber-500" />
+                      <span class="truncate">{{ $t('catalog.torrents.fileCount', { count: numberFormatter.format(torrent.fileCount) }) }}</span>
+                    </div>
+                    <p class="shrink-0 truncate text-right text-sm font-semibold text-slate-950 dark:text-white">
+                      {{ formatBytes(torrent.size) }}
+                    </p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  :class="peerStatCardClass('seeders')"
+                  :aria-pressed="activePeerView === 'seeders'"
+                  @click="handlePeerStatClick('seeders')"
+                >
+                  <div class="flex min-w-0 items-center justify-between gap-3">
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <UIcon name="i-lucide-users" class="size-3.5 shrink-0 text-emerald-500" />
+                      <span class="truncate">{{ $t('catalog.torrents.detail.stats.seeders') }}</span>
+                    </div>
+                    <p class="shrink-0 text-right text-sm font-semibold text-emerald-600 dark:text-emerald-400">{{ numberFormatter.format(torrent.seeders) }}</p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  :class="peerStatCardClass('leechers')"
+                  :aria-pressed="activePeerView === 'leechers'"
+                  @click="handlePeerStatClick('leechers')"
+                >
+                  <div class="flex min-w-0 items-center justify-between gap-3">
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <UIcon name="i-lucide-loader-circle" class="size-3.5 shrink-0 text-sky-500" />
+                      <span class="truncate">{{ $t('catalog.torrents.detail.stats.leechers') }}</span>
+                    </div>
+                    <p class="shrink-0 text-right text-sm font-semibold text-sky-600 dark:text-sky-400">{{ numberFormatter.format(torrent.leechers) }}</p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  :class="peerStatCardClass('completed')"
+                  :aria-pressed="activePeerView === 'completed'"
+                  @click="handlePeerStatClick('completed')"
+                >
+                  <div class="flex min-w-0 items-center justify-between gap-3">
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <UIcon name="i-lucide-circle-check" class="size-3.5 shrink-0 text-slate-500 dark:text-slate-400" />
+                      <span class="truncate">{{ $t('catalog.torrents.detail.stats.completed') }}</span>
+                    </div>
+                    <p class="shrink-0 text-right text-sm font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(torrent.snatched) }}</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div v-if="filePanelOpen" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+              <div v-if="filesError" class="flex flex-col items-center justify-center px-4 py-10 text-center">
+                <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
+                <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ filesError }}</p>
+                <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadFiles(true)">
+                  {{ $t('common.retry') }}
+                </UButton>
+              </div>
+
+              <div v-else-if="fileTree.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                {{ $t('catalog.torrents.detail.files.empty') }}
+              </div>
+
+              <div v-else class="max-h-[520px] overflow-auto">
+                <div
+                  v-for="row in visibleFileTreeRows"
+                  :key="row.node.id"
+                  class="grid min-h-11 gap-2 border-b border-slate-100 px-4 py-2 text-sm last:border-b-0 sm:grid-cols-[minmax(0,1fr)_120px] sm:items-center dark:border-slate-800"
+                  :class="row.node.id === fileTreeRootId ? 'bg-slate-50/70 dark:bg-slate-950/40' : ''"
+                >
+                  <button
+                    v-if="row.node.type === 'directory'"
+                    type="button"
+                    class="flex min-w-0 items-center gap-2 rounded-md py-1 pr-2 text-left text-slate-700 transition-colors hover:bg-white dark:text-slate-200 dark:hover:bg-slate-950"
+                    :style="fileTreeIndent(row.depth)"
+                    :aria-expanded="expandedFileNodeIds.has(row.node.id)"
+                    :disabled="filesPending"
+                    @click="toggleFileTreeNode(row.node)"
+                  >
+                    <UIcon
+                      v-if="filesPending && !filesLoaded && row.node.id === fileTreeRootId"
+                      name="i-lucide-loader-circle"
+                      class="size-4 shrink-0 animate-spin text-slate-400"
+                    />
+                    <UIcon
+                      v-else
+                      :name="expandedFileNodeIds.has(row.node.id) ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
+                      class="size-4 shrink-0 text-slate-400"
+                    />
+                    <UIcon
+                      :name="expandedFileNodeIds.has(row.node.id) ? 'i-lucide-folder-open' : 'i-lucide-folder'"
+                      class="size-4 shrink-0 text-amber-500"
+                    />
+                    <span class="min-w-0 truncate font-medium">{{ row.node.name }}</span>
+                    <span v-if="row.node.id !== fileTreeRootId" class="shrink-0 text-xs text-slate-500 dark:text-slate-400">
+                      {{ $t('catalog.torrents.fileCount', { count: numberFormatter.format(row.node.fileCount) }) }}
+                    </span>
+                  </button>
+                  <div
+                    v-else
+                    class="flex min-w-0 items-center gap-2 py-1 pr-2 text-slate-700 dark:text-slate-200"
+                    :style="fileTreeIndent(row.depth)"
+                  >
+                    <span class="size-4 shrink-0" />
+                    <UIcon name="i-lucide-file" class="size-4 shrink-0 text-slate-400" />
+                    <span class="min-w-0 truncate font-mono text-xs">{{ row.node.name }}</span>
+                  </div>
+                  <div v-if="row.node.id === fileTreeRootId" class="flex items-center justify-end gap-1">
+                    <UTooltip
+                      :text="$t('catalog.torrents.detail.files.expandAll')"
+                      :content="{ side: 'top', sideOffset: 8 }"
+                      :delay-duration="120"
+                    >
+                      <UButton
+                        color="neutral"
+                        variant="ghost"
+                        size="xs"
+                        icon="i-lucide-folder-open"
+                        :loading="filesPending"
+                        :disabled="filesPending || (filesLoaded && allFileTreeExpanded)"
+                        :aria-label="$t('catalog.torrents.detail.files.expandAll')"
+                        @click.stop="expandAllFileTree"
+                      />
+                    </UTooltip>
+                    <UTooltip
+                      :text="$t('catalog.torrents.detail.files.collapseAll')"
+                      :content="{ side: 'top', sideOffset: 8 }"
+                      :delay-duration="120"
+                    >
+                      <UButton
+                        color="neutral"
+                        variant="ghost"
+                        size="xs"
+                        icon="i-lucide-folder"
+                        :disabled="filesPending || expandedFileNodeIds.size === 0"
+                        :aria-label="$t('catalog.torrents.detail.files.collapseAll')"
+                        @click.stop="collapseAllFileTree"
+                      />
+                    </UTooltip>
+                  </div>
+                  <span v-else class="text-slate-500 sm:text-right dark:text-slate-400">{{ formatBytes(row.node.size) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="activePeerView" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
               <div v-if="activePeerView === 'completed'" class="px-4 py-8 text-center">
                 <UIcon name="i-lucide-circle-check" class="mx-auto size-8 text-slate-400" />
                 <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
@@ -186,370 +287,398 @@
             </div>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.description.title') }}</h2>
-            <p
-              v-if="torrent.description"
-              class="mt-4 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200"
+          <section id="torrent-subtitles" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between gap-4 px-4 py-3 text-left transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:hover:bg-slate-950 dark:focus-visible:ring-sky-900"
+              :aria-expanded="subtitlesPanelOpen"
+              @click="toggleSubtitlesPanel"
             >
-              {{ torrent.description }}
-            </p>
-            <p v-else class="mt-4 text-sm text-slate-500 dark:text-slate-400">
-              {{ $t('catalog.torrents.detail.description.empty') }}
-            </p>
-          </section>
-
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <div>
-                <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.files.title') }}</h2>
-                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  {{ $t('catalog.torrents.fileCount', { count: numberFormatter.format(torrent.fileCount) }) }}
-                </p>
-              </div>
-              <div v-if="filesLoaded && hasFileTreeDirectories" class="flex items-center gap-2">
-                <UButton
-                  color="neutral"
-                  variant="outline"
-                  size="xs"
-                  icon="i-lucide-folder-open"
-                  :loading="filesPending"
-                  :disabled="allFileTreeExpanded"
-                  @click="expandAllFileTree"
-                >
-                  {{ $t('catalog.torrents.detail.files.expandAll') }}
-                </UButton>
-                <UButton
-                  color="neutral"
-                  variant="outline"
-                  size="xs"
-                  icon="i-lucide-folder"
-                  :disabled="filesPending || expandedFileNodeIds.size === 0"
-                  @click="collapseAllFileTree"
-                >
-                  {{ $t('catalog.torrents.detail.files.collapseAll') }}
-                </UButton>
-              </div>
-            </div>
-
-            <div v-if="filesError" class="flex flex-col items-center justify-center px-4 py-10 text-center">
-              <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
-              <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ filesError }}</p>
-              <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadFiles(true)">
-                {{ $t('common.retry') }}
-              </UButton>
-            </div>
-
-            <div v-else-if="fileTree.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
-              {{ $t('catalog.torrents.detail.files.empty') }}
-            </div>
-
-            <div v-else class="max-h-[560px] overflow-auto">
-              <div
-                v-for="row in visibleFileTreeRows"
-                :key="row.node.id"
-                class="grid min-h-11 gap-2 border-b border-slate-100 px-4 py-2 text-sm last:border-b-0 sm:grid-cols-[minmax(0,1fr)_120px] sm:items-center dark:border-slate-800"
-              >
-                <button
-                  v-if="row.node.type === 'directory'"
-                  type="button"
-                  class="flex min-w-0 items-center gap-2 rounded-md py-1 pr-2 text-left text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-950"
-                  :style="fileTreeIndent(row.depth)"
-                  :aria-expanded="expandedFileNodeIds.has(row.node.id)"
-                  :disabled="filesPending"
-                  @click="toggleFileTreeNode(row.node)"
-                >
-                  <UIcon
-                    v-if="filesPending && !filesLoaded && row.node.id === fileTreeRootId"
-                    name="i-lucide-loader-circle"
-                    class="size-4 shrink-0 animate-spin text-slate-400"
-                  />
-                  <UIcon
-                    v-else
-                    :name="expandedFileNodeIds.has(row.node.id) ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
-                    class="size-4 shrink-0 text-slate-400"
-                  />
-                  <UIcon
-                    :name="expandedFileNodeIds.has(row.node.id) ? 'i-lucide-folder-open' : 'i-lucide-folder'"
-                    class="size-4 shrink-0 text-amber-500"
-                  />
-                  <span class="min-w-0 truncate font-medium">{{ row.node.name }}</span>
-                  <span class="shrink-0 text-xs text-slate-500 dark:text-slate-400">
-                    {{ $t('catalog.torrents.fileCount', { count: numberFormatter.format(row.node.fileCount) }) }}
-                  </span>
-                </button>
-                <div
-                  v-else
-                  class="flex min-w-0 items-center gap-2 py-1 pr-2 text-slate-700 dark:text-slate-200"
-                  :style="fileTreeIndent(row.depth)"
-                >
-                  <span class="size-4 shrink-0" />
-                  <UIcon name="i-lucide-file" class="size-4 shrink-0 text-slate-400" />
-                  <span class="min-w-0 truncate font-mono text-xs">{{ row.node.name }}</span>
-                </div>
-                <span class="text-slate-500 sm:text-right dark:text-slate-400">{{ formatBytes(row.node.size) }}</span>
-              </div>
-            </div>
-          </section>
-
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <div>
+              <div class="min-w-0">
                 <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.subtitles.title') }}</h2>
-                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  {{ $t('catalog.torrents.detail.subtitles.summary', { count: numberFormatter.format(subtitleTotal) }) }}
-                </p>
               </div>
-              <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" :loading="subtitlesPending" @click="loadSubtitles">
-                {{ $t('common.refresh') }}
-              </UButton>
-            </div>
+              <div class="flex shrink-0 items-center gap-2">
+                <UBadge v-if="subtitlesLoaded" color="neutral" variant="soft">
+                  {{ $t('catalog.torrents.detail.subtitles.summary', { count: numberFormatter.format(subtitleTotal) }) }}
+                </UBadge>
+                <UIcon :name="subtitlesPanelOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" class="size-4 text-slate-400" />
+              </div>
+            </button>
 
-            <form class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_180px_auto]" @submit.prevent="handleSubtitleUpload">
-              <label class="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700">
-                <UIcon name="i-lucide-file-up" class="size-4 shrink-0 text-slate-400" />
-                <span class="min-w-0 truncate">{{ selectedSubtitleFile?.name || $t('catalog.torrents.detail.subtitles.choose') }}</span>
-                <input :key="subtitleFileInputKey" class="sr-only" type="file" :disabled="subtitleUploadPending" @change="handleSubtitleFileChange">
-              </label>
-              <select
-                v-model="subtitleForm.language"
-                class="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-                :disabled="subtitleUploadPending"
-              >
-                <option v-for="option in subtitleLanguageOptions" :key="option.value" :value="option.value">
-                  {{ option.label }}
-                </option>
-              </select>
-              <UButton type="submit" color="primary" icon="i-lucide-upload" :loading="subtitleUploadPending" :disabled="!canUploadSubtitle">
-                {{ $t('catalog.torrents.detail.subtitles.upload') }}
-              </UButton>
-            </form>
+            <div v-if="subtitlesPanelOpen" class="border-t border-slate-200 p-4 dark:border-slate-800">
+              <form class="grid grid-cols-1 gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 lg:grid-cols-[minmax(0,1fr)_180px_auto] dark:border-slate-800 dark:bg-slate-950" @submit.prevent="handleSubtitleUpload">
+                <label class="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600">
+                  <UIcon name="i-lucide-file-up" class="size-4 shrink-0 text-slate-400" />
+                  <span class="min-w-0 truncate">{{ selectedSubtitleFile?.name || $t('catalog.torrents.detail.subtitles.choose') }}</span>
+                  <input :key="subtitleFileInputKey" class="sr-only" type="file" :disabled="subtitleUploadPending" @change="handleSubtitleFileChange">
+                </label>
+                <select
+                  v-model="subtitleForm.language"
+                  class="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  :disabled="subtitleUploadPending"
+                >
+                  <option v-for="option in subtitleLanguageOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <UButton type="submit" color="primary" icon="i-lucide-upload" :loading="subtitleUploadPending" :disabled="!canUploadSubtitle">
+                  {{ $t('catalog.torrents.detail.subtitles.upload') }}
+                </UButton>
+              </form>
 
-            <div v-if="subtitlesError" class="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-              {{ subtitlesError }}
-            </div>
+              <div v-if="subtitlesError" class="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+                {{ subtitlesError }}
+              </div>
 
-            <div v-if="subtitlesPending && subtitles.length === 0" class="mt-4 space-y-2">
-              <div v-for="item in 3" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-            </div>
-            <div v-else-if="subtitles.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
-              {{ $t('catalog.torrents.detail.subtitles.empty') }}
-            </div>
-            <div v-else class="mt-4 divide-y divide-slate-100 dark:divide-slate-800">
-              <div v-for="subtitle in subtitles" :key="subtitle.id" class="grid gap-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-                <div class="min-w-0">
-                  <div class="flex min-w-0 items-center gap-2">
-                    <UIcon name="i-lucide-captions" class="size-4 shrink-0 text-sky-500" />
-                    <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ subtitle.fileName }}</p>
-                    <UBadge color="neutral" variant="soft">{{ subtitle.language }}</UBadge>
+              <div v-if="subtitlesPending && subtitles.length === 0" class="mt-4 space-y-2">
+                <div v-for="item in 3" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+              </div>
+              <div v-else-if="subtitles.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                {{ $t('catalog.torrents.detail.subtitles.empty') }}
+              </div>
+              <div v-else class="mt-4 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
+                <div v-for="subtitle in subtitles" :key="subtitle.id" class="grid gap-3 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-slate-800">
+                  <div class="min-w-0">
+                    <div class="flex min-w-0 items-center gap-2">
+                      <UIcon name="i-lucide-captions" class="size-4 shrink-0 text-sky-500" />
+                      <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ subtitle.fileName }}</p>
+                      <UBadge color="neutral" variant="soft">{{ subtitle.language }}</UBadge>
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      {{ subtitle.username || `#${subtitle.userId}` }} · {{ formatBytes(subtitle.size) }} · {{ formatDateTime(subtitle.createdAt, locale) }}
+                    </p>
                   </div>
-                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                    {{ subtitle.username || `#${subtitle.userId}` }} · {{ formatBytes(subtitle.size) }} · {{ formatDateTime(subtitle.createdAt, locale) }}
-                  </p>
-                </div>
-                <div class="flex items-center gap-2">
-                  <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-download" :loading="subtitleDownloadPendingId === subtitle.id" @click="handleSubtitleDownload(subtitle)">
-                    {{ $t('catalog.torrents.detail.subtitles.download') }}
-                  </UButton>
-                  <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-flag" @click="startSubtitleReport(subtitle.id)">
-                    {{ $t('catalog.torrents.detail.actions.report') }}
-                  </UButton>
-                </div>
-                <form v-if="activeSubtitleReportId === subtitle.id" class="sm:col-span-2 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleSubtitleReport(subtitle.id)">
-                  <UTextarea v-model="subtitleReportReason" :rows="2" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
-                  <div class="flex justify-end gap-2">
-                    <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeSubtitleReportId = 0">{{ $t('common.cancel') }}</UButton>
-                    <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="subtitleReportReason.trim().length < 5">
-                      {{ $t('catalog.torrents.detail.report.submit') }}
+                  <div class="flex items-center gap-2">
+                    <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-download" :loading="subtitleDownloadPendingId === subtitle.id" @click="handleSubtitleDownload(subtitle)">
+                      {{ $t('catalog.torrents.detail.subtitles.download') }}
+                    </UButton>
+                    <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-flag" @click="startSubtitleReport(subtitle.id)">
+                      {{ $t('catalog.torrents.detail.actions.report') }}
                     </UButton>
                   </div>
-                </form>
+                  <form v-if="activeSubtitleReportId === subtitle.id" class="sm:col-span-2 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleSubtitleReport(subtitle.id)">
+                    <UTextarea v-model="subtitleReportReason" :rows="2" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
+                    <div class="flex justify-end gap-2">
+                      <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeSubtitleReportId = 0">{{ $t('common.cancel') }}</UButton>
+                      <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="subtitleReportReason.trim().length < 5">
+                        {{ $t('catalog.torrents.detail.report.submit') }}
+                      </UButton>
+                    </div>
+                  </form>
+                </div>
               </div>
+
+              <AppPager
+                v-if="subtitleTotal > subtitleSize"
+                class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+                size="xs"
+                :page="subtitlePage"
+                :total="subtitleTotal"
+                :page-size="subtitleSize"
+                :disabled="subtitlesPending"
+                @page-change="goToSubtitlePage"
+              />
             </div>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <div>
-                <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.comments.title') }}</h2>
-                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  {{ $t('catalog.torrents.detail.comments.summary', { count: numberFormatter.format(commentTotal) }) }}
-                </p>
-              </div>
-              <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" :loading="commentsPending" @click="loadComments">
-                {{ $t('common.refresh') }}
-              </UButton>
+          <section id="torrent-description" class="scroll-mt-24 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <div class="border-b border-slate-200 pb-4 dark:border-slate-800">
+              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.description.title') }}</h2>
+            </div>
+            <div class="mt-4">
+              <div
+                v-if="renderedDescription"
+                class="rich-text"
+                v-html="renderedDescription"
+              />
+              <p v-else class="text-sm text-slate-500 dark:text-slate-400">
+                {{ $t('catalog.torrents.detail.description.empty') }}
+              </p>
+            </div>
+          </section>
+
+          <section id="torrent-comments" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.comments.title') }}</h2>
+              <UBadge color="neutral" variant="soft">
+                {{ $t('catalog.torrents.detail.comments.summary', { count: numberFormatter.format(commentTotal) }) }}
+              </UBadge>
             </div>
 
-            <form class="mt-4 space-y-3" @submit.prevent="handleCommentSubmit">
-              <UTextarea v-model="commentForm.content" class="w-full" :rows="4" :placeholder="$t('catalog.torrents.detail.comments.placeholder')" :disabled="commentSubmitPending" />
-              <div class="flex justify-end">
+            <form id="torrent-comment-composer" class="border-b border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40" @submit.prevent="handleCommentSubmit">
+              <UTextarea
+                v-if="commentEditorMode === 'write'"
+                v-model="commentForm.content"
+                class="w-full"
+                :rows="4"
+                :placeholder="$t('catalog.torrents.detail.comments.placeholder')"
+                :disabled="commentSubmitPending"
+              />
+              <div v-else class="min-h-28 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+                <div v-if="renderedCommentPreview" class="rich-text rich-text-compact" v-html="renderedCommentPreview" />
+                <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.comments.previewEmpty') }}</p>
+              </div>
+              <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+                  <button
+                    type="button"
+                    :class="commentEditorTabClass('write')"
+                    @click="commentEditorMode = 'write'"
+                  >
+                    {{ $t('catalog.torrents.detail.comments.edit') }}
+                  </button>
+                  <button
+                    type="button"
+                    :class="commentEditorTabClass('preview')"
+                    @click="commentEditorMode = 'preview'"
+                  >
+                    {{ $t('catalog.torrents.detail.comments.preview') }}
+                  </button>
+                </div>
                 <UButton type="submit" color="primary" icon="i-lucide-send" :loading="commentSubmitPending" :disabled="commentForm.content.trim().length < 3">
                   {{ $t('catalog.torrents.detail.comments.submit') }}
                 </UButton>
               </div>
             </form>
 
-            <div v-if="commentsError" class="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-              {{ commentsError }}
-            </div>
-
-            <div v-if="commentsPending && comments.length === 0" class="mt-5 space-y-3">
-              <div v-for="item in 3" :key="item" class="h-24 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-            </div>
-            <div v-else-if="comments.length === 0" class="mt-5 rounded-md border border-dashed border-slate-200 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
-              {{ $t('catalog.torrents.detail.comments.empty') }}
-            </div>
-            <div v-else class="mt-5 divide-y divide-slate-100 dark:divide-slate-800">
-              <article v-for="comment in comments" :key="comment.id" class="py-4">
-                <div class="flex items-start gap-3">
-                  <UAvatar :alt="comment.username || `#${comment.userId}`" size="sm" />
-                  <div class="min-w-0 flex-1">
-                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                      <p class="text-sm font-medium text-slate-950 dark:text-white">{{ comment.username || `#${comment.userId}` }}</p>
-                      <span class="text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(comment.createdAt, locale) }}</span>
-                    </div>
-                    <p class="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200">{{ comment.content }}</p>
-                    <div class="mt-3 flex flex-wrap items-center gap-2">
-                      <UButton
-                        color="neutral"
-                        :variant="comment.isLiked ? 'soft' : 'ghost'"
-                        size="xs"
-                        :icon="comment.isLiked ? 'i-lucide-heart' : 'i-lucide-heart-plus'"
-                        :loading="commentLikePendingId === comment.id"
-                        @click="handleCommentLike(comment)"
-                      >
-                        {{ numberFormatter.format(comment.likeCount) }}
-                      </UButton>
-                      <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-coins" @click="startCommentReward(comment.id)">
-                        {{ $t('catalog.torrents.detail.comments.reward', { count: numberFormatter.format(comment.rewardCount) }) }}
-                      </UButton>
-                      <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-flag" @click="startCommentReport(comment.id)">
-                        {{ $t('catalog.torrents.detail.actions.report') }}
-                      </UButton>
-                    </div>
-                    <form v-if="activeCommentRewardId === comment.id" class="mt-3 flex flex-col gap-2 rounded-md bg-slate-50 p-3 sm:flex-row dark:bg-slate-950" @submit.prevent="handleCommentReward(comment)">
-                      <UInput v-model="commentRewardAmount" class="sm:w-40" type="number" min="1" step="1" :placeholder="$t('catalog.torrents.detail.reward.amount')" :disabled="commentRewardPendingId === comment.id" />
-                      <div class="flex gap-2">
-                        <UButton color="neutral" variant="ghost" size="sm" type="button" @click="activeCommentRewardId = 0">{{ $t('common.cancel') }}</UButton>
-                        <UButton color="primary" variant="soft" size="sm" type="submit" :loading="commentRewardPendingId === comment.id" :disabled="Number(commentRewardAmount) < 1">
-                          {{ $t('catalog.torrents.detail.reward.submit') }}
-                        </UButton>
-                      </div>
-                    </form>
-                    <form v-if="activeCommentReportId === comment.id" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleCommentReport(comment.id)">
-                      <UTextarea v-model="commentReportReason" :rows="2" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
-                      <div class="flex justify-end gap-2">
-                        <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeCommentReportId = 0">{{ $t('common.cancel') }}</UButton>
-                        <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="commentReportReason.trim().length < 5">
-                          {{ $t('catalog.torrents.detail.report.submit') }}
-                        </UButton>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </section>
-        </main>
-
-        <aside class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-24">
-          <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
-          <dl class="mt-4 space-y-4 text-sm">
-            <div class="flex items-center justify-between gap-4">
-              <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.category') }}</dt>
-              <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ categoryName }}</dd>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publisher') }}</dt>
-              <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ publisherName }}</dd>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publishedAt') }}</dt>
-              <dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(torrent.createdAt, locale) }}</dd>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.type') }}</dt>
-              <dd class="font-medium text-slate-950 dark:text-white">
-                {{ torrent.type === 1 ? $t('catalog.torrents.types.multi') : $t('catalog.torrents.types.single') }}
-              </dd>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.fileCount') }}</dt>
-              <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(torrent.fileCount) }}</dd>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.torrentId') }}</dt>
-              <dd class="font-medium text-slate-950 dark:text-white">#{{ torrent.id }}</dd>
-            </div>
-          </dl>
-
-          <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
-            <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.title') }}</h3>
-            <div class="mt-3 grid gap-2">
-              <UButton
-                v-if="canEditTorrent"
-                color="neutral"
-                variant="outline"
-                icon="i-lucide-pen-line"
-                block
-                :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
-              >
-                {{ $t('catalog.torrents.detail.actions.edit') }}
-              </UButton>
-              <UButton color="neutral" variant="outline" icon="i-lucide-flag" block @click="showTorrentReport = !showTorrentReport">
-                {{ $t('catalog.torrents.detail.actions.report') }}
-              </UButton>
-              <UButton
-                v-if="isStaff"
-                color="error"
-                variant="soft"
-                icon="i-lucide-trash-2"
-                block
-                :loading="adminActionPending === 'delete'"
-                @click="handleAdminDeleteTorrent"
-              >
-                {{ $t('catalog.torrents.detail.actions.adminDelete') }}
-              </UButton>
-            </div>
-
-            <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
-              <UTextarea v-model="torrentReportReason" :rows="3" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
-              <div class="flex justify-end gap-2">
-                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="showTorrentReport = false">{{ $t('common.cancel') }}</UButton>
-                <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="torrentReportReason.trim().length < 5">
-                  {{ $t('catalog.torrents.detail.report.submit') }}
+            <div class="p-4">
+              <div v-if="commentsError" class="flex flex-col gap-3 rounded-md border border-red-200 bg-red-50 px-3 py-3 text-sm text-red-700 sm:flex-row sm:items-center sm:justify-between dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+                <span>{{ commentsError }}</span>
+                <UButton color="error" variant="soft" size="xs" icon="i-lucide-refresh-cw" :loading="commentsPending" @click="loadComments">
+                  {{ $t('common.retry') }}
                 </UButton>
               </div>
-            </form>
-          </div>
 
-          <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
-            <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.reward.title') }}</h3>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {{ $t('catalog.torrents.detail.reward.summary', { count: numberFormatter.format(rewardTotal) }) }}
-            </p>
-            <form class="mt-3 flex gap-2" @submit.prevent="handleTorrentReward">
-              <UInput v-model="torrentRewardAmount" type="number" min="1" step="1" :placeholder="$t('catalog.torrents.detail.reward.amount')" :disabled="torrentRewardPending" />
-              <UButton type="submit" color="primary" icon="i-lucide-coins" :loading="torrentRewardPending" :disabled="Number(torrentRewardAmount) < 1">
-                {{ $t('catalog.torrents.detail.reward.submit') }}
-              </UButton>
-            </form>
-
-            <div v-if="rewardsError" class="mt-3 text-sm text-red-600 dark:text-red-300">{{ rewardsError }}</div>
-            <div v-else-if="rewardsPending && rewards.length === 0" class="mt-4 space-y-2">
-              <div v-for="item in 3" :key="item" class="h-9 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-            </div>
-            <div v-else-if="rewards.length === 0" class="mt-4 text-sm text-slate-500 dark:text-slate-400">
-              {{ $t('catalog.torrents.detail.reward.empty') }}
-            </div>
-            <div v-else class="mt-4 space-y-3">
-              <div v-for="reward in rewards" :key="reward.id" class="flex items-center justify-between gap-3 text-sm">
-                <span class="min-w-0 truncate text-slate-600 dark:text-slate-300">#{{ reward.userId }}</span>
-                <span class="shrink-0 font-medium text-amber-600 dark:text-amber-300">{{ formatBonus(reward.amount) }}</span>
+              <div v-else-if="commentsPending && comments.length === 0" class="mt-4 space-y-3">
+                <div v-for="item in 3" :key="item" class="h-28 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
               </div>
+              <div v-else-if="comments.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                {{ $t('catalog.torrents.detail.comments.empty') }}
+              </div>
+              <div v-else class="divide-y divide-slate-100 dark:divide-slate-800">
+                <article
+                  v-for="(comment, index) in comments"
+                  :id="commentAnchorId(comment)"
+                  :key="comment.id"
+                  class="scroll-mt-24 py-4 transition-colors target:bg-sky-50/60 dark:target:bg-sky-950/30"
+                >
+                  <div class="flex min-w-0 items-start gap-4">
+                    <img
+                      v-if="comment.author.avatar"
+                      class="size-12 shrink-0 rounded-md border border-slate-200 object-cover dark:border-slate-800"
+                      :src="comment.author.avatar"
+                      :alt="commentDisplayName(comment)"
+                      loading="lazy"
+                    >
+                    <div
+                      v-else
+                      :class="commentAvatarClass(comment)"
+                      :aria-label="commentDisplayName(comment)"
+                    >
+                      {{ commentAvatarInitial(comment) }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex min-w-0 items-start justify-between gap-3">
+                        <div class="min-w-0">
+                          <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ commentDisplayName(comment) }}</p>
+                            <span class="text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(comment.createdAt, locale) }}</span>
+                          </div>
+                        </div>
+                        <NuxtLink
+                          :to="commentAnchorLocation(comment)"
+                          class="shrink-0 rounded px-1 text-xs font-medium tabular-nums text-slate-400 transition hover:bg-slate-100 hover:text-sky-600 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-sky-300"
+                          @click="handleCommentAnchorClick(comment)"
+                        >
+                          #{{ commentFloor(index) }}
+                        </NuxtLink>
+                      </div>
+
+                      <div class="rich-text rich-text-compact mt-2 text-sm leading-6 text-slate-700 dark:text-slate-200" v-html="renderRichText(comment.content)" />
+
+                      <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex flex-wrap items-center gap-1">
+                          <UButton
+                            :color="comment.isLiked ? 'error' : 'neutral'"
+                            :variant="comment.isLiked ? 'soft' : 'ghost'"
+                            size="xs"
+                            icon="i-lucide-heart"
+                            :loading="commentLikePendingId === comment.id"
+                            :aria-label="$t('catalog.torrents.detail.actions.like')"
+                            :title="$t('catalog.torrents.detail.actions.like')"
+                            @click="handleCommentLike(comment)"
+                          >
+                            {{ numberFormatter.format(comment.likeCount) }}
+                          </UButton>
+                          <RewardQuickButton
+                            :count="comment.rewardCount"
+                            :aria-label="$t('catalog.torrents.detail.reward.submit')"
+                            :submit-reward="(amount) => submitCommentReward(comment, amount)"
+                            @success="handleCommentRewardSuccess(comment)"
+                          />
+                          <UButton
+                            color="neutral"
+                            variant="ghost"
+                            size="xs"
+                            icon="i-lucide-quote"
+                            :aria-label="$t('catalog.torrents.detail.comments.quote')"
+                            :title="$t('catalog.torrents.detail.comments.quote')"
+                            @click="quoteComment(comment, index)"
+                          >
+                            {{ $t('catalog.torrents.detail.comments.quote') }}
+                          </UButton>
+                        </div>
+                        <UButton
+                          color="neutral"
+                          variant="ghost"
+                          size="xs"
+                          icon="i-lucide-flag"
+                          :aria-label="$t('catalog.torrents.detail.actions.report')"
+                          :title="$t('catalog.torrents.detail.actions.report')"
+                          @click="startCommentReport(comment.id)"
+                        />
+                      </div>
+
+                      <form v-if="activeCommentReportId === comment.id" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleCommentReport(comment.id)">
+                        <UTextarea v-model="commentReportReason" :rows="2" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
+                        <div class="flex justify-end gap-2">
+                          <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeCommentReportId = 0">{{ $t('common.cancel') }}</UButton>
+                          <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="commentReportReason.trim().length < 5">
+                            {{ $t('catalog.torrents.detail.report.submit') }}
+                          </UButton>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <AppPager
+                v-if="commentTotalPages > 1"
+                class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+                size="sm"
+                :page="commentPage"
+                :total="commentTotal"
+                :page-size="commentSize"
+                :disabled="commentsPending"
+                @page-change="goToCommentPage"
+              />
+            </div>
+          </section>
+          <div id="torrent-bottom" class="h-px scroll-mt-24" />
+        </main>
+
+        <nav
+          class="hidden lg:sticky lg:top-[5.5rem] lg:flex lg:h-[calc(100vh-7rem)] lg:items-center lg:justify-center"
+          :aria-label="$t('catalog.torrents.detail.navigation.title')"
+        >
+          <div class="relative flex min-h-56 w-full justify-center">
+            <div class="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-slate-200 dark:bg-slate-800" />
+            <div class="relative z-10 flex flex-col items-center gap-2">
+              <UTooltip
+                v-for="item in sectionNavItems"
+                :key="item.id"
+                :text="item.label"
+                :content="{ side: 'left', sideOffset: 10 }"
+                :delay-duration="120"
+              >
+                <button
+                  type="button"
+                  :class="sectionRailButtonClass(item.id)"
+                  :aria-label="item.label"
+                  :aria-current="activeSectionId === item.id ? 'location' : undefined"
+                  @click="scrollToSection(item.id)"
+                >
+                  <UIcon :name="item.icon" class="size-4" />
+                </button>
+              </UTooltip>
             </div>
           </div>
+        </nav>
+
+        <aside class="space-y-3 lg:sticky lg:top-[5.5rem]">
+          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <div class="flex items-center justify-between gap-3">
+              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
+              <span class="shrink-0 rounded border border-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                #{{ torrent.id }}
+              </span>
+            </div>
+            <dl class="mt-3 divide-y divide-slate-100 text-sm dark:divide-slate-800">
+              <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
+                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.category') }}</dt>
+                <dd class="min-w-0 truncate text-right font-medium text-slate-950 dark:text-white">{{ categoryName }}</dd>
+              </div>
+              <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
+                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publisher') }}</dt>
+                <dd class="min-w-0 truncate text-right font-medium text-slate-950 dark:text-white">{{ publisherName }}</dd>
+              </div>
+              <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
+                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publishedAt') }}</dt>
+                <dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(torrent.createdAt, locale) }}</dd>
+              </div>
+            </dl>
+            <div class="mt-3 border-t border-slate-100 pt-3 dark:border-slate-800">
+              <div class="grid grid-cols-2 gap-2">
+                <UButton
+                  v-if="canEditTorrent"
+                  color="neutral"
+                  variant="outline"
+                  size="sm"
+                  icon="i-lucide-pen-line"
+                  block
+                  :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
+                >
+                  {{ $t('catalog.torrents.detail.actions.edit') }}
+                </UButton>
+                <UButton
+                  color="neutral"
+                  variant="outline"
+                  size="sm"
+                  icon="i-lucide-flag"
+                  block
+                  :class="canEditTorrent ? '' : 'col-span-2'"
+                  @click="showTorrentReport = !showTorrentReport"
+                >
+                  {{ $t('catalog.torrents.detail.actions.report') }}
+                </UButton>
+                <UButton
+                  v-if="isStaff"
+                  class="col-span-2"
+                  color="error"
+                  variant="soft"
+                  size="sm"
+                  icon="i-lucide-trash-2"
+                  block
+                  :loading="adminActionPending === 'delete'"
+                  @click="handleAdminDeleteTorrent"
+                >
+                  {{ $t('catalog.torrents.detail.actions.adminDelete') }}
+                </UButton>
+              </div>
+
+              <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
+                <UTextarea v-model="torrentReportReason" :rows="3" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
+                <div class="flex justify-end gap-2">
+                  <UButton color="neutral" variant="ghost" size="xs" type="button" @click="showTorrentReport = false">{{ $t('common.cancel') }}</UButton>
+                  <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="torrentReportReason.trim().length < 5">
+                    {{ $t('catalog.torrents.detail.report.submit') }}
+                  </UButton>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <RewardPanel
+            :title="$t('catalog.torrents.detail.reward.title')"
+            :source-key="torrent.id"
+            summary-key="catalog.torrents.detail.reward.summary"
+            all-title-key="catalog.torrents.detail.reward.allTitle"
+            all-description-key="catalog.torrents.detail.reward.allDescription"
+            success-key="catalog.torrents.detail.reward.success"
+            :load-rewards="loadTorrentRewards"
+            :submit-reward="submitTorrentReward"
+          />
         </aside>
       </div>
     </div>
@@ -558,7 +687,8 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CommentItem, SubtitleItem, TorrentDetail, TorrentFileItem, TorrentPeerItem, TorrentRewardItem } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, CommentItem, SubtitleItem, TorrentDetail, TorrentFileItem, TorrentPeerItem } from '~/composables/useCatalogTorrents'
+import { renderUserMarkdown } from '~/utils/richText'
 
 interface FileTreeNode {
   id: string
@@ -575,7 +705,21 @@ interface FileTreeRow {
   depth: number
 }
 
+interface TorrentStatusBadge {
+  key: string
+  label: string
+  class: string
+  title: string
+}
+
+interface SectionNavItem {
+  id: string
+  icon: string
+  label: string
+}
+
 type PeerView = 'seeders' | 'leechers' | 'completed'
+type CommentEditorMode = 'write' | 'preview'
 
 definePageMeta({
   middleware: 'auth'
@@ -592,7 +736,6 @@ const { user, isStaff } = useAuth()
 const torrent = ref<TorrentDetail | null>(null)
 const files = ref<TorrentFileItem[]>([])
 const peers = ref<TorrentPeerItem[]>([])
-const rewards = ref<TorrentRewardItem[]>([])
 const comments = ref<CommentItem[]>([])
 const subtitles = ref<SubtitleItem[]>([])
 const categories = ref<CatalogCategory[]>([])
@@ -601,47 +744,49 @@ const downloadPending = ref(false)
 const likePending = ref(false)
 const bookmarkPending = ref(false)
 const peersPending = ref(false)
-const rewardsPending = ref(false)
 const commentsPending = ref(false)
 const subtitlesPending = ref(false)
-const torrentRewardPending = ref(false)
 const commentSubmitPending = ref(false)
 const subtitleUploadPending = ref(false)
 const peersLoaded = ref(false)
 const errorMessage = ref('')
 const peersError = ref('')
-const rewardsError = ref('')
 const commentsError = ref('')
 const subtitlesError = ref('')
 const expandedFileNodeIds = ref(new Set<string>())
 const filesLoaded = ref(false)
 const filesPending = ref(false)
 const filesError = ref('')
-const rewardTotal = ref(0)
 const commentTotal = ref(0)
 const subtitleTotal = ref(0)
 const selectedSubtitleFile = ref<File | null>(null)
 const subtitleFileInputKey = ref(0)
 const subtitleDownloadPendingId = ref(0)
 const commentLikePendingId = ref(0)
-const commentRewardPendingId = ref(0)
-const activeCommentRewardId = ref(0)
 const activeCommentReportId = ref(0)
 const activeSubtitleReportId = ref(0)
 const activePeerView = ref<PeerView | null>(null)
+const filePanelOpen = ref(false)
+const subtitlesPanelOpen = ref(false)
+const subtitlesLoaded = ref(false)
 const reportPending = ref(false)
 const adminActionPending = ref('')
 const showTorrentReport = ref(false)
-const torrentRewardAmount = ref('10')
-const commentRewardAmount = ref('5')
 const torrentReportReason = ref('')
 const commentReportReason = ref('')
 const subtitleReportReason = ref('')
+const commentEditorMode = ref<CommentEditorMode>('write')
+const activeSectionId = ref('torrent-top')
+let sectionObserver: IntersectionObserver | null = null
 
 const commentForm = reactive({
   content: ''
 })
 
+const commentSize = 20
+const subtitleSize = 10
+const commentPage = ref(1)
+const subtitlePage = ref(1)
 const subtitleForm = reactive({
   language: 'zh-CN'
 })
@@ -655,44 +800,60 @@ const subtitleLanguageOptions = [
   { value: 'other', label: 'Other' }
 ]
 
+const commentAvatarPalettes = [
+  'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300',
+  'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300',
+  'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300',
+  'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-300',
+  'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-300',
+  'border-teal-200 bg-teal-50 text-teal-700 dark:border-teal-900 dark:bg-teal-950 dark:text-teal-300'
+]
+
 const fileTreeRootId = 'dir:/'
 const torrentId = computed(() => readRouteId())
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
+const commentTotalPages = computed(() => Math.max(1, Math.ceil(commentTotal.value / commentSize)))
 const fileTree = computed(() => filesLoaded.value ? buildFileTree(files.value) : buildFileTreePlaceholder())
 const fileTreeDirectoryIds = computed(() => collectFileTreeDirectoryIds(fileTree.value))
 const hasFileTreeDirectories = computed(() => fileTreeDirectoryIds.value.length > 0)
 const allFileTreeExpanded = computed(() => hasFileTreeDirectories.value && fileTreeDirectoryIds.value.every((id) => expandedFileNodeIds.value.has(id)))
 const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expandedFileNodeIds.value))
+const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
+const renderedCommentPreview = computed(() => renderRichText(commentForm.content))
 const canUploadSubtitle = computed(() => Boolean(selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
 const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.ownerId)))
-const peerSeederCount = computed(() => peers.value.filter((item) => item.isSeeder).length)
-const peerLeecherCount = computed(() => peers.value.filter((item) => !item.isSeeder).length)
 const visiblePeers = computed(() => {
   if (activePeerView.value === 'seeders') return peers.value.filter((item) => item.isSeeder)
   if (activePeerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)
   return []
 })
-const activePeerPanelTitle = computed(() => {
-  if (activePeerView.value === 'seeders') return t('catalog.torrents.detail.peers.seedersTitle')
-  if (activePeerView.value === 'leechers') return t('catalog.torrents.detail.peers.leechersTitle')
-  if (activePeerView.value === 'completed') return t('catalog.torrents.detail.peers.completedTitle')
-  return ''
-})
-const activePeerPanelSummary = computed(() => {
-  if (!torrent.value) return ''
-  if (activePeerView.value === 'completed') {
-    return t('catalog.torrents.detail.peers.completedSummary', {
-      count: numberFormatter.value.format(torrent.value.snatched)
-    })
+const sectionNavItems = computed<SectionNavItem[]>(() => [
+  {
+    id: 'torrent-top',
+    icon: 'i-lucide-arrow-up',
+    label: t('catalog.torrents.detail.navigation.top')
+  },
+  {
+    id: 'torrent-subtitles',
+    icon: 'i-lucide-captions',
+    label: t('catalog.torrents.detail.subtitles.title')
+  },
+  {
+    id: 'torrent-description',
+    icon: 'i-lucide-align-left',
+    label: t('catalog.torrents.detail.description.title')
+  },
+  {
+    id: 'torrent-comments',
+    icon: 'i-lucide-message-square',
+    label: t('catalog.torrents.detail.comments.title')
+  },
+  {
+    id: 'torrent-bottom',
+    icon: 'i-lucide-arrow-down',
+    label: t('catalog.torrents.detail.navigation.bottom')
   }
-
-  const seeders = peersLoaded.value ? peerSeederCount.value : torrent.value.seeders
-  const leechers = peersLoaded.value ? peerLeecherCount.value : torrent.value.leechers
-  return t('catalog.torrents.detail.peers.summary', {
-    seeders: numberFormatter.value.format(seeders),
-    leechers: numberFormatter.value.format(leechers)
-  })
-})
+])
 const categoryName = computed(() => {
   if (!torrent.value) return '-'
 
@@ -700,8 +861,8 @@ const categoryName = computed(() => {
   return category ? localizeI18nName(category.name, locale.value, category.slug || `#${category.id}`) : t('catalog.torrents.unknownCategory')
 })
 const publisherName = computed(() => {
-	if (!torrent.value) return '-'
-	return torrentOwnerName(torrent.value)
+  if (!torrent.value) return '-'
+  return torrentOwnerName(torrent.value)
 })
 
 function torrentOwnerName(torrent: TorrentDetail) {
@@ -710,6 +871,123 @@ function torrentOwnerName(torrent: TorrentDetail) {
     return torrent.ownerId > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
   }
   return torrent.ownerId > 0 ? ownerName : '-'
+}
+
+function renderRichText(content: string) {
+  return renderUserMarkdown(content).trim()
+}
+
+function commentEditorTabClass(mode: CommentEditorMode) {
+  const base = 'h-8 rounded px-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  if (commentEditorMode.value === mode) {
+    return `${base} bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white`
+  }
+  return `${base} text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white`
+}
+
+function sectionRailButtonClass(id: string) {
+  const base = 'flex size-9 items-center justify-center rounded-full border text-slate-400 shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  if (activeSectionId.value === id) {
+    return `${base} border-sky-200 bg-sky-50 text-sky-600 shadow-sky-950/5 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300`
+  }
+  return `${base} border-slate-200 bg-white hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-sky-900 dark:hover:bg-sky-950 dark:hover:text-sky-300`
+}
+
+async function scrollToSection(id: string) {
+  activeSectionId.value = id
+
+  if (id === 'torrent-subtitles') {
+    await openSubtitlesPanel()
+  }
+  if (id === 'torrent-bottom') {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })
+    return
+  }
+
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function setupSectionObserver() {
+  if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return
+
+  sectionObserver?.disconnect()
+  sectionObserver = new IntersectionObserver((entries) => {
+    const visibleEntry = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => {
+        if (b.intersectionRatio !== a.intersectionRatio) return b.intersectionRatio - a.intersectionRatio
+        return a.boundingClientRect.top - b.boundingClientRect.top
+      })[0]
+    if (visibleEntry?.target.id) {
+      activeSectionId.value = visibleEntry.target.id
+    }
+  }, {
+    rootMargin: '-24% 0px -62% 0px',
+    threshold: [0, 0.1, 0.25, 0.5]
+  })
+
+  for (const item of sectionNavItems.value) {
+    const element = document.getElementById(item.id)
+    if (element) {
+      sectionObserver.observe(element)
+    }
+  }
+}
+
+function torrentStatusBadges(torrent: TorrentDetail) {
+  const badges: TorrentStatusBadge[] = []
+  if (torrent.isPinned) {
+    badges.push({
+      key: 'pinned',
+      label: t('catalog.torrents.status.pinned'),
+      class: 'bg-slate-900 text-white dark:bg-white dark:text-slate-950',
+      title: t('catalog.torrents.status.pinned')
+    })
+  }
+  if (torrent.isFeatured) {
+    badges.push({
+      key: 'featured',
+      label: t('catalog.torrents.status.featured'),
+      class: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200',
+      title: t('catalog.torrents.status.featured')
+    })
+  }
+
+  const promotionLabel = torrentPromotionLabel(torrent.spState)
+  if (promotionLabel && isPromotionActive(torrent)) {
+    badges.push({
+      key: `sp-${torrent.spState}`,
+      label: promotionLabel,
+      class: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200',
+      title: torrent.spExpireAt
+        ? t('catalog.torrents.status.expiresAt', { time: formatDateTime(torrent.spExpireAt, locale.value) })
+        : promotionLabel
+    })
+  }
+  return badges
+}
+
+function torrentPromotionLabel(spState?: number | null) {
+  const key = Number(spState || 0)
+  return key >= 1 && key <= 7 ? t(`catalog.torrents.status.promotion.${key}`) : ''
+}
+
+function isPromotionActive(torrent: TorrentDetail) {
+  if (!torrent.spState) return false
+  if (!torrent.spExpireAt) return true
+
+  const expireAt = parseDateTime(torrent.spExpireAt)
+  return !expireAt || expireAt.getTime() > Date.now()
+}
+
+function parseDateTime(value?: string | null) {
+  if (!value) return null
+
+  const date = new Date(value)
+  if (!Number.isNaN(date.getTime())) return date
+
+  const normalized = new Date(value.replace(' ', 'T'))
+  return Number.isNaN(normalized.getTime()) ? null : normalized
 }
 
 async function handleAdminDeleteTorrent() {
@@ -732,11 +1010,25 @@ async function handleAdminDeleteTorrent() {
 }
 
 onMounted(loadPage)
+onBeforeUnmount(() => {
+  sectionObserver?.disconnect()
+  sectionObserver = null
+})
+
+watch(() => route.hash, () => {
+  void nextTick(() => scrollToCommentHash())
+})
 
 function readRouteId() {
   const raw = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
   const id = Number(raw)
   return Number.isInteger(id) && id > 0 ? id : 0
+}
+
+function readCommentPageQuery() {
+  const raw = Array.isArray(route.query.commentPage) ? route.query.commentPage[0] : route.query.commentPage
+  const page = Number(raw)
+  return Number.isInteger(page) && page > 0 ? page : 1
 }
 
 async function loadPage() {
@@ -761,7 +1053,7 @@ async function loadPage() {
     expandedFileNodeIds.value = new Set()
     categories.value = categoryList.list || []
     resetInteractionState()
-    void Promise.all([loadRewards(), loadComments(), loadSubtitles()])
+    void loadComments()
   } catch (error) {
     torrent.value = null
     files.value = []
@@ -772,30 +1064,36 @@ async function loadPage() {
     errorMessage.value = error instanceof ApiError ? error.message : t('common.requestFailed')
   } finally {
     pending.value = false
+    if (torrent.value) {
+      void nextTick(setupSectionObserver)
+    }
   }
 }
 
 function resetInteractionState() {
   peers.value = []
   peersLoaded.value = false
-  rewards.value = []
   comments.value = []
+  commentPage.value = readCommentPageQuery()
   subtitles.value = []
-  rewardTotal.value = 0
+  subtitlePage.value = 1
   commentTotal.value = 0
   subtitleTotal.value = 0
   peersError.value = ''
-  rewardsError.value = ''
   commentsError.value = ''
   subtitlesError.value = ''
   selectedSubtitleFile.value = null
   subtitleFileInputKey.value += 1
-  activeCommentRewardId.value = 0
   activeCommentReportId.value = 0
   activeSubtitleReportId.value = 0
   activePeerView.value = null
+  filePanelOpen.value = false
+  subtitlesPanelOpen.value = false
+  subtitlesLoaded.value = false
+  activeSectionId.value = 'torrent-top'
   showTorrentReport.value = false
   commentForm.content = ''
+  commentEditorMode.value = 'write'
   torrentReportReason.value = ''
   commentReportReason.value = ''
   subtitleReportReason.value = ''
@@ -821,18 +1119,40 @@ async function loadPeers(force = false) {
 }
 
 async function handlePeerStatClick(view: PeerView) {
+  if (activePeerView.value === view) {
+    activePeerView.value = null
+    return
+  }
+
+  filePanelOpen.value = false
   activePeerView.value = view
   if (view !== 'completed') {
     await loadPeers()
   }
 }
 
-function peerStatCardClass(view: PeerView) {
-  const base = 'rounded-md border px-3 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-900'
-  if (activePeerView.value === view) {
-    return `${base} border-sky-400 bg-sky-50 dark:border-sky-700 dark:bg-sky-950/40`
+async function handleFileStatClick() {
+  filePanelOpen.value = !filePanelOpen.value
+  if (!filePanelOpen.value) return
+
+  activePeerView.value = null
+  await loadFiles(true)
+}
+
+function fileStatCardClass() {
+  const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  if (filePanelOpen.value) {
+    return `${base} bg-amber-50 dark:bg-amber-950/30`
   }
-  return `${base} border-slate-200 hover:border-sky-300 hover:bg-slate-50 dark:border-slate-800 dark:hover:border-sky-800 dark:hover:bg-slate-950`
+  return `${base} hover:bg-white dark:hover:bg-slate-950`
+}
+
+function peerStatCardClass(view: PeerView) {
+  const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  if (activePeerView.value === view) {
+    return `${base} bg-sky-50 dark:bg-sky-950/40`
+  }
+  return `${base} hover:bg-white dark:hover:bg-slate-950`
 }
 
 async function handleDownload() {
@@ -859,6 +1179,9 @@ async function handleToggleLike() {
   likePending.value = true
   try {
     const out = await catalogTorrents.toggleLike(torrent.value.id)
+    if (torrent.value.isLiked !== out.isLiked) {
+      torrent.value.likeCount = Math.max(0, Number(torrent.value.likeCount || 0) + (out.isLiked ? 1 : -1))
+    }
     torrent.value.isLiked = out.isLiked
   } catch (error) {
     toast.add({
@@ -894,48 +1217,14 @@ async function handleToggleBookmark() {
   }
 }
 
-async function loadRewards() {
-  if (torrentId.value <= 0 || rewardsPending.value) return
-
-  rewardsPending.value = true
-  rewardsError.value = ''
-  try {
-    const data = await catalogTorrents.listRewards(torrentId.value, 1, 20)
-    rewards.value = data.list || []
-    rewardTotal.value = data.total || 0
-  } catch (error) {
-    rewards.value = []
-    rewardTotal.value = 0
-    rewardsError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
-  } finally {
-    rewardsPending.value = false
-  }
+async function loadTorrentRewards(page: number, size: number) {
+  if (torrentId.value <= 0) return { list: [], total: 0 }
+  return await catalogTorrents.listRewards(torrentId.value, page, size)
 }
 
-async function handleTorrentReward() {
-  if (!torrent.value || torrentRewardPending.value) return
-
-  const amount = Number(torrentRewardAmount.value)
-  if (!Number.isFinite(amount) || amount < 1) return
-
-  torrentRewardPending.value = true
-  try {
-    await catalogTorrents.rewardTorrent(torrent.value.id, amount)
-    toast.add({
-      title: t('catalog.torrents.detail.reward.success'),
-      color: 'success',
-      icon: 'i-lucide-check-circle'
-    })
-    await loadRewards()
-  } catch (error) {
-    toast.add({
-      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
-      color: 'error',
-      icon: 'i-lucide-circle-alert'
-    })
-  } finally {
-    torrentRewardPending.value = false
-  }
+async function submitTorrentReward(amount: number) {
+  if (!torrent.value) return
+  await catalogTorrents.rewardTorrent(torrent.value.id, amount)
 }
 
 async function handleTorrentReport() {
@@ -971,9 +1260,18 @@ async function loadComments() {
   commentsPending.value = true
   commentsError.value = ''
   try {
-    const data = await catalogTorrents.listComments(torrentId.value, 1, 20)
+    const data = await catalogTorrents.listComments(torrentId.value, commentPage.value, commentSize)
     comments.value = data.list || []
     commentTotal.value = data.total || 0
+
+    if (commentPage.value > commentTotalPages.value) {
+      commentPage.value = commentTotalPages.value
+      const nextData = await catalogTorrents.listComments(torrentId.value, commentPage.value, commentSize)
+      comments.value = nextData.list || []
+      commentTotal.value = nextData.total || 0
+    }
+    await nextTick()
+    scrollToCommentHash('auto')
   } catch (error) {
     comments.value = []
     commentTotal.value = 0
@@ -981,6 +1279,75 @@ async function loadComments() {
   } finally {
     commentsPending.value = false
   }
+}
+
+function goToCommentPage(nextPage: number) {
+  commentPage.value = Math.min(Math.max(1, nextPage), commentTotalPages.value)
+  loadComments()
+}
+
+function commentFloor(index: number) {
+  return (commentPage.value - 1) * commentSize + index + 1
+}
+
+function commentAnchorId(comment: CommentItem) {
+  return `comment-${comment.id}`
+}
+
+function commentAnchorLocation(comment: CommentItem) {
+  return {
+    path: route.path,
+    query: {
+      ...route.query,
+      commentPage: String(commentPage.value)
+    },
+    hash: `#${commentAnchorId(comment)}`
+  }
+}
+
+function handleCommentAnchorClick(comment: CommentItem) {
+  const id = commentAnchorId(comment)
+  if (route.hash === `#${id}`) {
+    scrollToCommentAnchor(id)
+  }
+}
+
+function scrollToCommentAnchor(id: string, behavior: ScrollBehavior = 'smooth') {
+  document.getElementById(id)?.scrollIntoView({ behavior, block: 'start' })
+}
+
+function scrollToCommentHash(behavior: ScrollBehavior = 'smooth') {
+  const id = route.hash.startsWith('#') ? route.hash.slice(1) : ''
+  if (!id.startsWith('comment-')) return
+
+  scrollToCommentAnchor(id, behavior)
+}
+
+function commentDisplayName(comment: CommentItem) {
+  return comment.author.username || `#${comment.author.id}`
+}
+
+function commentAvatarInitial(comment: CommentItem) {
+  const value = commentDisplayName(comment).trim()
+  return value ? Array.from(value)[0].toUpperCase() : '?'
+}
+
+function commentAvatarClass(comment: CommentItem) {
+  const base = 'flex size-12 shrink-0 items-center justify-center rounded-md border text-lg font-semibold'
+  return `${base} ${commentAvatarPalettes[comment.author.id % commentAvatarPalettes.length]}`
+}
+
+function quoteComment(comment: CommentItem, index: number) {
+  const floor = commentFloor(index)
+  const author = comment.author.username ? `@${comment.author.username}` : commentDisplayName(comment)
+  const quote = `> #${floor} ${author}\n\n`
+  commentForm.content = commentForm.content.trim()
+    ? `${commentForm.content.trim()}\n\n${quote}`
+    : quote
+  commentEditorMode.value = 'write'
+  void nextTick(() => {
+    document.getElementById('torrent-comment-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
 }
 
 async function handleCommentSubmit() {
@@ -991,11 +1358,13 @@ async function handleCommentSubmit() {
   try {
     await catalogTorrents.createComment(torrent.value.id, content)
     commentForm.content = ''
+    commentEditorMode.value = 'write'
     toast.add({
       title: t('catalog.torrents.detail.comments.created'),
       color: 'success',
       icon: 'i-lucide-check-circle'
     })
+    commentPage.value = Math.max(1, Math.ceil((commentTotal.value + 1) / commentSize))
     await loadComments()
   } catch (error) {
     toast.add({
@@ -1029,42 +1398,17 @@ async function handleCommentLike(comment: CommentItem) {
   }
 }
 
-function startCommentReward(commentId: number) {
-  activeCommentRewardId.value = activeCommentRewardId.value === commentId ? 0 : commentId
-  activeCommentReportId.value = 0
-  commentRewardAmount.value = '5'
+async function submitCommentReward(comment: CommentItem, amount: number) {
+  if (!torrent.value) return
+  await catalogTorrents.rewardComment(torrent.value.id, comment.id, amount)
 }
 
-async function handleCommentReward(comment: CommentItem) {
-  if (!torrent.value || commentRewardPendingId.value > 0) return
-
-  const amount = Number(commentRewardAmount.value)
-  if (!Number.isFinite(amount) || amount < 1) return
-
-  commentRewardPendingId.value = comment.id
-  try {
-    await catalogTorrents.rewardComment(torrent.value.id, comment.id, amount)
-    comment.rewardCount += 1
-    activeCommentRewardId.value = 0
-    toast.add({
-      title: t('catalog.torrents.detail.reward.success'),
-      color: 'success',
-      icon: 'i-lucide-check-circle'
-    })
-  } catch (error) {
-    toast.add({
-      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
-      color: 'error',
-      icon: 'i-lucide-circle-alert'
-    })
-  } finally {
-    commentRewardPendingId.value = 0
-  }
+function handleCommentRewardSuccess(comment: CommentItem) {
+  comment.rewardCount += 1
 }
 
 function startCommentReport(commentId: number) {
   activeCommentReportId.value = activeCommentReportId.value === commentId ? 0 : commentId
-  activeCommentRewardId.value = 0
   commentReportReason.value = ''
 }
 
@@ -1095,18 +1439,48 @@ async function handleCommentReport(commentId: number) {
   }
 }
 
-async function loadSubtitles() {
+async function toggleSubtitlesPanel() {
+  if (subtitlesPanelOpen.value) {
+    subtitlesPanelOpen.value = false
+    return
+  }
+  await openSubtitlesPanel()
+}
+
+async function openSubtitlesPanel() {
+  subtitlesPanelOpen.value = true
+  if (!subtitlesLoaded.value && !subtitlesPending.value) {
+    await loadSubtitles(1)
+  }
+}
+
+function goToSubtitlePage(page: number) {
+  void loadSubtitles(page)
+}
+
+async function loadSubtitles(page = subtitlePage.value) {
   if (torrentId.value <= 0 || subtitlesPending.value) return
 
+  subtitlePage.value = Math.max(1, page)
   subtitlesPending.value = true
   subtitlesError.value = ''
   try {
-    const data = await catalogTorrents.listSubtitles(torrentId.value, 1, 20)
+    const data = await catalogTorrents.listSubtitles(torrentId.value, subtitlePage.value, subtitleSize)
     subtitles.value = data.list || []
     subtitleTotal.value = data.total || 0
+    subtitlesLoaded.value = true
+
+    const totalPages = Math.max(1, Math.ceil(subtitleTotal.value / subtitleSize))
+    if (subtitlePage.value > totalPages) {
+      subtitlePage.value = totalPages
+      const nextData = await catalogTorrents.listSubtitles(torrentId.value, subtitlePage.value, subtitleSize)
+      subtitles.value = nextData.list || []
+      subtitleTotal.value = nextData.total || 0
+    }
   } catch (error) {
     subtitles.value = []
     subtitleTotal.value = 0
+    subtitlesLoaded.value = false
     subtitlesError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
   } finally {
     subtitlesPending.value = false
@@ -1131,7 +1505,7 @@ async function handleSubtitleUpload() {
       color: 'success',
       icon: 'i-lucide-check-circle'
     })
-    await loadSubtitles()
+    await loadSubtitles(1)
   } catch (error) {
     toast.add({
       title: error instanceof ApiError ? error.message : t('common.requestFailed'),
@@ -1207,10 +1581,6 @@ function downloadBlob(blob: Blob, filename: string) {
   link.click()
   link.remove()
   URL.revokeObjectURL(href)
-}
-
-function formatBonus(value: number) {
-  return numberFormatter.value.format(Number(value || 0))
 }
 
 async function loadFiles(expandRoot = false) {

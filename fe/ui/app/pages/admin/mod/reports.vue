@@ -1,22 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.mod.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.mod.reports.title') }}</h1>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <UButton color="primary" variant="soft" icon="i-lucide-flag" :to="localePath('/admin/mod/reports')">
-            {{ $t('admin.mod.reports.title') }}
-          </UButton>
-          <UButton color="neutral" variant="outline" icon="i-lucide-radar" :to="localePath('/admin/mod/cheaters')">
-            {{ $t('admin.mod.cheaters.title') }}
-          </UButton>
-        </div>
-      </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="mb-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
         <form class="grid gap-2 sm:grid-cols-[160px_180px_auto]" @submit.prevent="reloadFromFirstPage">
           <select v-model.number="query.status" class="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm outline-none dark:border-slate-700 dark:bg-slate-900" @change="reloadFromFirstPage">
@@ -101,17 +85,15 @@
             </table>
           </div>
 
-          <div class="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-            <p class="text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.pagination.summary', { page: query.page, pages: totalPages }) }}</p>
-            <div class="flex items-center justify-end gap-2">
-              <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-left" :disabled="query.page <= 1 || pending" @click="changePage(query.page - 1)">
-                {{ $t('common.previous') }}
-              </UButton>
-              <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-right" :disabled="query.page >= totalPages || pending" @click="changePage(query.page + 1)">
-                {{ $t('common.next') }}
-              </UButton>
-            </div>
-          </div>
+          <AppPager
+            class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+            size="sm"
+            :page="query.page"
+            :total="total"
+            :page-size="query.size"
+            :disabled="pending"
+            @page-change="changePage"
+          />
         </section>
 
         <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
@@ -151,7 +133,6 @@ import { formatDateTime } from '~/utils/format'
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
 const toast = useToast()
 const adminApi = useAdmin()
 

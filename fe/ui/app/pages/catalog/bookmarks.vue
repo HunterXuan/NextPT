@@ -1,15 +1,7 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" :to="localePath('/catalog/torrents')">
-            {{ $t('catalog.torrents.detail.back') }}
-          </UButton>
-          <p class="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('catalog.bookmarks.title') }}</h1>
-        </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
+      <div class="mb-4 flex justify-end">
         <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadBookmarks">
           {{ $t('common.refresh') }}
         </UButton>
@@ -93,19 +85,14 @@
         </div>
       </div>
 
-      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-sm text-slate-500 dark:text-slate-400">
-          {{ $t('catalog.bookmarks.pageSummary', { page: page, pages: totalPages }) }}
-        </p>
-        <div class="flex items-center gap-2">
-          <UButton color="neutral" variant="outline" icon="i-lucide-chevron-left" :disabled="page <= 1 || pending" @click="goToPage(page - 1)">
-            {{ $t('common.previous') }}
-          </UButton>
-          <UButton color="neutral" variant="outline" trailing-icon="i-lucide-chevron-right" :disabled="page >= totalPages || pending" @click="goToPage(page + 1)">
-            {{ $t('common.next') }}
-          </UButton>
-        </div>
-      </div>
+      <AppPager
+        class="mt-4"
+        :page="page"
+        :total="total"
+        :page-size="size"
+        :disabled="pending"
+        @page-change="goToPage"
+      />
     </div>
   </div>
 </template>

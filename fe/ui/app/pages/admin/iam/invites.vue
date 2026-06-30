@@ -1,25 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.iam.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.invites.title') }}</h1>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <UButton color="neutral" variant="outline" icon="i-lucide-users" :to="localePath('/admin/iam/users')">
-            {{ $t('admin.iam.users.title') }}
-          </UButton>
-          <UButton color="neutral" variant="outline" icon="i-lucide-shield-check" :to="localePath('/admin/iam/roles')">
-            {{ $t('admin.iam.roles.title') }}
-          </UButton>
-          <UButton color="primary" variant="soft" icon="i-lucide-ticket-plus" :to="localePath('/admin/iam/invites')">
-            {{ $t('admin.iam.invites.title') }}
-          </UButton>
-        </div>
-      </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
           <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.invites.form.title') }}</h2>
@@ -60,7 +41,6 @@ import { ApiError } from '~/composables/useApi'
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t } = useI18n()
-const localePath = useLocalePath()
 const toast = useToast()
 const adminApi = useAdmin()
 

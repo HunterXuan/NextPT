@@ -1,13 +1,9 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div class="min-w-0">
-          <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" :to="localePath('/forum')">
-            {{ $t('forum.detail.back') }}
-          </UButton>
-          <p class="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('forum.eyebrow') }}</p>
-          <h1 class="mt-1 break-words text-2xl font-semibold text-slate-950 dark:text-white">
+          <h1 class="break-words text-2xl font-semibold text-slate-950 dark:text-white">
             {{ topic?.subject || $t('forum.detail.titleFallback', { id: topicId }) }}
           </h1>
           <p v-if="topic" class="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -172,19 +168,15 @@
               </article>
             </div>
 
-            <div class="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <p class="text-sm text-slate-500 dark:text-slate-400">
-                {{ $t('forum.pagination.summary', { page: replyPage, pages: replyTotalPages }) }}
-              </p>
-              <div class="flex flex-wrap items-center gap-2">
-                <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-left" :disabled="replyPage <= 1 || repliesPending" @click="goToReplyPage(replyPage - 1)">
-                  {{ $t('common.previous') }}
-                </UButton>
-                <UButton color="neutral" variant="outline" size="sm" trailing-icon="i-lucide-chevron-right" :disabled="replyPage >= replyTotalPages || repliesPending" @click="goToReplyPage(replyPage + 1)">
-                  {{ $t('common.next') }}
-                </UButton>
-              </div>
-            </div>
+            <AppPager
+              class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+              size="sm"
+              :page="replyPage"
+              :total="replyTotal"
+              :page-size="replySize"
+              :disabled="repliesPending"
+              @page-change="goToReplyPage"
+            />
           </section>
 
           <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
@@ -341,7 +333,6 @@ type TopicPanel = 'append' | 'reward' | 'report'
 type ReplyPanelType = 'reward' | 'report'
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
 const route = useRoute()
 const toast = useToast()
 const forum = useForum()

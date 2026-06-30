@@ -1,16 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('forum.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('forum.create.title') }}</h1>
-        </div>
-        <UButton color="neutral" variant="outline" icon="i-lucide-arrow-left" :to="localePath('/forum')">
-          {{ $t('forum.create.back') }}
-        </UButton>
-      </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <form class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]" @submit.prevent="handleSubmit">
         <div class="space-y-6">
           <UCard class="rounded-lg">

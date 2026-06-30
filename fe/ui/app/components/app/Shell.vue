@@ -10,7 +10,15 @@
       class="fixed inset-y-0 left-0 z-50 hidden border-r border-slate-200 transition-[width] duration-200 lg:block dark:border-slate-800"
       :class="sidebarCollapsed ? 'w-16' : 'w-64'"
     >
-      <AppShellSidebar :sections="navSections" :user="user" :collapsed="sidebarCollapsed" @navigate="mobileSidebarOpen = false" />
+      <AppShellSidebar
+        :sections="navSections"
+        :user="user"
+        :user-menu-items="userMenuItems"
+        :return-action="adminReturnAction"
+        :logging-out="loggingOut"
+        :collapsed="sidebarCollapsed"
+        @navigate="mobileSidebarOpen = false"
+      />
     </aside>
 
     <aside
@@ -20,6 +28,9 @@
       <AppShellSidebar
         :sections="navSections"
         :user="user"
+        :user-menu-items="userMenuItems"
+        :return-action="adminReturnAction"
+        :logging-out="loggingOut"
         show-close
         @close="mobileSidebarOpen = false"
         @navigate="mobileSidebarOpen = false"
@@ -63,17 +74,6 @@
             </UDropdownMenu>
 
             <AppThemeToggle />
-
-            <UDropdownMenu :items="userMenuItems" :content="{ align: 'end' }">
-              <UButton
-                color="neutral"
-                variant="ghost"
-                icon="i-lucide-user-round"
-                trailing-icon="i-lucide-chevron-down"
-                :label="user?.username || $t('nav.user')"
-                :loading="loggingOut"
-              />
-            </UDropdownMenu>
           </div>
         </div>
       </header>
@@ -128,9 +128,18 @@ function isForumHomeActive() {
 
 function isCatalogTorrentsActive() {
   const torrentsPath = localePath('/catalog/torrents')
-  const uploadPath = localePath('/catalog/torrents/upload')
-  return (route.path === torrentsPath || route.path.startsWith(`${torrentsPath}/`)) && !route.path.startsWith(uploadPath)
+  return route.path === torrentsPath || route.path.startsWith(`${torrentsPath}/`)
 }
+
+const currentAppPath = computed(() => {
+  const codes = (locales.value as any[]).map((item) => item.code).filter(Boolean)
+  for (const code of codes) {
+    const prefix = `/${code}`
+    if (route.path === prefix) return '/'
+    if (route.path.startsWith(`${prefix}/`)) return route.path.slice(prefix.length)
+  }
+  return route.path
+})
 
 const appNavSections = computed(() => {
   const sections = [
@@ -145,10 +154,9 @@ const appNavSections = computed(() => {
       key: 'catalog',
       label: t('nav.catalog'),
       items: [
-        { label: t('nav.catalog'), to: '/catalog/torrents', icon: 'i-lucide-library', active: isCatalogTorrentsActive() },
-        { label: t('nav.uploadTorrent'), to: '/catalog/torrents/upload', icon: 'i-lucide-upload', active: isActive('/catalog/torrents/upload') },
+        { label: t('catalog.torrents.title'), to: '/catalog/torrents', icon: 'i-lucide-library', active: isCatalogTorrentsActive() },
         { label: t('nav.subtitles'), to: '/catalog/subtitles', icon: 'i-lucide-captions', active: isActive('/catalog/subtitles') },
-        { label: t('nav.bookmarks'), to: '/catalog/bookmarks', icon: 'i-lucide-bookmark', active: isActive('/catalog/bookmarks') }
+        { label: t('catalog.bookmarks.title'), to: '/catalog/bookmarks', icon: 'i-lucide-bookmark', active: isActive('/catalog/bookmarks') }
       ]
     },
     {
@@ -161,7 +169,7 @@ const appNavSections = computed(() => {
     },
     {
       key: 'account',
-      label: t('nav.user'),
+      label: t('nav.my'),
       items: [
         { label: t('nav.user'), to: '/iam/users/me', icon: 'i-lucide-user-round', active: isActive('/iam/users/me') }
       ]
@@ -239,8 +247,22 @@ const adminNavSections = computed(() => [
 ])
 
 const navSections = computed(() => props.mode === 'admin' ? adminNavSections.value : appNavSections.value)
+const adminReturnAction = computed(() => props.mode === 'admin'
+  ? { label: t('nav.backToUser'), to: '/', icon: 'i-lucide-arrow-left' }
+  : null
+)
 const activeItem = computed(() => navSections.value.flatMap((section) => section.items).find((item) => item.active))
-const activeItemLabel = computed(() => activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : t('common.brand')))
+const routeSpecificLabel = computed(() => {
+  const path = currentAppPath.value
+  if (path === '/catalog/torrents/upload') return t('catalog.torrents.upload.title')
+  if (/^\/catalog\/torrents\/[^/]+\/edit$/.test(path)) return t('catalog.torrents.edit.title')
+  if (path === '/catalog/bookmarks') return t('catalog.bookmarks.title')
+  if (path === '/catalog/subtitles') return t('catalog.subtitles.title')
+  if (path === '/forum/topics/create') return t('forum.create.title')
+  if (path === '/forum/bookmarks') return t('forum.bookmarks.title')
+  return ''
+})
+const activeItemLabel = computed(() => routeSpecificLabel.value || activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : t('common.brand')))
 
 const languageItems = computed(() => [
   (locales.value as any[]).map((item) => ({
@@ -254,12 +276,12 @@ const userMenuItems = computed(() => {
     {
       label: t('nav.user'),
       icon: 'i-lucide-user-round',
-      onSelect: () => navigateTo(localePath('/iam/users/me'))
+      onSelect: () => navigateFromUserMenu('/iam/users/me')
     },
     {
       label: t('nav.catalog'),
       icon: 'i-lucide-library',
-      onSelect: () => navigateTo(localePath('/catalog/torrents'))
+      onSelect: () => navigateFromUserMenu('/catalog/torrents')
     }
   ]
 
@@ -267,7 +289,7 @@ const userMenuItems = computed(() => {
     firstGroup.push({
       label: t('nav.admin'),
       icon: 'i-lucide-shield-check',
-      onSelect: () => navigateTo(localePath('/admin'))
+      onSelect: () => navigateFromUserMenu('/admin')
     })
   }
 
@@ -292,7 +314,13 @@ function toggleSidebar() {
   sidebarCollapsed.value = !sidebarCollapsed.value
 }
 
+function navigateFromUserMenu(path: string) {
+  mobileSidebarOpen.value = false
+  return navigateTo(localePath(path))
+}
+
 async function handleLogout() {
+  mobileSidebarOpen.value = false
   loggingOut.value = true
   try {
     await logout()

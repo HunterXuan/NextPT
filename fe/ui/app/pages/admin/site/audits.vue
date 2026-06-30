@@ -1,22 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.site.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.audits.title') }}</h1>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <UButton color="neutral" variant="outline" icon="i-lucide-settings-2" :to="localePath('/admin/site/configs')">
-            {{ $t('admin.site.configs.title') }}
-          </UButton>
-          <UButton color="primary" variant="soft" icon="i-lucide-scroll-text" :to="localePath('/admin/site/audits')">
-            {{ $t('admin.site.audits.title') }}
-          </UButton>
-        </div>
-      </div>
-
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
           <div>
@@ -74,23 +58,17 @@
           </table>
         </div>
 
-        <div class="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.pageSize') }}</span>
-            <select v-model.number="query.size" class="h-9 rounded-md border border-slate-200 bg-white px-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" @change="reloadFromFirstPage">
-              <option v-for="size in pageSizes" :key="size" :value="size">{{ size }}</option>
-            </select>
-          </div>
-          <div class="flex items-center justify-end gap-2">
-            <span class="text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.pagination.summary', { page: query.page, pages: totalPages }) }}</span>
-            <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-left" :disabled="query.page <= 1 || pending" @click="changePage(query.page - 1)">
-              {{ $t('common.previous') }}
-            </UButton>
-            <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-right" :disabled="query.page >= totalPages || pending" @click="changePage(query.page + 1)">
-              {{ $t('common.next') }}
-            </UButton>
-          </div>
-        </div>
+        <AppPager
+          class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+          size="sm"
+          :page="query.page"
+          :total="total"
+          :page-size="query.size"
+          :page-size-options="pageSizes"
+          :disabled="pending"
+          @page-change="changePage"
+          @page-size-change="changePageSize"
+        />
       </section>
     </div>
   </div>
@@ -104,7 +82,6 @@ import { formatDateTime } from '~/utils/format'
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
 const adminApi = useAdmin()
 
 const audits = ref<AdminSiteAuditItem[]>([])
@@ -136,6 +113,11 @@ async function loadAudits() {
 function reloadFromFirstPage() {
   query.page = 1
   loadAudits()
+}
+
+function changePageSize(size: number) {
+  query.size = size
+  reloadFromFirstPage()
 }
 
 function changePage(page: number) {

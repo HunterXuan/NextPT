@@ -1,24 +1,17 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.site.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.configs.title') }}</h1>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <UButton
-            v-for="group in groups"
-            :key="group.value"
-            :color="selectedGroup === group.value ? 'primary' : 'neutral'"
-            :variant="selectedGroup === group.value ? 'soft' : 'outline'"
-            icon="i-lucide-folder-cog"
-            @click="selectGroup(group.value)"
-          >
-            {{ group.label }}
-          </UButton>
-        </div>
+    <div class="w-full px-3 sm:px-4 lg:px-5">
+      <div class="mb-4 flex flex-wrap items-center justify-end gap-2">
+        <UButton
+          v-for="group in groups"
+          :key="group.value"
+          :color="selectedGroup === group.value ? 'primary' : 'neutral'"
+          :variant="selectedGroup === group.value ? 'soft' : 'outline'"
+          icon="i-lucide-folder-cog"
+          @click="selectGroup(group.value)"
+        >
+          {{ group.label }}
+        </UButton>
       </div>
 
       <div class="mb-4 grid grid-cols-2 gap-2 sm:flex sm:items-center">

@@ -1,13 +1,9 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div class="min-w-0">
-          <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" :to="localePath('/forum')">
-            {{ $t('forum.topicList.back') }}
-          </UButton>
-          <p class="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('forum.eyebrow') }}</p>
-          <h1 class="mt-1 break-words text-2xl font-semibold text-slate-950 dark:text-white">
+          <h1 class="break-words text-2xl font-semibold text-slate-950 dark:text-white">
             {{ node ? nodeDisplayName(node) : $t('forum.fallback.node') }}
           </h1>
           <p v-if="node && nodeDisplayDesc(node)" class="mt-2 max-w-3xl break-words text-sm text-slate-500 dark:text-slate-400">
@@ -123,32 +119,16 @@
         </aside>
       </div>
 
-      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-sm text-slate-500 dark:text-slate-400">
-          {{ $t('forum.pagination.summary', { page: page, pages: totalPages }) }}
-        </p>
-        <div class="flex flex-wrap items-center gap-2">
-          <label class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-            <span>{{ $t('forum.pagination.pageSize') }}</span>
-            <select
-              v-model="selectedSize"
-              class="h-9 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-              :disabled="pending"
-              @change="handlePageSizeChange"
-            >
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </label>
-          <UButton color="neutral" variant="outline" icon="i-lucide-chevron-left" :disabled="page <= 1 || pending" @click="goToPage(page - 1)">
-            {{ $t('common.previous') }}
-          </UButton>
-          <UButton color="neutral" variant="outline" trailing-icon="i-lucide-chevron-right" :disabled="page >= totalPages || pending" @click="goToPage(page + 1)">
-            {{ $t('common.next') }}
-          </UButton>
-        </div>
-      </div>
+      <AppPager
+        class="mt-4"
+        :page="page"
+        :total="total"
+        :page-size="Number(selectedSize)"
+        :page-size-options="pageSizes"
+        :disabled="pending"
+        @page-change="goToPage"
+        @page-size-change="handlePageSizeChange"
+      />
     </div>
   </div>
 </template>
@@ -174,6 +154,7 @@ const topics = ref<ForumTopicListItem[]>([])
 const total = ref(0)
 const pending = ref(false)
 const errorMessage = ref('')
+const pageSizes = [20, 50, 100]
 
 const page = ref(readPositiveIntQuery('page', 1))
 const selectedSize = ref(String(readPageSizeQuery()))
@@ -235,7 +216,8 @@ async function loadTopics() {
   }
 }
 
-function handlePageSizeChange() {
+function handlePageSizeChange(nextSize: number) {
+  selectedSize.value = String(nextSize)
   page.value = 1
   loadTopics()
 }

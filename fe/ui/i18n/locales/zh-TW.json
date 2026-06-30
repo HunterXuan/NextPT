@@ -13,16 +13,41 @@
     "expandSidebar": "展開側邊欄",
     "switchLanguage": "切換語言",
     "showPassword": "顯示密碼",
-    "hidePassword": "隱藏密碼"
+    "hidePassword": "隱藏密碼",
+    "pagination": {
+      "label": "分頁",
+      "total": "共 {total} 筆",
+      "pageSize": "每頁",
+      "page": "第 {page} 頁",
+      "first": "第一頁",
+      "last": "最後一頁"
+    },
+    "reward": {
+      "summary": "{count} 位讚賞者",
+      "confirmTitle": "將扣除 {amount} 魔力",
+      "confirm": "確認",
+      "success": "讚賞成功",
+      "empty": "暫無讚賞",
+      "preview": "前 {count} / {total} 位",
+      "viewAll": "查看全部",
+      "allTitle": "全部讚賞者",
+      "allDescription": "共 {count} 位讚賞者",
+      "once": "讚賞 1 次",
+      "times": "讚賞 {count} 次"
+    }
   },
   "nav": {
     "home": "首頁",
+    "resources": "資源庫",
     "catalog": "資源庫",
+    "community": "論壇",
     "forum": "論壇",
     "uploadTorrent": "發布種子",
     "subtitles": "字幕",
-    "bookmarks": "我的收藏",
+    "bookmarks": "收藏",
+    "my": "我的",
     "user": "使用者中心",
+    "backToUser": "返回使用者端",
     "admin": "管理後台"
   },
   "footer": {
@@ -240,7 +265,7 @@
       "metaTitle": "種子",
       "eyebrow": "資源庫 / 種子",
       "title": "種子",
-      "anonymous": "匿名發布",
+      "anonymous": "匿名",
       "anonymousOwner": "匿名（{name}）",
       "unknownCategory": "未分類",
       "fileCount": "{count} 個檔案",
@@ -259,16 +284,31 @@
         "clearCategories": "清除分類",
         "noCategories": "暫無可選分類"
       },
-      "types": {
-        "single": "單檔案",
-        "multi": "多檔案"
+      "status": {
+        "pinned": "置頂",
+        "featured": "推薦",
+        "expiresAt": "促銷至 {time}",
+        "promotion": {
+          "1": "免費",
+          "2": "2x",
+          "3": "2x 免費",
+          "4": "50%",
+          "5": "2x 50%",
+          "6": "30%",
+          "7": "促銷"
+        }
       },
       "table": {
+        "category": "分類",
         "torrent": "種子",
         "size": "大小",
         "activity": "活躍",
+        "seeders": "做種",
+        "leechers": "下載",
         "completed": "完成",
-        "createdAt": "發布時間"
+        "uploader": "發布者",
+        "createdAt": "發布時間",
+        "actions": "操作"
       },
       "empty": {
         "title": "暫無種子",
@@ -283,6 +323,11 @@
         "back": "返回種子列表",
         "titleFallback": "種子 #{id}",
         "invalidId": "無效的種子 ID",
+        "navigation": {
+          "title": "頁面目錄",
+          "top": "頂部",
+          "bottom": "底部"
+        },
         "actions": {
           "title": "種子操作",
           "download": "下載種子",
@@ -300,7 +345,8 @@
           "seeders": "做種",
           "leechers": "下載",
           "completed": "完成",
-          "size": "大小"
+          "size": "大小",
+          "files": "檔案"
         },
         "description": {
           "title": "詳情描述",
@@ -340,18 +386,30 @@
           "title": "評論",
           "summary": "{count} 條評論",
           "placeholder": "寫下你的評論",
+          "edit": "編輯",
+          "preview": "預覽",
+          "previewEmpty": "寫點內容後可以在這裡預覽",
           "submit": "發表評論",
           "created": "評論已發布",
           "empty": "暫無評論",
-          "reward": "讚賞 {count}"
+          "reward": "讚賞 {count}",
+          "quote": "引用"
         },
         "reward": {
           "title": "讚賞種子",
-          "summary": "{count} 條讚賞記錄",
+          "summary": "{count} 位讚賞者",
           "amount": "金額",
           "submit": "讚賞",
+          "confirmTitle": "將扣除 {amount} 魔力",
+          "confirm": "確認",
           "success": "讚賞成功",
-          "empty": "暫無讚賞記錄"
+          "empty": "暫無讚賞",
+          "preview": "前 {count} / {total} 位",
+          "viewAll": "查看全部",
+          "allTitle": "全部讚賞者",
+          "allDescription": "共 {count} 位讚賞者",
+          "once": "讚賞 1 次",
+          "times": "讚賞 {count} 次"
         },
         "report": {
           "reason": "填寫檢舉原因",
@@ -363,7 +421,6 @@
           "category": "分類",
           "publisher": "發布者",
           "publishedAt": "發布時間",
-          "type": "類型",
           "fileCount": "檔案數",
           "torrentId": "種子 ID"
         }
@@ -415,11 +472,11 @@
       }
     },
     "bookmarks": {
-      "metaTitle": "收藏種子",
-      "title": "收藏種子",
+      "metaTitle": "種子收藏",
+      "title": "種子收藏",
       "pageSummary": "第 {page} / {pages} 頁",
       "empty": {
-        "title": "暫無收藏種子",
+        "title": "暫無種子收藏",
         "description": "你收藏的種子會顯示在這裡。"
       }
     },
@@ -459,7 +516,7 @@
   },
   "forum": {
     "metaTitle": "論壇",
-    "eyebrow": "社群 / 論壇",
+    "eyebrow": "論壇",
     "title": "論壇",
     "summary": {
       "nodes": "節點",
@@ -522,7 +579,7 @@
       "metaTitle": "主題收藏",
       "title": "主題收藏",
       "empty": {
-        "title": "暫無收藏主題",
+        "title": "暫無主題收藏",
         "description": "你收藏的論壇主題會顯示在這裡。"
       }
     },
@@ -626,10 +683,10 @@
       "overview": "總覽",
       "catalog": "資源庫",
       "forum": "論壇",
-      "iam": "使用者權限",
-      "moderation": "審核風控",
+      "iam": "IAM",
+      "moderation": "Mod",
       "site": "站點",
-      "system": "系統"
+      "system": "Sys"
     },
     "dashboard": {
       "title": "後台總覽",
@@ -805,20 +862,20 @@
           "success": "封禁已生效"
         },
         "mod": {
-          "title": "使用者限制",
+          "title": "帳號限制",
           "activeSummary": "目前生效 {count} 條",
-          "type": "限制類型",
+          "type": "帳號限制類型",
           "reason": "原因",
           "durationDays": "天數",
           "permanentHint": "0 表示永久",
           "permanent": "永久",
           "expireAt": "到期",
-          "submit": "新增限制",
-          "applied": "限制已生效",
+          "submit": "新增帳號限制",
+          "applied": "帳號限制已生效",
           "remove": "解除",
-          "removed": "限制已解除",
-          "confirmRemove": "確認解除「{type}」限制？",
-          "empty": "暫無限制記錄",
+          "removed": "帳號限制已解除",
+          "confirmRemove": "確認解除「{type}」帳號限制？",
+          "empty": "暫無帳號限制記錄",
           "status": {
             "active": "生效中",
             "inactive": "已結束"

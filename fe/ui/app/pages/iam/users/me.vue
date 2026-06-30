@@ -1,10 +1,9 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-8 dark:bg-slate-950">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('user.eyebrow') }}</p>
-          <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">{{ displayName }}</h1>
+          <h1 class="text-2xl font-semibold text-slate-950 dark:text-white">{{ displayName }}</h1>
         </div>
         <div class="flex items-center gap-2">
           <UBadge :color="user?.isStaff ? 'primary' : 'neutral'" variant="soft">
@@ -292,19 +291,16 @@
               </article>
             </div>
 
-            <div v-if="bonusLogTotalPages > 1" class="mt-4 flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <p class="text-sm text-slate-500 dark:text-slate-400">
-                {{ $t('user.bonusLogs.pageSummary', { page: bonusLogPage, pages: bonusLogTotalPages }) }}
-              </p>
-              <div class="flex items-center gap-2">
-                <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-left" :disabled="bonusLogPage <= 1 || bonusLogsPending" @click="goToBonusLogPage(bonusLogPage - 1)">
-                  {{ $t('common.previous') }}
-                </UButton>
-                <UButton color="neutral" variant="outline" size="sm" trailing-icon="i-lucide-chevron-right" :disabled="bonusLogPage >= bonusLogTotalPages || bonusLogsPending" @click="goToBonusLogPage(bonusLogPage + 1)">
-                  {{ $t('common.next') }}
-                </UButton>
-              </div>
-            </div>
+            <AppPager
+              v-if="bonusLogTotalPages > 1"
+              class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+              size="sm"
+              :page="bonusLogPage"
+              :total="bonusLogTotal"
+              :page-size="bonusLogSize"
+              :disabled="bonusLogsPending"
+              @page-change="goToBonusLogPage"
+            />
           </UCard>
 
           <UCard class="rounded-lg">
@@ -396,19 +392,16 @@
               </article>
             </div>
 
-            <div v-if="snatchTotalPages > 1" class="mt-4 flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <p class="text-sm text-slate-500 dark:text-slate-400">
-                {{ $t('user.snatches.pageSummary', { page: snatchPage, pages: snatchTotalPages }) }}
-              </p>
-              <div class="flex items-center gap-2">
-                <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-chevron-left" :disabled="snatchPage <= 1 || snatchesPending" @click="goToSnatchPage(snatchPage - 1)">
-                  {{ $t('common.previous') }}
-                </UButton>
-                <UButton color="neutral" variant="outline" size="sm" trailing-icon="i-lucide-chevron-right" :disabled="snatchPage >= snatchTotalPages || snatchesPending" @click="goToSnatchPage(snatchPage + 1)">
-                  {{ $t('common.next') }}
-                </UButton>
-              </div>
-            </div>
+            <AppPager
+              v-if="snatchTotalPages > 1"
+              class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+              size="sm"
+              :page="snatchPage"
+              :total="snatchTotal"
+              :page-size="snatchSize"
+              :disabled="snatchesPending"
+              @page-change="goToSnatchPage"
+            />
           </UCard>
 
           <UCard class="rounded-lg">
