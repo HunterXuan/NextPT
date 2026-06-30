@@ -1,49 +1,84 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <form class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]" @submit.prevent="handleSubmit">
-        <div class="space-y-6">
-          <UCard class="rounded-lg">
-            <template #header>
+      <form class="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start" @submit.prevent="handleSubmit">
+        <main class="min-w-0 space-y-4">
+          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.file') }}</h2>
-            </template>
+              <UBadge :color="selectedFile ? 'success' : 'neutral'" variant="soft">
+                {{ selectedFile ? $t('catalog.torrents.upload.file.selected') : $t('catalog.torrents.upload.file.required') }}
+              </UBadge>
+            </div>
 
-            <label
-              class="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed px-4 py-8 text-center transition"
-              :class="selectedFile
-                ? 'border-sky-300 bg-sky-50 dark:border-sky-700 dark:bg-sky-950'
-                : 'border-slate-300 bg-slate-50 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-600'"
-              @dragover.prevent
-              @drop.prevent="handleDrop"
-            >
-              <input
-                class="sr-only"
-                type="file"
-                accept=".torrent,application/x-bittorrent"
-                :disabled="pending"
-                @change="handleFileChange"
+            <div class="p-4">
+              <div
+                v-if="selectedFile"
+                class="grid gap-3 rounded-md border border-sky-200 bg-sky-50 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-sky-800 dark:bg-sky-950/40"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
               >
-              <UIcon name="i-lucide-file-up" class="size-9 text-slate-400" />
-              <span class="mt-3 text-sm font-medium text-slate-950 dark:text-white">
-                {{ selectedFile?.name || $t('catalog.torrents.upload.file.choose') }}
-              </span>
-              <span v-if="selectedFile" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                {{ formatBytes(selectedFile.size) }}
-              </span>
-            </label>
-          </UCard>
+                <div class="flex min-w-0 items-center gap-3">
+                  <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-sky-600 ring-1 ring-sky-200 dark:bg-slate-900 dark:text-sky-300 dark:ring-sky-800">
+                    <UIcon name="i-lucide-file-check-2" class="size-5" />
+                  </span>
+                  <div class="min-w-0">
+                    <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ selectedFile.name }}</p>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatBytes(selectedFile.size) }}</p>
+                  </div>
+                </div>
 
-          <UCard class="rounded-lg">
-            <template #header>
+                <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end">
+                  <label class="inline-flex h-8 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                    {{ $t('catalog.torrents.upload.file.replace') }}
+                    <input
+                      :key="fileInputKey"
+                      class="sr-only"
+                      type="file"
+                      accept=".torrent,application/x-bittorrent"
+                      :disabled="pending"
+                      @change="handleFileChange"
+                    >
+                  </label>
+                  <UButton type="button" color="neutral" variant="ghost" size="sm" icon="i-lucide-x" :disabled="pending" @click="clearFile">
+                    {{ $t('catalog.torrents.upload.file.remove') }}
+                  </UButton>
+                </div>
+              </div>
+
+              <label
+                v-else
+                class="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center transition hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-600"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+              >
+                <input
+                  :key="fileInputKey"
+                  class="sr-only"
+                  type="file"
+                  accept=".torrent,application/x-bittorrent"
+                  :disabled="pending"
+                  @change="handleFileChange"
+                >
+                <UIcon name="i-lucide-file-up" class="size-9 text-slate-400" />
+                <span class="mt-3 text-sm font-medium text-slate-950 dark:text-white">
+                  {{ $t('catalog.torrents.upload.file.choose') }}
+                </span>
+              </label>
+            </div>
+          </section>
+
+          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.info') }}</h2>
-            </template>
+            </div>
 
-            <div class="grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-1 gap-4 p-4">
               <UFormField :label="$t('catalog.torrents.upload.fields.category')" required>
                 <select
                   v-model="form.categoryId"
                   class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-                  :disabled="pending || categories.length === 0"
+                  :disabled="pending || categoriesPending || categories.length === 0"
                 >
                   <option value="0">{{ $t('catalog.torrents.upload.fields.categoryPlaceholder') }}</option>
                   <option v-for="category in categories" :key="category.id" :value="String(category.id)">
@@ -51,6 +86,10 @@
                   </option>
                 </select>
               </UFormField>
+
+              <div v-if="categoriesError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+                {{ categoriesError }}
+              </div>
 
               <UFormField :label="$t('catalog.torrents.upload.fields.name')">
                 <UInput v-model="form.name" class="w-full" :disabled="pending" />
@@ -61,19 +100,49 @@
               </UFormField>
 
               <UFormField :label="$t('catalog.torrents.upload.fields.description')">
-                <UTextarea v-model="form.description" class="w-full" :rows="8" :disabled="pending" />
+                <UTextarea
+                  v-if="descriptionMode === 'write'"
+                  v-model="form.description"
+                  class="w-full"
+                  :rows="12"
+                  :disabled="pending"
+                />
+                <div v-else class="min-h-72 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+                  <div v-if="renderedDescriptionPreview" class="rich-text" v-html="renderedDescriptionPreview" />
+                  <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.preview.empty') }}</p>
+                </div>
+
+                <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+                    <button
+                      type="button"
+                      :class="descriptionModeButtonClass('write')"
+                      @click="descriptionMode = 'write'"
+                    >
+                      {{ $t('catalog.torrents.upload.preview.write') }}
+                    </button>
+                    <button
+                      type="button"
+                      :class="descriptionModeButtonClass('preview')"
+                      @click="descriptionMode = 'preview'"
+                    >
+                      {{ $t('catalog.torrents.upload.preview.preview') }}
+                    </button>
+                  </div>
+                  <span class="text-xs text-slate-500 dark:text-slate-400">
+                    {{ $t('catalog.torrents.upload.summary.descriptionLength', { count: numberFormatter.format(form.description.trim().length) }) }}
+                  </span>
+                </div>
               </UFormField>
             </div>
-          </UCard>
-        </div>
+          </section>
+        </main>
 
-        <aside class="space-y-6">
-          <UCard class="rounded-lg">
-            <template #header>
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.publish') }}</h2>
-            </template>
+        <aside class="min-w-0 space-y-4 lg:sticky lg:top-[5.5rem]">
+          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.publish') }}</h2>
 
-            <div class="space-y-4">
+            <div class="mt-3 space-y-4">
               <label class="flex items-center justify-between gap-4 rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.upload.fields.anonymous') }}</span>
                 <input
@@ -84,22 +153,30 @@
                 >
               </label>
 
-              <dl class="space-y-3 text-sm">
-                <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.summary.file') }}</dt>
-                  <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ selectedFile?.name || '-' }}</dd>
+              <div class="divide-y divide-slate-100 rounded-md border border-slate-200 dark:divide-slate-800 dark:border-slate-800">
+                <div
+                  v-for="check in publishChecks"
+                  :key="check.key"
+                  class="flex items-center justify-between gap-3 px-3 py-2.5 text-sm"
+                >
+                  <div class="flex min-w-0 items-center gap-2">
+                    <UIcon :name="check.passed ? 'i-lucide-circle-check' : 'i-lucide-circle'" :class="check.passed ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600'" class="size-4 shrink-0" />
+                    <span class="text-slate-600 dark:text-slate-300">{{ check.label }}</span>
+                  </div>
+                  <span class="min-w-0 truncate text-right text-xs font-medium text-slate-500 dark:text-slate-400">{{ check.value }}</span>
                 </div>
-                <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.summary.category') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">{{ selectedCategoryName }}</dd>
-                </div>
-              </dl>
+              </div>
 
-              <UButton type="submit" color="primary" icon="i-lucide-upload" block :loading="pending" :disabled="!canSubmit">
-                {{ $t('catalog.torrents.upload.submit') }}
-              </UButton>
+              <div class="grid grid-cols-2 gap-2">
+                <UButton color="neutral" variant="outline" block :to="localePath('/catalog/torrents')">
+                  {{ $t('common.cancel') }}
+                </UButton>
+                <UButton type="submit" color="primary" icon="i-lucide-upload" block :loading="pending" :disabled="!canSubmit">
+                  {{ $t('catalog.torrents.upload.submit') }}
+                </UButton>
+              </div>
             </div>
-          </UCard>
+          </section>
         </aside>
       </form>
     </div>
@@ -109,6 +186,9 @@
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
 import type { CatalogCategory } from '~/composables/useCatalogTorrents'
+import { renderUserMarkdown } from '~/utils/richText'
+
+type DescriptionMode = 'write' | 'preview'
 
 definePageMeta({
   middleware: 'auth'
@@ -116,41 +196,93 @@ definePageMeta({
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
 
 const categories = ref<CatalogCategory[]>([])
+const categoriesPending = ref(true)
+const categoriesError = ref('')
 const selectedFile = ref<File | null>(null)
+const fileInputKey = ref(0)
+const descriptionMode = ref<DescriptionMode>('write')
 const pending = ref(false)
+const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 
 const form = reactive({
-  categoryId: '0',
+  categoryId: String(readCategoryIdQuery()),
   name: '',
   subTitle: '',
   description: '',
   anonymous: false
 })
 
-const selectedCategoryName = computed(() => {
+const selectedCategory = computed(() => {
   const categoryId = Number(form.categoryId)
-  const category = categories.value.find((item) => item.id === categoryId)
-  return category ? categoryDisplayName(category) : '-'
+  return categories.value.find((item) => item.id === categoryId) || null
 })
 
-const canSubmit = computed(() => Boolean(selectedFile.value && Number(form.categoryId) > 0 && !pending.value))
+const selectedCategoryName = computed(() => {
+  return selectedCategory.value ? categoryDisplayName(selectedCategory.value) : '-'
+})
+
+const effectiveTitle = computed(() => {
+  const title = form.name.trim()
+  if (title) return title
+  return selectedFile.value?.name.replace(/\.torrent$/i, '') || '-'
+})
+
+const renderedDescriptionPreview = computed(() => renderUserMarkdown(form.description).trim())
+const canSubmit = computed(() => Boolean(selectedFile.value && selectedCategory.value && !categoriesPending.value && !pending.value))
+const publishChecks = computed(() => [
+  {
+    key: 'file',
+    label: t('catalog.torrents.upload.checks.file'),
+    value: selectedFile.value ? formatBytes(selectedFile.value.size) : '-',
+    passed: Boolean(selectedFile.value)
+  },
+  {
+    key: 'category',
+    label: t('catalog.torrents.upload.checks.category'),
+    value: selectedCategoryName.value,
+    passed: Boolean(selectedCategory.value)
+  },
+  {
+    key: 'title',
+    label: t('catalog.torrents.upload.checks.title'),
+    value: numberFormatter.value.format(effectiveTitle.value === '-' ? 0 : effectiveTitle.value.length),
+    passed: effectiveTitle.value !== '-'
+  },
+  {
+    key: 'description',
+    label: t('catalog.torrents.upload.checks.description'),
+    value: numberFormatter.value.format(form.description.trim().length),
+    passed: form.description.trim().length > 0
+  }
+])
 
 onMounted(loadCategories)
 
+function readCategoryIdQuery() {
+  const raw = Array.isArray(route.query.categoryId) ? route.query.categoryId[0] : route.query.categoryId
+  const parsed = Number(raw)
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 0
+}
+
 async function loadCategories() {
+  categoriesPending.value = true
+  categoriesError.value = ''
   try {
     const data = await catalogTorrents.listCategories()
     categories.value = data.list || []
+    if (Number(form.categoryId) > 0 && !categories.value.some((item) => item.id === Number(form.categoryId))) {
+      form.categoryId = '0'
+    }
   } catch (error) {
-    toast.add({
-      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
-      color: 'error',
-      icon: 'i-lucide-circle-alert'
-    })
+    categories.value = []
+    categoriesError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    categoriesPending.value = false
   }
 }
 
@@ -163,9 +295,14 @@ function handleDrop(event: DragEvent) {
   setFile(event.dataTransfer?.files?.[0] || null)
 }
 
+function clearFile() {
+  selectedFile.value = null
+  fileInputKey.value += 1
+}
+
 function setFile(file: File | null) {
   if (!file) {
-    selectedFile.value = null
+    clearFile()
     return
   }
 
@@ -179,6 +316,7 @@ function setFile(file: File | null) {
   }
 
   selectedFile.value = file
+  fileInputKey.value += 1
   if (!form.name.trim()) {
     form.name = file.name.replace(/\.torrent$/i, '')
   }
@@ -217,6 +355,16 @@ async function handleSubmit() {
 
 function categoryDisplayName(category: CatalogCategory) {
   return localizeI18nName(category.name, locale.value, category.slug || `#${category.id}`)
+}
+
+function descriptionModeButtonClass(mode: DescriptionMode) {
+  const active = descriptionMode.value === mode
+  return [
+    'h-7 rounded px-3 text-xs font-medium transition-colors',
+    active
+      ? 'bg-white text-slate-950 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:text-white dark:ring-slate-700'
+      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
+  ].join(' ')
 }
 
 useSeoMeta({

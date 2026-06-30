@@ -439,7 +439,11 @@
         },
         "file": {
           "choose": "Choose a .torrent file",
-          "invalid": "Choose a .torrent file"
+          "invalid": "Choose a .torrent file",
+          "required": "Required",
+          "selected": "Selected",
+          "replace": "Replace",
+          "remove": "Remove"
         },
         "fields": {
           "category": "Category",
@@ -451,7 +455,19 @@
         },
         "summary": {
           "file": "File",
-          "category": "Category"
+          "category": "Category",
+          "descriptionLength": "{count} chars"
+        },
+        "checks": {
+          "file": "File",
+          "category": "Category",
+          "title": "Title",
+          "description": "Description"
+        },
+        "preview": {
+          "write": "Edit",
+          "preview": "Preview",
+          "empty": "No content"
         }
       },
       "edit": {

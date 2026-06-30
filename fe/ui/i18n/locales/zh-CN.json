@@ -439,7 +439,11 @@
         },
         "file": {
           "choose": "选择 .torrent 文件",
-          "invalid": "请选择 .torrent 文件"
+          "invalid": "请选择 .torrent 文件",
+          "required": "必填",
+          "selected": "已选择",
+          "replace": "更换",
+          "remove": "移除"
         },
         "fields": {
           "category": "分类",
@@ -451,7 +455,19 @@
         },
         "summary": {
           "file": "文件",
-          "category": "分类"
+          "category": "分类",
+          "descriptionLength": "{count} 字"
+        },
+        "checks": {
+          "file": "文件",
+          "category": "分类",
+          "title": "标题",
+          "description": "详情"
+        },
+        "preview": {
+          "write": "编辑",
+          "preview": "预览",
+          "empty": "暂无内容"
         }
       },
       "edit": {

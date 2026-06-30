@@ -439,7 +439,11 @@
         },
         "file": {
           "choose": "選擇 .torrent 檔案",
-          "invalid": "請選擇 .torrent 檔案"
+          "invalid": "請選擇 .torrent 檔案",
+          "required": "必填",
+          "selected": "已選擇",
+          "replace": "更換",
+          "remove": "移除"
         },
         "fields": {
           "category": "分類",
@@ -451,7 +455,19 @@
         },
         "summary": {
           "file": "檔案",
-          "category": "分類"
+          "category": "分類",
+          "descriptionLength": "{count} 字"
+        },
+        "checks": {
+          "file": "檔案",
+          "category": "分類",
+          "title": "標題",
+          "description": "詳情"
+        },
+        "preview": {
+          "write": "編輯",
+          "preview": "預覽",
+          "empty": "暫無內容"
         }
       },
       "edit": {
