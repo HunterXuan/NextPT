@@ -19,7 +19,7 @@
             </template>
 
             <div class="grid grid-cols-1 gap-4">
-              <UFormField :label="$t('catalog.torrents.upload.fields.category')" required>
+              <UFormField id="edit-category" :label="$t('catalog.torrents.upload.fields.category')" required>
                 <select
                   v-model="form.categoryId"
                   class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
@@ -32,91 +32,37 @@
                 </select>
               </UFormField>
 
-              <div v-if="schemaFields.length > 0" class="rounded-md border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/40">
-                <div class="mb-3 flex items-center justify-between gap-3">
-                  <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.release') }}</h3>
-                  <UBadge color="neutral" variant="soft">{{ selectedCategoryName }}</UBadge>
-                </div>
-
-                <div class="grid grid-cols-1 gap-4">
-                  <UFormField
-                    v-for="field in schemaFields"
-                    :key="field.key"
-                    :label="fieldLabel(field)"
-                    :description="fieldDescription(field)"
-                    :required="Boolean(field.required)"
-                  >
-                    <select
-                      v-if="field.type === 'select'"
-                      :value="String(releaseFields[field.key] || '')"
-                      class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-                      :disabled="savePending || tagGroupsPending"
-                      @change="handleReleaseSelectChange(field.key, $event)"
-                    >
-                      <option value="">{{ $t('catalog.torrents.upload.fields.optionPlaceholder') }}</option>
-                      <option v-for="option in fieldOptions(field)" :key="option.value" :value="option.value">
-                        {{ optionLabel(option) }}
-                      </option>
-                    </select>
-
-                    <div v-else-if="field.type === 'multiSelect'" class="grid gap-2 rounded-md border border-slate-200 bg-white p-2 sm:grid-cols-2 dark:border-slate-700 dark:bg-slate-950">
-                      <label
-                        v-for="option in fieldOptions(field)"
-                        :key="option.value"
-                        class="flex min-h-8 cursor-pointer items-center gap-2 rounded px-2 text-sm text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
-                      >
-                        <input
-                          type="checkbox"
-                          class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
-                          :checked="releaseFieldListValue(field.key).includes(option.value)"
-                          :disabled="savePending || tagGroupsPending"
-                          @change="toggleReleaseFieldOption(field.key, option.value)"
-                        >
-                        <span class="min-w-0 truncate">{{ optionLabel(option) }}</span>
-                      </label>
-                      <p v-if="fieldOptions(field).length === 0" class="px-2 py-1 text-sm text-slate-500 dark:text-slate-400">
-                        {{ $t('catalog.torrents.upload.fields.noOptions') }}
-                      </p>
-                    </div>
-
-                    <UTextarea
-                      v-else-if="field.type === 'textarea'"
-                      :model-value="String(releaseFields[field.key] || '')"
-                      class="w-full"
-                      :rows="3"
-                      :disabled="savePending"
-                      :placeholder="fieldPlaceholder(field)"
-                      @update:model-value="setReleaseField(field.key, String($event || ''))"
-                    />
-
-                    <UInput
-                      v-else
-                      :model-value="String(releaseFields[field.key] || '')"
-                      class="w-full"
-                      :disabled="savePending"
-                      :placeholder="fieldPlaceholder(field)"
-                      @update:model-value="setReleaseField(field.key, String($event || ''))"
-                    />
-                  </UFormField>
-                </div>
-              </div>
-
-              <div v-if="isGeneratedTitleMode" class="rounded-md border border-slate-200 bg-white px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
-                <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.generatedTitle') }}</p>
-                <p class="mt-1 break-words text-sm font-semibold text-slate-950 dark:text-white">{{ generatedTitle || '-' }}</p>
-              </div>
+              <CatalogTorrentReleaseFieldsForm
+                v-model="releaseFields"
+                :category="selectedCategory"
+                :tag-groups="tagGroups"
+                :disabled="savePending"
+                :options-pending="tagGroupsPending"
+                :show-errors="submitAttempted"
+                @state-change="handleReleaseStateChange"
+              />
 
               <UFormField v-if="showManualTitleInput" :label="manualTitleLabel">
-                <UInput v-model="form.name" class="w-full" :disabled="savePending" @update:model-value="titleManuallyEdited = true" />
+                <UInput v-model="form.name" class="w-full" :disabled="savePending" />
               </UFormField>
+
+              <div id="edit-title" :class="finalTitleCardClass">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.finalTitle') }}</p>
+                  <UBadge v-if="isGeneratedTitleMode && generatedTitle && generatedTitle === finalTitle" color="neutral" variant="soft">{{ $t('catalog.torrents.upload.generatedTitle') }}</UBadge>
+                </div>
+                <p class="mt-1 break-words text-sm font-semibold text-slate-950 dark:text-white">{{ finalTitle || $t('catalog.torrents.upload.finalTitleEmpty') }}</p>
+                <p v-if="isGeneratedTitleMode && generatedTitle && generatedTitle !== finalTitle" class="mt-2 break-words text-xs text-slate-500 dark:text-slate-400">
+                  {{ $t('catalog.torrents.upload.generatedTitle') }}: {{ generatedTitle }}
+                </p>
+                <p v-if="submitAttempted && titleError" class="mt-2 text-xs text-red-600 dark:text-red-300">{{ titleError }}</p>
+              </div>
 
               <UFormField :label="$t('catalog.torrents.upload.fields.subTitle')">
                 <UInput v-model="form.subTitle" class="w-full" :disabled="savePending" />
               </UFormField>
 
-              <UFormField :label="$t('catalog.torrents.upload.fields.description')">
-                <UTextarea v-model="form.description" class="w-full" :rows="10" :disabled="savePending" />
-              </UFormField>
+              <CatalogTorrentDescriptionEditor v-model="form.description" :disabled="savePending" :rows="12" />
             </div>
           </UCard>
         </div>
@@ -149,7 +95,15 @@
                 </div>
               </dl>
 
-              <UButton type="submit" color="primary" icon="i-lucide-save" block :loading="savePending" :disabled="!canSubmit">
+              <div v-if="submitAttempted && submitError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+                {{ submitError }}
+              </div>
+
+              <div v-if="initialEditSnapshot && !hasChanges" class="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+                {{ $t('catalog.torrents.edit.noChanges') }}
+              </div>
+
+              <UButton type="submit" color="primary" icon="i-lucide-save" block :loading="savePending" :disabled="savePending || !torrent || !canEditTorrent || !hasChanges">
                 {{ $t('catalog.torrents.edit.submit') }}
               </UButton>
             </div>
@@ -162,10 +116,8 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CatalogTagGroup, TorrentDetail, UploadFieldConfig, UploadOptionItem, UploadTitlePart } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue, TorrentDetail } from '~/composables/useCatalogTorrents'
 import { localizeI18nName } from '~/utils/format'
-
-type ReleaseFieldValue = string | string[]
 
 definePageMeta({
   middleware: 'auth'
@@ -185,7 +137,7 @@ const pending = ref(true)
 const savePending = ref(false)
 const tagGroupsPending = ref(false)
 const errorMessage = ref('')
-const titleManuallyEdited = ref(false)
+const submitAttempted = ref(false)
 
 const form = reactive({
   categoryId: '0',
@@ -194,24 +146,55 @@ const form = reactive({
   description: '',
   anonymous: false
 })
-const releaseFields = reactive<Record<string, ReleaseFieldValue>>({})
+const releaseFields = ref<Record<string, ReleaseFieldValue>>({})
+const releaseState = ref<ReleaseFieldsState>({
+  generatedTitle: '',
+  valid: true,
+  firstError: '',
+  missingLabels: [],
+  output: {}
+})
+const initialEditSnapshot = ref('')
+const initialSnapshotPending = ref(false)
+let initialSnapshotTimer: ReturnType<typeof setTimeout> | null = null
+const initialSnapshotSettleMs = 30
 
 const torrentId = computed(() => readRouteId())
 const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.ownerId)))
 const selectedCategory = computed(() => categories.value.find((item) => item.id === Number(form.categoryId)) || null)
 const selectedCategoryName = computed(() => selectedCategory.value ? categoryDisplayName(selectedCategory.value) : '-')
 const selectedUploadConfig = computed(() => selectedCategory.value?.uploadConfig || null)
-const schemaFields = computed(() => selectedUploadConfig.value?.fields || [])
 const isGeneratedTitleMode = computed(() => selectedUploadConfig.value?.title?.mode === 'generated')
 const showManualTitleInput = computed(() => !isGeneratedTitleMode.value || Boolean(selectedUploadConfig.value?.title?.allowManualOverride))
 const manualTitleLabel = computed(() => isGeneratedTitleMode.value ? t('catalog.torrents.upload.fields.titleOverride') : t('catalog.torrents.upload.fields.name'))
-const generatedTitle = computed(() => buildGeneratedTitle(selectedUploadConfig.value?.title?.parts || []))
-const releaseFieldsValid = computed(() => schemaFields.value.every((field) => {
-  if (!field.required) return true
-  const value = releaseFields[field.key]
-  return Array.isArray(value) ? value.length > 0 : Boolean(String(value || '').trim())
-}))
-const canSubmit = computed(() => Number(form.categoryId) > 0 && Boolean(torrent.value) && canEditTorrent.value && releaseFieldsValid.value && !tagGroupsPending.value && !savePending.value)
+const generatedTitle = computed(() => releaseState.value.generatedTitle)
+const releaseFieldsValid = computed(() => releaseState.value.valid)
+const effectiveTitle = computed(() => {
+  const manualTitle = form.name.trim()
+  if (showManualTitleInput.value && manualTitle) return manualTitle
+  if (isGeneratedTitleMode.value) {
+    if (generatedTitle.value) return generatedTitle.value
+  }
+  return manualTitle
+})
+const finalTitle = computed(() => effectiveTitle.value)
+const titleError = computed(() => finalTitle.value ? '' : t('catalog.torrents.upload.errors.titleRequired'))
+const submitError = computed(() => {
+  if (Number(form.categoryId) <= 0) return t('catalog.torrents.upload.errors.categoryRequired')
+  if (tagGroupsPending.value) return t('catalog.torrents.upload.errors.optionsLoading')
+  if (!releaseFieldsValid.value) return releaseState.value.firstError
+  if (titleError.value) return titleError.value
+  return ''
+})
+const currentEditSnapshot = computed(() => editSnapshot())
+const hasChanges = computed(() => Boolean(!initialSnapshotPending.value && initialEditSnapshot.value && currentEditSnapshot.value !== initialEditSnapshot.value))
+const canSubmit = computed(() => Boolean(hasChanges.value && !submitError.value && torrent.value && canEditTorrent.value && !savePending.value))
+const finalTitleCardClass = computed(() => [
+  'rounded-md border bg-white px-3 py-2.5 dark:bg-slate-950',
+  submitAttempted.value && titleError.value
+    ? 'border-red-200 dark:border-red-900'
+    : 'border-slate-200 dark:border-slate-800'
+].join(' '))
 
 useHead(() => ({
   title: `${t('catalog.torrents.edit.metaTitle')} - NextPT`
@@ -219,14 +202,20 @@ useHead(() => ({
 
 onMounted(loadPage)
 
+onBeforeUnmount(clearInitialSnapshotTimer)
+
+watch(currentEditSnapshot, () => {
+  if (initialSnapshotPending.value) {
+    scheduleInitialSnapshotCapture()
+  }
+})
+
 watch(selectedCategory, (category) => {
-  initializeReleaseFields()
   if (categoryNeedsTagGroups(category)) {
     void loadTagGroups()
   }
   if (isGeneratedTitleMode.value && !selectedUploadConfig.value?.title?.allowManualOverride) {
     form.name = ''
-    titleManuallyEdited.value = false
   }
 })
 
@@ -245,6 +234,8 @@ async function loadPage() {
 
   pending.value = true
   errorMessage.value = ''
+  initialEditSnapshot.value = ''
+  initialSnapshotPending.value = true
   try {
     if (!user.value) {
       await fetchUser()
@@ -262,8 +253,7 @@ async function loadPage() {
     form.subTitle = detail.subTitle || ''
     form.description = detail.description || ''
     form.anonymous = Boolean(detail.anonymous)
-    titleManuallyEdited.value = false
-    initializeReleaseFields(detail.releaseFields)
+    releaseFields.value = normalizeStoredReleaseFields(detail.releaseFields)
     if (categoryNeedsTagGroups(selectedCategory.value)) {
       await loadTagGroups()
     }
@@ -271,9 +261,13 @@ async function loadPage() {
     if (!canEditTorrent.value) {
       errorMessage.value = t('catalog.torrents.edit.forbidden')
     }
+    initialSnapshotPending.value = true
+    scheduleInitialSnapshotCapture()
   } catch (error) {
     torrent.value = null
     categories.value = []
+    initialSnapshotPending.value = false
+    clearInitialSnapshotTimer()
     errorMessage.value = error instanceof ApiError ? error.message : t('common.requestFailed')
   } finally {
     pending.value = false
@@ -281,7 +275,24 @@ async function loadPage() {
 }
 
 async function handleSubmit() {
-  if (!canSubmit.value) return
+  submitAttempted.value = true
+  if (!hasChanges.value) {
+    toast.add({
+      title: t('catalog.torrents.edit.noChanges'),
+      color: 'neutral',
+      icon: 'i-lucide-circle-check'
+    })
+    return
+  }
+  if (!canSubmit.value) {
+    toast.add({
+      title: submitError.value || t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+    scrollToEditIssue()
+    return
+  }
 
   savePending.value = true
   try {
@@ -290,7 +301,7 @@ async function handleSubmit() {
       name: submitTitleValue(),
       subTitle: form.subTitle.trim(),
       description: form.description.trim(),
-      releaseFields: buildReleaseFieldsInput(),
+      releaseFields: releaseState.value.output,
       anonymous: form.anonymous
     })
     toast.add({
@@ -331,119 +342,75 @@ async function loadTagGroups() {
   }
 }
 
-function fieldLabel(field: UploadFieldConfig) {
-  return localizeI18nName(field.label, locale.value, field.key)
-}
-
-function fieldDescription(field: UploadFieldConfig) {
-  return localizeI18nName(field.description, locale.value, '')
-}
-
-function fieldPlaceholder(field: UploadFieldConfig) {
-  return localizeI18nName(field.placeholder, locale.value, '')
-}
-
-function optionLabel(option: UploadOptionItem) {
-  return localizeI18nName(option.label, locale.value, option.value)
-}
-
-function fieldOptions(field: UploadFieldConfig): UploadOptionItem[] {
-  if (!field.options) return []
-  if (field.options.source === 'static') return field.options.items || []
-  if (field.options.source !== 'tagGroup' || !field.options.slug) return []
-
-  const group = tagGroups.value.find((item) => item.slug === field.options?.slug && tagGroupAppliesToCategory(item))
-  return (group?.tags || [])
-    .filter((tag) => Boolean(tag.value))
-    .map((tag) => ({ value: tag.value, label: tag.name }))
-}
-
-function tagGroupAppliesToCategory(group: CatalogTagGroup) {
-  if (!selectedCategory.value || !group.categories?.length) return true
-  return group.categories.includes(selectedCategory.value.id)
-}
-
 function categoryNeedsTagGroups(category: CatalogCategory | null) {
   return Boolean(category?.uploadConfig?.fields?.some((field) => field.options?.source === 'tagGroup'))
 }
 
-function initializeReleaseFields(source?: Record<string, unknown> | null) {
-  const nextKeys = new Set(schemaFields.value.map((field) => field.key).filter(Boolean))
-  for (const key of Object.keys(releaseFields)) {
-    if (!nextKeys.has(key)) delete releaseFields[key]
-  }
-  for (const field of schemaFields.value) {
-    if (!field.key) continue
-    const sourceValue = source && Object.prototype.hasOwnProperty.call(source, field.key) ? source[field.key] : undefined
-    const currentValue = releaseFields[field.key]
-    releaseFields[field.key] = normalizeReleaseFieldValue(field, sourceValue ?? currentValue)
-  }
-}
-
-function normalizeReleaseFieldValue(field: UploadFieldConfig, value: unknown): ReleaseFieldValue {
-  if (field.type === 'multiSelect') {
-    if (Array.isArray(value)) return value.map((item) => String(item)).filter(Boolean)
-    const text = String(value || '').trim()
-    return text ? [text] : []
-  }
-  if (Array.isArray(value)) return value.map((item) => String(item)).filter(Boolean).join('/')
-  return String(value || '')
-}
-
-function setReleaseField(key: string, value: string) {
-  releaseFields[key] = value
-}
-
-function handleReleaseSelectChange(key: string, event: Event) {
-  setReleaseField(key, (event.target as HTMLSelectElement).value)
-}
-
-function releaseFieldListValue(key: string) {
-  const value = releaseFields[key]
-  return Array.isArray(value) ? value : []
-}
-
-function toggleReleaseFieldOption(key: string, value: string) {
-  const current = releaseFieldListValue(key)
-  releaseFields[key] = current.includes(value)
-    ? current.filter((item) => item !== value)
-    : [...current, value]
-}
-
-function buildGeneratedTitle(parts: UploadTitlePart[]) {
-  return parts
-    .map((part) => {
-      const value = titlePartValue(releaseFields[part.field], part.separator)
-      return value ? `${part.prefix || ''}${value}${part.suffix || ''}` : ''
-    })
-    .join('')
-    .trim()
-}
-
-function titlePartValue(value: ReleaseFieldValue | undefined, separator = '/') {
-  if (Array.isArray(value)) return value.join(separator || '/')
-  return String(value || '').trim()
-}
-
-function buildReleaseFieldsInput() {
-  const input: Record<string, unknown> = {}
-  for (const field of schemaFields.value) {
-    const value = releaseFields[field.key]
-    if (Array.isArray(value)) {
-      const list = value.filter(Boolean)
-      if (list.length > 0) input[field.key] = list
-      continue
-    }
-    const text = String(value || '').trim()
-    if (text) input[field.key] = text
-  }
-  return input
-}
-
 function submitTitleValue() {
-  if (isGeneratedTitleMode.value && !(showManualTitleInput.value && titleManuallyEdited.value)) {
+  if (showManualTitleInput.value && form.name.trim()) {
+    return form.name.trim()
+  }
+  if (isGeneratedTitleMode.value) {
     return ''
   }
   return form.name.trim()
+}
+
+function normalizeStoredReleaseFields(source?: Record<string, unknown> | null) {
+  const fields: Record<string, ReleaseFieldValue> = {}
+  if (!source) return fields
+  for (const [key, value] of Object.entries(source)) {
+    if (Array.isArray(value)) {
+      fields[key] = value.map((item) => String(item)).filter(Boolean)
+      continue
+    }
+    fields[key] = String(value || '')
+  }
+  return fields
+}
+
+function handleReleaseStateChange(state: ReleaseFieldsState) {
+  releaseState.value = state
+  if (initialSnapshotPending.value) {
+    scheduleInitialSnapshotCapture()
+  }
+}
+
+function editSnapshot() {
+  return JSON.stringify({
+    categoryId: Number(form.categoryId),
+    name: submitTitleValue(),
+    subTitle: form.subTitle.trim(),
+    description: form.description.trim(),
+    anonymous: form.anonymous,
+    releaseFields: releaseState.value.output
+  })
+}
+
+function scheduleInitialSnapshotCapture() {
+  clearInitialSnapshotTimer()
+  initialSnapshotTimer = setTimeout(() => {
+    initialSnapshotTimer = null
+    if (!initialSnapshotPending.value) return
+    initialEditSnapshot.value = currentEditSnapshot.value
+    initialSnapshotPending.value = false
+    submitAttempted.value = false
+  }, initialSnapshotSettleMs)
+}
+
+function clearInitialSnapshotTimer() {
+  if (!initialSnapshotTimer) return
+  clearTimeout(initialSnapshotTimer)
+  initialSnapshotTimer = null
+}
+
+function scrollToEditIssue() {
+  let target = '#edit-title'
+  if (Number(form.categoryId) <= 0) {
+    target = '#edit-category'
+  } else if (!releaseFieldsValid.value) {
+    target = '#upload-release-fields'
+  }
+  document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 </script>

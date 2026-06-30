@@ -3,7 +3,7 @@
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <form class="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start" @submit.prevent="handleSubmit">
         <main class="min-w-0 space-y-4">
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <section id="upload-file" class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.file') }}</h2>
               <UBadge :color="selectedFile ? 'success' : 'neutral'" variant="soft">
@@ -74,7 +74,7 @@
             </div>
 
             <div class="grid grid-cols-1 gap-4 p-4">
-              <UFormField :label="$t('catalog.torrents.upload.fields.category')" required>
+              <UFormField id="upload-category" :label="$t('catalog.torrents.upload.fields.category')" required>
                 <select
                   v-model="form.categoryId"
                   class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
@@ -91,123 +91,34 @@
                 {{ categoriesError }}
               </div>
 
-              <div v-if="schemaFields.length > 0" class="rounded-md border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/40">
-                <div class="mb-3 flex items-center justify-between gap-3">
-                  <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.release') }}</h3>
-                  <UBadge color="neutral" variant="soft">{{ selectedCategoryName }}</UBadge>
-                </div>
-
-                <div class="grid grid-cols-1 gap-4">
-                  <UFormField
-                    v-for="field in schemaFields"
-                    :key="field.key"
-                    :label="fieldLabel(field)"
-                    :description="fieldDescription(field)"
-                    :required="Boolean(field.required)"
-                  >
-                    <select
-                      v-if="field.type === 'select'"
-                      :value="String(releaseFields[field.key] || '')"
-                      class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-                      :disabled="pending || tagGroupsPending"
-                      @change="handleReleaseSelectChange(field.key, $event)"
-                    >
-                      <option value="">{{ $t('catalog.torrents.upload.fields.optionPlaceholder') }}</option>
-                      <option v-for="option in fieldOptions(field)" :key="option.value" :value="option.value">
-                        {{ optionLabel(option) }}
-                      </option>
-                    </select>
-
-                    <div v-else-if="field.type === 'multiSelect'" class="grid gap-2 rounded-md border border-slate-200 bg-white p-2 sm:grid-cols-2 dark:border-slate-700 dark:bg-slate-950">
-                      <label
-                        v-for="option in fieldOptions(field)"
-                        :key="option.value"
-                        class="flex min-h-8 cursor-pointer items-center gap-2 rounded px-2 text-sm text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
-                      >
-                        <input
-                          type="checkbox"
-                          class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
-                          :checked="releaseFieldListValue(field.key).includes(option.value)"
-                          :disabled="pending || tagGroupsPending"
-                          @change="toggleReleaseFieldOption(field.key, option.value)"
-                        >
-                        <span class="min-w-0 truncate">{{ optionLabel(option) }}</span>
-                      </label>
-                      <p v-if="fieldOptions(field).length === 0" class="px-2 py-1 text-sm text-slate-500 dark:text-slate-400">
-                        {{ $t('catalog.torrents.upload.fields.noOptions') }}
-                      </p>
-                    </div>
-
-                    <UTextarea
-                      v-else-if="field.type === 'textarea'"
-                      :model-value="String(releaseFields[field.key] || '')"
-                      class="w-full"
-                      :rows="3"
-                      :disabled="pending"
-                      :placeholder="fieldPlaceholder(field)"
-                      @update:model-value="setReleaseField(field.key, String($event || ''))"
-                    />
-
-                    <UInput
-                      v-else
-                      :model-value="String(releaseFields[field.key] || '')"
-                      class="w-full"
-                      :disabled="pending"
-                      :placeholder="fieldPlaceholder(field)"
-                      @update:model-value="setReleaseField(field.key, String($event || ''))"
-                    />
-                  </UFormField>
-                </div>
-              </div>
-
-              <div v-if="isGeneratedTitleMode" class="rounded-md border border-slate-200 bg-white px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
-                <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.generatedTitle') }}</p>
-                <p class="mt-1 break-words text-sm font-semibold text-slate-950 dark:text-white">{{ generatedTitle || '-' }}</p>
-              </div>
+              <CatalogTorrentReleaseFieldsForm
+                v-model="releaseFields"
+                :category="selectedCategory"
+                :tag-groups="tagGroups"
+                :disabled="pending"
+                :options-pending="tagGroupsPending"
+                :show-errors="submitAttempted"
+                @state-change="releaseState = $event"
+              />
 
               <UFormField v-if="showManualTitleInput" :label="manualTitleLabel">
                 <UInput v-model="form.name" class="w-full" :disabled="pending" @update:model-value="titleManuallyEdited = true" />
               </UFormField>
 
+              <div id="upload-title" :class="finalTitleCardClass">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.finalTitle') }}</p>
+                  <UBadge v-if="isGeneratedTitleMode" color="neutral" variant="soft">{{ $t('catalog.torrents.upload.generatedTitle') }}</UBadge>
+                </div>
+                <p class="mt-1 break-words text-sm font-semibold text-slate-950 dark:text-white">{{ finalTitle || $t('catalog.torrents.upload.finalTitleEmpty') }}</p>
+                <p v-if="submitAttempted && titleError" class="mt-2 text-xs text-red-600 dark:text-red-300">{{ titleError }}</p>
+              </div>
+
               <UFormField :label="$t('catalog.torrents.upload.fields.subTitle')">
                 <UInput v-model="form.subTitle" class="w-full" :disabled="pending" />
               </UFormField>
 
-              <UFormField :label="$t('catalog.torrents.upload.fields.description')">
-                <UTextarea
-                  v-if="descriptionMode === 'write'"
-                  v-model="form.description"
-                  class="w-full"
-                  :rows="12"
-                  :disabled="pending"
-                />
-                <div v-else class="min-h-72 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
-                  <div v-if="renderedDescriptionPreview" class="rich-text" v-html="renderedDescriptionPreview" />
-                  <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.preview.empty') }}</p>
-                </div>
-
-                <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
-                    <button
-                      type="button"
-                      :class="descriptionModeButtonClass('write')"
-                      @click="descriptionMode = 'write'"
-                    >
-                      {{ $t('catalog.torrents.upload.preview.write') }}
-                    </button>
-                    <button
-                      type="button"
-                      :class="descriptionModeButtonClass('preview')"
-                      @click="descriptionMode = 'preview'"
-                    >
-                      {{ $t('catalog.torrents.upload.preview.preview') }}
-                    </button>
-                  </div>
-                  <span class="text-xs text-slate-500 dark:text-slate-400">
-                    {{ $t('catalog.torrents.upload.summary.descriptionLength', { count: numberFormatter.format(form.description.trim().length) }) }}
-                  </span>
-                </div>
-              </UFormField>
+              <CatalogTorrentDescriptionEditor v-model="form.description" :disabled="pending" :rows="12" />
             </div>
           </section>
         </main>
@@ -241,11 +152,15 @@
                 </div>
               </div>
 
+              <div v-if="submitAttempted && submitError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+                {{ submitError }}
+              </div>
+
               <div class="grid grid-cols-2 gap-2">
                 <UButton color="neutral" variant="outline" block :to="localePath('/catalog/torrents')">
                   {{ $t('common.cancel') }}
                 </UButton>
-                <UButton type="submit" color="primary" icon="i-lucide-upload" block :loading="pending" :disabled="!canSubmit">
+                <UButton type="submit" color="primary" icon="i-lucide-upload" block :loading="pending" :disabled="pending">
                   {{ $t('catalog.torrents.upload.submit') }}
                 </UButton>
               </div>
@@ -259,11 +174,8 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CatalogTagGroup, UploadFieldConfig, UploadOptionItem, UploadTitlePart } from '~/composables/useCatalogTorrents'
-import { renderUserMarkdown } from '~/utils/richText'
-
-type DescriptionMode = 'write' | 'preview'
-type ReleaseFieldValue = string | string[]
+import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue } from '~/composables/useCatalogTorrents'
+import { localizeI18nName } from '~/utils/format'
 
 definePageMeta({
   middleware: 'auth'
@@ -282,8 +194,8 @@ const tagGroupsPending = ref(false)
 const categoriesError = ref('')
 const selectedFile = ref<File | null>(null)
 const fileInputKey = ref(0)
-const descriptionMode = ref<DescriptionMode>('write')
 const titleManuallyEdited = ref(false)
+const submitAttempted = ref(false)
 const pending = ref(false)
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 
@@ -294,7 +206,14 @@ const form = reactive({
   description: '',
   anonymous: false
 })
-const releaseFields = reactive<Record<string, ReleaseFieldValue>>({})
+const releaseFields = ref<Record<string, ReleaseFieldValue>>({})
+const releaseState = ref<ReleaseFieldsState>({
+  generatedTitle: '',
+  valid: true,
+  firstError: '',
+  missingLabels: [],
+  output: {}
+})
 
 const selectedCategory = computed(() => {
   const categoryId = Number(form.categoryId)
@@ -306,16 +225,11 @@ const selectedCategoryName = computed(() => {
 })
 
 const selectedUploadConfig = computed(() => selectedCategory.value?.uploadConfig || null)
-const schemaFields = computed(() => selectedUploadConfig.value?.fields || [])
 const isGeneratedTitleMode = computed(() => selectedUploadConfig.value?.title?.mode === 'generated')
 const showManualTitleInput = computed(() => !isGeneratedTitleMode.value || Boolean(selectedUploadConfig.value?.title?.allowManualOverride))
 const manualTitleLabel = computed(() => isGeneratedTitleMode.value ? t('catalog.torrents.upload.fields.titleOverride') : t('catalog.torrents.upload.fields.name'))
-const generatedTitle = computed(() => buildGeneratedTitle(selectedUploadConfig.value?.title?.parts || []))
-const releaseFieldsValid = computed(() => schemaFields.value.every((field) => {
-  if (!field.required) return true
-  const value = releaseFields[field.key]
-  return Array.isArray(value) ? value.length > 0 : Boolean(String(value || '').trim())
-}))
+const generatedTitle = computed(() => releaseState.value.generatedTitle)
+const releaseFieldsValid = computed(() => releaseState.value.valid)
 
 const effectiveTitle = computed(() => {
   const manualTitle = form.name.trim()
@@ -327,8 +241,23 @@ const effectiveTitle = computed(() => {
   return selectedFile.value?.name.replace(/\.torrent$/i, '') || '-'
 })
 
-const renderedDescriptionPreview = computed(() => renderUserMarkdown(form.description).trim())
-const canSubmit = computed(() => Boolean(selectedFile.value && selectedCategory.value && releaseFieldsValid.value && effectiveTitle.value !== '-' && !categoriesPending.value && !tagGroupsPending.value && !pending.value))
+const finalTitle = computed(() => effectiveTitle.value === '-' ? '' : effectiveTitle.value)
+const titleError = computed(() => finalTitle.value ? '' : t('catalog.torrents.upload.errors.titleRequired'))
+const submitError = computed(() => {
+  if (!selectedFile.value) return t('catalog.torrents.upload.errors.fileRequired')
+  if (!selectedCategory.value) return t('catalog.torrents.upload.errors.categoryRequired')
+  if (tagGroupsPending.value) return t('catalog.torrents.upload.errors.optionsLoading')
+  if (!releaseFieldsValid.value) return releaseState.value.firstError
+  if (titleError.value) return titleError.value
+  return ''
+})
+const canSubmit = computed(() => Boolean(!submitError.value && !categoriesPending.value && !pending.value))
+const finalTitleCardClass = computed(() => [
+  'rounded-md border bg-white px-3 py-2.5 dark:bg-slate-950',
+  submitAttempted.value && titleError.value
+    ? 'border-red-200 dark:border-red-900'
+    : 'border-slate-200 dark:border-slate-800'
+].join(' '))
 const publishChecks = computed(() => [
   {
     key: 'file',
@@ -359,7 +288,6 @@ const publishChecks = computed(() => [
 onMounted(loadCategories)
 
 watch(selectedCategory, (category) => {
-  initializeReleaseFields()
   if (categoryNeedsTagGroups(category)) {
     void loadTagGroups()
   }
@@ -451,7 +379,16 @@ function setFile(file: File | null) {
 }
 
 async function handleSubmit() {
-  if (!selectedFile.value || Number(form.categoryId) <= 0) return
+  submitAttempted.value = true
+  if (!canSubmit.value || !selectedFile.value || Number(form.categoryId) <= 0) {
+    toast.add({
+      title: submitError.value || t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+    scrollToUploadIssue()
+    return
+  }
 
   pending.value = true
   try {
@@ -461,7 +398,7 @@ async function handleSubmit() {
       name: submitTitleValue(),
       subTitle: form.subTitle,
       description: form.description,
-      releaseFields: buildReleaseFieldsInput(),
+      releaseFields: releaseState.value.output,
       anonymous: form.anonymous
     })
 
@@ -486,101 +423,8 @@ function categoryDisplayName(category: CatalogCategory) {
   return localizeI18nName(category.name, locale.value, category.slug || `#${category.id}`)
 }
 
-function fieldLabel(field: UploadFieldConfig) {
-  return localizeI18nName(field.label, locale.value, field.key)
-}
-
-function fieldDescription(field: UploadFieldConfig) {
-  return localizeI18nName(field.description, locale.value, '')
-}
-
-function fieldPlaceholder(field: UploadFieldConfig) {
-  return localizeI18nName(field.placeholder, locale.value, '')
-}
-
-function optionLabel(option: UploadOptionItem) {
-  return localizeI18nName(option.label, locale.value, option.value)
-}
-
-function fieldOptions(field: UploadFieldConfig): UploadOptionItem[] {
-  if (!field.options) return []
-  if (field.options.source === 'static') return field.options.items || []
-  if (field.options.source !== 'tagGroup' || !field.options.slug) return []
-
-  const group = tagGroups.value.find((item) => item.slug === field.options?.slug && tagGroupAppliesToCategory(item))
-  return (group?.tags || [])
-    .filter((tag) => Boolean(tag.value))
-    .map((tag) => ({ value: tag.value, label: tag.name }))
-}
-
-function tagGroupAppliesToCategory(group: CatalogTagGroup) {
-  if (!selectedCategory.value || !group.categories?.length) return true
-  return group.categories.includes(selectedCategory.value.id)
-}
-
 function categoryNeedsTagGroups(category: CatalogCategory | null) {
   return Boolean(category?.uploadConfig?.fields?.some((field) => field.options?.source === 'tagGroup'))
-}
-
-function initializeReleaseFields() {
-  const nextKeys = new Set(schemaFields.value.map((field) => field.key).filter(Boolean))
-  for (const key of Object.keys(releaseFields)) {
-    if (!nextKeys.has(key)) delete releaseFields[key]
-  }
-  for (const field of schemaFields.value) {
-    if (!field.key || releaseFields[field.key] !== undefined) continue
-    releaseFields[field.key] = field.type === 'multiSelect' ? [] : ''
-  }
-}
-
-function setReleaseField(key: string, value: string) {
-  releaseFields[key] = value
-}
-
-function handleReleaseSelectChange(key: string, event: Event) {
-  setReleaseField(key, (event.target as HTMLSelectElement).value)
-}
-
-function releaseFieldListValue(key: string) {
-  const value = releaseFields[key]
-  return Array.isArray(value) ? value : []
-}
-
-function toggleReleaseFieldOption(key: string, value: string) {
-  const current = releaseFieldListValue(key)
-  releaseFields[key] = current.includes(value)
-    ? current.filter((item) => item !== value)
-    : [...current, value]
-}
-
-function buildGeneratedTitle(parts: UploadTitlePart[]) {
-  return parts
-    .map((part) => {
-      const value = titlePartValue(releaseFields[part.field], part.separator)
-      return value ? `${part.prefix || ''}${value}${part.suffix || ''}` : ''
-    })
-    .join('')
-    .trim()
-}
-
-function titlePartValue(value: ReleaseFieldValue | undefined, separator = '/') {
-  if (Array.isArray(value)) return value.join(separator || '/')
-  return String(value || '').trim()
-}
-
-function buildReleaseFieldsInput() {
-  const input: Record<string, unknown> = {}
-  for (const field of schemaFields.value) {
-    const value = releaseFields[field.key]
-    if (Array.isArray(value)) {
-      const list = value.filter(Boolean)
-      if (list.length > 0) input[field.key] = list
-      continue
-    }
-    const text = String(value || '').trim()
-    if (text) input[field.key] = text
-  }
-  return input
 }
 
 function submitTitleValue() {
@@ -590,14 +434,16 @@ function submitTitleValue() {
   return form.name
 }
 
-function descriptionModeButtonClass(mode: DescriptionMode) {
-  const active = descriptionMode.value === mode
-  return [
-    'h-7 rounded px-3 text-xs font-medium transition-colors',
-    active
-      ? 'bg-white text-slate-950 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:text-white dark:ring-slate-700'
-      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
-  ].join(' ')
+function scrollToUploadIssue() {
+  let target = '#upload-title'
+  if (!selectedFile.value) {
+    target = '#upload-file'
+  } else if (!selectedCategory.value) {
+    target = '#upload-category'
+  } else if (!releaseFieldsValid.value) {
+    target = '#upload-release-fields'
+  }
+  document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 useSeoMeta({

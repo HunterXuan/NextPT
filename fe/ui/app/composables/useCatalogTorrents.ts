@@ -46,6 +46,16 @@ export interface UploadOptionItem {
   label?: I18nName
 }
 
+export type ReleaseFieldValue = string | string[]
+
+export interface ReleaseFieldsState {
+  generatedTitle: string
+  valid: boolean
+  firstError: string
+  missingLabels: string[]
+  output: Record<string, unknown>
+}
+
 export interface CatalogTagItem {
   id: number
   name: I18nName

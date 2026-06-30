@@ -473,7 +473,16 @@
           "preview": "预览",
           "empty": "暂无内容"
         },
-        "generatedTitle": "生成标题"
+        "errors": {
+          "fileRequired": "请选择 .torrent 文件",
+          "categoryRequired": "请选择分类",
+          "releaseFieldRequired": "请填写 {field}",
+          "titleRequired": "请填写标题",
+          "optionsLoading": "选项加载中，请稍后再试"
+        },
+        "generatedTitle": "生成标题",
+        "finalTitle": "最终标题",
+        "finalTitleEmpty": "填写标题相关字段后生成"
       },
       "edit": {
         "metaTitle": "编辑种子",
@@ -482,6 +491,7 @@
         "submit": "保存修改",
         "saved": "种子已更新",
         "forbidden": "你没有权限编辑这个种子",
+        "noChanges": "没有需要保存的改动",
         "sections": {
           "info": "基础信息",
           "publish": "发布设置"

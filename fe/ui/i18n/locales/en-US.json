@@ -473,7 +473,16 @@
           "preview": "Preview",
           "empty": "No content"
         },
-        "generatedTitle": "Generated title"
+        "errors": {
+          "fileRequired": "Choose a .torrent file",
+          "categoryRequired": "Choose a category",
+          "releaseFieldRequired": "Fill in {field}",
+          "titleRequired": "Fill in the title",
+          "optionsLoading": "Options are still loading. Try again in a moment"
+        },
+        "generatedTitle": "Generated title",
+        "finalTitle": "Final title",
+        "finalTitleEmpty": "Complete title fields to generate it"
       },
       "edit": {
         "metaTitle": "Edit Torrent",
@@ -482,6 +491,7 @@
         "submit": "Save changes",
         "saved": "Torrent updated",
         "forbidden": "You do not have permission to edit this torrent",
+        "noChanges": "No changes to save",
         "sections": {
           "info": "Basic info",
           "publish": "Publish settings"

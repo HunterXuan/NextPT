@@ -473,7 +473,16 @@
           "preview": "預覽",
           "empty": "暫無內容"
         },
-        "generatedTitle": "生成標題"
+        "errors": {
+          "fileRequired": "請選擇 .torrent 檔案",
+          "categoryRequired": "請選擇分類",
+          "releaseFieldRequired": "請填寫 {field}",
+          "titleRequired": "請填寫標題",
+          "optionsLoading": "選項載入中，請稍後再試"
+        },
+        "generatedTitle": "生成標題",
+        "finalTitle": "最終標題",
+        "finalTitleEmpty": "填寫標題相關欄位後生成"
       },
       "edit": {
         "metaTitle": "編輯種子",
@@ -482,6 +491,7 @@
         "submit": "儲存修改",
         "saved": "種子已更新",
         "forbidden": "你沒有權限編輯這個種子",
+        "noChanges": "沒有需要儲存的改動",
         "sections": {
           "info": "基本資訊",
           "publish": "發布設定"
