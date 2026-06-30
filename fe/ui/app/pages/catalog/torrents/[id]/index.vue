@@ -21,9 +21,9 @@
         <main class="space-y-6">
           <section id="torrent-top" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="p-4 sm:p-5">
-              <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
-                <div class="min-w-0">
-                  <div class="flex flex-wrap items-center gap-2">
+              <div class="space-y-4">
+                <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                  <div class="flex min-w-0 flex-wrap items-center gap-2">
                     <span class="inline-flex h-6 max-w-full items-center rounded border border-slate-200 bg-slate-50 px-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
                       <span class="truncate">{{ categoryName }}</span>
                     </span>
@@ -38,47 +38,64 @@
                     </span>
                   </div>
 
-                  <h1 class="mt-3 break-words text-xl font-semibold leading-7 text-slate-950 md:text-2xl dark:text-white">
+                  <div class="flex shrink-0 flex-wrap items-center gap-2 lg:justify-end">
+                    <UTooltip
+                      :text="$t('catalog.torrents.detail.actions.download')"
+                      :content="{ side: 'top', sideOffset: 8 }"
+                      :delay-duration="120"
+                    >
+                      <UButton
+                        class="shrink-0"
+                        color="primary"
+                        icon="i-lucide-download"
+                        :loading="downloadPending"
+                        :disabled="downloadPending"
+                        :aria-label="$t('catalog.torrents.detail.actions.download')"
+                        @click="handleDownload"
+                      />
+                    </UTooltip>
+                    <UTooltip
+                      :text="$t('catalog.torrents.detail.actions.like')"
+                      :content="{ side: 'top', sideOffset: 8 }"
+                      :delay-duration="120"
+                    >
+                      <UButton
+                        :color="torrent.isLiked ? 'error' : 'neutral'"
+                        :variant="torrent.isLiked ? 'soft' : 'outline'"
+                        icon="i-lucide-heart"
+                        :loading="likePending"
+                        :disabled="likePending"
+                        :aria-label="$t('catalog.torrents.detail.actions.like')"
+                        @click="handleToggleLike"
+                      >
+                        {{ numberFormatter.format(torrent.likeCount || 0) }}
+                      </UButton>
+                    </UTooltip>
+                    <UTooltip
+                      :text="$t('catalog.torrents.detail.actions.bookmark')"
+                      :content="{ side: 'top', sideOffset: 8 }"
+                      :delay-duration="120"
+                    >
+                      <UButton
+                        color="neutral"
+                        :variant="torrent.isBookmarked ? 'soft' : 'outline'"
+                        :icon="torrent.isBookmarked ? 'i-lucide-bookmark-check' : 'i-lucide-bookmark'"
+                        :loading="bookmarkPending"
+                        :disabled="bookmarkPending"
+                        :aria-label="$t('catalog.torrents.detail.actions.bookmark')"
+                        @click="handleToggleBookmark"
+                      />
+                    </UTooltip>
+                  </div>
+                </div>
+
+                <div class="min-w-0">
+                  <h1 class="break-words text-xl font-semibold leading-7 text-slate-950 md:text-2xl dark:text-white">
                     {{ torrent.name || $t('catalog.torrents.detail.titleFallback', { id: torrent.id }) }}
                   </h1>
                   <p v-if="torrent.subTitle" class="mt-2 break-words text-sm leading-6 text-slate-600 dark:text-slate-300">
                     {{ torrent.subTitle }}
                   </p>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2 xl:justify-end">
-                  <UButton
-                    class="shrink-0"
-                    color="primary"
-                    icon="i-lucide-download"
-                    :loading="downloadPending"
-                    :disabled="downloadPending"
-                    @click="handleDownload"
-                  >
-                    {{ $t('catalog.torrents.detail.actions.download') }}
-                  </UButton>
-                  <UButton
-                    :color="torrent.isLiked ? 'error' : 'neutral'"
-                    :variant="torrent.isLiked ? 'soft' : 'outline'"
-                    icon="i-lucide-heart"
-                    :loading="likePending"
-                    :disabled="likePending"
-                    :aria-label="$t('catalog.torrents.detail.actions.like')"
-                    :title="$t('catalog.torrents.detail.actions.like')"
-                    @click="handleToggleLike"
-                  >
-                    {{ numberFormatter.format(torrent.likeCount || 0) }}
-                  </UButton>
-                  <UButton
-                    color="neutral"
-                    :variant="torrent.isBookmarked ? 'soft' : 'outline'"
-                    :icon="torrent.isBookmarked ? 'i-lucide-bookmark-check' : 'i-lucide-bookmark'"
-                    :loading="bookmarkPending"
-                    :disabled="bookmarkPending"
-                    :aria-label="$t('catalog.torrents.detail.actions.bookmark')"
-                    :title="$t('catalog.torrents.detail.actions.bookmark')"
-                    @click="handleToggleBookmark"
-                  />
                 </div>
               </div>
             </div>
