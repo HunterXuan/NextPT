@@ -231,7 +231,6 @@ CREATE TABLE `catalog_torrent` (
     `sub_title`       VARCHAR(500)    NOT NULL DEFAULT '' COMMENT '副标题',
     `category_id`     INT UNSIGNED    NOT NULL DEFAULT 0,
     `description`     MEDIUMTEXT      NULL     COMMENT '详情描述 (BBCode/Markdown)',
-    `nfo`             MEDIUMBLOB      NULL     COMMENT 'NFO 文件内容',
     `file_name`       VARCHAR(255)    NOT NULL DEFAULT '' COMMENT '种子文件名',
     `size`            BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '总大小 (bytes)',
     `file_count`      INT UNSIGNED    NOT NULL DEFAULT 0  COMMENT '文件数量',

@@ -18,7 +18,6 @@ type CatalogTorrent struct {
 	SubTitle       any         // 副标题
 	CategoryId     any         //
 	Description    any         // 详情描述 (BBCode/Markdown)
-	Nfo            []byte      // NFO 文件内容
 	FileName       any         // 种子文件名
 	Size           any         // 总大小 (bytes)
 	FileCount      any         // 文件数量
