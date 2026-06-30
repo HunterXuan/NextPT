@@ -1,9 +1,12 @@
 package catalogout
 
+import "server/internal/model"
+
 type CategoryItem struct {
-	Id   uint           `json:"id"`
-	Name map[string]any `json:"name"`
-	Slug string         `json:"slug"`
+	Id           uint                       `json:"id"`
+	Name         map[string]any             `json:"name"`
+	Slug         string                     `json:"slug"`
+	UploadConfig *model.CatalogUploadConfig `json:"uploadConfig"`
 }
 
 type CategoryListOut struct {
@@ -11,8 +14,9 @@ type CategoryListOut struct {
 }
 
 type TagItem struct {
-	Id   uint           `json:"id"`
-	Name map[string]any `json:"name"`
+	Id    uint           `json:"id"`
+	Name  map[string]any `json:"name"`
+	Value string         `json:"value"`
 }
 
 type TagGroupItem struct {

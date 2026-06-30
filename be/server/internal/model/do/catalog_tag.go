@@ -16,6 +16,7 @@ type CatalogTag struct {
 	Id        any         //
 	GroupId   any         // 所属分组
 	NameI18N  *gjson.Json // 多语言名称映射
+	Value     any         // 稳定值
 	SortOrder any         //
 	CreatedAt *gtime.Time //
 	UpdatedAt *gtime.Time //

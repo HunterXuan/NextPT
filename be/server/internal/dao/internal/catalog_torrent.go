@@ -27,6 +27,7 @@ type CatalogTorrentColumns struct {
 	SubTitle       string // 副标题
 	CategoryId     string //
 	Description    string // 详情描述 (BBCode/Markdown)
+	ReleaseFields  string // 发布结构化字段值
 	FileName       string // 种子文件名
 	Size           string // 总大小 (bytes)
 	FileCount      string // 文件数量
@@ -61,6 +62,7 @@ var catalogTorrentColumns = CatalogTorrentColumns{
 	SubTitle:       "sub_title",
 	CategoryId:     "category_id",
 	Description:    "description",
+	ReleaseFields:  "release_fields",
 	FileName:       "file_name",
 	Size:           "size",
 	FileCount:      "file_count",

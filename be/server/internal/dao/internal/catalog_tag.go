@@ -24,6 +24,7 @@ type CatalogTagColumns struct {
 	Id        string //
 	GroupId   string // 所属分组
 	NameI18N  string // 多语言名称映射
+	Value     string // 稳定值
 	SortOrder string //
 	CreatedAt string //
 	UpdatedAt string //
@@ -34,6 +35,7 @@ var catalogTagColumns = CatalogTagColumns{
 	Id:        "id",
 	GroupId:   "group_id",
 	NameI18N:  "name_i18n",
+	Value:     "value",
 	SortOrder: "sort_order",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",

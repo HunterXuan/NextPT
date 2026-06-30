@@ -18,8 +18,9 @@ import (
 type (
 	ICatalogCategoryDomain interface {
 		ListCategories(ctx context.Context) ([]entity.CatalogCategory, error)
-		AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool) error
-		AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool) error
+		GetCategoryById(ctx context.Context, id uint) (*entity.CatalogCategory, error)
+		AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool, uploadConfig []byte) error
+		AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool, uploadConfig *[]byte) error
 		AdminDeleteCategory(ctx context.Context, id uint) error
 		AdminListCategories(ctx context.Context) ([]entity.CatalogCategory, error)
 		ListTagGroups(ctx context.Context) ([]entity.CatalogTagGroup, []entity.CatalogTag, error)

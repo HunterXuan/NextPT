@@ -35,9 +35,10 @@ type TorrentListOut struct {
 
 type TorrentDetailOut struct {
 	TorrentListItem
-	Description  string `json:"description" description:"详细描述"`
-	IsBookmarked bool   `json:"isBookmarked" description:"是否收藏"`
-	IsLiked      bool   `json:"isLiked" description:"是否已感谢(点赞)"`
+	Description   string         `json:"description" description:"详细描述"`
+	ReleaseFields map[string]any `json:"releaseFields" description:"发布结构化字段值"`
+	IsBookmarked  bool           `json:"isBookmarked" description:"是否收藏"`
+	IsLiked       bool           `json:"isLiked" description:"是否已感谢(点赞)"`
 }
 
 type TorrentDownloadOut struct {

@@ -26,17 +26,27 @@ func (s *sCatalogCategoryDomain) ListCategories(ctx context.Context) ([]entity.C
 	return categories, err
 }
 
-func (s *sCatalogCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool) error {
+func (s *sCatalogCategoryDomain) GetCategoryById(ctx context.Context, id uint) (*entity.CatalogCategory, error) {
+	var category *entity.CatalogCategory
+	err := dao.CatalogCategory.Ctx(ctx).
+		Where(dao.CatalogCategory.Columns().Id, id).
+		Where(dao.CatalogCategory.Columns().Enabled, 1).
+		Scan(&category)
+	return category, err
+}
+
+func (s *sCatalogCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool, uploadConfig []byte) error {
 	_, err := dao.CatalogCategory.Ctx(ctx).Data(g.Map{
-		dao.CatalogCategory.Columns().NameI18N:  nameI18N,
-		dao.CatalogCategory.Columns().Slug:      slug,
-		dao.CatalogCategory.Columns().SortOrder: sortOrder,
-		dao.CatalogCategory.Columns().Enabled:   enabled,
+		dao.CatalogCategory.Columns().NameI18N:     nameI18N,
+		dao.CatalogCategory.Columns().Slug:         slug,
+		dao.CatalogCategory.Columns().SortOrder:    sortOrder,
+		dao.CatalogCategory.Columns().Enabled:      enabled,
+		dao.CatalogCategory.Columns().UploadConfig: uploadConfig,
 	}).Insert()
 	return err
 }
 
-func (s *sCatalogCategoryDomain) AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool) error {
+func (s *sCatalogCategoryDomain) AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool, uploadConfig *[]byte) error {
 	data := g.Map{}
 	if nameI18N != nil {
 		data[dao.CatalogCategory.Columns().NameI18N] = nameI18N
@@ -49,6 +59,9 @@ func (s *sCatalogCategoryDomain) AdminUpdateCategory(ctx context.Context, id uin
 	}
 	if enabled != nil {
 		data[dao.CatalogCategory.Columns().Enabled] = *enabled
+	}
+	if uploadConfig != nil {
+		data[dao.CatalogCategory.Columns().UploadConfig] = *uploadConfig
 	}
 	if len(data) == 0 {
 		return nil

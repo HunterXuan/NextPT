@@ -34,8 +34,12 @@ catalog.torrent.query_failed: failed to query torrents
 catalog.torrent.read_cache_failed: failed to read local torrent cache
 catalog.torrent.read_upload_failed: failed to read uploaded file
 catalog.torrent.reencode_info_failed: failed to re-encode torrent info dictionary
+catalog.torrent.release_field_option_invalid: Invalid release field option
+catalog.torrent.release_field_required: Required release field is missing
+catalog.torrent.release_fields_invalid: Invalid release field format
 catalog.torrent.transaction_failed: database transaction or s3 upload failed
 catalog.torrent.unmarshal_info_failed: failed to unmarshal torrent info dictionary
+catalog.torrent.upload_config_invalid: Invalid category upload config
 catalog.torrent.upload_storage_failed: failed to upload torrent to storage
 catalog.torrent.write_reward_failed: Failed to write reward record
 catalog.comment.not_found: Comment not found

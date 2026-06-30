@@ -3,12 +3,13 @@ package catalogin
 import "github.com/gogf/gf/v2/net/ghttp"
 
 type TorrentUploadInp struct {
-	File        *ghttp.UploadFile `json:"file" v:"required#{#catalog.torrent.file_req}" type:"file" description:"Torrent 文件"`
-	Name        string            `json:"name" description:"自定义标题"`
-	SubTitle    string            `json:"subTitle" description:"副标题"`
-	CategoryId  uint              `json:"categoryId" v:"required#{#catalog.torrent.category_req}" description:"分类ID"`
-	Description string            `json:"description" description:"种子详情描述"`
-	Anonymous   bool              `json:"anonymous" description:"是否匿名上传"`
+	File          *ghttp.UploadFile `json:"file" v:"required#{#catalog.torrent.file_req}" type:"file" description:"Torrent 文件"`
+	Name          string            `json:"name" description:"自定义标题"`
+	SubTitle      string            `json:"subTitle" description:"副标题"`
+	CategoryId    uint              `json:"categoryId" v:"required#{#catalog.torrent.category_req}" description:"分类ID"`
+	Description   string            `json:"description" description:"种子详情描述"`
+	ReleaseFields string            `json:"releaseFields" description:"发布结构化字段 JSON"`
+	Anonymous     bool              `json:"anonymous" description:"是否匿名上传"`
 }
 
 type TorrentListInp struct {

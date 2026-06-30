@@ -100,8 +100,8 @@ func (s *sCatalogCommentUsecase) List(ctx context.Context, actor *model.Actor, i
 	}, nil
 }
 
-func (s *sCatalogCommentUsecase) loadCommentAuthorMap(ctx context.Context, userIds []uint64) map[uint64]model.UserSummary {
-	authorMap := make(map[uint64]model.UserSummary)
+func (s *sCatalogCommentUsecase) loadCommentAuthorMap(ctx context.Context, userIds []uint64) map[uint64]model.IamUserSummary {
+	authorMap := make(map[uint64]model.IamUserSummary)
 	if len(userIds) == 0 {
 		return authorMap
 	}
@@ -117,7 +117,7 @@ func (s *sCatalogCommentUsecase) loadCommentAuthorMap(ctx context.Context, userI
 		}
 		seen[id] = struct{}{}
 		uniqueIds = append(uniqueIds, id)
-		authorMap[id] = model.UserSummary{Id: id}
+		authorMap[id] = model.IamUserSummary{Id: id}
 	}
 	if len(uniqueIds) == 0 {
 		return authorMap

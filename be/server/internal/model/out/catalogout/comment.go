@@ -3,13 +3,13 @@ package catalogout
 import "server/internal/model"
 
 type CommentListItem struct {
-	Id          uint64            `json:"id"`
-	Author      model.UserSummary `json:"author"`
-	Content     string            `json:"content"`
-	LikeCount   uint              `json:"likeCount"`
-	RewardCount uint              `json:"rewardCount"`
-	CreatedAt   string            `json:"createdAt"`
-	IsLiked     bool              `json:"isLiked"`
+	Id          uint64               `json:"id"`
+	Author      model.IamUserSummary `json:"author"`
+	Content     string               `json:"content"`
+	LikeCount   uint                 `json:"likeCount"`
+	RewardCount uint                 `json:"rewardCount"`
+	CreatedAt   string               `json:"createdAt"`
+	IsLiked     bool                 `json:"isLiked"`
 }
 
 type CommentListOut struct {

@@ -12,12 +12,13 @@ import (
 
 // CatalogCategory is the golang structure of table catalog_category for DAO operations like Where/Data.
 type CatalogCategory struct {
-	g.Meta    `orm:"table:catalog_category, do:true"`
-	Id        any         //
-	NameI18N  *gjson.Json // 多语言名称映射
-	Slug      any         // URL-friendly
-	SortOrder any         //
-	Enabled   any         //
-	CreatedAt *gtime.Time //
-	UpdatedAt *gtime.Time //
+	g.Meta       `orm:"table:catalog_category, do:true"`
+	Id           any         //
+	NameI18N     *gjson.Json // 多语言名称映射
+	Slug         any         // URL-friendly
+	SortOrder    any         //
+	Enabled      any         //
+	UploadConfig *gjson.Json // 分类发布表单配置
+	CreatedAt    *gtime.Time //
+	UpdatedAt    *gtime.Time //
 }

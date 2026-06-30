@@ -21,24 +21,26 @@ type CatalogCategoryDao struct {
 
 // CatalogCategoryColumns defines and stores column names for the table catalog_category.
 type CatalogCategoryColumns struct {
-	Id        string //
-	NameI18N  string // 多语言名称映射
-	Slug      string // URL-friendly
-	SortOrder string //
-	Enabled   string //
-	CreatedAt string //
-	UpdatedAt string //
+	Id           string //
+	NameI18N     string // 多语言名称映射
+	Slug         string // URL-friendly
+	SortOrder    string //
+	Enabled      string //
+	UploadConfig string // 分类发布表单配置
+	CreatedAt    string //
+	UpdatedAt    string //
 }
 
 // catalogCategoryColumns holds the columns for the table catalog_category.
 var catalogCategoryColumns = CatalogCategoryColumns{
-	Id:        "id",
-	NameI18N:  "name_i18n",
-	Slug:      "slug",
-	SortOrder: "sort_order",
-	Enabled:   "enabled",
-	CreatedAt: "created_at",
-	UpdatedAt: "updated_at",
+	Id:           "id",
+	NameI18N:     "name_i18n",
+	Slug:         "slug",
+	SortOrder:    "sort_order",
+	Enabled:      "enabled",
+	UploadConfig: "upload_config",
+	CreatedAt:    "created_at",
+	UpdatedAt:    "updated_at",
 }
 
 // NewCatalogCategoryDao creates and returns a new DAO object for table data access.

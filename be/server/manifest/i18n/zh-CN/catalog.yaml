@@ -34,8 +34,12 @@ catalog.torrent.query_failed: 获取种子列表失败
 catalog.torrent.read_cache_failed: 读取本地种子缓存失败
 catalog.torrent.read_upload_failed: 读取上传文件失败
 catalog.torrent.reencode_info_failed: 重新编码种子 Info 字典失败
+catalog.torrent.release_field_option_invalid: 发布字段选项无效
+catalog.torrent.release_field_required: 请填写必填发布字段
+catalog.torrent.release_fields_invalid: 发布字段格式无效
 catalog.torrent.transaction_failed: 数据库事务或存储上传失败
 catalog.torrent.unmarshal_info_failed: 解析种子 Info 字典失败
+catalog.torrent.upload_config_invalid: 分类发布配置无效
 catalog.torrent.upload_storage_failed: 上传种子到存储失败
 catalog.torrent.write_reward_failed: 写入赞赏记录失败
 catalog.comment.not_found: 未找到评论

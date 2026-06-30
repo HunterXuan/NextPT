@@ -5,6 +5,7 @@
 package entity
 
 import (
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
@@ -16,6 +17,7 @@ type CatalogTorrent struct {
 	SubTitle       string      `json:"subTitle"       orm:"sub_title"       description:"副标题"`
 	CategoryId     uint        `json:"categoryId"     orm:"category_id"     description:""`
 	Description    string      `json:"description"    orm:"description"     description:"详情描述 (BBCode/Markdown)"`
+	ReleaseFields  *gjson.Json `json:"releaseFields"  orm:"release_fields"  description:"发布结构化字段值"`
 	FileName       string      `json:"fileName"       orm:"file_name"       description:"种子文件名"`
 	Size           uint64      `json:"size"           orm:"size"            description:"总大小 (bytes)"`
 	FileCount      uint        `json:"fileCount"      orm:"file_count"      description:"文件数量"`

@@ -5,6 +5,7 @@
 package do
 
 import (
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 )
@@ -18,6 +19,7 @@ type CatalogTorrent struct {
 	SubTitle       any         // 副标题
 	CategoryId     any         //
 	Description    any         // 详情描述 (BBCode/Markdown)
+	ReleaseFields  *gjson.Json // 发布结构化字段值
 	FileName       any         // 种子文件名
 	Size           any         // 总大小 (bytes)
 	FileCount      any         // 文件数量

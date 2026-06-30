@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"server/internal/consts"
@@ -22,6 +23,7 @@ import (
 	"github.com/anacrolix/torrent/metainfo"
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
@@ -131,8 +133,12 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.file_req"))
 	}
 
-	if err := s.validateCategory(ctx, in.CategoryId); err != nil {
+	category, err := service.CatalogCategoryDomain().GetCategoryById(ctx, in.CategoryId)
+	if err != nil {
 		return nil, err
+	}
+	if category == nil {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.category.invalid"))
 	}
 
 	mi, info, err := s.parseAndModifyTorrent(ctx, in)
@@ -146,9 +152,9 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 	}
 
 	totalSize, fileCount := s.extractTorrentMetadata(info)
-	torrentName := in.Name
-	if torrentName == "" {
-		torrentName = info.Name
+	releaseData, err := s.prepareUploadReleaseData(ctx, category, info.Name, in)
+	if err != nil {
+		return nil, err
 	}
 
 	var finalTorrentBuf bytes.Buffer
@@ -158,7 +164,7 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 
 	var torrentId uint64
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, torrentName, totalSize, fileCount, info)
+		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, releaseData, totalSize, fileCount, info)
 		if err != nil {
 			return err
 		}
@@ -339,10 +345,14 @@ func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (ui
 	return totalSize, fileCount
 }
 
-func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, torrentName string, totalSize uint64, fileCount uint, info *metainfo.Info) (uint64, error) {
+func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData *uploadReleaseData, totalSize uint64, fileCount uint, info *metainfo.Info) (uint64, error) {
+	if releaseData == nil {
+		releaseData = &uploadReleaseData{Name: s.resolveUploadName(strings.TrimSpace(in.Name), info.Name)}
+	}
+
 	torrentInsert := &entity.CatalogTorrent{
 		InfoHash:    infoHashBytes,
-		Name:        torrentName,
+		Name:        releaseData.Name,
 		SubTitle:    in.SubTitle,
 		CategoryId:  in.CategoryId,
 		Description: in.Description,
@@ -352,6 +362,9 @@ func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *mod
 		OwnerId:     actor.Id,
 		Anonymous:   in.Anonymous,
 		Visible:     true,
+	}
+	if releaseData != nil && len(releaseData.Fields) > 0 {
+		torrentInsert.ReleaseFields = gjson.New(releaseData.Fields)
 	}
 
 	var filesToInsert []entity.CatalogTorrentFile
@@ -606,9 +619,15 @@ func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Ac
 		item = listItems[0]
 	}
 
+	var releaseFields map[string]any
+	if torrent.ReleaseFields != nil {
+		_ = torrent.ReleaseFields.Scan(&releaseFields)
+	}
+
 	return &catalogout.TorrentDetailOut{
 		TorrentListItem: item,
 		Description:     torrent.Description,
+		ReleaseFields:   releaseFields,
 		IsBookmarked:    isBookmarked,
 		IsLiked:         isLiked,
 	}, nil
