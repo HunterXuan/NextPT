@@ -77,7 +77,7 @@ type (
 		QueryBookmarkedTorrents(ctx context.Context, actor *model.Actor, page int, size int) ([]entity.CatalogTorrent, int, error)
 		ToggleLike(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		QueryTorrentLikes(ctx context.Context, torrentId uint64, page int, size int) ([]entity.CatalogTorrentLike, int, error)
-		UpdateTorrent(ctx context.Context, id uint64, name string, subTitle string, categoryId uint, description string, anonymous *bool) error
+		UpdateTorrent(ctx context.Context, id uint64, data model.CatalogTorrentUpdate) error
 		GetTorrentFiles(ctx context.Context, torrentId uint64) ([]entity.CatalogTorrentFile, error)
 		GetTorrentsByIds(ctx context.Context, ids []uint64) ([]*entity.CatalogTorrent, error)
 		DeleteTorrent(ctx context.Context, id uint64) error

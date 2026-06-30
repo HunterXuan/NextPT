@@ -62,12 +62,13 @@ type TorrentLikeListInp struct {
 }
 
 type TorrentUpdateInp struct {
-	Id          uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
-	Name        string `json:"name" description:"种子标题"`
-	SubTitle    string `json:"subTitle" description:"副标题"`
-	CategoryId  uint   `json:"categoryId" description:"分类ID"`
-	Description string `json:"description" description:"详情描述"`
-	Anonymous   *bool  `json:"anonymous" description:"匿名上传"`
+	Id            uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
+	Name          string `json:"name" description:"种子标题"`
+	SubTitle      string `json:"subTitle" description:"副标题"`
+	CategoryId    uint   `json:"categoryId" description:"分类ID"`
+	Description   string `json:"description" description:"详情描述"`
+	ReleaseFields string `json:"releaseFields" description:"发布结构化字段 JSON"`
+	Anonymous     *bool  `json:"anonymous" description:"匿名上传"`
 }
 
 type TorrentFileListInp struct {

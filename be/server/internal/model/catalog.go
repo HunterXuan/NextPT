@@ -1,5 +1,14 @@
 package model
 
+type CatalogTorrentUpdate struct {
+	Name          string
+	SubTitle      string
+	CategoryId    uint
+	Description   string
+	Anonymous     *bool
+	ReleaseFields any
+}
+
 type CatalogUploadConfig struct {
 	Title  CatalogUploadTitleConfig   `json:"title"`
 	Fields []CatalogUploadFieldConfig `json:"fields"`

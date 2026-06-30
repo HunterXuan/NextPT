@@ -65,6 +65,61 @@ func (s *sCatalogTorrentUsecase) prepareUploadReleaseData(ctx context.Context, c
 	return &uploadReleaseData{Name: title, Fields: fields}, nil
 }
 
+func (s *sCatalogTorrentUsecase) prepareUpdateReleaseData(ctx context.Context, category *entity.CatalogCategory, torrent *entity.CatalogTorrent, in catalogin.TorrentUpdateInp) (*uploadReleaseData, error) {
+	manualName := strings.TrimSpace(in.Name)
+	currentName := ""
+	if torrent != nil {
+		currentName = torrent.Name
+	}
+	if category == nil || category.UploadConfig == nil {
+		return &uploadReleaseData{Name: s.resolveUploadName(manualName, currentName), Fields: nil}, nil
+	}
+
+	config, err := s.scanUploadConfig(ctx, category)
+	if err != nil {
+		return nil, err
+	}
+	if config == nil {
+		return &uploadReleaseData{Name: s.resolveUploadName(manualName, currentName), Fields: nil}, nil
+	}
+
+	rawFields, err := s.parseUpdateReleaseFields(ctx, torrent, in.ReleaseFields)
+	if err != nil {
+		return nil, err
+	}
+
+	fields, err := s.validateReleaseFields(ctx, category.Id, config, rawFields)
+	if err != nil {
+		return nil, err
+	}
+
+	title := s.resolveUploadName(manualName, currentName)
+	if config.Title.Mode == uploadTitleModeGenerated {
+		generatedTitle := s.buildGeneratedTitle(config.Title.Parts, fields)
+		title = s.resolveGeneratedUploadName(manualName, generatedTitle, currentName, config.Title.AllowManualOverride)
+	}
+
+	return &uploadReleaseData{Name: title, Fields: fields}, nil
+}
+
+func (s *sCatalogTorrentUsecase) parseUpdateReleaseFields(ctx context.Context, torrent *entity.CatalogTorrent, raw string) (map[string]any, error) {
+	if strings.TrimSpace(raw) != "" {
+		return s.parseReleaseFields(ctx, raw)
+	}
+	if torrent == nil || torrent.ReleaseFields == nil {
+		return map[string]any{}, nil
+	}
+
+	var fields map[string]any
+	if err := torrent.ReleaseFields.Scan(&fields); err != nil {
+		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.release_fields_invalid"))
+	}
+	if fields == nil {
+		fields = map[string]any{}
+	}
+	return fields, nil
+}
+
 func (s *sCatalogTorrentUsecase) scanUploadConfig(ctx context.Context, category *entity.CatalogCategory) (*model.CatalogUploadConfig, error) {
 	if category == nil || category.UploadConfig == nil {
 		return nil, nil

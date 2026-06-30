@@ -706,13 +706,38 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.forbidden"))
 	}
 
+	categoryId := torrent.CategoryId
 	if in.CategoryId > 0 {
-		if err := s.validateCategory(ctx, in.CategoryId); err != nil {
-			return nil, err
-		}
+		categoryId = in.CategoryId
+	}
+	category, err := service.CatalogCategoryDomain().GetCategoryById(ctx, categoryId)
+	if err != nil {
+		return nil, err
+	}
+	if category == nil {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.category.invalid"))
 	}
 
-	err = service.CatalogTorrentDomain().UpdateTorrent(ctx, in.Id, in.Name, in.SubTitle, in.CategoryId, in.Description, in.Anonymous)
+	releaseData, err := s.prepareUpdateReleaseData(ctx, category, torrent, in)
+	if err != nil {
+		return nil, err
+	}
+
+	name := releaseData.Name
+	subTitle := strings.TrimSpace(in.SubTitle)
+	description := strings.TrimSpace(in.Description)
+	updateData := model.CatalogTorrentUpdate{
+		Name:        name,
+		SubTitle:    subTitle,
+		CategoryId:  categoryId,
+		Description: description,
+		Anonymous:   in.Anonymous,
+	}
+	if releaseData != nil && len(releaseData.Fields) > 0 {
+		updateData.ReleaseFields = gjson.New(releaseData.Fields)
+	}
+
+	err = service.CatalogTorrentDomain().UpdateTorrent(ctx, in.Id, updateData)
 	if err != nil {
 		return nil, err
 	}

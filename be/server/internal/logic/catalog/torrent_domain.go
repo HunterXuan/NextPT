@@ -264,33 +264,24 @@ func (s *sCatalogTorrentDomain) QueryTorrentLikes(ctx context.Context, torrentId
 	return list, total, err
 }
 
-func (s *sCatalogTorrentDomain) UpdateTorrent(ctx context.Context, id uint64, name, subTitle string, categoryId uint, description string, anonymous *bool) error {
-	updateMap := g.Map{}
-	if name != "" {
-		updateMap[dao.CatalogTorrent.Columns().Name] = name
+func (s *sCatalogTorrentDomain) UpdateTorrent(ctx context.Context, id uint64, data model.CatalogTorrentUpdate) error {
+	updateMap := g.Map{
+		dao.CatalogTorrent.Columns().Name:          data.Name,
+		dao.CatalogTorrent.Columns().SubTitle:      data.SubTitle,
+		dao.CatalogTorrent.Columns().CategoryId:    data.CategoryId,
+		dao.CatalogTorrent.Columns().Description:   data.Description,
+		dao.CatalogTorrent.Columns().ReleaseFields: data.ReleaseFields,
 	}
-	if subTitle != "" {
-		updateMap[dao.CatalogTorrent.Columns().SubTitle] = subTitle
-	}
-	if categoryId > 0 {
-		updateMap[dao.CatalogTorrent.Columns().CategoryId] = categoryId
-	}
-	if description != "" {
-		updateMap[dao.CatalogTorrent.Columns().Description] = description
-	}
-	if anonymous != nil {
-		if *anonymous {
+	if data.Anonymous != nil {
+		if *data.Anonymous {
 			updateMap[dao.CatalogTorrent.Columns().Anonymous] = 1
 		} else {
 			updateMap[dao.CatalogTorrent.Columns().Anonymous] = 0
 		}
 	}
 
-	if len(updateMap) > 0 {
-		_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, id).Data(updateMap).Update()
-		return err
-	}
-	return nil
+	_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, id).Data(updateMap).Update()
+	return err
 }
 
 func (s *sCatalogTorrentDomain) GetTorrentFiles(ctx context.Context, torrentId uint64) ([]entity.CatalogTorrentFile, error) {
