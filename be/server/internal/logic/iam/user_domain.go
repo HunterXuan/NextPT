@@ -267,3 +267,12 @@ func (s *sIamUserDomain) GetUsersByIds(ctx context.Context, ids []uint64) ([]ent
 	err := dao.IamUser.Ctx(ctx).WhereIn(dao.IamUser.Columns().Id, ids).Scan(&users)
 	return users, err
 }
+
+func (s *sIamUserDomain) GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error) {
+	if len(userIds) == 0 {
+		return nil, nil
+	}
+	var profiles []entity.IamUserProfile
+	err := dao.IamUserProfile.Ctx(ctx).WhereIn(dao.IamUserProfile.Columns().UserId, userIds).Scan(&profiles)
+	return profiles, err
+}

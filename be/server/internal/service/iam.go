@@ -79,6 +79,7 @@ type (
 		AdminGetUserStat(ctx context.Context, id uint64) (*entity.IamUserStat, error)
 		AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64, bonusDiff *float64) (int64, error)
 		GetUsersByIds(ctx context.Context, ids []uint64) ([]entity.IamUser, error)
+		GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error)
 	}
 	IIamUserUsecase interface {
 		InvalidateUserCache(ctx context.Context, userId uint64)

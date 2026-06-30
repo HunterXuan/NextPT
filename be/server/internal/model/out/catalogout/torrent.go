@@ -1,5 +1,7 @@
 package catalogout
 
+import "github.com/gogf/gf/v2/os/gtime"
+
 type TorrentUploadOut struct {
 	TorrentId uint64 `json:"torrentId" description:"新种子的ID"`
 	InfoHash  string `json:"infoHash" description:"新种子的InfoHash(Hex)"`
@@ -47,11 +49,19 @@ type TorrentRewardOut struct {
 	// 空结构体
 }
 
+type TorrentRewardSummary struct {
+	UserId       uint64      `json:"userId" orm:"user_id"`
+	Amount       float64     `json:"amount" orm:"amount"`
+	RewardCount  uint        `json:"rewardCount" orm:"reward_count"`
+	LastRewardAt *gtime.Time `json:"lastRewardAt" orm:"last_reward_at"`
+}
+
 type TorrentRewardItem struct {
-	Id        uint64  `json:"id" description:"赞赏记录ID"`
-	UserId    uint64  `json:"userId" description:"赞赏者ID"`
-	Amount    float64 `json:"amount" description:"赞赏金额"`
-	CreatedAt string  `json:"createdAt" description:"赞赏时间"`
+	UserId       uint64  `json:"userId" description:"赞赏者ID"`
+	Username     string  `json:"username" description:"赞赏者名称"`
+	Amount       float64 `json:"amount" description:"累计赞赏金额"`
+	RewardCount  uint    `json:"rewardCount" description:"赞赏次数"`
+	LastRewardAt string  `json:"lastRewardAt" description:"最近赞赏时间"`
 }
 
 type TorrentRewardListOut struct {

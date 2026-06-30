@@ -67,7 +67,7 @@ func (s *sCatalogCommentUsecase) List(ctx context.Context, actor *model.Actor, i
 	for _, c := range comments {
 		userIds = append(userIds, c.UserId)
 	}
-	usernameMap := s.loadUsernameMap(ctx, userIds)
+	authorMap := s.loadCommentAuthorMap(ctx, userIds)
 
 	likedMap := make(map[uint64]bool)
 	if actor != nil && actor.Id > 0 {
@@ -85,8 +85,7 @@ func (s *sCatalogCommentUsecase) List(ctx context.Context, actor *model.Actor, i
 	for _, c := range comments {
 		list = append(list, catalogout.CommentListItem{
 			Id:          c.Id,
-			UserId:      c.UserId,
-			Username:    usernameMap[c.UserId],
+			Author:      authorMap[c.UserId],
 			Content:     c.Content,
 			LikeCount:   c.LikeCount,
 			RewardCount: c.RewardCount,
@@ -101,10 +100,10 @@ func (s *sCatalogCommentUsecase) List(ctx context.Context, actor *model.Actor, i
 	}, nil
 }
 
-func (s *sCatalogCommentUsecase) loadUsernameMap(ctx context.Context, userIds []uint64) map[uint64]string {
-	userMap := make(map[uint64]string)
+func (s *sCatalogCommentUsecase) loadCommentAuthorMap(ctx context.Context, userIds []uint64) map[uint64]model.UserSummary {
+	authorMap := make(map[uint64]model.UserSummary)
 	if len(userIds) == 0 {
-		return userMap
+		return authorMap
 	}
 
 	uniqueIds := make([]uint64, 0, len(userIds))
@@ -118,19 +117,32 @@ func (s *sCatalogCommentUsecase) loadUsernameMap(ctx context.Context, userIds []
 		}
 		seen[id] = struct{}{}
 		uniqueIds = append(uniqueIds, id)
+		authorMap[id] = model.UserSummary{Id: id}
 	}
 	if len(uniqueIds) == 0 {
-		return userMap
+		return authorMap
 	}
 
 	users, err := service.IamUserDomain().GetUsersByIds(ctx, uniqueIds)
-	if err != nil {
-		return userMap
+	if err == nil {
+		for _, user := range users {
+			author := authorMap[user.Id]
+			author.Id = user.Id
+			author.Username = user.Username
+			authorMap[user.Id] = author
+		}
 	}
-	for _, user := range users {
-		userMap[user.Id] = user.Username
+
+	profiles, err := service.IamUserDomain().GetUserProfilesByUserIds(ctx, uniqueIds)
+	if err == nil {
+		for _, profile := range profiles {
+			author := authorMap[profile.UserId]
+			author.Id = profile.UserId
+			author.Avatar = profile.Avatar
+			authorMap[profile.UserId] = author
+		}
 	}
-	return userMap
+	return authorMap
 }
 
 func (s *sCatalogCommentUsecase) ToggleLike(ctx context.Context, actor *model.Actor, in catalogin.CommentToggleLikeInp) (*catalogout.CommentToggleLikeOut, error) {

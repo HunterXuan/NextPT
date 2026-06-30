@@ -92,7 +92,7 @@ type (
 		CheckTorrentLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		IncrementTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
 		QueryActiveTorrentIds(ctx context.Context) ([]entity.CatalogTorrent, error)
-		QueryTorrentRewards(ctx context.Context, torrentId uint64, page int, size int) ([]entity.CatalogTorrentReward, int, error)
+		QueryTorrentRewards(ctx context.Context, torrentId uint64, page int, size int) ([]catalogout.TorrentRewardSummary, int, error)
 		ApplyTorrentVisibleScope(m *gdb.Model, actor *model.Actor) *gdb.Model
 		CheckTorrentVisiblePolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error
 		CheckTorrentDownloadPolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error

@@ -427,18 +427,25 @@ func (s *sCatalogTorrentUsecase) RewardList(ctx context.Context, actor *model.Ac
 		return nil, err
 	}
 
-	entities, total, err := service.CatalogTorrentDomain().QueryTorrentRewards(ctx, in.Id, in.Page, in.Size)
+	summaries, total, err := service.CatalogTorrentDomain().QueryTorrentRewards(ctx, in.Id, in.Page, in.Size)
 	if err != nil {
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.get_reward_list_failed"))
 	}
 
+	userIds := make([]uint64, 0, len(summaries))
+	for _, e := range summaries {
+		userIds = append(userIds, e.UserId)
+	}
+	usernameMap := s.loadUsernameMap(ctx, userIds)
+
 	var list []catalogout.TorrentRewardItem
-	for _, e := range entities {
+	for _, e := range summaries {
 		list = append(list, catalogout.TorrentRewardItem{
-			Id:        e.Id,
-			UserId:    e.UserId,
-			Amount:    e.Amount,
-			CreatedAt: e.CreatedAt.String(),
+			UserId:       e.UserId,
+			Username:     usernameMap[e.UserId],
+			Amount:       e.Amount,
+			RewardCount:  e.RewardCount,
+			LastRewardAt: s.formatTime(e.LastRewardAt),
 		})
 	}
 
@@ -546,6 +553,38 @@ func (s *sCatalogTorrentUsecase) shouldHideTorrentOwner(actor *model.Actor, torr
 		return false
 	}
 	return actor == nil || (!actor.IsStaff && actor.Id != torrent.OwnerId)
+}
+
+func (s *sCatalogTorrentUsecase) loadUsernameMap(ctx context.Context, userIds []uint64) map[uint64]string {
+	userMap := make(map[uint64]string)
+	if len(userIds) == 0 {
+		return userMap
+	}
+
+	uniqueIds := make([]uint64, 0, len(userIds))
+	seen := make(map[uint64]struct{}, len(userIds))
+	for _, id := range userIds {
+		if id == 0 {
+			continue
+		}
+		if _, ok := seen[id]; ok {
+			continue
+		}
+		seen[id] = struct{}{}
+		uniqueIds = append(uniqueIds, id)
+	}
+	if len(uniqueIds) == 0 {
+		return userMap
+	}
+
+	users, err := service.IamUserDomain().GetUsersByIds(ctx, uniqueIds)
+	if err != nil {
+		return userMap
+	}
+	for _, user := range users {
+		userMap[user.Id] = user.Username
+	}
+	return userMap
 }
 
 func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Actor, in catalogin.TorrentGetInp) (*catalogout.TorrentDetailOut, error) {

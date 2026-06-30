@@ -8,6 +8,7 @@ import (
 	"server/internal/dao"
 	"server/internal/model"
 	"server/internal/model/entity"
+	"server/internal/model/out/catalogout"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/database/gdb"
@@ -475,15 +476,32 @@ func (s *sCatalogTorrentDomain) QueryActiveTorrentIds(ctx context.Context) ([]en
 	return dbTorrents, err
 }
 
-func (s *sCatalogTorrentDomain) QueryTorrentRewards(ctx context.Context, torrentId uint64, page, size int) ([]entity.CatalogTorrentReward, int, error) {
-	m := dao.CatalogTorrentReward.Ctx(ctx).Where(dao.CatalogTorrentReward.Columns().TorrentId, torrentId)
-	total, err := m.Count()
+func (s *sCatalogTorrentDomain) QueryTorrentRewards(ctx context.Context, torrentId uint64, page, size int) ([]catalogout.TorrentRewardSummary, int, error) {
+	columns := dao.CatalogTorrentReward.Columns()
+
+	totalValue, err := dao.CatalogTorrentReward.Ctx(ctx).
+		Fields(fmt.Sprintf("COUNT(DISTINCT %s)", columns.UserId)).
+		Where(columns.TorrentId, torrentId).
+		Value()
 	if err != nil {
 		return nil, 0, err
 	}
-	var entities []entity.CatalogTorrentReward
-	err = m.Page(page, size).OrderDesc(dao.CatalogTorrentReward.Columns().CreatedAt).Scan(&entities)
-	return entities, total, err
+
+	var summaries []catalogout.TorrentRewardSummary
+	err = dao.CatalogTorrentReward.Ctx(ctx).
+		Fields(
+			fmt.Sprintf("%s AS user_id", columns.UserId),
+			fmt.Sprintf("SUM(%s) AS amount", columns.Amount),
+			"COUNT(*) AS reward_count",
+			fmt.Sprintf("MAX(%s) AS last_reward_at", columns.CreatedAt),
+		).
+		Where(columns.TorrentId, torrentId).
+		Group(columns.UserId).
+		Page(page, size).
+		OrderDesc("amount").
+		OrderDesc("last_reward_at").
+		Scan(&summaries)
+	return summaries, totalValue.Int(), err
 }
 
 func (s *sCatalogTorrentDomain) ApplyTorrentVisibleScope(m *gdb.Model, actor *model.Actor) *gdb.Model {
