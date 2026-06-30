@@ -159,6 +159,7 @@ export interface TorrentUpdateInput {
   subTitle?: string
   categoryId?: number
   description?: string
+  releaseFields?: Record<string, unknown>
   anonymous?: boolean
 }
 
@@ -367,9 +368,14 @@ export function useCatalogTorrents() {
   }
 
   async function updateTorrent(id: number, input: TorrentUpdateInput) {
+    const body = {
+      ...input,
+      releaseFields: input.releaseFields === undefined ? undefined : JSON.stringify(input.releaseFields)
+    }
+
     return await fetchApi<TorrentUpdateOut>(`/api/catalog/torrents/${id}`, {
       method: 'PATCH',
-      body: input
+      body
     })
   }
 
