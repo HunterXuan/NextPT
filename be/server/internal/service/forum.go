@@ -55,9 +55,11 @@ type (
 	IForumTopicDomain interface {
 		GetTopicById(ctx context.Context, topicId uint64) (*entity.ForumTopic, error)
 		CheckTopicWritePolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error
+		CheckTopicEditPolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error
 		CheckTopicAppendPolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error
 		InsertTopic(ctx context.Context, actor *model.Actor, in forumin.TopicCreateInp) (uint64, error)
 		AppendContent(ctx context.Context, topic *entity.ForumTopic, content string) error
+		UpdateTopic(ctx context.Context, id uint64, nodeId uint, subject string, content string) error
 		IncrementTopicViews(ctx context.Context, topicId uint64) error
 		UpdateTopicReplyStats(ctx context.Context, topicId uint64, replyId uint64, lastReplyBy uint64) error
 		ToggleLike(ctx context.Context, actor *model.Actor, topicId uint64) (bool, error)
@@ -75,6 +77,7 @@ type (
 		List(ctx context.Context, actor *model.Actor, in forumin.TopicListInp) (*forumout.TopicListOut, error)
 		Detail(ctx context.Context, actor *model.Actor, in forumin.TopicDetailInp) (*forumout.TopicDetailOut, error)
 		Create(ctx context.Context, actor *model.Actor, in forumin.TopicCreateInp) (uint64, error)
+		Update(ctx context.Context, actor *model.Actor, in forumin.TopicUpdateInp) error
 		Append(ctx context.Context, actor *model.Actor, in forumin.TopicAppendInp) error
 		ToggleTopicLike(ctx context.Context, actor *model.Actor, in forumin.TopicToggleLikeInp) error
 		RewardTopic(ctx context.Context, actor *model.Actor, in forumin.TopicRewardInp) error

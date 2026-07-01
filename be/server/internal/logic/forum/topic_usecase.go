@@ -3,6 +3,7 @@ package forum
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"server/internal/consts"
 	"server/internal/model"
@@ -140,6 +141,50 @@ func (s *sForumTopicUsecase) Create(ctx context.Context, actor *model.Actor, in 
 	_ = service.IamPermissionDomain().GrantUserPermission(ctx, actor.Id, fmt.Sprintf("update:forum/topic:%d", topicId), false)
 
 	return topicId, nil
+}
+
+func (s *sForumTopicUsecase) Update(ctx context.Context, actor *model.Actor, in forumin.TopicUpdateInp) error {
+	if actor == nil {
+		return gerror.New(gi18n.T(ctx, "forum.general.unauthorized"))
+	}
+
+	topic, err := service.ForumTopicDomain().GetTopicById(ctx, in.Id)
+	if err != nil {
+		return err
+	}
+	if err := service.ForumTopicDomain().CheckTopicEditPolicy(ctx, actor, topic); err != nil {
+		return err
+	}
+
+	nodePtr, err := service.ForumNodeDomain().GetNodeById(ctx, in.NodeId)
+	if err != nil || nodePtr == nil || nodePtr.Id == 0 {
+		return gerror.New(gi18n.T(ctx, "forum.node.not_found"))
+	}
+	node := *nodePtr
+	if err := service.ForumNodeDomain().CheckNodeCreatePolicy(ctx, actor, &node); err != nil {
+		return err
+	}
+
+	subject := strings.TrimSpace(in.Subject)
+	content := strings.TrimSpace(in.Content)
+	oldNodeId := topic.NodeId
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		if err := service.ForumTopicDomain().UpdateTopic(ctx, in.Id, in.NodeId, subject, content); err != nil {
+			return err
+		}
+		if oldNodeId == in.NodeId {
+			return nil
+		}
+		replyCount := int(topic.ReplyCount)
+		if err := service.ForumNodeDomain().UpdateStats(ctx, oldNodeId, -1, -replyCount); err != nil {
+			return err
+		}
+		return service.ForumNodeDomain().UpdateStats(ctx, in.NodeId, 1, replyCount)
+	})
+	if err != nil {
+		return gerror.Wrap(err, gi18n.T(ctx, "forum.topic.update_failed"))
+	}
+	return nil
 }
 
 func (s *sForumTopicUsecase) Append(ctx context.Context, actor *model.Actor, in forumin.TopicAppendInp) error {

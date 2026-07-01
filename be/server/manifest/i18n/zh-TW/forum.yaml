@@ -13,8 +13,11 @@ forum.reply.not_found: 回覆不存在
 forum.topic.append_author_only: 僅作者可以追加內容
 forum.topic.append_limit_exceeded: 已超過最大追加次數限制（3次）
 forum.topic.create_failed: 創建主題失敗
+forum.topic.edit_author_only: 僅作者可以編輯主題
+forum.topic.edit_window_expired: 主題發布超過 5 分鐘後不能編輯
 forum.topic.is_locked: 話題已鎖定
 forum.topic.not_found: 話題不存在
 forum.topic.query_node_failed: 查詢板塊信息失敗
+forum.topic.update_failed: 更新主題失敗
 forum.reply.reward_self_not_allowed: 不能打赏自己的回复
 forum.topic.reward_self_not_allowed: 不能打赏自己的主题

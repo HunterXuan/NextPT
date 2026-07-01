@@ -34,6 +34,13 @@ type TopicCreateRes struct {
 	forumout.TopicCreateOut
 }
 
+type TopicUpdateReq struct {
+	g.Meta `path:"/topics/{id}" method:"patch" tags:"Forum" summary:"编辑主题" perm:"update:forum/topic:{id}"`
+	forumin.TopicUpdateInp
+}
+
+type TopicUpdateRes struct{}
+
 type TopicAppendReq struct {
 	g.Meta `path:"/topics/{id}:append" method:"post" tags:"Forum" summary:"追加主题附言" perm:"update:forum/topic:{id}"`
 	forumin.TopicAppendInp

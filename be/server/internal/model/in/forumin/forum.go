@@ -16,6 +16,13 @@ type TopicCreateInp struct {
 	Content string `json:"content" v:"required|min-length:2"`
 }
 
+type TopicUpdateInp struct {
+	Id      uint64 `json:"id" in:"path" v:"required"`
+	NodeId  uint   `json:"nodeId" v:"required"`
+	Subject string `json:"subject" v:"required|length:2,200"`
+	Content string `json:"content" v:"required|min-length:2"`
+}
+
 type TopicAppendInp struct {
 	Id      uint64 `json:"id" in:"path" v:"required"`
 	Content string `json:"content" v:"required"`

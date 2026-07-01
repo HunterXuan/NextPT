@@ -2,7 +2,10 @@ package forum
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"server/internal/consts"
 	"server/internal/dao"
 	"server/internal/model"
 	"server/internal/model/entity"
@@ -38,6 +41,22 @@ func (s *sForumTopicDomain) GetTopicById(ctx context.Context, topicId uint64) (*
 func (s *sForumTopicDomain) CheckTopicWritePolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error {
 	if topic.IsLocked {
 		return gerror.New(gi18n.T(ctx, "forum.topic.is_locked"))
+	}
+	return nil
+}
+
+func (s *sForumTopicDomain) CheckTopicEditPolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error {
+	if actor == nil || actor.Id == 0 {
+		return gerror.New(gi18n.T(ctx, "forum.general.unauthorized"))
+	}
+	if topic.UserId != actor.Id {
+		return gerror.New(gi18n.T(ctx, "forum.topic.edit_author_only"))
+	}
+	if topic.IsLocked {
+		return gerror.New(gi18n.T(ctx, "forum.topic.is_locked"))
+	}
+	if topic.CreatedAt == nil || topic.CreatedAt.Add(time.Duration(consts.ForumTopicEditWindowSeconds)*time.Second).Before(gtime.Now()) {
+		return gerror.New(gi18n.T(ctx, "forum.topic.edit_window_expired"))
 	}
 	return nil
 }
@@ -88,6 +107,15 @@ func (s *sForumTopicDomain) AppendContent(ctx context.Context, topic *entity.For
 		dao.ForumTopic.Columns().Appends: gjson.New(appends),
 	}).Update()
 
+	return err
+}
+
+func (s *sForumTopicDomain) UpdateTopic(ctx context.Context, id uint64, nodeId uint, subject string, content string) error {
+	_, err := dao.ForumTopic.Ctx(ctx).Where(dao.ForumTopic.Columns().Id, id).Data(g.Map{
+		dao.ForumTopic.Columns().NodeId:  nodeId,
+		dao.ForumTopic.Columns().Subject: subject,
+		dao.ForumTopic.Columns().Content: content,
+	}).Update()
 	return err
 }
 
@@ -239,11 +267,18 @@ func (s *sForumTopicDomain) AdminMoveTopic(ctx context.Context, id uint64, newNo
 	if err != nil {
 		return err
 	}
-	_, err = dao.ForumNode.Ctx(ctx).Where(dao.ForumNode.Columns().Id, oldNodeId).Decrement(dao.ForumNode.Columns().TopicCount, 1)
+	nodeColumns := dao.ForumNode.Columns()
+	_, err = dao.ForumNode.Ctx(ctx).Where(nodeColumns.Id, oldNodeId).Data(g.Map{
+		nodeColumns.TopicCount: gdb.Raw("topic_count - 1"),
+		nodeColumns.ReplyCount: gdb.Raw(fmt.Sprintf("reply_count - %d", topic.ReplyCount)),
+	}).Update()
 	if err != nil {
 		return err
 	}
-	_, err = dao.ForumNode.Ctx(ctx).Where(dao.ForumNode.Columns().Id, newNodeId).Increment(dao.ForumNode.Columns().TopicCount, 1)
+	_, err = dao.ForumNode.Ctx(ctx).Where(nodeColumns.Id, newNodeId).Data(g.Map{
+		nodeColumns.TopicCount: gdb.Raw("topic_count + 1"),
+		nodeColumns.ReplyCount: gdb.Raw(fmt.Sprintf("reply_count + %d", topic.ReplyCount)),
+	}).Update()
 	return err
 }
 
