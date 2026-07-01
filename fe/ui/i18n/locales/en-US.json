@@ -509,7 +509,12 @@
       "pageSummary": "Page {page} / {pages}",
       "empty": {
         "title": "No torrent bookmarks",
-        "description": "Torrents you bookmark will appear here."
+        "description": "Torrents you bookmark will appear here.",
+        "action": "Browse torrents"
+      },
+      "actions": {
+        "remove": "Remove bookmark",
+        "removed": "Bookmark removed"
       }
     },
     "subtitles": {

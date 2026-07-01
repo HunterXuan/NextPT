@@ -509,7 +509,12 @@
       "pageSummary": "第 {page} / {pages} 頁",
       "empty": {
         "title": "暫無種子收藏",
-        "description": "你收藏的種子會顯示在這裡。"
+        "description": "你收藏的種子會顯示在這裡。",
+        "action": "瀏覽種子"
+      },
+      "actions": {
+        "remove": "取消收藏",
+        "removed": "已取消收藏"
       }
     },
     "subtitles": {

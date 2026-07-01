@@ -509,7 +509,12 @@
       "pageSummary": "第 {page} / {pages} 页",
       "empty": {
         "title": "暂无种子收藏",
-        "description": "你收藏的种子会显示在这里。"
+        "description": "你收藏的种子会显示在这里。",
+        "action": "浏览种子"
+      },
+      "actions": {
+        "remove": "取消收藏",
+        "removed": "已取消收藏"
       }
     },
     "subtitles": {
