@@ -272,7 +272,7 @@ func (s *sForumTopicUsecase) formatTopicListItems(ctx context.Context, topics []
 	userIds := make([]uint64, 0, len(topics)*2)
 	for _, topic := range topics {
 		userIds = append(userIds, topic.UserId)
-		if topic.LastReplyBy > 0 {
+		if topic.ReplyCount > 0 && topic.LastReplyBy > 0 {
 			userIds = append(userIds, topic.LastReplyBy)
 		}
 	}
@@ -280,6 +280,13 @@ func (s *sForumTopicUsecase) formatTopicListItems(ctx context.Context, topics []
 
 	list := make([]forumout.TopicListItem, 0, len(topics))
 	for _, topic := range topics {
+		lastReplyAt := ""
+		lastReplyUser := model.IamUserSummary{}
+		if topic.ReplyCount > 0 {
+			lastReplyAt = s.formatTime(topic.LastReplyAt)
+			lastReplyUser = userMap[topic.LastReplyBy]
+		}
+
 		list = append(list, forumout.TopicListItem{
 			Id:            topic.Id,
 			Subject:       topic.Subject,
@@ -288,8 +295,8 @@ func (s *sForumTopicUsecase) formatTopicListItems(ctx context.Context, topics []
 			IsSticky:      topic.IsSticky,
 			Views:         topic.Views,
 			ReplyCount:    topic.ReplyCount,
-			LastReplyAt:   s.formatTime(topic.LastReplyAt),
-			LastReplyUser: userMap[topic.LastReplyBy],
+			LastReplyAt:   lastReplyAt,
+			LastReplyUser: lastReplyUser,
 			CreatedAt:     s.formatTime(topic.CreatedAt),
 		})
 	}
