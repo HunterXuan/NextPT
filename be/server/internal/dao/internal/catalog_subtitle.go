@@ -31,7 +31,7 @@ type CatalogSubtitleColumns struct {
 	StoragePath   string // 存储路径/S3 key
 	Language      string // 语言代码 (如 zh-CN, en-US)
 	DownloadCount string //
-	IsAnonymous   string //
+	Anonymous     string // 匿名上传
 	CreatedAt     string //
 }
 
@@ -47,7 +47,7 @@ var catalogSubtitleColumns = CatalogSubtitleColumns{
 	StoragePath:   "storage_path",
 	Language:      "language",
 	DownloadCount: "download_count",
-	IsAnonymous:   "is_anonymous",
+	Anonymous:     "anonymous",
 	CreatedAt:     "created_at",
 }
 

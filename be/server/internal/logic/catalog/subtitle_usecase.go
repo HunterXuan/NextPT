@@ -33,29 +33,37 @@ func init() {
 	service.RegisterCatalogSubtitleUsecase(NewCatalogSubtitleUsecase())
 }
 
-func (s *sCatalogSubtitleUsecase) formatSubtitles(ctx context.Context, entities []entity.CatalogSubtitle) []catalogout.SubtitleListItem {
+func (s *sCatalogSubtitleUsecase) formatSubtitles(ctx context.Context, actor *model.Actor, entities []entity.CatalogSubtitle) []catalogout.SubtitleListItem {
 	var userIds []uint64
 	for _, e := range entities {
-		userIds = append(userIds, e.UserId)
+		if s.canViewSubtitleOwner(actor, e) {
+			userIds = append(userIds, e.UserId)
+		}
 	}
 
-	userMap := make(map[uint64]string)
+	uploaderMap := make(map[uint64]model.IamUserSummary)
 	if len(userIds) > 0 {
 		var users []entity.IamUser
 		users, _ = service.IamUserDomain().GetUsersByIds(ctx, userIds)
 		for _, u := range users {
-			userMap[u.Id] = u.Username
+			uploaderMap[u.Id] = model.IamUserSummary{
+				Id:       u.Id,
+				Username: u.Username,
+			}
 		}
 	}
 
 	var list []catalogout.SubtitleListItem
 	for _, e := range entities {
-		username := userMap[e.UserId]
+		uploader := uploaderMap[e.UserId]
+		if uploader.Id == 0 && s.canViewSubtitleOwner(actor, e) && e.UserId > 0 {
+			uploader.Id = e.UserId
+		}
 		list = append(list, catalogout.SubtitleListItem{
 			Id:        e.Id,
 			TorrentId: e.TorrentId,
-			UserId:    e.UserId,
-			Username:  username,
+			Uploader:  uploader,
+			Anonymous: e.Anonymous,
 			FileName:  e.FileName,
 			Language:  e.Language,
 			Size:      e.FileSize,
@@ -65,6 +73,10 @@ func (s *sCatalogSubtitleUsecase) formatSubtitles(ctx context.Context, entities 
 	return list
 }
 
+func (s *sCatalogSubtitleUsecase) canViewSubtitleOwner(actor *model.Actor, subtitle entity.CatalogSubtitle) bool {
+	return !subtitle.Anonymous || (actor != nil && (actor.IsStaff || actor.Id == subtitle.UserId))
+}
+
 func (s *sCatalogSubtitleUsecase) List(ctx context.Context, actor *model.Actor, in catalogin.SubtitleListInp) (*catalogout.SubtitleListOut, error) {
 	subs, total, err := service.CatalogSubtitleDomain().QuerySubtitles(ctx, 0, in.Page, in.Size)
 	if err != nil {
@@ -72,7 +84,7 @@ func (s *sCatalogSubtitleUsecase) List(ctx context.Context, actor *model.Actor, 
 	}
 
 	return &catalogout.SubtitleListOut{
-		List:  s.formatSubtitles(ctx, subs),
+		List:  s.formatSubtitles(ctx, actor, subs),
 		Total: total,
 	}, nil
 }
@@ -89,7 +101,7 @@ func (s *sCatalogSubtitleUsecase) ListByTorrent(ctx context.Context, actor *mode
 	}
 
 	return &catalogout.SubtitleListOut{
-		List:  s.formatSubtitles(ctx, subs),
+		List:  s.formatSubtitles(ctx, actor, subs),
 		Total: total,
 	}, nil
 }
@@ -121,7 +133,7 @@ func (s *sCatalogSubtitleUsecase) Upload(ctx context.Context, actor *model.Actor
 	var subtitleId uint64
 	// 2. Transaction 1: Insert DB Record
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		id, err := service.CatalogSubtitleDomain().InsertSubtitle(ctx, in.Id, actor.Id, in.File.Filename, ext, len(data), in.Language)
+		id, err := service.CatalogSubtitleDomain().InsertSubtitle(ctx, in.Id, actor.Id, in.File.Filename, ext, len(data), in.Language, in.Anonymous)
 		if err != nil {
 			return err
 		}

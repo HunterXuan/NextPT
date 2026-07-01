@@ -14,9 +14,10 @@ type TorrentSubtitleListInp struct {
 }
 
 type SubtitleUploadInp struct {
-	Id       uint64            `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
-	File     *ghttp.UploadFile `json:"file" type:"file" v:"required#{#catalog.subtitle.file_req}" description:"字幕文件"`
-	Language string            `json:"language" v:"required#{#catalog.subtitle.lang_req}" description:"语言代码"`
+	Id        uint64            `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
+	File      *ghttp.UploadFile `json:"file" type:"file" v:"required#{#catalog.subtitle.file_req}" description:"字幕文件"`
+	Language  string            `json:"language" v:"required#{#catalog.subtitle.lang_req}" description:"语言代码"`
+	Anonymous bool              `json:"anonymous" description:"是否匿名上传"`
 }
 
 type SubtitleDownloadInp struct {

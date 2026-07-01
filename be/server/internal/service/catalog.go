@@ -47,7 +47,7 @@ type (
 		Report(ctx context.Context, actor *model.Actor, in catalogin.CommentReportInp) error
 	}
 	ICatalogSubtitleDomain interface {
-		InsertSubtitle(ctx context.Context, torrentId uint64, userId uint64, fileName string, ext string, size int, language string) (uint64, error)
+		InsertSubtitle(ctx context.Context, torrentId uint64, userId uint64, fileName string, ext string, size int, language string, anonymous bool) (uint64, error)
 		UpdateSubtitleStoragePath(ctx context.Context, id uint64, path string) error
 		GetSubtitleById(ctx context.Context, id uint64) (*entity.CatalogSubtitle, error)
 		IncrementDownloadCount(ctx context.Context, id uint64) error

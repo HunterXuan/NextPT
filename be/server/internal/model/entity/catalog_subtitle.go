@@ -20,6 +20,6 @@ type CatalogSubtitle struct {
 	StoragePath   string      `json:"storagePath"   orm:"storage_path"   description:"存储路径/S3 key"`
 	Language      string      `json:"language"      orm:"language"       description:"语言代码 (如 zh-CN, en-US)"`
 	DownloadCount uint        `json:"downloadCount" orm:"download_count" description:""`
-	IsAnonymous   bool        `json:"isAnonymous"   orm:"is_anonymous"   description:""`
+	Anonymous     bool        `json:"anonymous"     orm:"anonymous"      description:"匿名上传"`
 	CreatedAt     *gtime.Time `json:"createdAt"     orm:"created_at"     description:""`
 }

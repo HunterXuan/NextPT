@@ -449,13 +449,12 @@ func (s *sCatalogTorrentUsecase) RewardList(ctx context.Context, actor *model.Ac
 	for _, e := range summaries {
 		userIds = append(userIds, e.UserId)
 	}
-	usernameMap := s.loadUsernameMap(ctx, userIds)
+	userMap := s.loadUserSummaryMap(ctx, userIds)
 
 	var list []catalogout.TorrentRewardItem
 	for _, e := range summaries {
 		list = append(list, catalogout.TorrentRewardItem{
-			UserId:       e.UserId,
-			Username:     usernameMap[e.UserId],
+			User:         userMap[e.UserId],
 			Amount:       e.Amount,
 			RewardCount:  e.RewardCount,
 			LastRewardAt: s.formatTime(e.LastRewardAt),
@@ -514,21 +513,13 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 		}
 	}
 
-	userMap := make(map[uint64]string)
-	if len(ownerIds) > 0 {
-		users, _ := service.IamUserDomain().GetUsersByIds(ctx, ownerIds)
-		for _, u := range users {
-			userMap[u.Id] = u.Username
-		}
-	}
+	ownerMap := s.loadUserSummaryMap(ctx, ownerIds)
 
 	var list []catalogout.TorrentListItem
 	for _, e := range entities {
-		ownerId := e.OwnerId
-		ownerName := userMap[e.OwnerId]
-		if s.shouldHideTorrentOwner(actor, e) {
-			ownerId = 0
-			ownerName = ""
+		owner := ownerMap[e.OwnerId]
+		if owner.Id == 0 && !s.shouldHideTorrentOwner(actor, e) && e.OwnerId > 0 {
+			owner.Id = e.OwnerId
 		}
 		list = append(list, catalogout.TorrentListItem{
 			Id:         e.Id,
@@ -545,8 +536,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			Leechers:   e.Leechers,
 			Snatched:   e.TimesCompleted,
 			LikeCount:  e.LikeCount,
-			OwnerId:    ownerId,
-			OwnerName:  ownerName,
+			Owner:      owner,
 			Anonymous:  e.Anonymous,
 			CreatedAt:  e.CreatedAt.String(),
 		})
@@ -568,8 +558,8 @@ func (s *sCatalogTorrentUsecase) shouldHideTorrentOwner(actor *model.Actor, torr
 	return actor == nil || (!actor.IsStaff && actor.Id != torrent.OwnerId)
 }
 
-func (s *sCatalogTorrentUsecase) loadUsernameMap(ctx context.Context, userIds []uint64) map[uint64]string {
-	userMap := make(map[uint64]string)
+func (s *sCatalogTorrentUsecase) loadUserSummaryMap(ctx context.Context, userIds []uint64) map[uint64]model.IamUserSummary {
+	userMap := make(map[uint64]model.IamUserSummary)
 	if len(userIds) == 0 {
 		return userMap
 	}
@@ -585,6 +575,7 @@ func (s *sCatalogTorrentUsecase) loadUsernameMap(ctx context.Context, userIds []
 		}
 		seen[id] = struct{}{}
 		uniqueIds = append(uniqueIds, id)
+		userMap[id] = model.IamUserSummary{Id: id}
 	}
 	if len(uniqueIds) == 0 {
 		return userMap
@@ -595,7 +586,10 @@ func (s *sCatalogTorrentUsecase) loadUsernameMap(ctx context.Context, userIds []
 		return userMap
 	}
 	for _, user := range users {
-		userMap[user.Id] = user.Username
+		summary := userMap[user.Id]
+		summary.Id = user.Id
+		summary.Username = user.Username
+		userMap[user.Id] = summary
 	}
 	return userMap
 }
@@ -665,20 +659,13 @@ func (s *sCatalogTorrentUsecase) ListLikes(ctx context.Context, actor *model.Act
 		userIds = append(userIds, e.UserId)
 	}
 
-	userMap := make(map[uint64]string)
-	if len(userIds) > 0 {
-		users, _ := service.IamUserDomain().GetUsersByIds(ctx, userIds)
-		for _, u := range users {
-			userMap[u.Id] = u.Username
-		}
-	}
+	userMap := s.loadUserSummaryMap(ctx, userIds)
 
 	var list []catalogout.TorrentLikeItem
 	for _, e := range likes {
 		list = append(list, catalogout.TorrentLikeItem{
 			Id:        e.Id,
-			UserId:    e.UserId,
-			Username:  userMap[e.UserId],
+			User:      userMap[e.UserId],
 			CreatedAt: e.CreatedAt.String(),
 		})
 	}
@@ -787,13 +774,7 @@ func (s *sCatalogTorrentUsecase) ListPeers(ctx context.Context, actor *model.Act
 		userIds = append(userIds, p.UserId)
 	}
 
-	userMap := make(map[uint64]string)
-	if len(userIds) > 0 {
-		users, _ := service.IamUserDomain().GetUsersByIds(ctx, userIds)
-		for _, u := range users {
-			userMap[u.Id] = u.Username
-		}
-	}
+	userMap := s.loadUserSummaryMap(ctx, userIds)
 
 	var list []catalogout.TorrentPeerItem
 	for _, p := range peers {
@@ -802,8 +783,7 @@ func (s *sCatalogTorrentUsecase) ListPeers(ctx context.Context, actor *model.Act
 			startedAt = p.StartedAt.String()
 		}
 		list = append(list, catalogout.TorrentPeerItem{
-			UserId:     p.UserId,
-			Username:   userMap[p.UserId],
+			User:       userMap[p.UserId],
 			IsSeeder:   p.IsSeeder,
 			Uploaded:   p.Uploaded,
 			Downloaded: p.Downloaded,

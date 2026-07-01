@@ -23,7 +23,7 @@ func init() {
 	service.RegisterCatalogSubtitleDomain(NewCatalogSubtitleDomain())
 }
 
-func (s *sCatalogSubtitleDomain) InsertSubtitle(ctx context.Context, torrentId uint64, userId uint64, fileName, ext string, size int, language string) (uint64, error) {
+func (s *sCatalogSubtitleDomain) InsertSubtitle(ctx context.Context, torrentId uint64, userId uint64, fileName, ext string, size int, language string, anonymous bool) (uint64, error) {
 	insertData := g.Map{
 		dao.CatalogSubtitle.Columns().TorrentId:     torrentId,
 		dao.CatalogSubtitle.Columns().UserId:        userId,
@@ -34,7 +34,7 @@ func (s *sCatalogSubtitleDomain) InsertSubtitle(ctx context.Context, torrentId u
 		dao.CatalogSubtitle.Columns().StoragePath:   "",
 		dao.CatalogSubtitle.Columns().Language:      language,
 		dao.CatalogSubtitle.Columns().DownloadCount: 0,
-		dao.CatalogSubtitle.Columns().IsAnonymous:   0,
+		dao.CatalogSubtitle.Columns().Anonymous:     anonymous,
 		dao.CatalogSubtitle.Columns().CreatedAt:     gtime.Now(),
 	}
 

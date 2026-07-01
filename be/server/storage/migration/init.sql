@@ -608,7 +608,7 @@ CREATE TABLE `catalog_subtitle` (
     `storage_path`    VARCHAR(500)    NOT NULL DEFAULT '' COMMENT '存储路径/S3 key',
     `language`        VARCHAR(10)     NOT NULL DEFAULT '' COMMENT '语言代码 (如 zh-CN, en-US)',
     `download_count`  INT UNSIGNED    NOT NULL DEFAULT 0,
-    `is_anonymous`    BIT(1)      NOT NULL DEFAULT 0,
+    `anonymous`       BIT(1)      NOT NULL DEFAULT 0 COMMENT '匿名上传',
     `created_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
     KEY `idx_torrent` (`torrent_id`),

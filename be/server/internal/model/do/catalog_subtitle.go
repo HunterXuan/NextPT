@@ -22,6 +22,6 @@ type CatalogSubtitle struct {
 	StoragePath   any         // 存储路径/S3 key
 	Language      any         // 语言代码 (如 zh-CN, en-US)
 	DownloadCount any         //
-	IsAnonymous   any         //
+	Anonymous     any         // 匿名上传
 	CreatedAt     *gtime.Time //
 }
