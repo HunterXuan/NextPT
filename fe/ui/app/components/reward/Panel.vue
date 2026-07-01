@@ -141,8 +141,10 @@
 import { formatDateOnly } from '~/utils/format'
 
 interface RewardPanelItem {
-  userId?: number
-  username?: string
+  user?: {
+    id?: number
+    username?: string
+  }
   amount: number
   rewardCount?: number
   lastRewardAt?: string
@@ -369,7 +371,7 @@ async function confirmReward(amount: number, close?: () => void) {
 }
 
 function rewardDisplayName(reward: RewardPanelItem) {
-  return reward.username || `#${reward.userId || 0}`
+  return reward.user?.username || `#${reward.user?.id || 0}`
 }
 
 function rewardMetaText(reward: RewardPanelItem) {
@@ -382,7 +384,7 @@ function rewardMetaText(reward: RewardPanelItem) {
 }
 
 function rewardKey(reward: RewardPanelItem, index: number) {
-  return `${reward.userId || 0}-${reward.lastRewardAt || 'none'}-${index}`
+  return `${reward.user?.id || 0}-${reward.lastRewardAt || 'none'}-${index}`
 }
 
 function formatRewardAmount(value: number) {

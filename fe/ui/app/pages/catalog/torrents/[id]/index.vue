@@ -279,10 +279,10 @@
                 {{ $t('catalog.torrents.detail.peers.empty') }}
               </div>
               <div v-else class="max-h-80 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
-                <div v-for="peer in visiblePeers" :key="`${peer.userId}-${peer.startedAt}-${peer.isSeeder}`" class="grid gap-3 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
+                <div v-for="peer in visiblePeers" :key="`${peer.user?.id || 0}-${peer.startedAt}-${peer.isSeeder}`" class="grid gap-3 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
                   <div class="min-w-0">
                     <div class="flex min-w-0 items-center gap-2">
-                      <p class="truncate font-medium text-slate-950 dark:text-white">{{ peer.username || `#${peer.userId}` }}</p>
+                      <p class="truncate font-medium text-slate-950 dark:text-white">{{ peerUserName(peer) }}</p>
                       <UBadge :color="peer.isSeeder ? 'success' : 'primary'" variant="soft">
                         {{ peer.isSeeder ? $t('catalog.torrents.detail.peers.seeder') : $t('catalog.torrents.detail.peers.leecher') }}
                       </UBadge>
@@ -323,7 +323,7 @@
             </button>
 
             <div v-if="subtitlesPanelOpen" class="border-t border-slate-200 p-4 dark:border-slate-800">
-              <form class="grid grid-cols-1 gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 lg:grid-cols-[minmax(0,1fr)_180px_auto] dark:border-slate-800 dark:bg-slate-950" @submit.prevent="handleSubtitleUpload">
+              <form class="grid grid-cols-1 gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 lg:grid-cols-[minmax(0,1fr)_180px_auto_auto] lg:items-center dark:border-slate-800 dark:bg-slate-950" @submit.prevent="handleSubtitleUpload">
                 <label class="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600">
                   <UIcon name="i-lucide-file-up" class="size-4 shrink-0 text-slate-400" />
                   <span class="min-w-0 truncate">{{ selectedSubtitleFile?.name || $t('catalog.torrents.detail.subtitles.choose') }}</span>
@@ -338,6 +338,15 @@
                     {{ option.label }}
                   </option>
                 </select>
+                <label class="flex h-10 items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                  <span>{{ $t('catalog.torrents.detail.subtitles.anonymous') }}</span>
+                  <input
+                    v-model="subtitleForm.anonymous"
+                    type="checkbox"
+                    class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
+                    :disabled="subtitleUploadPending"
+                  >
+                </label>
                 <UButton type="submit" color="primary" icon="i-lucide-upload" :loading="subtitleUploadPending" :disabled="!canUploadSubtitle">
                   {{ $t('catalog.torrents.detail.subtitles.upload') }}
                 </UButton>
@@ -359,10 +368,10 @@
                     <div class="flex min-w-0 items-center gap-2">
                       <UIcon name="i-lucide-captions" class="size-4 shrink-0 text-sky-500" />
                       <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ subtitle.fileName }}</p>
-                      <UBadge color="neutral" variant="soft">{{ subtitle.language }}</UBadge>
+                      <UBadge color="neutral" variant="soft">{{ subtitleLanguageLabel(subtitle.language) }}</UBadge>
                     </div>
                     <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                      {{ subtitle.username || `#${subtitle.userId}` }} · {{ formatBytes(subtitle.size) }} · {{ formatDateTime(subtitle.createdAt, locale) }}
+                      {{ subtitleUploaderName(subtitle) }} · {{ formatBytes(subtitle.size) }} · {{ formatDateTime(subtitle.createdAt, locale) }}
                     </p>
                   </div>
                   <div class="flex items-center gap-2">
@@ -807,7 +816,8 @@ const subtitleSize = 10
 const commentPage = ref(1)
 const subtitlePage = ref(1)
 const subtitleForm = reactive({
-  language: 'zh-CN'
+  language: 'zh-CN',
+  anonymous: false
 })
 
 const subtitleLanguageOptions = [
@@ -818,6 +828,8 @@ const subtitleLanguageOptions = [
   { value: 'ko-KR', label: '한국어' },
   { value: 'other', label: 'Other' }
 ]
+
+const subtitleLanguageLabelMap = new Map(subtitleLanguageOptions.map((option) => [option.value, option.label]))
 
 const commentAvatarPalettes = [
   'border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300',
@@ -840,7 +852,7 @@ const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expan
 const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
 const renderedCommentPreview = computed(() => renderRichText(commentForm.content))
 const canUploadSubtitle = computed(() => Boolean(selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
-const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.ownerId)))
+const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.owner?.id)))
 const visiblePeers = computed(() => {
   if (activePeerView.value === 'seeders') return peers.value.filter((item) => item.isSeeder)
   if (activePeerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)
@@ -885,11 +897,15 @@ const publisherName = computed(() => {
 })
 
 function torrentOwnerName(torrent: TorrentDetail) {
-  const ownerName = torrent.ownerName || `#${torrent.ownerId}`
+  const ownerName = rawTorrentOwnerName(torrent)
   if (torrent.anonymous) {
-    return torrent.ownerId > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
+    return torrent.owner?.id > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
   }
-  return torrent.ownerId > 0 ? ownerName : '-'
+  return torrent.owner?.id > 0 ? ownerName : '-'
+}
+
+function rawTorrentOwnerName(torrent: TorrentDetail) {
+  return torrent.owner?.username || (torrent.owner?.id > 0 ? `#${torrent.owner.id}` : '')
 }
 
 function renderRichText(content: string) {
@@ -1511,12 +1527,33 @@ function handleSubtitleFileChange(event: Event) {
   selectedSubtitleFile.value = input.files?.[0] || null
 }
 
+function subtitleLanguageLabel(language?: string | null) {
+  if (!language) return '-'
+  return subtitleLanguageLabelMap.get(language) || language
+}
+
+function subtitleUploaderName(subtitle: SubtitleItem) {
+  if (subtitle.anonymous) {
+    const name = rawSubtitleUploaderName(subtitle)
+    return name ? t('catalog.torrents.anonymousOwner', { name }) : t('catalog.torrents.anonymous')
+  }
+  return subtitle.uploader?.id > 0 ? rawSubtitleUploaderName(subtitle) : '-'
+}
+
+function rawSubtitleUploaderName(subtitle: SubtitleItem) {
+  return subtitle.uploader?.username || (subtitle.uploader?.id > 0 ? `#${subtitle.uploader.id}` : '')
+}
+
+function peerUserName(peer: TorrentPeerItem) {
+  return peer.user?.username || (peer.user?.id > 0 ? `#${peer.user.id}` : '-')
+}
+
 async function handleSubtitleUpload() {
   if (!torrent.value || !selectedSubtitleFile.value || !subtitleForm.language || subtitleUploadPending.value) return
 
   subtitleUploadPending.value = true
   try {
-    await catalogTorrents.uploadSubtitle(torrent.value.id, selectedSubtitleFile.value, subtitleForm.language)
+    await catalogTorrents.uploadSubtitle(torrent.value.id, selectedSubtitleFile.value, subtitleForm.language, subtitleForm.anonymous)
     selectedSubtitleFile.value = null
     subtitleFileInputKey.value += 1
     toast.add({

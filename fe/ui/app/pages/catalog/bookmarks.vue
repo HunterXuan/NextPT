@@ -200,10 +200,14 @@ function categoryName(categoryId: number) {
 }
 
 function torrentOwnerName(torrent: TorrentListItem) {
-  const ownerName = torrent.ownerName || `#${torrent.ownerId}`
+  const ownerName = rawTorrentOwnerName(torrent)
   if (torrent.anonymous) {
-    return torrent.ownerId > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
+    return torrent.owner?.id > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
   }
-  return torrent.ownerId > 0 ? ownerName : '-'
+  return torrent.owner?.id > 0 ? ownerName : '-'
+}
+
+function rawTorrentOwnerName(torrent: TorrentListItem) {
+  return torrent.owner?.username || (torrent.owner?.id > 0 ? `#${torrent.owner.id}` : '')
 }
 </script>

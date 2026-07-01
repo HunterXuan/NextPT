@@ -160,7 +160,7 @@ let initialSnapshotTimer: ReturnType<typeof setTimeout> | null = null
 const initialSnapshotSettleMs = 30
 
 const torrentId = computed(() => readRouteId())
-const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.ownerId)))
+const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.owner?.id)))
 const selectedCategory = computed(() => categories.value.find((item) => item.id === Number(form.categoryId)) || null)
 const selectedCategoryName = computed(() => selectedCategory.value ? categoryDisplayName(selectedCategory.value) : '-')
 const selectedUploadConfig = computed(() => selectedCategory.value?.uploadConfig || null)

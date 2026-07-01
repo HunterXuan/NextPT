@@ -85,8 +85,7 @@ export interface TorrentListItem {
   leechers: number
   snatched: number
   likeCount: number
-  ownerId: number
-  ownerName: string
+  owner: UserSummary
   anonymous: boolean
   createdAt: string
 }
@@ -104,8 +103,7 @@ export interface TorrentFileItem {
 }
 
 export interface TorrentPeerItem {
-  userId: number
-  username: string
+  user: UserSummary
   isSeeder: boolean
   uploaded: number
   downloaded: number
@@ -113,8 +111,7 @@ export interface TorrentPeerItem {
 }
 
 export interface TorrentRewardItem {
-  userId: number
-  username: string
+  user: UserSummary
   amount: number
   rewardCount: number
   lastRewardAt: string
@@ -139,8 +136,8 @@ export interface CommentItem {
 export interface SubtitleItem {
   id: number
   torrentId: number
-  userId: number
-  username: string
+  uploader: UserSummary
+  anonymous: boolean
   fileName: string
   language: string
   size: number
@@ -331,10 +328,11 @@ export function useCatalogTorrents() {
     })
   }
 
-  async function uploadSubtitle(id: number, file: File, language: string) {
+  async function uploadSubtitle(id: number, file: File, language: string, anonymous = false) {
     const body = new FormData()
     body.append('file', file)
     body.append('language', language)
+    body.append('anonymous', anonymous ? 'true' : 'false')
 
     return await fetchApi<{ id: number }>(`/api/catalog/torrents/${id}/subtitles`, {
       method: 'POST',

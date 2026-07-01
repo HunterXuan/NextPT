@@ -378,6 +378,7 @@
           "summary": "{count} 条字幕",
           "choose": "选择字幕文件",
           "upload": "上传字幕",
+          "anonymous": "匿名上传",
           "uploaded": "字幕已上传",
           "download": "下载",
           "empty": "暂无字幕"
@@ -520,6 +521,7 @@
       },
       "table": {
         "file": "字幕文件",
+        "language": "语言",
         "torrent": "种子",
         "uploader": "上传者",
         "size": "大小",
@@ -527,6 +529,7 @@
         "actions": "操作"
       },
       "actions": {
+        "openTorrent": "查看种子",
         "download": "下载",
         "report": "举报"
       },

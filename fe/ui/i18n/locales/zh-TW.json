@@ -378,6 +378,7 @@
           "summary": "{count} 條字幕",
           "choose": "選擇字幕檔案",
           "upload": "上傳字幕",
+          "anonymous": "匿名上傳",
           "uploaded": "字幕已上傳",
           "download": "下載",
           "empty": "暫無字幕"
@@ -520,6 +521,7 @@
       },
       "table": {
         "file": "字幕檔案",
+        "language": "語言",
         "torrent": "種子",
         "uploader": "上傳者",
         "size": "大小",
@@ -527,6 +529,7 @@
         "actions": "操作"
       },
       "actions": {
+        "openTorrent": "查看種子",
         "download": "下載",
         "report": "檢舉"
       },

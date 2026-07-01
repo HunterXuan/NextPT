@@ -1,37 +1,29 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <div class="mb-4 grid grid-cols-2 gap-3 sm:flex sm:items-center sm:justify-end">
-        <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-          <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.subtitles.summary.total') }}</p>
-          <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(total) }}</p>
-        </div>
-        <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadSubtitles">
-          {{ $t('common.refresh') }}
-        </UButton>
-      </div>
-
-      <div class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div class="hidden grid-cols-[minmax(0,1fr)_120px_150px_120px_150px_170px] gap-4 border-b border-slate-200 px-4 py-3 text-xs font-medium uppercase text-slate-500 lg:grid dark:border-slate-800 dark:text-slate-400">
+      <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <div class="hidden grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] items-center gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
           <span>{{ $t('catalog.subtitles.table.file') }}</span>
-          <span>{{ $t('catalog.subtitles.table.torrent') }}</span>
+          <span class="text-center">{{ $t('catalog.subtitles.table.language') }}</span>
+          <span class="text-center">{{ $t('catalog.subtitles.table.torrent') }}</span>
           <span>{{ $t('catalog.subtitles.table.uploader') }}</span>
-          <span>{{ $t('catalog.subtitles.table.size') }}</span>
-          <span>{{ $t('catalog.subtitles.table.createdAt') }}</span>
-          <span class="text-right">{{ $t('catalog.subtitles.table.actions') }}</span>
+          <span class="text-right">{{ $t('catalog.subtitles.table.size') }}</span>
+          <span class="text-right">{{ $t('catalog.subtitles.table.createdAt') }}</span>
+          <span class="text-center">{{ $t('catalog.subtitles.table.actions') }}</span>
         </div>
 
         <div v-if="pending" class="divide-y divide-slate-200 dark:divide-slate-800">
-          <div v-for="index in 6" :key="index" class="grid gap-4 px-4 py-4 lg:grid-cols-[minmax(0,1fr)_120px_150px_120px_150px_170px]">
+          <div v-for="index in 8" :key="index" class="grid gap-3 px-3 py-3 lg:grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] lg:items-center lg:gap-2">
             <div class="space-y-2">
               <div class="h-4 w-3/4 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
               <div class="h-3 w-1/2 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
             </div>
-            <div class="h-4 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+            <div class="h-5 w-14 animate-pulse rounded bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
+            <div class="h-4 w-16 animate-pulse rounded bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
             <div class="h-4 w-24 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
-            <div class="h-4 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
-            <div class="h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
-            <div class="ml-auto h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+            <div class="h-4 w-16 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
+            <div class="h-4 w-20 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
+            <div class="h-8 w-16 animate-pulse rounded-md bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
           </div>
         </div>
 
@@ -53,39 +45,89 @@
           <article
             v-for="subtitle in subtitles"
             :key="subtitle.id"
-            class="grid gap-4 px-4 py-4 transition-colors hover:bg-slate-50 lg:grid-cols-[minmax(0,1fr)_120px_150px_120px_150px_170px] lg:items-center dark:hover:bg-slate-950/70"
+            class="grid gap-3 px-3 py-3 transition-colors hover:bg-slate-50 lg:grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] lg:items-center lg:gap-2 lg:py-2.5 dark:hover:bg-slate-950/70"
           >
             <div class="min-w-0">
-              <div class="flex min-w-0 flex-wrap items-center gap-2">
-                <UIcon name="i-lucide-captions" class="size-4 shrink-0 text-sky-500" />
-                <h2 class="min-w-0 truncate text-sm font-semibold text-slate-950 dark:text-white">{{ subtitle.fileName || `#${subtitle.id}` }}</h2>
-                <UBadge color="neutral" variant="soft">{{ subtitle.language || '-' }}</UBadge>
+              <h2 class="truncate text-sm font-medium leading-5 text-slate-950 dark:text-white" :title="subtitleFileName(subtitle)">
+                {{ subtitleFileName(subtitle) }}
+              </h2>
+              <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 lg:hidden dark:text-slate-400">
+                <span class="inline-flex items-center rounded border border-slate-200 px-1.5 py-0.5 font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">
+                  {{ subtitleLanguage(subtitle) }}
+                </span>
+                <span>{{ formatBytes(subtitle.size) }}</span>
+                <span :title="formatDateTime(subtitle.createdAt, locale)">{{ formatDateOnly(subtitle.createdAt, locale) }}</span>
+                <span>{{ uploaderName(subtitle) }}</span>
               </div>
-              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">#{{ subtitle.id }}</p>
+            </div>
+
+            <div class="hidden justify-center lg:flex">
+              <UBadge color="neutral" variant="soft">{{ subtitleLanguage(subtitle) }}</UBadge>
             </div>
 
             <NuxtLink
               :to="localePath(`/catalog/torrents/${subtitle.torrentId}`)"
-              class="inline-flex items-center gap-1 text-sm font-medium text-sky-700 hover:text-sky-800 dark:text-sky-300 dark:hover:text-sky-200"
+              class="hidden min-w-0 justify-center gap-1 text-sm font-medium text-sky-700 hover:text-sky-800 lg:inline-flex dark:text-sky-300 dark:hover:text-sky-200"
+              :title="$t('catalog.subtitles.actions.openTorrent')"
             >
               <UIcon name="i-lucide-arrow-up-right" class="size-4" />
               #{{ subtitle.torrentId }}
             </NuxtLink>
 
-            <p class="truncate text-sm text-slate-600 dark:text-slate-300">{{ subtitle.username || `#${subtitle.userId}` }}</p>
-            <p class="text-sm font-medium text-slate-950 dark:text-white">{{ formatBytes(subtitle.size) }}</p>
-            <p class="text-sm text-slate-500 dark:text-slate-400">{{ formatDateTime(subtitle.createdAt, locale) }}</p>
+            <p class="hidden truncate text-sm text-slate-600 lg:block dark:text-slate-300" :title="uploaderName(subtitle)">
+              {{ uploaderName(subtitle) }}
+            </p>
+            <p class="hidden text-right text-sm font-medium tabular-nums text-slate-950 lg:block dark:text-white">{{ formatBytes(subtitle.size) }}</p>
+            <p class="hidden text-right text-sm text-slate-500 lg:block dark:text-slate-400" :title="formatDateTime(subtitle.createdAt, locale)">
+              {{ formatDateOnly(subtitle.createdAt, locale) }}
+            </p>
 
-            <div class="flex flex-wrap items-center justify-start gap-2 lg:justify-end">
+            <div class="hidden justify-center gap-1 lg:flex">
+              <UTooltip
+                :text="$t('catalog.subtitles.actions.download')"
+                :content="{ side: 'top', sideOffset: 8 }"
+                :delay-duration="120"
+              >
+                <UButton
+                  color="neutral"
+                  variant="ghost"
+                  size="xs"
+                  icon="i-lucide-download"
+                  :loading="downloadPendingId === subtitle.id"
+                  :disabled="downloadPendingId > 0"
+                  :aria-label="$t('catalog.subtitles.actions.download')"
+                  @click="handleDownload(subtitle)"
+                />
+              </UTooltip>
+              <UTooltip
+                :text="$t('catalog.subtitles.actions.report')"
+                :content="{ side: 'top', sideOffset: 8 }"
+                :delay-duration="120"
+              >
+                <UButton
+                  color="neutral"
+                  :variant="activeReportId === subtitle.id ? 'soft' : 'ghost'"
+                  size="xs"
+                  icon="i-lucide-flag"
+                  :aria-label="$t('catalog.subtitles.actions.report')"
+                  @click="startReport(subtitle.id)"
+                />
+              </UTooltip>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 lg:hidden">
+              <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-arrow-up-right" :to="localePath(`/catalog/torrents/${subtitle.torrentId}`)">
+                #{{ subtitle.torrentId }}
+              </UButton>
               <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-download" :loading="downloadPendingId === subtitle.id" :disabled="downloadPendingId > 0" @click="handleDownload(subtitle)">
                 {{ $t('catalog.subtitles.actions.download') }}
               </UButton>
-              <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-flag" @click="startReport(subtitle.id)">
+              <UButton color="neutral" :variant="activeReportId === subtitle.id ? 'soft' : 'ghost'" size="xs" icon="i-lucide-flag" @click="startReport(subtitle.id)">
                 {{ $t('catalog.subtitles.actions.report') }}
               </UButton>
             </div>
 
-            <form v-if="activeReportId === subtitle.id" class="grid gap-2 rounded-md bg-slate-50 p-3 lg:col-span-6 dark:bg-slate-950" @submit.prevent="handleReport(subtitle.id)">
+            <form v-if="activeReportId === subtitle.id" class="grid gap-2 rounded-md border border-slate-200 bg-slate-50 p-3 lg:col-span-7 dark:border-slate-800 dark:bg-slate-950" @submit.prevent="handleReport(subtitle.id)">
               <UTextarea v-model="reportReason" :rows="2" :placeholder="$t('catalog.subtitles.report.reason')" :disabled="reportPending" />
               <div class="flex justify-end gap-2">
                 <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeReportId = 0">{{ $t('common.cancel') }}</UButton>
@@ -96,9 +138,10 @@
             </form>
           </article>
         </div>
-      </div>
+      </section>
 
       <AppPager
+        v-if="total > 0"
         class="mt-4"
         :page="page"
         :total="total"
@@ -115,7 +158,7 @@
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
 import type { SubtitleItem } from '~/composables/useCatalogTorrents'
-import { formatBytes, formatDateTime } from '~/utils/format'
+import { formatBytes, formatDateOnly, formatDateTime } from '~/utils/format'
 
 definePageMeta({
   middleware: 'auth'
@@ -139,8 +182,15 @@ const activeReportId = ref(0)
 const reportPending = ref(false)
 const reportReason = ref('')
 const pageSizes = [20, 50, 100]
+const subtitleLanguageLabels: Record<string, string> = {
+  'zh-CN': '简体中文',
+  'zh-TW': '繁體中文',
+  'en-US': 'English',
+  'ja-JP': '日本語',
+  'ko-KR': '한국어',
+  other: 'Other'
+}
 
-const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const size = computed(() => Number(selectedSize.value))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / size.value)))
 
@@ -161,8 +211,8 @@ function readPositiveIntQuery(key: string, fallback: number) {
 }
 
 function readPageSizeQuery() {
-  const parsed = readPositiveIntQuery('size', 20)
-  return [20, 50, 100].includes(parsed) ? parsed : 20
+  const parsed = readPositiveIntQuery('size', 50)
+  return [20, 50, 100].includes(parsed) ? parsed : 50
 }
 
 async function loadSubtitles() {
@@ -205,9 +255,30 @@ function syncQuery() {
     query: {
       ...route.query,
       page: page.value > 1 ? String(page.value) : undefined,
-      size: size.value !== 20 ? String(size.value) : undefined
+      size: size.value !== 50 ? String(size.value) : undefined
     }
   })
+}
+
+function subtitleFileName(subtitle: SubtitleItem) {
+  return subtitle.fileName || `subtitle-${subtitle.id}`
+}
+
+function subtitleLanguage(subtitle: SubtitleItem) {
+  if (!subtitle.language) return '-'
+  return subtitleLanguageLabels[subtitle.language] || subtitle.language
+}
+
+function uploaderName(subtitle: SubtitleItem) {
+  if (subtitle.anonymous) {
+    const name = rawUploaderName(subtitle)
+    return name ? t('catalog.torrents.anonymousOwner', { name }) : t('catalog.torrents.anonymous')
+  }
+  return subtitle.uploader?.id > 0 ? rawUploaderName(subtitle) : '-'
+}
+
+function rawUploaderName(subtitle: SubtitleItem) {
+  return subtitle.uploader?.username || (subtitle.uploader?.id > 0 ? `#${subtitle.uploader.id}` : '')
 }
 
 async function handleDownload(subtitle: SubtitleItem) {

@@ -432,23 +432,23 @@ function categoryName(categoryId: number) {
 function torrentOwnerName(torrent: TorrentListItem) {
   const ownerName = rawTorrentOwnerName(torrent)
   if (torrent.anonymous) {
-    return torrent.ownerId > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
+    return torrent.owner?.id > 0 ? t('catalog.torrents.anonymousOwner', { name: ownerName }) : t('catalog.torrents.anonymous')
   }
-  return torrent.ownerId > 0 ? ownerName : '-'
+  return torrent.owner?.id > 0 ? ownerName : '-'
 }
 
 function torrentOwnerPrimary(torrent: TorrentListItem) {
   if (torrent.anonymous) return t('catalog.torrents.anonymous')
-  return torrent.ownerId > 0 ? rawTorrentOwnerName(torrent) : '-'
+  return torrent.owner?.id > 0 ? rawTorrentOwnerName(torrent) : '-'
 }
 
 function torrentOwnerSecondary(torrent: TorrentListItem) {
-  if (!torrent.anonymous || torrent.ownerId === 0) return ''
+  if (!torrent.anonymous || !torrent.owner?.id) return ''
   return `(${rawTorrentOwnerName(torrent)})`
 }
 
 function rawTorrentOwnerName(torrent: TorrentListItem) {
-  return torrent.ownerName || `#${torrent.ownerId}`
+  return torrent.owner?.username || (torrent.owner?.id > 0 ? `#${torrent.owner.id}` : '')
 }
 
 function torrentStatusBadges(torrent: TorrentListItem) {

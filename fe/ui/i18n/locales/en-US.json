@@ -378,6 +378,7 @@
           "summary": "{count} subtitles",
           "choose": "Choose subtitle file",
           "upload": "Upload subtitle",
+          "anonymous": "Anonymous",
           "uploaded": "Subtitle uploaded",
           "download": "Download",
           "empty": "No subtitles yet"
@@ -520,6 +521,7 @@
       },
       "table": {
         "file": "Subtitle file",
+        "language": "Language",
         "torrent": "Torrent",
         "uploader": "Uploader",
         "size": "Size",
@@ -527,6 +529,7 @@
         "actions": "Actions"
       },
       "actions": {
+        "openTorrent": "Open torrent",
         "download": "Download",
         "report": "Report"
       },
