@@ -22,72 +22,17 @@
       </div>
 
       <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
-        <main class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div v-if="pending" class="divide-y divide-slate-200 dark:divide-slate-800">
-          <div v-for="index in 6" :key="index" class="grid gap-4 px-4 py-4 md:grid-cols-[minmax(0,1fr)_64px]">
-            <div class="space-y-2">
-              <div class="h-4 w-3/4 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-              <div class="h-3 w-1/2 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
-            </div>
-            <div class="h-7 w-12 animate-pulse rounded-full bg-slate-100 dark:bg-slate-800/70" />
-          </div>
-        </div>
-
-        <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-          <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadTopics">
-            {{ $t('common.retry') }}
-          </UButton>
-        </div>
-
-        <div v-else-if="topics.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <UIcon name="i-lucide-message-square-off" class="size-9 text-slate-400" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('forum.topicList.empty.title') }}</p>
-          <p class="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ $t('forum.topicList.empty.description') }}</p>
-          <UButton class="mt-5" color="primary" icon="i-lucide-square-pen" :to="createTopicPath">
-            {{ $t('forum.actions.createTopic') }}
-          </UButton>
-        </div>
-
-        <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
-          <article
-            v-for="topic in topics"
-            :key="topic.id"
-            class="grid gap-3 px-4 py-3 transition-colors hover:bg-slate-50 md:grid-cols-[minmax(0,1fr)_64px] md:items-center dark:hover:bg-slate-950/70"
-          >
-            <div class="min-w-0">
-              <div class="flex flex-wrap items-center gap-2">
-                <UBadge v-if="topic.isSticky" color="primary" variant="soft">{{ $t('forum.topicList.badges.sticky') }}</UBadge>
-                <UBadge v-if="topic.isLocked" color="neutral" variant="outline">{{ $t('forum.topicList.badges.locked') }}</UBadge>
-              </div>
-              <h2 class="mt-2 truncate text-sm font-semibold">
-                <NuxtLink
-                  :to="localePath(`/forum/topics/${topic.id}`)"
-                  class="text-slate-950 hover:text-sky-700 dark:text-white dark:hover:text-sky-300"
-                >
-                  {{ topic.subject || `#${topic.id}` }}
-                </NuxtLink>
-              </h2>
-              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                {{ topic.username || `#${topic.userId}` }}
-                <span class="mx-1 text-slate-300 dark:text-slate-700">/</span>
-                {{ $t('forum.topicList.meta.created') }} {{ formatDateTime(topic.createdAt, locale) }}
-                <span class="mx-1 text-slate-300 dark:text-slate-700">/</span>
-                {{ $t('forum.topicList.meta.lastReply') }} {{ formatDateTime(topic.lastReplyAt || topic.createdAt, locale) }}
-                <span class="mx-1 text-slate-300 dark:text-slate-700">/</span>
-                {{ $t('forum.topicList.meta.views', { count: numberFormatter.format(topic.views) }) }}
-              </p>
-            </div>
-
-            <NuxtLink
-              :to="localePath(`/forum/topics/${topic.id}`)"
-              class="inline-flex h-7 min-w-10 items-center justify-center rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-800 md:justify-self-end dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-sky-950 dark:hover:text-sky-200"
-            >
-              {{ numberFormatter.format(topic.replyCount) }}
-            </NuxtLink>
-          </article>
-        </div>
+        <main>
+          <ForumTopicList
+            :topics="topics"
+            :pending="pending"
+            :error-message="errorMessage"
+            :empty-title="$t('forum.topicList.empty.title')"
+            :empty-description="$t('forum.topicList.empty.description')"
+            :empty-action-label="$t('forum.actions.createTopic')"
+            :empty-action-to="createTopicPath"
+            @retry="loadTopics"
+          />
         </main>
 
         <aside class="space-y-4">
@@ -136,7 +81,7 @@
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
 import { useForum, type ForumNode, type ForumTopicListItem } from '~/composables/useForum'
-import { formatDateTime, localizeI18nName } from '~/utils/format'
+import { localizeI18nName } from '~/utils/format'
 
 definePageMeta({
   middleware: 'auth'

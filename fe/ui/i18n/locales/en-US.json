@@ -572,7 +572,9 @@
     "sidebar": {
       "title": "Forum Tools",
       "bookmarks": "Topic Bookmarks",
-      "quickNodes": "Quick nodes"
+      "currentNode": "Current Node",
+      "siteStats": "Forum Stats",
+      "quickNodes": "Popular nodes"
     },
     "fallback": {
       "category": "Category",
@@ -597,6 +599,7 @@
       "meta": {
         "created": "Posted",
         "lastReply": "Last reply",
+        "lastReplyBy": "last reply by {user}",
         "views": "{count} views"
       },
       "table": {
@@ -619,7 +622,8 @@
       "title": "Topic Bookmarks",
       "empty": {
         "title": "No topic bookmarks",
-        "description": "Forum topics you bookmark will appear here."
+        "description": "Forum topics you bookmark will appear here.",
+        "action": "Browse forum"
       }
     },
     "create": {

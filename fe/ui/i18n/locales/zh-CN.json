@@ -572,7 +572,9 @@
     "sidebar": {
       "title": "论坛工具",
       "bookmarks": "主题收藏",
-      "quickNodes": "常用节点"
+      "currentNode": "当前节点",
+      "siteStats": "论坛数据",
+      "quickNodes": "热门节点"
     },
     "fallback": {
       "category": "分区",
@@ -597,6 +599,7 @@
       "meta": {
         "created": "发布",
         "lastReply": "最后回复",
+        "lastReplyBy": "最后回复来自 {user}",
         "views": "{count} 浏览"
       },
       "table": {
@@ -619,7 +622,8 @@
       "title": "主题收藏",
       "empty": {
         "title": "暂无主题收藏",
-        "description": "你收藏的论坛主题会显示在这里。"
+        "description": "你收藏的论坛主题会显示在这里。",
+        "action": "浏览论坛"
       }
     },
     "create": {

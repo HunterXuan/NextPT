@@ -1,4 +1,5 @@
 import type { I18nName } from '~/types/i18n'
+import type { UserSummary } from '~/types/iam'
 
 export interface ForumNodeCategory {
   id: number
@@ -19,13 +20,13 @@ export interface ForumNode {
 export interface ForumTopicListItem {
   id: number
   subject: string
-  userId: number
-  username: string
+  author: UserSummary
   isLocked: boolean
   isSticky: boolean
   views: number
   replyCount: number
   lastReplyAt: string
+  lastReplyUser: UserSummary
   createdAt: string
 }
 
@@ -45,8 +46,7 @@ export interface ForumTopicDetail extends ForumTopicListItem {
 
 export interface ForumReplyItem {
   id: number
-  userId: number
-  username: string
+  author: UserSummary
   content: string
   createdAt: string
   isLiked: boolean

@@ -7,7 +7,7 @@
             {{ topic?.subject || $t('forum.detail.titleFallback', { id: topicId }) }}
           </h1>
           <p v-if="topic" class="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            {{ $t('forum.topicList.byline', { user: topic.username || `#${topic.userId}`, time: formatDateTime(topic.createdAt, locale) }) }}
+            {{ $t('forum.topicList.byline', { user: userDisplayName(topic.author), time: formatDateTime(topic.createdAt, locale) }) }}
           </p>
         </div>
 
@@ -110,7 +110,7 @@
               <article v-for="(reply, index) in replies" :key="reply.id" class="px-4 py-4">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div class="min-w-0">
-                    <p class="text-sm font-medium text-slate-950 dark:text-white">{{ reply.username || `#${reply.userId}` }}</p>
+                    <p class="text-sm font-medium text-slate-950 dark:text-white">{{ userDisplayName(reply.author) }}</p>
                     <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
                       {{ $t('forum.detail.replies.floor', { floor: replyFloor(index) }) }}
                       <span class="mx-1 text-slate-300 dark:text-slate-700">/</span>
@@ -201,7 +201,7 @@
             <dl class="space-y-3 text-sm">
               <div class="flex items-center justify-between gap-3">
                 <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.info.author') }}</dt>
-                <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ topic.username || `#${topic.userId}` }}</dd>
+                <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ userDisplayName(topic.author) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3">
                 <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.info.createdAt') }}</dt>
@@ -323,6 +323,7 @@
 import { ApiError } from '~/composables/useApi'
 import type { AdminForumNode } from '~/composables/useAdmin'
 import { useForum, type ForumReplyItem, type ForumTopicAppend, type ForumTopicDetail } from '~/composables/useForum'
+import type { UserSummary } from '~/types/iam'
 import { formatDateTime, localizeI18nName } from '~/utils/format'
 
 definePageMeta({
@@ -665,5 +666,10 @@ async function handleMoveTopic() {
 
 function forumNodeName(node: AdminForumNode) {
   return localizeI18nName(node.nameI18N as any, locale.value, node.slug || `#${node.id}`)
+}
+
+function userDisplayName(user?: UserSummary | null) {
+  if (!user) return '-'
+  return user.username || (user.id > 0 ? `#${user.id}` : '-')
 }
 </script>

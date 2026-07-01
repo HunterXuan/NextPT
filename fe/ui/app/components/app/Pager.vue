@@ -17,7 +17,7 @@
       </label>
     </div>
 
-    <nav class="flex flex-wrap items-center gap-1" :aria-label="t('common.pagination.label')">
+    <nav v-if="totalPages > 1" class="flex flex-wrap items-center gap-1" :aria-label="t('common.pagination.label')">
       <UButton
         color="neutral"
         variant="outline"

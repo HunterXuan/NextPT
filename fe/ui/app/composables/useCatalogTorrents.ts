@@ -1,4 +1,5 @@
 import type { I18nName } from '~/types/i18n'
+import type { UserSummary } from '~/types/iam'
 
 export interface CatalogCategory {
   id: number
@@ -115,12 +116,6 @@ export interface TorrentRewardItem {
   amount: number
   rewardCount: number
   lastRewardAt: string
-}
-
-export interface UserSummary {
-  id: number
-  username: string
-  avatar: string
 }
 
 export interface CommentItem {

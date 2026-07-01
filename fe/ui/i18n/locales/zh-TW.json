@@ -572,7 +572,9 @@
     "sidebar": {
       "title": "論壇工具",
       "bookmarks": "主題收藏",
-      "quickNodes": "常用節點"
+      "currentNode": "目前節點",
+      "siteStats": "論壇資料",
+      "quickNodes": "熱門節點"
     },
     "fallback": {
       "category": "分區",
@@ -597,6 +599,7 @@
       "meta": {
         "created": "發布",
         "lastReply": "最後回覆",
+        "lastReplyBy": "最後回覆來自 {user}",
         "views": "{count} 瀏覽"
       },
       "table": {
@@ -619,7 +622,8 @@
       "title": "主題收藏",
       "empty": {
         "title": "暫無主題收藏",
-        "description": "你收藏的論壇主題會顯示在這裡。"
+        "description": "你收藏的論壇主題會顯示在這裡。",
+        "action": "瀏覽論壇"
       }
     },
     "create": {
