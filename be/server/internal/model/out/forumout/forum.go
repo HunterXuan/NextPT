@@ -1,6 +1,10 @@
 package forumout
 
-import "github.com/gogf/gf/v2/encoding/gjson"
+import (
+	"server/internal/model"
+
+	"github.com/gogf/gf/v2/encoding/gjson"
+)
 
 type NodeCategoryItem struct {
 	Id       uint        `json:"id"`
@@ -23,16 +27,16 @@ type NodeItem struct {
 }
 
 type TopicListItem struct {
-	Id          uint64 `json:"id"`
-	Subject     string `json:"subject"`
-	UserId      uint64 `json:"userId"`
-	Username    string `json:"username"`
-	IsLocked    bool   `json:"isLocked"`
-	IsSticky    bool   `json:"isSticky"`
-	Views       uint   `json:"views"`
-	ReplyCount  uint   `json:"replyCount"`
-	LastReplyAt string `json:"lastReplyAt"`
-	CreatedAt   string `json:"createdAt"`
+	Id            uint64               `json:"id"`
+	Subject       string               `json:"subject"`
+	Author        model.IamUserSummary `json:"author"`
+	IsLocked      bool                 `json:"isLocked"`
+	IsSticky      bool                 `json:"isSticky"`
+	Views         uint                 `json:"views"`
+	ReplyCount    uint                 `json:"replyCount"`
+	LastReplyAt   string               `json:"lastReplyAt"`
+	LastReplyUser model.IamUserSummary `json:"lastReplyUser"`
+	CreatedAt     string               `json:"createdAt"`
 }
 
 type TopicListOut struct {
@@ -56,12 +60,11 @@ type TopicDetailOut struct {
 }
 
 type ReplyListItem struct {
-	Id        uint64 `json:"id"`
-	UserId    uint64 `json:"userId"`
-	Username  string `json:"username"`
-	Content   string `json:"content"`
-	CreatedAt string `json:"createdAt"`
-	IsLiked   bool   `json:"isLiked"`
+	Id        uint64               `json:"id"`
+	Author    model.IamUserSummary `json:"author"`
+	Content   string               `json:"content"`
+	CreatedAt string               `json:"createdAt"`
+	IsLiked   bool                 `json:"isLiked"`
 }
 
 type ReplyListOut struct {

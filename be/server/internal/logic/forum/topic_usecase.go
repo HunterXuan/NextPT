@@ -16,6 +16,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sForumTopicUsecase struct{}
@@ -47,30 +48,8 @@ func (s *sForumTopicUsecase) List(ctx context.Context, actor *model.Actor, in fo
 		return nil, err
 	}
 
-	userIds := make([]uint64, 0, len(topics))
-	for _, t := range topics {
-		userIds = append(userIds, t.UserId)
-	}
-	usernameMap := s.loadUsernameMap(ctx, userIds)
-
-	var list []forumout.TopicListItem
-	for _, t := range topics {
-		list = append(list, forumout.TopicListItem{
-			Id:          t.Id,
-			Subject:     t.Subject,
-			UserId:      t.UserId,
-			Username:    usernameMap[t.UserId],
-			IsLocked:    t.IsLocked,
-			IsSticky:    t.IsSticky,
-			Views:       t.Views,
-			ReplyCount:  t.ReplyCount,
-			LastReplyAt: t.LastReplyAt.String(),
-			CreatedAt:   t.CreatedAt.String(),
-		})
-	}
-
 	return &forumout.TopicListOut{
-		List:  list,
+		List:  s.formatTopicListItems(ctx, topics),
 		Total: total,
 		Node: forumout.NodeItem{
 			Id:         node.Id,
@@ -103,12 +82,6 @@ func (s *sForumTopicUsecase) Detail(ctx context.Context, actor *model.Actor, in 
 		return nil, err
 	}
 
-	var user entity.IamUser
-	userPtr, _ := service.IamUserDomain().GetUserById(ctx, topic.UserId)
-	if userPtr != nil {
-		user = *userPtr
-	}
-
 	isLiked := false
 	isBookmarked := false
 	if actor != nil && actor.Id > 0 {
@@ -116,24 +89,20 @@ func (s *sForumTopicUsecase) Detail(ctx context.Context, actor *model.Actor, in 
 		isBookmarked, _ = service.ForumTopicDomain().CheckTopicBookmarked(ctx, in.Id, actor.Id)
 	}
 
+	listItems := s.formatTopicListItems(ctx, []entity.ForumTopic{*topic})
+	var listItem forumout.TopicListItem
+	if len(listItems) > 0 {
+		listItem = listItems[0]
+	}
+	listItem.Views = topic.Views + 1
+
 	return &forumout.TopicDetailOut{
-		TopicListItem: forumout.TopicListItem{
-			Id:          topic.Id,
-			Subject:     topic.Subject,
-			UserId:      topic.UserId,
-			Username:    user.Username,
-			IsLocked:    topic.IsLocked,
-			IsSticky:    topic.IsSticky,
-			Views:       topic.Views + 1,
-			ReplyCount:  topic.ReplyCount,
-			LastReplyAt: topic.LastReplyAt.String(),
-			CreatedAt:   topic.CreatedAt.String(),
-		},
-		Content:      topic.Content,
-		Appends:      topic.Appends,
-		NodeId:       topic.NodeId,
-		IsLiked:      isLiked,
-		IsBookmarked: isBookmarked,
+		TopicListItem: listItem,
+		Content:       topic.Content,
+		Appends:       topic.Appends,
+		NodeId:        topic.NodeId,
+		IsLiked:       isLiked,
+		IsBookmarked:  isBookmarked,
 	}, nil
 }
 
@@ -293,35 +262,49 @@ func (s *sForumTopicUsecase) ListBookmarkedTopics(ctx context.Context, actor *mo
 	if err != nil {
 		return nil, err
 	}
-	var list []forumout.TopicListItem
-	userIds := make([]uint64, 0, len(topics))
-	for _, t := range topics {
-		userIds = append(userIds, t.UserId)
-	}
-	usernameMap := s.loadUsernameMap(ctx, userIds)
-
-	for _, t := range topics {
-		list = append(list, forumout.TopicListItem{
-			Id:          t.Id,
-			Subject:     t.Subject,
-			UserId:      t.UserId,
-			Username:    usernameMap[t.UserId],
-			IsLocked:    t.IsLocked,
-			IsSticky:    t.IsSticky,
-			Views:       t.Views,
-			ReplyCount:  t.ReplyCount,
-			LastReplyAt: t.LastReplyAt.String(),
-			CreatedAt:   t.CreatedAt.String(),
-		})
-	}
 	return &forumout.TopicBookmarkListOut{
-		List:  list,
+		List:  s.formatTopicListItems(ctx, topics),
 		Total: total,
 	}, nil
 }
 
-func (s *sForumTopicUsecase) loadUsernameMap(ctx context.Context, userIds []uint64) map[uint64]string {
-	userMap := make(map[uint64]string)
+func (s *sForumTopicUsecase) formatTopicListItems(ctx context.Context, topics []entity.ForumTopic) []forumout.TopicListItem {
+	userIds := make([]uint64, 0, len(topics)*2)
+	for _, topic := range topics {
+		userIds = append(userIds, topic.UserId)
+		if topic.LastReplyBy > 0 {
+			userIds = append(userIds, topic.LastReplyBy)
+		}
+	}
+	userMap := s.loadUserSummaryMap(ctx, userIds)
+
+	list := make([]forumout.TopicListItem, 0, len(topics))
+	for _, topic := range topics {
+		list = append(list, forumout.TopicListItem{
+			Id:            topic.Id,
+			Subject:       topic.Subject,
+			Author:        userMap[topic.UserId],
+			IsLocked:      topic.IsLocked,
+			IsSticky:      topic.IsSticky,
+			Views:         topic.Views,
+			ReplyCount:    topic.ReplyCount,
+			LastReplyAt:   s.formatTime(topic.LastReplyAt),
+			LastReplyUser: userMap[topic.LastReplyBy],
+			CreatedAt:     s.formatTime(topic.CreatedAt),
+		})
+	}
+	return list
+}
+
+func (s *sForumTopicUsecase) formatTime(value *gtime.Time) string {
+	if value == nil {
+		return ""
+	}
+	return value.String()
+}
+
+func (s *sForumTopicUsecase) loadUserSummaryMap(ctx context.Context, userIds []uint64) map[uint64]model.IamUserSummary {
+	userMap := make(map[uint64]model.IamUserSummary)
 	if len(userIds) == 0 {
 		return userMap
 	}
@@ -337,6 +320,7 @@ func (s *sForumTopicUsecase) loadUsernameMap(ctx context.Context, userIds []uint
 		}
 		seen[id] = struct{}{}
 		uniqueIds = append(uniqueIds, id)
+		userMap[id] = model.IamUserSummary{Id: id}
 	}
 	if len(uniqueIds) == 0 {
 		return userMap
@@ -347,7 +331,21 @@ func (s *sForumTopicUsecase) loadUsernameMap(ctx context.Context, userIds []uint
 		return userMap
 	}
 	for _, user := range users {
-		userMap[user.Id] = user.Username
+		summary := userMap[user.Id]
+		summary.Id = user.Id
+		summary.Username = user.Username
+		userMap[user.Id] = summary
+	}
+
+	profiles, err := service.IamUserDomain().GetUserProfilesByUserIds(ctx, uniqueIds)
+	if err != nil {
+		return userMap
+	}
+	for _, profile := range profiles {
+		summary := userMap[profile.UserId]
+		summary.Id = profile.UserId
+		summary.Avatar = profile.Avatar
+		userMap[profile.UserId] = summary
 	}
 	return userMap
 }

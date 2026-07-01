@@ -15,6 +15,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sForumReplyUsecase struct{}
@@ -62,7 +63,7 @@ func (s *sForumReplyUsecase) List(ctx context.Context, actor *model.Actor, in fo
 	for _, r := range replies {
 		userIds = append(userIds, r.UserId)
 	}
-	usernameMap := s.loadUsernameMap(ctx, userIds)
+	authorMap := s.loadUserSummaryMap(ctx, userIds)
 
 	likedMap := make(map[uint64]bool)
 	if actor != nil && actor.Id > 0 {
@@ -79,10 +80,9 @@ func (s *sForumReplyUsecase) List(ctx context.Context, actor *model.Actor, in fo
 	for _, r := range replies {
 		list = append(list, forumout.ReplyListItem{
 			Id:        r.Id,
-			UserId:    r.UserId,
-			Username:  usernameMap[r.UserId],
+			Author:    authorMap[r.UserId],
 			Content:   r.Content,
-			CreatedAt: r.CreatedAt.String(),
+			CreatedAt: s.formatTime(r.CreatedAt),
 			IsLiked:   likedMap[r.Id],
 		})
 	}
@@ -93,8 +93,15 @@ func (s *sForumReplyUsecase) List(ctx context.Context, actor *model.Actor, in fo
 	}, nil
 }
 
-func (s *sForumReplyUsecase) loadUsernameMap(ctx context.Context, userIds []uint64) map[uint64]string {
-	userMap := make(map[uint64]string)
+func (s *sForumReplyUsecase) formatTime(value *gtime.Time) string {
+	if value == nil {
+		return ""
+	}
+	return value.String()
+}
+
+func (s *sForumReplyUsecase) loadUserSummaryMap(ctx context.Context, userIds []uint64) map[uint64]model.IamUserSummary {
+	userMap := make(map[uint64]model.IamUserSummary)
 	if len(userIds) == 0 {
 		return userMap
 	}
@@ -110,6 +117,7 @@ func (s *sForumReplyUsecase) loadUsernameMap(ctx context.Context, userIds []uint
 		}
 		seen[id] = struct{}{}
 		uniqueIds = append(uniqueIds, id)
+		userMap[id] = model.IamUserSummary{Id: id}
 	}
 	if len(uniqueIds) == 0 {
 		return userMap
@@ -120,7 +128,21 @@ func (s *sForumReplyUsecase) loadUsernameMap(ctx context.Context, userIds []uint
 		return userMap
 	}
 	for _, user := range users {
-		userMap[user.Id] = user.Username
+		summary := userMap[user.Id]
+		summary.Id = user.Id
+		summary.Username = user.Username
+		userMap[user.Id] = summary
+	}
+
+	profiles, err := service.IamUserDomain().GetUserProfilesByUserIds(ctx, uniqueIds)
+	if err != nil {
+		return userMap
+	}
+	for _, profile := range profiles {
+		summary := userMap[profile.UserId]
+		summary.Id = profile.UserId
+		summary.Avatar = profile.Avatar
+		userMap[profile.UserId] = summary
 	}
 	return userMap
 }
