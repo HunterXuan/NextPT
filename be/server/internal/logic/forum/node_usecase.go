@@ -2,8 +2,12 @@ package forum
 
 import (
 	"context"
+	"strings"
 
+	"server/internal/consts"
 	"server/internal/model"
+	"server/internal/model/entity"
+	"server/internal/model/in/forumin"
 	"server/internal/model/out/forumout"
 	"server/internal/service"
 )
@@ -18,11 +22,12 @@ func NewForumNodeUsecase() *sForumNodeUsecase {
 	return &sForumNodeUsecase{}
 }
 
-func (s *sForumNodeUsecase) List(ctx context.Context, actor *model.Actor) (*forumout.NodeListOut, error) {
+func (s *sForumNodeUsecase) List(ctx context.Context, actor *model.Actor, in forumin.NodeListInp) (*forumout.NodeListOut, error) {
 	userLevel := 0
 	if actor != nil {
 		userLevel = actor.RoleLevel
 	}
+	scope := s.normalizeListScope(in.Scope)
 
 	categories, err := service.ForumNodeDomain().GetCategories(ctx)
 	if err != nil {
@@ -36,7 +41,7 @@ func (s *sForumNodeUsecase) List(ctx context.Context, actor *model.Actor) (*foru
 
 	nodeMap := make(map[uint][]forumout.NodeItem)
 	for _, node := range nodes {
-		if userLevel < int(node.MinRoleRead) {
+		if !s.canUseNodeForScope(userLevel, &node, scope) {
 			continue
 		}
 		item := forumout.NodeItem{
@@ -72,4 +77,22 @@ func (s *sForumNodeUsecase) List(ctx context.Context, actor *model.Actor) (*foru
 	return &forumout.NodeListOut{
 		List: list,
 	}, nil
+}
+
+func (s *sForumNodeUsecase) normalizeListScope(scope string) string {
+	switch strings.ToLower(strings.TrimSpace(scope)) {
+	case consts.ForumNodeListScopeCreate:
+		return consts.ForumNodeListScopeCreate
+	default:
+		return consts.ForumNodeListScopeRead
+	}
+}
+
+func (s *sForumNodeUsecase) canUseNodeForScope(userLevel int, node *entity.ForumNode, scope string) bool {
+	switch scope {
+	case consts.ForumNodeListScopeCreate:
+		return userLevel >= int(node.MinRoleCreate)
+	default:
+		return userLevel >= int(node.MinRoleRead)
+	}
 }

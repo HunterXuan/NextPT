@@ -1,5 +1,9 @@
 package forumin
 
+type NodeListInp struct {
+	Scope string `json:"scope" d:"read" v:"in:read,create"`
+}
+
 type TopicListInp struct {
 	Slug string `json:"slug" in:"path"` // Path param for routing
 	Page int    `json:"page" d:"1"`

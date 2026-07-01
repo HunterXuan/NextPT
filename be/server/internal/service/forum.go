@@ -36,7 +36,7 @@ type (
 		IncrementNodeStats(ctx context.Context, nodeId uint, topicId uint64) error
 	}
 	IForumNodeUsecase interface {
-		List(ctx context.Context, actor *model.Actor) (*forumout.NodeListOut, error)
+		List(ctx context.Context, actor *model.Actor, in forumin.NodeListInp) (*forumout.NodeListOut, error)
 	}
 	IForumReplyDomain interface {
 		InsertReply(ctx context.Context, actor *model.Actor, in forumin.ReplyCreateInp) (uint64, error)

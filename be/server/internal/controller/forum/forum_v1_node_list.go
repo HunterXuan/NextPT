@@ -10,7 +10,7 @@ import (
 
 func (c *ControllerV1) NodeList(ctx context.Context, req *v1.NodeListReq) (res *v1.NodeListRes, err error) {
 	res = &v1.NodeListRes{}
-	out, err := service.ForumNodeUsecase().List(ctx, contexts.GetActor(ctx))
+	out, err := service.ForumNodeUsecase().List(ctx, contexts.GetActor(ctx), req.NodeListInp)
 	if err != nil {
 		return nil, err
 	}
