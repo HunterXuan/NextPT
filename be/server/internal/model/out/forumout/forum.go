@@ -34,6 +34,7 @@ type TopicListItem struct {
 	IsSticky      bool                 `json:"isSticky"`
 	Views         uint                 `json:"views"`
 	ReplyCount    uint                 `json:"replyCount"`
+	LikeCount     uint                 `json:"likeCount"`
 	LastReplyAt   string               `json:"lastReplyAt"`
 	LastReplyUser model.IamUserSummary `json:"lastReplyUser"`
 	CreatedAt     string               `json:"createdAt"`
@@ -60,11 +61,13 @@ type TopicDetailOut struct {
 }
 
 type ReplyListItem struct {
-	Id        uint64               `json:"id"`
-	Author    model.IamUserSummary `json:"author"`
-	Content   string               `json:"content"`
-	CreatedAt string               `json:"createdAt"`
-	IsLiked   bool                 `json:"isLiked"`
+	Id          uint64               `json:"id"`
+	Author      model.IamUserSummary `json:"author"`
+	Content     string               `json:"content"`
+	CreatedAt   string               `json:"createdAt"`
+	LikeCount   uint                 `json:"likeCount"`
+	RewardCount uint                 `json:"rewardCount"`
+	IsLiked     bool                 `json:"isLiked"`
 }
 
 type ReplyListOut struct {

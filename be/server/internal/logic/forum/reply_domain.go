@@ -111,3 +111,8 @@ func (s *sForumReplyDomain) GetReplyLikesByUser(ctx context.Context, userId uint
 	err := dao.ForumReplyLike.Ctx(ctx).Where(dao.ForumReplyLike.Columns().UserId, userId).WhereIn(dao.ForumReplyLike.Columns().ReplyId, replyIds).Scan(&likes)
 	return likes, err
 }
+
+func (s *sForumReplyDomain) IncrementRewardStats(ctx context.Context, replyId uint64) error {
+	_, err := dao.ForumReply.Ctx(ctx).Where(dao.ForumReply.Columns().Id, replyId).Increment(dao.ForumReply.Columns().RewardCount, 1)
+	return err
+}

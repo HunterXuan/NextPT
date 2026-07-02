@@ -340,6 +340,7 @@ func (s *sForumTopicUsecase) formatTopicListItems(ctx context.Context, topics []
 			IsSticky:      topic.IsSticky,
 			Views:         topic.Views,
 			ReplyCount:    topic.ReplyCount,
+			LikeCount:     topic.LikeCount,
 			LastReplyAt:   lastReplyAt,
 			LastReplyUser: lastReplyUser,
 			CreatedAt:     s.formatTime(topic.CreatedAt),

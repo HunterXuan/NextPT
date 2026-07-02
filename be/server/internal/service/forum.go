@@ -44,6 +44,7 @@ type (
 		GetReplyById(ctx context.Context, replyId uint64) (*entity.ForumReply, error)
 		ToggleLike(ctx context.Context, actor *model.Actor, replyId uint64) (bool, error)
 		GetReplyLikesByUser(ctx context.Context, userId uint64, replyIds []uint64) ([]entity.ForumReplyLike, error)
+		IncrementRewardStats(ctx context.Context, replyId uint64) error
 	}
 	IForumReplyUsecase interface {
 		List(ctx context.Context, actor *model.Actor, in forumin.ReplyListInp) (*forumout.ReplyListOut, error)

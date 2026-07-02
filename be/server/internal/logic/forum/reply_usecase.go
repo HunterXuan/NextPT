@@ -79,11 +79,13 @@ func (s *sForumReplyUsecase) List(ctx context.Context, actor *model.Actor, in fo
 
 	for _, r := range replies {
 		list = append(list, forumout.ReplyListItem{
-			Id:        r.Id,
-			Author:    authorMap[r.UserId],
-			Content:   r.Content,
-			CreatedAt: s.formatTime(r.CreatedAt),
-			IsLiked:   likedMap[r.Id],
+			Id:          r.Id,
+			Author:      authorMap[r.UserId],
+			Content:     r.Content,
+			CreatedAt:   s.formatTime(r.CreatedAt),
+			LikeCount:   r.LikeCount,
+			RewardCount: r.RewardCount,
+			IsLiked:     likedMap[r.Id],
 		})
 	}
 
@@ -252,8 +254,12 @@ func (s *sForumReplyUsecase) RewardReply(ctx context.Context, actor *model.Actor
 	if reply.UserId == actor.Id {
 		return gerror.New(gi18n.T(ctx, "forum.reply.reward_self_not_allowed"))
 	}
-	err = service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, reply.UserId, in.Amount, consts.EconomyBonusTargetTypeForumReply, in.Id, "Reward reply", "Reply rewarded")
-	return err
+	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, reply.UserId, in.Amount, consts.EconomyBonusTargetTypeForumReply, in.Id, "Reward reply", "Reply rewarded"); err != nil {
+			return err
+		}
+		return service.ForumReplyDomain().IncrementRewardStats(ctx, in.Id)
+	})
 }
 
 func (s *sForumReplyUsecase) ReportReply(ctx context.Context, actor *model.Actor, in forumin.ReplyReportInp) error {

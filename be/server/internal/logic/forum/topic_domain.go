@@ -257,7 +257,14 @@ func (s *sForumTopicDomain) AdminMoveTopic(ctx context.Context, id uint64, newNo
 	var topic entity.ForumTopic
 	err := dao.ForumTopic.Ctx(ctx).Where(dao.ForumTopic.Columns().Id, id).Scan(&topic)
 	if err != nil || topic.Id == 0 {
-		return gerror.New("Topic not found")
+		return gerror.New(gi18n.T(ctx, "admin.forum.topic_not_found"))
+	}
+	node, err := service.ForumNodeDomain().GetNodeById(ctx, newNodeId)
+	if err != nil {
+		return err
+	}
+	if node == nil || node.Id == 0 {
+		return gerror.New(gi18n.T(ctx, "admin.forum.new_node_not_found"))
 	}
 	oldNodeId := topic.NodeId
 	if oldNodeId == newNodeId {
