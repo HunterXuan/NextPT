@@ -625,6 +625,11 @@
     "bookmarks": {
       "metaTitle": "主題收藏",
       "title": "主題收藏",
+      "actions": {
+        "browse": "瀏覽論壇",
+        "remove": "取消收藏",
+        "removed": "已取消收藏"
+      },
       "empty": {
         "title": "暫無主題收藏",
         "description": "你收藏的論壇主題會顯示在這裡。",

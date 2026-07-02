@@ -17,7 +17,7 @@
       </label>
     </div>
 
-    <nav v-if="totalPages > 1" class="flex flex-wrap items-center gap-1" :aria-label="t('common.pagination.label')">
+    <nav v-if="totalPages > 0" class="flex flex-wrap items-center gap-1" :aria-label="t('common.pagination.label')">
       <UButton
         color="neutral"
         variant="outline"
@@ -114,7 +114,7 @@ const { t, locale } = useI18n()
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const safeTotal = computed(() => Math.max(0, Number(props.total) || 0))
 const safePageSize = computed(() => Math.max(1, Number(props.pageSize) || 1))
-const totalPages = computed(() => Math.max(1, Math.ceil(safeTotal.value / safePageSize.value)))
+const totalPages = computed(() => safeTotal.value > 0 ? Math.ceil(safeTotal.value / safePageSize.value) : 0)
 const safePage = computed(() => clampPage(props.page))
 
 const normalizedPageSizeOptions = computed(() => {
@@ -137,6 +137,8 @@ const pageItems = computed<PageItem[]>(() => {
 })
 
 function buildVisiblePages(page: number, pages: number) {
+  if (pages <= 0) return []
+
   if (pages <= 7) {
     return Array.from({ length: pages }, (_, index) => index + 1)
   }
@@ -161,6 +163,8 @@ function buildVisiblePages(page: number, pages: number) {
 }
 
 function clampPage(page: number) {
+  if (totalPages.value <= 0) return 1
+
   const parsed = Number(page)
   if (!Number.isFinite(parsed)) return 1
   return Math.min(Math.max(1, Math.trunc(parsed)), totalPages.value)

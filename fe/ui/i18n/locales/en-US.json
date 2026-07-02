@@ -625,6 +625,11 @@
     "bookmarks": {
       "metaTitle": "Topic Bookmarks",
       "title": "Topic Bookmarks",
+      "actions": {
+        "browse": "Browse forum",
+        "remove": "Remove bookmark",
+        "removed": "Bookmark removed"
+      },
       "empty": {
         "title": "No topic bookmarks",
         "description": "Forum topics you bookmark will appear here.",

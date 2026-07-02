@@ -1,7 +1,7 @@
 <template>
   <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
     <div v-if="pending" class="divide-y divide-slate-200 dark:divide-slate-800">
-      <div v-for="index in 8" :key="index" class="grid gap-3 px-3 py-3 md:grid-cols-[minmax(0,1fr)_56px] md:items-center">
+      <div v-for="index in 8" :key="index" class="grid gap-3 px-3 py-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
         <div class="flex gap-3">
           <div class="size-10 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800/70" />
           <div class="min-w-0 flex-1 space-y-2">
@@ -25,7 +25,7 @@
       <UIcon :name="emptyIcon" class="size-9 text-slate-400" />
       <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ emptyTitle }}</p>
       <p class="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ emptyDescription }}</p>
-      <UButton v-if="emptyActionTo && emptyActionLabel" class="mt-5" color="primary" icon="i-lucide-square-pen" :to="emptyActionTo">
+      <UButton v-if="emptyActionTo && emptyActionLabel" class="mt-5" color="primary" :icon="emptyActionIcon" :to="emptyActionTo">
         {{ emptyActionLabel }}
       </UButton>
     </div>
@@ -34,7 +34,7 @@
       <article
         v-for="topic in topics"
         :key="topic.id"
-        class="grid gap-3 px-3 py-3 transition-colors hover:bg-slate-50 md:grid-cols-[minmax(0,1fr)_56px] md:items-center dark:hover:bg-slate-950/70"
+        class="grid gap-3 px-3 py-3 transition-colors hover:bg-slate-50 md:grid-cols-[minmax(0,1fr)_auto] md:items-center dark:hover:bg-slate-950/70"
       >
         <div class="flex min-w-0 gap-3">
           <div
@@ -90,13 +90,16 @@
           </div>
         </div>
 
-        <NuxtLink
-          :to="localePath(`/forum/topics/${topic.id}`)"
-          class="inline-flex h-7 min-w-10 items-center justify-center rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-800 md:justify-self-center dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-sky-950 dark:hover:text-sky-200"
-          :title="$t('forum.topicList.table.replies')"
-        >
-          {{ numberFormatter.format(topic.replyCount) }}
-        </NuxtLink>
+        <div class="flex items-center gap-2 md:justify-self-end">
+          <NuxtLink
+            :to="localePath(`/forum/topics/${topic.id}`)"
+            class="inline-flex h-7 min-w-10 items-center justify-center rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-800 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-sky-950 dark:hover:text-sky-200"
+            :title="$t('forum.topicList.table.replies')"
+          >
+            {{ numberFormatter.format(topic.replyCount) }}
+          </NuxtLink>
+          <slot name="topic-actions" :topic="topic" />
+        </div>
       </article>
     </div>
   </section>
@@ -118,6 +121,7 @@ withDefaults(defineProps<{
   emptyTitle: string
   emptyDescription: string
   emptyIcon?: string
+  emptyActionIcon?: string
   emptyActionLabel?: string
   emptyActionTo?: string
   showViews?: boolean
@@ -125,6 +129,7 @@ withDefaults(defineProps<{
   pending: false,
   errorMessage: '',
   emptyIcon: 'i-lucide-message-square-off',
+  emptyActionIcon: 'i-lucide-square-pen',
   emptyActionLabel: '',
   emptyActionTo: '',
   showViews: true
