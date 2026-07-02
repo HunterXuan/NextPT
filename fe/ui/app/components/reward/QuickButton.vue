@@ -5,18 +5,24 @@
     :ui="{ content: 'w-64 p-3' }"
     @update:open="setOpen"
   >
-    <UButton
-      type="button"
-      color="neutral"
-      variant="ghost"
-      size="xs"
-      icon="i-lucide-coins"
-      :disabled="disabled || pending"
-      :aria-label="ariaLabel || t('common.reward.confirm')"
-      :title="ariaLabel || t('common.reward.confirm')"
+    <UTooltip
+      :text="tooltipText"
+      :disabled="open"
+      :content="{ side: 'top', sideOffset: 8 }"
+      :delay-duration="120"
     >
-      {{ numberFormatter.format(count) }}
-    </UButton>
+      <UButton
+        type="button"
+        color="neutral"
+        variant="ghost"
+        size="xs"
+        icon="i-lucide-coins"
+        :disabled="disabled || pending"
+        :aria-label="tooltipText"
+      >
+        {{ numberFormatter.format(count) }}
+      </UButton>
+    </UTooltip>
 
     <template #content="{ close }">
       <div class="space-y-3">
@@ -93,6 +99,7 @@ const pending = ref(false)
 const selectedAmount = ref(0)
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
+const tooltipText = computed(() => props.ariaLabel || t('common.reward.confirm'))
 const normalizedPresets = computed(() => {
   return Array.from(new Set(props.presets
     .map((amount) => Number(amount))
