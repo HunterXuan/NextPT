@@ -691,7 +691,27 @@
       "edit": {
         "title": "Edit topic",
         "hint": "You can edit the title, node, and content within 5 minutes after publishing.",
-        "success": "Topic updated"
+        "success": "Topic updated",
+        "confirmCancel": "Discard unsaved changes?",
+        "discard": "Discard changes",
+        "leaveConfirm": "You have unsaved topic changes. Leave this page?",
+        "windowStatus": "Edit window",
+        "remaining": "{time} left",
+        "expired": "Expired",
+        "errors": {
+          "noChanges": "There are no changes to save",
+          "expired": "The editing window has expired",
+          "nodeRequired": "Select a node",
+          "subjectTooShort": "The title must be at least 2 characters",
+          "contentTooShort": "The content must be at least 2 characters"
+        },
+        "guide": {
+          "title": "Editing tips",
+          "window": "Topics can be edited within 5 minutes after publishing.",
+          "markdown": "Content supports Markdown preview and will use the site rendering after saving.",
+          "node": "When moving nodes, make sure the discussion still belongs in the target node.",
+          "discard": "Canceling will discard unsaved changes."
+        }
       },
       "admin": {
         "title": "Admin actions",

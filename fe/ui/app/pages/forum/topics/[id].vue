@@ -17,10 +17,9 @@
         </UButton>
       </div>
 
-      <div v-else-if="topic" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
-        <main class="space-y-6">
+      <div v-else-if="topic && topicEditOpen" class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
+        <main class="min-w-0">
           <ForumTopicEditForm
-            v-if="topicEditOpen"
             v-model:selected-category-id="editSelectedCategoryId"
             v-model:node-id="editForm.nodeId"
             v-model:subject="editForm.subject"
@@ -31,12 +30,62 @@
             :nodes-error="editNodesError"
             :action-pending="topicActionPending"
             :can-submit="canSubmitTopicEdit"
+            :is-dirty="isTopicEditDirty"
+            :submit-disabled-reason="topicEditSubmitDisabledReason"
             @submit="handleUpdateTopic"
             @cancel="closeTopicEdit"
           />
+        </main>
 
+        <aside class="space-y-3 xl:sticky xl:top-20">
+          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.edit.guide.title') }}</h2>
+            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              <li class="flex gap-2">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span>{{ $t('forum.detail.edit.guide.window') }}</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span>{{ $t('forum.detail.edit.guide.markdown') }}</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span>{{ $t('forum.detail.edit.guide.node') }}</span>
+              </li>
+              <li class="flex gap-2 rounded-md bg-amber-50 px-2 py-1.5 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+                <UIcon name="i-lucide-triangle-alert" class="mt-1 size-4 shrink-0" />
+                <span>{{ $t('forum.detail.edit.guide.discard') }}</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+            <dl class="space-y-2 text-sm">
+              <div class="flex items-center justify-between gap-3">
+                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.edit.windowStatus') }}</dt>
+                <dd>
+                  <UBadge :color="topicEditStatusColor" variant="soft">
+                    {{ topicEditStatusText }}
+                  </UBadge>
+                </dd>
+              </div>
+              <div class="flex items-center justify-between gap-3">
+                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.create.summary.subjectLength') }}</dt>
+                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(editForm.subject.trim().length) }}</dd>
+              </div>
+              <div class="flex items-center justify-between gap-3">
+                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.create.summary.content') }}</dt>
+                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(editForm.content.trim().length) }}</dd>
+              </div>
+            </dl>
+          </section>
+        </aside>
+      </div>
+
+      <div v-else-if="topic" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+        <main class="space-y-6">
           <ForumTopicCard
-            v-else
             v-model:append-content="topicAppendContent"
             v-model:append-editor-mode="topicAppendEditorMode"
             v-model:report-reason="topicReportReason"
@@ -134,6 +183,12 @@ definePageMeta({
 type TopicPanel = 'append' | 'report'
 type EditorMode = 'write' | 'preview'
 
+interface TopicEditSnapshot {
+  nodeId: string
+  subject: string
+  content: string
+}
+
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -161,6 +216,7 @@ const adminNodes = ref<AdminForumNode[]>([])
 const adminCategories = ref<AdminForumCategory[]>([])
 const moveNodeId = ref(0)
 const topicEditOpen = ref(false)
+const currentTimeMs = ref(Date.now())
 const editCategories = ref<ForumNodeCategory[]>([])
 const editNodesPending = ref(false)
 const editNodesError = ref('')
@@ -170,6 +226,7 @@ const editForm = reactive({
   subject: '',
   content: ''
 })
+const editInitialForm = ref<TopicEditSnapshot | null>(null)
 
 const replyPage = ref(readPositiveIntQuery('page', 1))
 const replySize = 50
@@ -182,6 +239,7 @@ const topicReportReason = ref('')
 const replyReportReason = ref('')
 const replyContent = ref('')
 const replyEditorMode = ref<EditorMode>('write')
+let currentTimeTimer: ReturnType<typeof setInterval> | null = null
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const replyTotalPages = computed(() => Math.max(1, Math.ceil(replyTotal.value / replySize)))
@@ -189,23 +247,56 @@ const topicAppends = computed<ForumTopicAppend[]>(() => {
   return Array.isArray(topic.value?.appends) ? topic.value.appends.filter((append) => append?.content) : []
 })
 const topicEditWindowMs = 5 * 60 * 1000
+const topicEditExpiresAtMs = computed(() => {
+  const createdAt = Date.parse(topic.value?.createdAt || '')
+  return Number.isFinite(createdAt) ? createdAt + topicEditWindowMs : 0
+})
+const topicEditRemainingMs = computed(() => {
+  if (!topicEditExpiresAtMs.value) return 0
+  return Math.max(0, topicEditExpiresAtMs.value - currentTimeMs.value)
+})
+const topicEditRemainingSeconds = computed(() => Math.ceil(topicEditRemainingMs.value / 1000))
+const isTopicEditExpired = computed(() => Boolean(topicEditOpen.value && topicEditRemainingMs.value <= 0))
+const topicEditStatusColor = computed<'warning' | 'error'>(() => isTopicEditExpired.value || topicEditRemainingSeconds.value <= 60 ? 'error' : 'warning')
+const topicEditStatusText = computed(() => {
+  if (isTopicEditExpired.value) return t('forum.detail.edit.expired')
+  return t('forum.detail.edit.remaining', { time: formatTopicEditRemaining(topicEditRemainingSeconds.value) })
+})
 const canEditTopic = computed(() => {
   if (!topic.value || topic.value.isLocked || !user.value?.id || topic.value.author?.id !== user.value.id) return false
   const createdAt = Date.parse(topic.value.createdAt || '')
-  return Number.isFinite(createdAt) && Date.now() - createdAt <= topicEditWindowMs
+  return Number.isFinite(createdAt) && currentTimeMs.value - createdAt <= topicEditWindowMs
 })
 const canAppendTopic = computed(() => {
   return Boolean(topic.value && !topic.value.isLocked && user.value?.id && topic.value.author?.id === user.value.id && topicAppends.value.length < 3)
 })
 const canUseTopicOwnerActions = computed(() => canEditTopic.value || canAppendTopic.value || activeTopicPanel.value === 'append')
+const isTopicEditDirty = computed(() => {
+  const initial = editInitialForm.value
+  if (!initial) return false
+  return editForm.nodeId !== initial.nodeId
+    || editForm.subject.trim() !== initial.subject
+    || editForm.content.trim() !== initial.content
+})
 const canSubmitTopicEdit = computed(() => {
   return Boolean(
     topic.value
+    && isTopicEditDirty.value
+    && !isTopicEditExpired.value
     && Number(editForm.nodeId) > 0
     && editForm.subject.trim().length >= 2
     && editForm.content.trim().length >= 2
     && topicActionPending.value !== 'update'
   )
+})
+const topicEditSubmitDisabledReason = computed(() => {
+  if (topicActionPending.value === 'update') return ''
+  if (isTopicEditExpired.value) return t('forum.detail.edit.errors.expired')
+  if (Number(editForm.nodeId) <= 0) return t('forum.detail.edit.errors.nodeRequired')
+  if (editForm.subject.trim().length < 2) return t('forum.detail.edit.errors.subjectTooShort')
+  if (editForm.content.trim().length < 2) return t('forum.detail.edit.errors.contentTooShort')
+  if (!isTopicEditDirty.value) return t('forum.detail.edit.errors.noChanges')
+  return ''
 })
 const canCreateReply = computed(() => {
   return Boolean(topic.value && !topic.value.isLocked && replyContent.value.trim().length >= 2 && !replyCreatePending.value)
@@ -216,8 +307,25 @@ useHead(() => ({
 }))
 
 onMounted(() => {
+  window.addEventListener('beforeunload', handleTopicEditBeforeUnload)
+  currentTimeTimer = setInterval(() => {
+    currentTimeMs.value = Date.now()
+  }, 1000)
   loadPage()
   if (isStaff.value) loadAdminNodes()
+})
+
+onBeforeUnmount(() => {
+  if (currentTimeTimer) {
+    clearInterval(currentTimeTimer)
+    currentTimeTimer = null
+  }
+  window.removeEventListener('beforeunload', handleTopicEditBeforeUnload)
+})
+
+onBeforeRouteLeave(() => {
+  if (!shouldWarnTopicEditLeave()) return true
+  return window.confirm(t('forum.detail.edit.leaveConfirm'))
 })
 
 watch(() => route.hash, () => {
@@ -232,6 +340,23 @@ function readFirstQueryValue(key: string) {
 function readPositiveIntQuery(key: string, fallback: number) {
   const parsed = Number(readFirstQueryValue(key))
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+}
+
+function formatTopicEditRemaining(seconds: number) {
+  const safeSeconds = Math.max(0, seconds)
+  const minutes = Math.floor(safeSeconds / 60)
+  const restSeconds = safeSeconds % 60
+  return `${minutes}:${String(restSeconds).padStart(2, '0')}`
+}
+
+function shouldWarnTopicEditLeave() {
+  return Boolean(topicEditOpen.value && isTopicEditDirty.value)
+}
+
+function handleTopicEditBeforeUnload(event: BeforeUnloadEvent) {
+  if (!shouldWarnTopicEditLeave()) return
+  event.preventDefault()
+  event.returnValue = ''
 }
 
 async function loadPage() {
@@ -261,9 +386,15 @@ async function openTopicEdit() {
   if (!topic.value || !canEditTopic.value) return
 
   closeTopicPanel()
-  editForm.nodeId = String(topic.value.nodeId)
-  editForm.subject = topic.value.subject
-  editForm.content = topic.value.content
+  const snapshot: TopicEditSnapshot = {
+    nodeId: String(topic.value.nodeId),
+    subject: topic.value.subject.trim(),
+    content: topic.value.content.trim()
+  }
+  editForm.nodeId = snapshot.nodeId
+  editForm.subject = snapshot.subject
+  editForm.content = snapshot.content
+  editInitialForm.value = snapshot
   topicEditEditorMode.value = 'write'
   topicEditOpen.value = true
   await loadEditNodes()
@@ -272,6 +403,7 @@ async function openTopicEdit() {
 function closeTopicEdit() {
   topicEditOpen.value = false
   editNodesError.value = ''
+  editInitialForm.value = null
   topicEditEditorMode.value = 'write'
 }
 

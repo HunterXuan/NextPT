@@ -22,7 +22,7 @@
           {{ previewLabel }}
         </button>
       </div>
-      <div class="flex items-center justify-end gap-3">
+      <div v-if="showActions" class="flex items-center justify-end gap-3">
         <span v-if="lockedText" class="text-xs text-slate-500 dark:text-slate-400">
           {{ lockedText }}
         </span>
@@ -50,6 +50,7 @@ const props = withDefaults(defineProps<{
   pending?: boolean
   submitDisabled?: boolean
   asForm?: boolean
+  showActions?: boolean
   submitLabel: string
   submitIcon?: string
   writeLabel: string
@@ -63,6 +64,7 @@ const props = withDefaults(defineProps<{
   pending: false,
   submitDisabled: false,
   asForm: true,
+  showActions: true,
   submitIcon: 'i-lucide-send',
   lockedText: ''
 })

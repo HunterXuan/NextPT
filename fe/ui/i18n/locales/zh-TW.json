@@ -691,7 +691,27 @@
       "edit": {
         "title": "編輯主題",
         "hint": "發布後 5 分鐘內可以修改標題、節點和正文。",
-        "success": "主題已更新"
+        "success": "主題已更新",
+        "confirmCancel": "放棄尚未保存的修改？",
+        "discard": "放棄修改",
+        "leaveConfirm": "目前主題還有尚未保存的修改，確定要離開嗎？",
+        "windowStatus": "編輯窗口",
+        "remaining": "還剩 {time}",
+        "expired": "已結束",
+        "errors": {
+          "noChanges": "沒有需要保存的修改",
+          "expired": "編輯時間已結束",
+          "nodeRequired": "請選擇節點",
+          "subjectTooShort": "標題至少需要 2 個字",
+          "contentTooShort": "正文至少需要 2 個字"
+        },
+        "guide": {
+          "title": "編輯提示",
+          "window": "主題發布後 5 分鐘內可以編輯標題、節點和正文。",
+          "markdown": "正文支援 Markdown 預覽，保存後會按站內格式展示。",
+          "node": "移動節點時請確認討論仍然屬於目標板塊。",
+          "discard": "取消編輯會放棄尚未保存的修改。"
+        }
       },
       "admin": {
         "title": "管理操作",

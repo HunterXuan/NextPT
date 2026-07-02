@@ -691,7 +691,27 @@
       "edit": {
         "title": "编辑主题",
         "hint": "发布后 5 分钟内可以修改标题、节点和正文。",
-        "success": "主题已更新"
+        "success": "主题已更新",
+        "confirmCancel": "放弃尚未保存的修改？",
+        "discard": "放弃修改",
+        "leaveConfirm": "当前主题还有未保存的修改，确定要离开吗？",
+        "windowStatus": "编辑窗口",
+        "remaining": "还剩 {time}",
+        "expired": "已结束",
+        "errors": {
+          "noChanges": "没有需要保存的修改",
+          "expired": "编辑时间已结束",
+          "nodeRequired": "请选择节点",
+          "subjectTooShort": "标题至少需要 2 个字",
+          "contentTooShort": "正文至少需要 2 个字"
+        },
+        "guide": {
+          "title": "编辑提示",
+          "window": "主题发布后 5 分钟内可以编辑标题、节点和正文。",
+          "markdown": "正文支持 Markdown 预览，保存后会按站内格式展示。",
+          "node": "移动节点时请确认讨论仍然属于目标板块。",
+          "discard": "取消编辑会放弃尚未保存的修改。"
+        }
       },
       "admin": {
         "title": "管理操作",

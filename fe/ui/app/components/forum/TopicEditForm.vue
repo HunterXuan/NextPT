@@ -6,9 +6,6 @@
           <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('forum.detail.edit.title') }}</h2>
           <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ t('forum.detail.edit.hint') }}</p>
         </div>
-        <UButton type="button" color="neutral" variant="ghost" size="sm" @click="$emit('cancel')">
-          {{ t('common.cancel') }}
-        </UButton>
       </div>
 
       <div v-if="nodesPending" class="grid gap-3 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
@@ -62,20 +59,49 @@
           :write-label="t('common.editor.edit')"
           :preview-label="t('common.editor.preview')"
           :preview-empty="t('common.editor.previewEmpty')"
-        >
-          <template #actions>
-            <span />
-          </template>
-        </RichTextComposer>
+          :show-actions="false"
+        />
       </UFormField>
 
       <div class="flex justify-end gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
-        <UButton type="button" color="neutral" variant="ghost" @click="$emit('cancel')">
-          {{ t('common.cancel') }}
-        </UButton>
-        <UButton type="submit" color="primary" icon="i-lucide-save" :loading="isUpdating" :disabled="!canSubmit">
-          {{ t('common.save') }}
-        </UButton>
+        <UPopover
+          :open="cancelConfirmOpen"
+          :content="{ side: 'top', align: 'end', sideOffset: 8 }"
+          :ui="{ content: 'w-72 p-3' }"
+          @update:open="setCancelConfirmOpen"
+        >
+          <UButton type="button" color="neutral" variant="ghost" @click="requestCancel">
+            {{ t('common.cancel') }}
+          </UButton>
+
+          <template #content="{ close }">
+            <div class="space-y-3">
+              <p class="text-sm font-medium text-slate-950 dark:text-white">
+                {{ t('forum.detail.edit.confirmCancel') }}
+              </p>
+              <div class="flex justify-end gap-2">
+                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="closeCancelPopover(close)">
+                  {{ t('common.cancel') }}
+                </UButton>
+                <UButton color="error" size="xs" type="button" icon="i-lucide-undo-2" @click="confirmCancel(close)">
+                  {{ t('forum.detail.edit.discard') }}
+                </UButton>
+              </div>
+            </div>
+          </template>
+        </UPopover>
+        <UTooltip
+          :text="submitDisabledReason"
+          :disabled="canSubmit || !submitDisabledReason"
+          :content="{ side: 'top', align: 'end', sideOffset: 8 }"
+          :delay-duration="120"
+        >
+          <span class="inline-flex">
+            <UButton type="submit" color="primary" icon="i-lucide-save" :loading="isUpdating" :disabled="!canSubmit">
+              {{ t('common.save') }}
+            </UButton>
+          </span>
+        </UTooltip>
       </div>
     </form>
   </section>
@@ -93,6 +119,8 @@ const props = withDefaults(defineProps<{
   nodesError?: string
   actionPending?: string
   canSubmit?: boolean
+  isDirty?: boolean
+  submitDisabledReason?: string
   selectedCategoryId: number
   nodeId: string
   subject: string
@@ -102,7 +130,9 @@ const props = withDefaults(defineProps<{
   nodesPending: false,
   nodesError: '',
   actionPending: '',
-  canSubmit: false
+  canSubmit: false,
+  isDirty: false,
+  submitDisabledReason: ''
 })
 
 const emit = defineEmits<{
@@ -117,6 +147,7 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n()
 
+const cancelConfirmOpen = ref(false)
 const isUpdating = computed(() => props.actionPending === 'update')
 const selectedCategoryIdValue = computed({
   get: () => props.selectedCategoryId,
@@ -162,5 +193,28 @@ function categoryDisplayName(category: ForumNodeCategory) {
 
 function nodeDisplayName(node: ForumNode) {
   return localizeI18nName(node.nameI18n, locale.value, node.slug || `#${node.id}`)
+}
+
+function requestCancel() {
+  if (props.isDirty) {
+    cancelConfirmOpen.value = true
+    return
+  }
+  emit('cancel')
+}
+
+function setCancelConfirmOpen(value: boolean) {
+  if (isUpdating.value) return
+  cancelConfirmOpen.value = value
+}
+
+function closeCancelPopover(close?: () => void) {
+  cancelConfirmOpen.value = false
+  close?.()
+}
+
+function confirmCancel(close?: () => void) {
+  closeCancelPopover(close)
+  emit('cancel')
 }
 </script>
