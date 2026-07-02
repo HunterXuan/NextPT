@@ -201,13 +201,18 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 	}
 
 	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, comment.UserId, in.Amount, consts.EconomyBonusTargetTypeComment, comment.Id, "", "")
+		err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, comment.UserId, in.Amount, consts.EconomyBonusTargetTypeCatalogComment, comment.Id, "", "")
 		if err != nil {
 			return err
 		}
 
-		err = service.CatalogCommentDomain().InsertCommentReward(ctx, actor.Id, comment.Id, in.Amount)
-		if err != nil {
+		if err = service.EconomyRewardDomain().InsertRewardRecord(ctx, entity.EconomyRewardRecord{
+			TargetType: consts.EconomyBonusTargetTypeCatalogComment,
+			TargetId:   comment.Id,
+			FromUserId: actor.Id,
+			ToUserId:   comment.UserId,
+			Amount:     in.Amount,
+		}); err != nil {
 			return err
 		}
 

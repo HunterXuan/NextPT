@@ -41,6 +41,7 @@ type (
 		Pin(ctx context.Context, actor *model.Actor, in adminin.ForumTopicPinInp) error
 		Unpin(ctx context.Context, actor *model.Actor, in adminin.ForumTopicUnpinInp) error
 		Move(ctx context.Context, actor *model.Actor, in adminin.ForumTopicMoveInp) error
+		Delete(ctx context.Context, actor *model.Actor, in adminin.ForumTopicDeleteInp) error
 	}
 	IAdminIamInviteUsecase interface {
 		Grant(ctx context.Context, actor *model.Actor, in adminin.IamInviteGrantInp) error

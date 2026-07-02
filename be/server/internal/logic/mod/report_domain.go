@@ -67,3 +67,14 @@ func (s *sModReportDomain) DeleteReportsByTarget(ctx context.Context, targetType
 		Where(dao.ModReport.Columns().TargetId, targetId).Delete()
 	return err
 }
+
+func (s *sModReportDomain) DeleteReportsByTargets(ctx context.Context, targetType string, targetIds []uint64) error {
+	if len(targetIds) == 0 {
+		return nil
+	}
+	_, err := dao.ModReport.Ctx(ctx).
+		Where(dao.ModReport.Columns().TargetType, targetType).
+		WhereIn(dao.ModReport.Columns().TargetId, targetIds).
+		Delete()
+	return err
+}

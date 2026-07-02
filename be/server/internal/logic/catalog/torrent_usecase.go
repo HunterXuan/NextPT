@@ -210,6 +210,16 @@ func (s *sCatalogTorrentUsecase) HardDeleteTorrent(ctx context.Context, torrentI
 
 	// 2. 执行跨域的 DB 大事务硬删除
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		commentIds, err := service.CatalogCommentDomain().QueryCommentIdsByTarget(ctx, "torrent", torrentId)
+		if err != nil {
+			return err
+		}
+		if err := service.EconomyRewardDomain().DeleteRewardRecordsByTarget(ctx, consts.EconomyBonusTargetTypeCatalogTorrent, torrentId); err != nil {
+			return err
+		}
+		if err := service.EconomyRewardDomain().DeleteRewardRecordsByTargets(ctx, consts.EconomyBonusTargetTypeCatalogComment, commentIds); err != nil {
+			return err
+		}
 		if err := service.CatalogTorrentDomain().DeleteTorrent(ctx, torrentId); err != nil {
 			return err
 		}
@@ -406,14 +416,19 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 		// 调用 Economy Bonus 域的 TransferBonus 方法
 		remarkFrom := fmt.Sprintf("Reward torrent #%d", in.Id)
 		remarkTo := fmt.Sprintf("Received reward for torrent #%d", in.Id)
-		err = service.EconomyBonusUsecase().TransferBonus(ctx, userId, torrent.OwnerId, in.Amount, consts.EconomyBonusTargetTypeTorrent, in.Id, remarkFrom, remarkTo)
+		err = service.EconomyBonusUsecase().TransferBonus(ctx, userId, torrent.OwnerId, in.Amount, consts.EconomyBonusTargetTypeCatalogTorrent, in.Id, remarkFrom, remarkTo)
 		if err != nil {
 			return err
 		}
 
 		// 写入赞赏记录
-		err = service.CatalogTorrentDomain().InsertTorrentReward(ctx, &entity.CatalogTorrentReward{TorrentId: in.Id, UserId: userId, Amount: in.Amount})
-		if err != nil {
+		if err = service.EconomyRewardDomain().InsertRewardRecord(ctx, entity.EconomyRewardRecord{
+			TargetType: consts.EconomyBonusTargetTypeCatalogTorrent,
+			TargetId:   in.Id,
+			FromUserId: userId,
+			ToUserId:   torrent.OwnerId,
+			Amount:     in.Amount,
+		}); err != nil {
 			return gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.write_reward_failed"))
 		}
 
@@ -440,7 +455,7 @@ func (s *sCatalogTorrentUsecase) RewardList(ctx context.Context, actor *model.Ac
 		return nil, err
 	}
 
-	summaries, total, err := service.CatalogTorrentDomain().QueryTorrentRewards(ctx, in.Id, in.Page, in.Size)
+	summaries, total, err := service.EconomyRewardDomain().QueryRewardSummaries(ctx, consts.EconomyBonusTargetTypeCatalogTorrent, in.Id, in.Page, in.Size)
 	if err != nil {
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.get_reward_list_failed"))
 	}

@@ -29,6 +29,7 @@ type IAdminV1 interface {
 	ForumTopicPin(ctx context.Context, req *v1.ForumTopicPinReq) (res *v1.ForumTopicPinRes, err error)
 	ForumTopicUnpin(ctx context.Context, req *v1.ForumTopicUnpinReq) (res *v1.ForumTopicUnpinRes, err error)
 	ForumTopicMove(ctx context.Context, req *v1.ForumTopicMoveReq) (res *v1.ForumTopicMoveRes, err error)
+	ForumTopicDelete(ctx context.Context, req *v1.ForumTopicDeleteReq) (res *v1.ForumTopicDeleteRes, err error)
 	IamInviteGrant(ctx context.Context, req *v1.IamInviteGrantReq) (res *v1.IamInviteGrantRes, err error)
 	IamPermissionList(ctx context.Context, req *v1.IamPermissionListReq) (res *v1.IamPermissionListRes, err error)
 	IamRoleList(ctx context.Context, req *v1.IamRoleListReq) (res *v1.IamRoleListRes, err error)

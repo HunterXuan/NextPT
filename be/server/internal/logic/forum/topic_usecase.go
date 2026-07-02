@@ -246,8 +246,59 @@ func (s *sForumTopicUsecase) RewardTopic(ctx context.Context, actor *model.Actor
 	if topic.UserId == actor.Id {
 		return gerror.New(gi18n.T(ctx, "forum.topic.reward_self_not_allowed"))
 	}
-	err = service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, consts.EconomyBonusTargetTypeForumTopic, in.Id, "Reward topic", "Topic rewarded")
-	return err
+	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, consts.EconomyBonusTargetTypeForumTopic, in.Id, "Reward topic", "Topic rewarded"); err != nil {
+			return err
+		}
+		return service.EconomyRewardDomain().InsertRewardRecord(ctx, entity.EconomyRewardRecord{
+			TargetType: consts.EconomyBonusTargetTypeForumTopic,
+			TargetId:   in.Id,
+			FromUserId: actor.Id,
+			ToUserId:   topic.UserId,
+			Amount:     in.Amount,
+		})
+	})
+}
+
+func (s *sForumTopicUsecase) RewardList(ctx context.Context, actor *model.Actor, in forumin.TopicRewardListInp) (*forumout.TopicRewardListOut, error) {
+	topic, err := service.ForumTopicDomain().GetTopicById(ctx, in.Id)
+	if err != nil {
+		return nil, err
+	}
+	nodePtr, err := service.ForumNodeDomain().GetNodeById(ctx, topic.NodeId)
+	if err != nil || nodePtr == nil || nodePtr.Id == 0 {
+		return nil, gerror.New(gi18n.T(ctx, "forum.node.not_found"))
+	}
+	node := *nodePtr
+	if err := service.ForumNodeDomain().CheckNodeReadPolicy(ctx, actor, &node); err != nil {
+		return nil, err
+	}
+
+	summaries, total, err := service.EconomyRewardDomain().QueryRewardSummaries(ctx, consts.EconomyBonusTargetTypeForumTopic, in.Id, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	userIds := make([]uint64, 0, len(summaries))
+	for _, summary := range summaries {
+		userIds = append(userIds, summary.UserId)
+	}
+	userMap := s.loadUserSummaryMap(ctx, userIds)
+
+	list := make([]forumout.TopicRewardItem, 0, len(summaries))
+	for _, summary := range summaries {
+		list = append(list, forumout.TopicRewardItem{
+			User:         userMap[summary.UserId],
+			Amount:       summary.Amount,
+			RewardCount:  summary.RewardCount,
+			LastRewardAt: s.formatTime(summary.LastRewardAt),
+		})
+	}
+
+	return &forumout.TopicRewardListOut{
+		List:  list,
+		Total: total,
+	}, nil
 }
 
 func (s *sForumTopicUsecase) ReportTopic(ctx context.Context, actor *model.Actor, in forumin.TopicReportInp) error {

@@ -41,6 +41,7 @@ type (
 	IForumReplyDomain interface {
 		InsertReply(ctx context.Context, actor *model.Actor, in forumin.ReplyCreateInp) (uint64, error)
 		QueryRepliesByTopic(ctx context.Context, topicId uint64, page int, size int) ([]entity.ForumReply, int, error)
+		QueryReplyIdsByTopic(ctx context.Context, topicId uint64) ([]uint64, error)
 		GetReplyById(ctx context.Context, replyId uint64) (*entity.ForumReply, error)
 		ToggleLike(ctx context.Context, actor *model.Actor, replyId uint64) (bool, error)
 		GetReplyLikesByUser(ctx context.Context, userId uint64, replyIds []uint64) ([]entity.ForumReplyLike, error)
@@ -70,6 +71,7 @@ type (
 		AdminSetTopicLock(ctx context.Context, id uint64, isLocked bool) error
 		AdminSetTopicSticky(ctx context.Context, id uint64, isSticky bool) error
 		AdminMoveTopic(ctx context.Context, id uint64, newNodeId uint) error
+		DeleteTopic(ctx context.Context, topic *entity.ForumTopic, replyIds []uint64) error
 		QueryTopicsByNode(ctx context.Context, nodeId uint, page int, size int) ([]entity.ForumTopic, int, error)
 		CheckTopicLiked(ctx context.Context, topicId uint64, userId uint64) (bool, error)
 		CheckTopicBookmarked(ctx context.Context, topicId uint64, userId uint64) (bool, error)
@@ -82,6 +84,7 @@ type (
 		Append(ctx context.Context, actor *model.Actor, in forumin.TopicAppendInp) error
 		ToggleTopicLike(ctx context.Context, actor *model.Actor, in forumin.TopicToggleLikeInp) error
 		RewardTopic(ctx context.Context, actor *model.Actor, in forumin.TopicRewardInp) error
+		RewardList(ctx context.Context, actor *model.Actor, in forumin.TopicRewardListInp) (*forumout.TopicRewardListOut, error)
 		ReportTopic(ctx context.Context, actor *model.Actor, in forumin.TopicReportInp) error
 		BookmarkTopic(ctx context.Context, actor *model.Actor, in forumin.TopicBookmarkInp) error
 		UnbookmarkTopic(ctx context.Context, actor *model.Actor, in forumin.TopicUnbookmarkInp) error

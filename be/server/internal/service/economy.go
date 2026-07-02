@@ -34,11 +34,18 @@ type (
 		// CalculateHourlyBonus 计算指定用户当前每小时可获得魔力值
 		CalculateHourlyBonus(ctx context.Context, userId uint64) (float64, error)
 	}
+	IEconomyRewardDomain interface {
+		InsertRewardRecord(ctx context.Context, record entity.EconomyRewardRecord) error
+		QueryRewardSummaries(ctx context.Context, targetType string, targetId uint64, page int, size int) ([]economyout.RewardSummary, int, error)
+		DeleteRewardRecordsByTarget(ctx context.Context, targetType string, targetId uint64) error
+		DeleteRewardRecordsByTargets(ctx context.Context, targetType string, targetIds []uint64) error
+	}
 )
 
 var (
 	localEconomyBonusDomain  IEconomyBonusDomain
 	localEconomyBonusUsecase IEconomyBonusUsecase
+	localEconomyRewardDomain IEconomyRewardDomain
 )
 
 func EconomyBonusDomain() IEconomyBonusDomain {
@@ -61,4 +68,15 @@ func EconomyBonusUsecase() IEconomyBonusUsecase {
 
 func RegisterEconomyBonusUsecase(i IEconomyBonusUsecase) {
 	localEconomyBonusUsecase = i
+}
+
+func EconomyRewardDomain() IEconomyRewardDomain {
+	if localEconomyRewardDomain == nil {
+		panic("implement not found for interface IEconomyRewardDomain, forgot register?")
+	}
+	return localEconomyRewardDomain
+}
+
+func RegisterEconomyRewardDomain(i IEconomyRewardDomain) {
+	localEconomyRewardDomain = i
 }

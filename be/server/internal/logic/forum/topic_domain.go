@@ -289,6 +289,46 @@ func (s *sForumTopicDomain) AdminMoveTopic(ctx context.Context, id uint64, newNo
 	return err
 }
 
+func (s *sForumTopicDomain) DeleteTopic(ctx context.Context, topic *entity.ForumTopic, replyIds []uint64) error {
+	if topic == nil || topic.Id == 0 {
+		return gerror.New(gi18n.T(ctx, "admin.forum.topic_not_found"))
+	}
+
+	if len(replyIds) > 0 {
+		if _, err := dao.ForumReplyLike.Ctx(ctx).
+			WhereIn(dao.ForumReplyLike.Columns().ReplyId, replyIds).
+			Delete(); err != nil {
+			return err
+		}
+	}
+	if _, err := dao.ForumReply.Ctx(ctx).
+		Where(dao.ForumReply.Columns().TopicId, topic.Id).
+		Delete(); err != nil {
+		return err
+	}
+	if _, err := dao.ForumTopicLike.Ctx(ctx).
+		Where(dao.ForumTopicLike.Columns().TopicId, topic.Id).
+		Delete(); err != nil {
+		return err
+	}
+	if _, err := dao.ForumTopicBookmark.Ctx(ctx).
+		Where(dao.ForumTopicBookmark.Columns().TopicId, topic.Id).
+		Delete(); err != nil {
+		return err
+	}
+	if _, err := dao.ForumTopic.Ctx(ctx).Where(dao.ForumTopic.Columns().Id, topic.Id).Delete(); err != nil {
+		return err
+	}
+
+	nodeColumns := dao.ForumNode.Columns()
+	_, err := dao.ForumNode.Ctx(ctx).Where(nodeColumns.Id, topic.NodeId).Data(g.Map{
+		nodeColumns.TopicCount:  gdb.Raw("IF(topic_count > 0, topic_count - 1, 0)"),
+		nodeColumns.ReplyCount:  gdb.Raw(fmt.Sprintf("IF(reply_count >= %d, reply_count - %d, 0)", topic.ReplyCount, topic.ReplyCount)),
+		nodeColumns.LastTopicId: gdb.Raw(fmt.Sprintf("IF(last_topic_id = %d, 0, last_topic_id)", topic.Id)),
+	}).Update()
+	return err
+}
+
 func (s *sForumTopicDomain) QueryTopicsByNode(ctx context.Context, nodeId uint, page, size int) ([]entity.ForumTopic, int, error) {
 	m := dao.ForumTopic.Ctx(ctx).Where(dao.ForumTopic.Columns().NodeId, nodeId)
 	total, err := m.Count()

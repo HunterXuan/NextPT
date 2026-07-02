@@ -35,3 +35,9 @@ type ForumTopicMoveReq struct {
 	adminin.ForumTopicMoveInp
 }
 type ForumTopicMoveRes struct{}
+
+type ForumTopicDeleteReq struct {
+	g.Meta `path:"/forum/topics/{id}" method:"delete" tags:"AdminForum" summary:"删除主题" perm:"admin:forum/topic:*"`
+	adminin.ForumTopicDeleteInp
+}
+type ForumTopicDeleteRes struct{}

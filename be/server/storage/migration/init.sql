@@ -394,17 +394,6 @@ CREATE TABLE `catalog_torrent_bookmark` (
 
 -- 种子感谢
 -- 种子赞赏
-CREATE TABLE `catalog_torrent_reward` (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '赞赏者ID',
-  `torrent_id` BIGINT UNSIGNED NOT NULL COMMENT '种子ID',
-  `amount` DOUBLE NOT NULL DEFAULT '0' COMMENT '赞赏的Bonus数量',
-  `created_at` DATETIME DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_user_id` (`user_id`),
-  KEY `idx_torrent_id` (`torrent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子赞赏记录表';
-
 -- 作弊检测记录
 CREATE TABLE `mod_cheater_log` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -726,6 +715,21 @@ CREATE TABLE `economy_bonus_log` (
     UNIQUE KEY `uk_user_action_period` (`user_id`, `action`, `period`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='魔力值交易日志';
 
+CREATE TABLE `economy_reward_record` (
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `target_type`     VARCHAR(50)     NOT NULL COMMENT 'catalog_torrent/catalog_comment/forum_topic/forum_reply',
+    `target_id`       BIGINT UNSIGNED NOT NULL,
+    `from_user_id`    BIGINT UNSIGNED NOT NULL COMMENT '赞赏者ID',
+    `to_user_id`      BIGINT UNSIGNED NOT NULL COMMENT '接收者ID',
+    `amount`          DECIMAL(10,2)   NOT NULL DEFAULT 0.00 COMMENT '赞赏金额',
+    `created_at`      DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_target_created` (`target_type`, `target_id`, `created_at`),
+    KEY `idx_target_user` (`target_type`, `target_id`, `from_user_id`),
+    KEY `idx_from_created` (`from_user_id`, `created_at`),
+    KEY `idx_to_created` (`to_user_id`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='通用赞赏记录表';
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ----------------------------
@@ -768,13 +772,3 @@ CREATE TABLE `catalog_comment_like` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_user_comment` (`user_id`, `comment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评论点赞表';
-
-CREATE TABLE `catalog_comment_reward` (
-    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id`         BIGINT UNSIGNED NOT NULL,
-    `comment_id`      BIGINT UNSIGNED NOT NULL,
-    `amount`          DECIMAL(10,2)   NOT NULL COMMENT '打赏金额',
-    `created_at`      DATETIME        NULL,
-    PRIMARY KEY (`id`),
-    KEY `idx_comment` (`comment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评论打赏表';

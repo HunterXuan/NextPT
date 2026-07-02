@@ -8,7 +8,6 @@ import (
 	"server/internal/dao"
 	"server/internal/model"
 	"server/internal/model/entity"
-	"server/internal/model/out/catalogout"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/database/gdb"
@@ -320,17 +319,8 @@ func (s *sCatalogTorrentDomain) DeleteTorrent(ctx context.Context, id uint64) er
 	if _, err := dao.CatalogTorrentLike.Ctx(ctx).Where(dao.CatalogTorrentLike.Columns().TorrentId, id).Delete(); err != nil {
 		return err
 	}
-	// 删除种子赞赏记录
-	if _, err := dao.CatalogTorrentReward.Ctx(ctx).Where(dao.CatalogTorrentReward.Columns().TorrentId, id).Delete(); err != nil {
-		return err
-	}
 	// 最后删除主表
 	_, err := dao.CatalogTorrent.Ctx(ctx).WherePri(id).Delete()
-	return err
-}
-
-func (s *sCatalogTorrentDomain) InsertTorrentReward(ctx context.Context, reward *entity.CatalogTorrentReward) error {
-	_, err := dao.CatalogTorrentReward.Ctx(ctx).Data(reward).Insert()
 	return err
 }
 
@@ -465,34 +455,6 @@ func (s *sCatalogTorrentDomain) QueryActiveTorrentIds(ctx context.Context) ([]en
 		Fields("id").
 		Scan(&dbTorrents)
 	return dbTorrents, err
-}
-
-func (s *sCatalogTorrentDomain) QueryTorrentRewards(ctx context.Context, torrentId uint64, page, size int) ([]catalogout.TorrentRewardSummary, int, error) {
-	columns := dao.CatalogTorrentReward.Columns()
-
-	totalValue, err := dao.CatalogTorrentReward.Ctx(ctx).
-		Fields(fmt.Sprintf("COUNT(DISTINCT %s)", columns.UserId)).
-		Where(columns.TorrentId, torrentId).
-		Value()
-	if err != nil {
-		return nil, 0, err
-	}
-
-	var summaries []catalogout.TorrentRewardSummary
-	err = dao.CatalogTorrentReward.Ctx(ctx).
-		Fields(
-			fmt.Sprintf("%s AS user_id", columns.UserId),
-			fmt.Sprintf("SUM(%s) AS amount", columns.Amount),
-			"COUNT(*) AS reward_count",
-			fmt.Sprintf("MAX(%s) AS last_reward_at", columns.CreatedAt),
-		).
-		Where(columns.TorrentId, torrentId).
-		Group(columns.UserId).
-		Page(page, size).
-		OrderDesc("amount").
-		OrderDesc("last_reward_at").
-		Scan(&summaries)
-	return summaries, totalValue.Int(), err
 }
 
 func (s *sCatalogTorrentDomain) ApplyTorrentVisibleScope(m *gdb.Model, actor *model.Actor) *gdb.Model {

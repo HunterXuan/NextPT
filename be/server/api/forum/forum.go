@@ -25,6 +25,7 @@ type IForumV1 interface {
 	TopicAppend(ctx context.Context, req *v1.TopicAppendReq) (res *v1.TopicAppendRes, err error)
 	TopicToggleLike(ctx context.Context, req *v1.TopicToggleLikeReq) (res *v1.TopicToggleLikeRes, err error)
 	TopicReward(ctx context.Context, req *v1.TopicRewardReq) (res *v1.TopicRewardRes, err error)
+	TopicRewardList(ctx context.Context, req *v1.TopicRewardListReq) (res *v1.TopicRewardListRes, err error)
 	TopicReport(ctx context.Context, req *v1.TopicReportReq) (res *v1.TopicReportRes, err error)
 	TopicBookmark(ctx context.Context, req *v1.TopicBookmarkReq) (res *v1.TopicBookmarkRes, err error)
 	TopicUnbookmark(ctx context.Context, req *v1.TopicUnbookmarkReq) (res *v1.TopicUnbookmarkRes, err error)

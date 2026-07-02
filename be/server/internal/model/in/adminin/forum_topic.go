@@ -20,3 +20,7 @@ type ForumTopicMoveInp struct {
 	Id     uint64 `json:"id" in:"path" v:"required"`
 	NodeId uint   `json:"nodeId" v:"required"`
 }
+
+type ForumTopicDeleteInp struct {
+	Id uint64 `json:"id" in:"path" v:"required"`
+}

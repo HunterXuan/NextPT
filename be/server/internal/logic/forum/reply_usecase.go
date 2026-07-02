@@ -258,6 +258,15 @@ func (s *sForumReplyUsecase) RewardReply(ctx context.Context, actor *model.Actor
 		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, reply.UserId, in.Amount, consts.EconomyBonusTargetTypeForumReply, in.Id, "Reward reply", "Reply rewarded"); err != nil {
 			return err
 		}
+		if err := service.EconomyRewardDomain().InsertRewardRecord(ctx, entity.EconomyRewardRecord{
+			TargetType: consts.EconomyBonusTargetTypeForumReply,
+			TargetId:   in.Id,
+			FromUserId: actor.Id,
+			ToUserId:   reply.UserId,
+			Amount:     in.Amount,
+		}); err != nil {
+			return err
+		}
 		return service.ForumReplyDomain().IncrementRewardStats(ctx, in.Id)
 	})
 }

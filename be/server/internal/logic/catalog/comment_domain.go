@@ -94,31 +94,27 @@ func (s *sCatalogCommentDomain) GetCommentLikesByUser(ctx context.Context, userI
 	return likes, err
 }
 
-func (s *sCatalogCommentDomain) InsertCommentReward(ctx context.Context, userId, commentId uint64, amount float64) error {
-	_, err := dao.CatalogCommentReward.Ctx(ctx).Insert(&entity.CatalogCommentReward{
-		CommentId: commentId,
-		UserId:    userId,
-		Amount:    amount,
-	})
-	return err
-}
-
 func (s *sCatalogCommentDomain) IncrementCommentRewardStats(ctx context.Context, commentId uint64) error {
 	_, err := dao.CatalogComment.Ctx(ctx).Where(dao.CatalogComment.Columns().Id, commentId).Increment(dao.CatalogComment.Columns().RewardCount, 1)
 	return err
 }
 
-func (s *sCatalogCommentDomain) DeleteCommentsByTarget(ctx context.Context, targetType string, targetId uint64) error {
+func (s *sCatalogCommentDomain) QueryCommentIdsByTarget(ctx context.Context, targetType string, targetId uint64) ([]uint64, error) {
 	var commentIds []uint64
-	err := dao.CatalogComment.Ctx(ctx).Where(dao.CatalogComment.Columns().TargetType, targetType).Where(dao.CatalogComment.Columns().TargetId, targetId).ScanList(&commentIds, "Id")
+	err := dao.CatalogComment.Ctx(ctx).
+		Where(dao.CatalogComment.Columns().TargetType, targetType).
+		Where(dao.CatalogComment.Columns().TargetId, targetId).
+		ScanList(&commentIds, "Id")
+	return commentIds, err
+}
+
+func (s *sCatalogCommentDomain) DeleteCommentsByTarget(ctx context.Context, targetType string, targetId uint64) error {
+	commentIds, err := s.QueryCommentIdsByTarget(ctx, targetType, targetId)
 	if err != nil {
 		return err
 	}
 	if len(commentIds) > 0 {
 		if _, err := dao.CatalogCommentLike.Ctx(ctx).WhereIn(dao.CatalogCommentLike.Columns().CommentId, commentIds).Delete(); err != nil {
-			return err
-		}
-		if _, err := dao.CatalogCommentReward.Ctx(ctx).WhereIn(dao.CatalogCommentReward.Columns().CommentId, commentIds).Delete(); err != nil {
 			return err
 		}
 	}

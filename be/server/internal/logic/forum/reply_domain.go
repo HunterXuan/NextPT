@@ -52,6 +52,14 @@ func (s *sForumReplyDomain) QueryRepliesByTopic(ctx context.Context, topicId uin
 	return replies, total, nil
 }
 
+func (s *sForumReplyDomain) QueryReplyIdsByTopic(ctx context.Context, topicId uint64) ([]uint64, error) {
+	var replyIds []uint64
+	err := dao.ForumReply.Ctx(ctx).
+		Where(dao.ForumReply.Columns().TopicId, topicId).
+		ScanList(&replyIds, "Id")
+	return replyIds, err
+}
+
 func (s *sForumReplyDomain) GetReplyById(ctx context.Context, replyId uint64) (*entity.ForumReply, error) {
 	var reply entity.ForumReply
 	err := dao.ForumReply.Ctx(ctx).Where(dao.ForumReply.Columns().Id, replyId).Scan(&reply)

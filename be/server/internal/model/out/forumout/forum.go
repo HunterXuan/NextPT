@@ -2,6 +2,7 @@ package forumout
 
 import (
 	"server/internal/model"
+	"server/internal/model/out/economyout"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
 )
@@ -50,6 +51,10 @@ type TopicBookmarkListOut struct {
 	List  []TopicListItem `json:"list"`
 	Total int             `json:"total"`
 }
+
+type TopicRewardItem = economyout.RewardItem
+
+type TopicRewardListOut = economyout.RewardListOut
 
 type TopicDetailOut struct {
 	TopicListItem

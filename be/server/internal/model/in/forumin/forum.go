@@ -53,6 +53,12 @@ type TopicRewardInp struct {
 	Amount float64 `json:"amount" v:"required|min:1"`
 }
 
+type TopicRewardListInp struct {
+	Id   uint64 `json:"id" in:"path" v:"required"`
+	Page int    `json:"page" d:"1" v:"min:1"`
+	Size int    `json:"size" d:"20" v:"min:1|max:100"`
+}
+
 type TopicReportInp struct {
 	Id     uint64 `json:"id" in:"path" v:"required"`
 	Reason string `json:"reason" v:"required|max-length:500"`

@@ -8,15 +8,15 @@ import (
 	"server/internal/dao/internal"
 )
 
-// catalogCommentRewardDao is the data access object for the table catalog_comment_reward.
+// economyRewardRecordDao is the data access object for the table economy_reward_record.
 // You can define custom methods on it to extend its functionality as needed.
-type catalogCommentRewardDao struct {
-	*internal.CatalogCommentRewardDao
+type economyRewardRecordDao struct {
+	*internal.EconomyRewardRecordDao
 }
 
 var (
-	// CatalogCommentReward is a globally accessible object for table catalog_comment_reward operations.
-	CatalogCommentReward = catalogCommentRewardDao{internal.NewCatalogCommentRewardDao()}
+	// EconomyRewardRecord is a globally accessible object for table economy_reward_record operations.
+	EconomyRewardRecord = economyRewardRecordDao{internal.NewEconomyRewardRecordDao()}
 )
 
 // Add your custom methods and functionality below.

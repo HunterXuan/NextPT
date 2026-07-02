@@ -35,8 +35,8 @@ type (
 		QueryCommentsByTarget(ctx context.Context, targetType string, targetId uint64, page int, size int) ([]entity.CatalogComment, int, error)
 		ToggleLike(ctx context.Context, userId uint64, commentId uint64) (bool, error)
 		GetCommentLikesByUser(ctx context.Context, userId uint64, commentIds []uint64) ([]entity.CatalogCommentLike, error)
-		InsertCommentReward(ctx context.Context, userId uint64, commentId uint64, amount float64) error
 		IncrementCommentRewardStats(ctx context.Context, commentId uint64) error
+		QueryCommentIdsByTarget(ctx context.Context, targetType string, targetId uint64) ([]uint64, error)
 		DeleteCommentsByTarget(ctx context.Context, targetType string, targetId uint64) error
 	}
 	ICatalogCommentUsecase interface {
@@ -81,7 +81,6 @@ type (
 		GetTorrentFiles(ctx context.Context, torrentId uint64) ([]entity.CatalogTorrentFile, error)
 		GetTorrentsByIds(ctx context.Context, ids []uint64) ([]*entity.CatalogTorrent, error)
 		DeleteTorrent(ctx context.Context, id uint64) error
-		InsertTorrentReward(ctx context.Context, reward *entity.CatalogTorrentReward) error
 		UpdateTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
 		CheckBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		CheckLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
@@ -93,7 +92,6 @@ type (
 		CheckTorrentLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		IncrementTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
 		QueryActiveTorrentIds(ctx context.Context) ([]entity.CatalogTorrent, error)
-		QueryTorrentRewards(ctx context.Context, torrentId uint64, page int, size int) ([]catalogout.TorrentRewardSummary, int, error)
 		ApplyTorrentVisibleScope(m *gdb.Model, actor *model.Actor) *gdb.Model
 		CheckTorrentVisiblePolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error
 		CheckTorrentDownloadPolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error

@@ -34,6 +34,7 @@ type (
 		Update(ctx context.Context, id uint64, data interface{}) error
 		QueryReports(ctx context.Context, status int, targetType string, page int, size int) ([]entity.ModReport, int, error)
 		DeleteReportsByTarget(ctx context.Context, targetType string, targetId uint64) error
+		DeleteReportsByTargets(ctx context.Context, targetType string, targetIds []uint64) error
 	}
 	IModReportUsecase interface {
 		Create(ctx context.Context, actor *model.Actor, in modin.CreateReportInp) error

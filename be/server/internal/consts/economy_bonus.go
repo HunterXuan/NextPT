@@ -7,8 +7,8 @@ const (
 )
 
 const (
-	EconomyBonusTargetTypeTorrent    = "torrent"
-	EconomyBonusTargetTypeComment    = "comment"
-	EconomyBonusTargetTypeForumTopic = "forum_topic"
-	EconomyBonusTargetTypeForumReply = "forum_reply"
+	EconomyBonusTargetTypeCatalogTorrent = "catalog_torrent"
+	EconomyBonusTargetTypeCatalogComment = "catalog_comment"
+	EconomyBonusTargetTypeForumTopic     = "forum_topic"
+	EconomyBonusTargetTypeForumReply     = "forum_reply"
 )

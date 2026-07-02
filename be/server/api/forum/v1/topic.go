@@ -60,6 +60,15 @@ type TopicRewardReq struct {
 }
 type TopicRewardRes struct{}
 
+type TopicRewardListReq struct {
+	g.Meta `path:"/topics/{id}/rewards" method:"get" tags:"Forum" summary:"获取主题赞赏列表" perm:"read:forum/topic:*"`
+	forumin.TopicRewardListInp
+}
+
+type TopicRewardListRes struct {
+	forumout.TopicRewardListOut
+}
+
 type TopicReportReq struct {
 	g.Meta `path:"/topics/{id}:report" method:"post" tags:"Forum" summary:"举报主题" perm:"read:forum/topic:*"`
 	forumin.TopicReportInp
