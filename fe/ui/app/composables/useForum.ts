@@ -25,6 +25,7 @@ export interface ForumTopicListItem {
   isSticky: boolean
   views: number
   replyCount: number
+  likeCount: number
   lastReplyAt: string
   lastReplyUser: UserSummary
   createdAt: string
@@ -49,6 +50,8 @@ export interface ForumReplyItem {
   author: UserSummary
   content: string
   createdAt: string
+  likeCount: number
+  rewardCount: number
   isLiked: boolean
 }
 
@@ -72,6 +75,18 @@ export interface ForumReplyListOut {
   total: number
 }
 
+export interface ForumRewardItem {
+  user: UserSummary
+  amount: number
+  rewardCount: number
+  lastRewardAt: string
+}
+
+export interface ForumRewardListOut {
+  list: ForumRewardItem[]
+  total: number
+}
+
 export interface ForumTopicCreateOut {
   id: number
 }
@@ -85,15 +100,29 @@ export interface ForumTopicListParams {
   size?: number
 }
 
+export type ForumNodeListScope = 'read' | 'create'
+
+export interface ForumNodeListParams {
+  scope?: ForumNodeListScope
+}
+
 export interface ForumTopicCreateInput {
   nodeId: number
   subject: string
   content: string
 }
 
+export interface ForumTopicUpdateInput {
+  nodeId: number
+  subject: string
+  content: string
+}
+
 export function useForum() {
-  async function listNodes() {
-    return await fetchApi<ForumNodeListOut>('/api/forum/nodes')
+  async function listNodes(params: ForumNodeListParams = {}) {
+    return await fetchApi<ForumNodeListOut>('/api/forum/nodes', {
+      query: params.scope ? { scope: params.scope } : undefined
+    })
   }
 
   async function listTopics(slug: string, params: ForumTopicListParams = {}) {
@@ -116,6 +145,13 @@ export function useForum() {
     })
   }
 
+  async function updateTopic(id: number, input: ForumTopicUpdateInput) {
+    await fetchApi(`/api/forum/topics/${id}`, {
+      method: 'PATCH',
+      body: input
+    })
+  }
+
   async function appendTopic(id: number, content: string) {
     await fetchApi(`/api/forum/topics/${id}:append`, {
       method: 'POST',
@@ -133,6 +169,12 @@ export function useForum() {
     await fetchApi(`/api/forum/topics/${id}:reward`, {
       method: 'POST',
       body: { amount }
+    })
+  }
+
+  async function listTopicRewards(id: number, page = 1, size = 20) {
+    return await fetchApi<ForumRewardListOut>(`/api/forum/topics/${id}/rewards`, {
+      query: { page, size }
     })
   }
 
@@ -199,9 +241,11 @@ export function useForum() {
     listTopics,
     getTopic,
     createTopic,
+    updateTopic,
     appendTopic,
     toggleTopicLike,
     rewardTopic,
+    listTopicRewards,
     reportTopic,
     bookmarkTopic,
     unbookmarkTopic,

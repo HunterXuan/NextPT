@@ -14,6 +14,11 @@
     "switchLanguage": "Switch language",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
+    "editor": {
+      "edit": "Edit",
+      "preview": "Preview",
+      "previewEmpty": "No content"
+    },
     "pagination": {
       "label": "Pagination",
       "total": "{total} total",
@@ -637,6 +642,7 @@
         "publish": "Publish"
       },
       "fields": {
+        "category": "Category",
         "node": "Node",
         "nodePlaceholder": "Choose node",
         "subject": "Title",
@@ -648,7 +654,21 @@
       },
       "summary": {
         "node": "Node",
-        "subjectLength": "Title length"
+        "subjectLength": "Title length",
+        "content": "Content",
+        "contentLength": "{count} chars"
+      },
+      "preview": {
+        "write": "Edit",
+        "preview": "Preview",
+        "empty": "No content"
+      },
+      "guide": {
+        "title": "Posting Tips",
+        "search": "Take a quick look for similar discussions before posting.",
+        "titleTip": "Use a specific title so others can understand the topic quickly.",
+        "kindness": "Keep the discussion on topic, friendly, and measured.",
+        "finality": "Topics can be edited within 5 minutes after publishing. After that, you can only append content, and topics cannot be deleted."
       }
     },
     "detail": {
@@ -663,9 +683,15 @@
         "liked": "Liked",
         "bookmark": "Bookmark",
         "bookmarked": "Bookmarked",
+        "edit": "Edit topic",
         "append": "Append",
         "reward": "Reward",
         "report": "Report"
+      },
+      "edit": {
+        "title": "Edit topic",
+        "hint": "You can edit the title, node, and content within 5 minutes after publishing.",
+        "success": "Topic updated"
       },
       "admin": {
         "title": "Admin actions",
@@ -675,21 +701,29 @@
         "unpin": "Unpin topic",
         "moveTo": "Move to node",
         "move": "Move topic",
-        "saved": "Topic updated"
+        "saved": "Topic updated",
+        "delete": "Delete topic",
+        "confirmDelete": "Delete this topic? This cannot be undone.",
+        "deleted": "Topic deleted"
       },
       "append": {
         "index": "Append #{index}",
         "placeholder": "Add an appendix",
         "submit": "Append",
-        "success": "Append added"
+        "success": "Append added",
+        "edit": "Edit",
+        "preview": "Preview",
+        "previewEmpty": "No content"
       },
       "replies": {
         "title": "Replies",
         "summary": "{count} replies",
         "empty": "No replies yet",
-        "floor": "#{floor}"
+        "floor": "#{floor}",
+        "quote": "Quote"
       },
       "reward": {
+        "title": "Reward Topic",
         "amount": "Amount",
         "submit": "Reward",
         "success": "Reward sent"
@@ -703,12 +737,21 @@
         "title": "Post Reply",
         "placeholder": "Write your reply",
         "submit": "Reply",
-        "success": "Reply posted"
+        "success": "Reply posted",
+        "edit": "Edit",
+        "preview": "Preview",
+        "previewEmpty": "No content",
+        "locked": "Topic locked"
       },
       "info": {
         "title": "Topic Info",
         "author": "Author",
         "createdAt": "Published",
+        "topic": "Topic",
+        "status": "Status",
+        "statusNormal": "Normal",
+        "statusSticky": "Pinned",
+        "statusLocked": "Locked",
         "views": "Views",
         "replies": "Replies"
       }

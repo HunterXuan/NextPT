@@ -1,40 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div class="min-w-0">
-          <h1 class="break-words text-2xl font-semibold text-slate-950 dark:text-white">
-            {{ topic?.subject || $t('forum.detail.titleFallback', { id: topicId }) }}
-          </h1>
-          <p v-if="topic" class="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            {{ $t('forum.topicList.byline', { user: userDisplayName(topic.author), time: formatDateTime(topic.createdAt, locale) }) }}
-          </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center">
-          <UButton
-            color="neutral"
-            :variant="topic?.isLiked ? 'soft' : 'outline'"
-            :icon="topic?.isLiked ? 'i-lucide-heart' : 'i-lucide-heart-plus'"
-            :loading="topicActionPending === 'like'"
-            :disabled="!topic || pending"
-            @click="handleToggleTopicLike"
-          >
-            {{ topic?.isLiked ? $t('forum.detail.actions.liked') : $t('forum.detail.actions.like') }}
-          </UButton>
-          <UButton
-            color="neutral"
-            :variant="topic?.isBookmarked ? 'soft' : 'outline'"
-            :icon="topic?.isBookmarked ? 'i-lucide-bookmark-check' : 'i-lucide-bookmark-plus'"
-            :loading="topicActionPending === 'bookmark'"
-            :disabled="!topic || pending"
-            @click="handleToggleTopicBookmark"
-          >
-            {{ topic?.isBookmarked ? $t('forum.detail.actions.bookmarked') : $t('forum.detail.actions.bookmark') }}
-          </UButton>
-        </div>
-      </div>
-
       <div v-if="pending" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div class="space-y-4">
           <div class="h-64 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
@@ -53,267 +19,104 @@
 
       <div v-else-if="topic" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
         <main class="space-y-6">
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-wrap items-center gap-2">
-              <UBadge v-if="topic.isSticky" color="primary" variant="soft">{{ $t('forum.topicList.badges.sticky') }}</UBadge>
-              <UBadge v-if="topic.isLocked" color="neutral" variant="outline">{{ $t('forum.topicList.badges.locked') }}</UBadge>
-              <UBadge color="neutral" variant="soft">{{ $t('forum.detail.topicId', { id: topic.id }) }}</UBadge>
-            </div>
+          <ForumTopicEditForm
+            v-if="topicEditOpen"
+            v-model:selected-category-id="editSelectedCategoryId"
+            v-model:node-id="editForm.nodeId"
+            v-model:subject="editForm.subject"
+            v-model:content="editForm.content"
+            v-model:editor-mode="topicEditEditorMode"
+            :categories="editCategories"
+            :nodes-pending="editNodesPending"
+            :nodes-error="editNodesError"
+            :action-pending="topicActionPending"
+            :can-submit="canSubmitTopicEdit"
+            @submit="handleUpdateTopic"
+            @cancel="closeTopicEdit"
+          />
 
-            <p class="mt-5 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200">
-              {{ topic.content }}
-            </p>
-
-            <div v-if="topicAppends.length > 0" class="mt-5 space-y-3 border-t border-slate-200 pt-4 dark:border-slate-800">
-              <article v-for="(append, index) in topicAppends" :key="`${append.created_at || append.createdAt || index}`" class="rounded-md bg-slate-50 px-3 py-3 dark:bg-slate-950">
-                <div class="flex items-center justify-between gap-3">
-                  <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
-                    {{ $t('forum.detail.append.index', { index: index + 1 }) }}
-                  </p>
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(append.created_at || append.createdAt, locale) }}</p>
-                </div>
-                <p class="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200">{{ append.content }}</p>
-              </article>
-            </div>
-          </section>
+          <ForumTopicCard
+            v-else
+            v-model:append-content="topicAppendContent"
+            v-model:append-editor-mode="topicAppendEditorMode"
+            v-model:report-reason="topicReportReason"
+            :topic="topic"
+            :appends="topicAppends"
+            :active-panel="activeTopicPanel"
+            :action-pending="topicActionPending"
+            :can-edit="canEditTopic"
+            :can-append="canAppendTopic"
+            :can-use-owner-actions="canUseTopicOwnerActions"
+            @toggle-like="handleToggleTopicLike"
+            @toggle-bookmark="handleToggleTopicBookmark"
+            @edit="openTopicEdit"
+            @open-panel="openTopicPanel"
+            @close-panel="closeTopicPanel"
+            @append="handleAppendTopic"
+            @report="handleReportTopic"
+          />
 
           <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-              <div>
-                <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.replies.title') }}</h2>
-                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  {{ $t('forum.detail.replies.summary', { count: numberFormatter.format(replyTotal) }) }}
-                </p>
-              </div>
-              <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="repliesPending" @click="loadReplies">
-                {{ $t('common.refresh') }}
-              </UButton>
+            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.replies.title') }}</h2>
+              <UBadge color="neutral" variant="soft">
+                {{ $t('forum.detail.replies.summary', { count: numberFormatter.format(replyTotal) }) }}
+              </UBadge>
             </div>
 
-            <div v-if="repliesError" class="flex flex-col items-center justify-center px-4 py-10 text-center">
-              <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
-              <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ repliesError }}</p>
-              <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadReplies">
-                {{ $t('common.retry') }}
-              </UButton>
-            </div>
-
-            <div v-else-if="repliesPending && replies.length === 0" class="space-y-2 px-4 py-4">
-              <div v-for="index in 4" :key="index" class="h-24 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-            </div>
-
-            <div v-else-if="replies.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
-              {{ $t('forum.detail.replies.empty') }}
-            </div>
-
-            <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
-              <article v-for="(reply, index) in replies" :key="reply.id" class="px-4 py-4">
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div class="min-w-0">
-                    <p class="text-sm font-medium text-slate-950 dark:text-white">{{ userDisplayName(reply.author) }}</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                      {{ $t('forum.detail.replies.floor', { floor: replyFloor(index) }) }}
-                      <span class="mx-1 text-slate-300 dark:text-slate-700">/</span>
-                      {{ formatDateTime(reply.createdAt, locale) }}
-                    </p>
-                  </div>
-                  <div class="flex shrink-0 flex-wrap items-center gap-1">
-                    <UButton
-                      color="neutral"
-                      :variant="reply.isLiked ? 'soft' : 'ghost'"
-                      size="xs"
-                      :icon="reply.isLiked ? 'i-lucide-heart' : 'i-lucide-heart-plus'"
-                      :loading="replyActionPending === `like:${reply.id}`"
-                      @click="handleToggleReplyLike(reply)"
-                    >
-                      {{ reply.isLiked ? $t('forum.detail.actions.liked') : $t('forum.detail.actions.like') }}
-                    </UButton>
-                    <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-coins" @click="openReplyPanel(reply.id, 'reward')">
-                      {{ $t('forum.detail.actions.reward') }}
-                    </UButton>
-                    <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-flag" @click="openReplyPanel(reply.id, 'report')">
-                      {{ $t('forum.detail.actions.report') }}
-                    </UButton>
-                  </div>
-                </div>
-
-                <p class="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200">
-                  {{ reply.content }}
-                </p>
-
-                <div v-if="activeReplyPanel?.id === reply.id" class="mt-4 rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
-                  <form v-if="activeReplyPanel.type === 'reward'" class="grid gap-3 sm:grid-cols-[160px_auto]" @submit.prevent="handleRewardReply(reply.id)">
-                    <UInput v-model="replyRewardAmount" type="number" min="1" step="1" :placeholder="$t('forum.detail.reward.amount')" :disabled="replyActionPending === `reward:${reply.id}`" />
-                    <div class="flex items-center gap-2">
-                      <UButton type="submit" color="primary" size="sm" icon="i-lucide-coins" :loading="replyActionPending === `reward:${reply.id}`">
-                        {{ $t('forum.detail.reward.submit') }}
-                      </UButton>
-                      <UButton type="button" color="neutral" variant="ghost" size="sm" @click="closeReplyPanel">
-                        {{ $t('common.cancel') }}
-                      </UButton>
-                    </div>
-                  </form>
-                  <form v-else class="grid gap-3" @submit.prevent="handleReportReply(reply.id)">
-                    <UTextarea v-model="replyReportReason" :rows="3" :placeholder="$t('forum.detail.report.reason')" :disabled="replyActionPending === `report:${reply.id}`" />
-                    <div class="flex items-center gap-2">
-                      <UButton type="submit" color="primary" size="sm" icon="i-lucide-flag" :loading="replyActionPending === `report:${reply.id}`">
-                        {{ $t('forum.detail.report.submit') }}
-                      </UButton>
-                      <UButton type="button" color="neutral" variant="ghost" size="sm" @click="closeReplyPanel">
-                        {{ $t('common.cancel') }}
-                      </UButton>
-                    </div>
-                  </form>
-                </div>
-              </article>
-            </div>
-
-            <AppPager
-              class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
-              size="sm"
-              :page="replyPage"
-              :total="replyTotal"
-              :page-size="replySize"
-              :disabled="repliesPending"
-              @page-change="goToReplyPage"
+            <RichTextComposer
+              id="forum-reply-composer"
+              v-model="replyContent"
+              v-model:mode="replyEditorMode"
+              class="border-b border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40"
+              :placeholder="$t('forum.detail.replyForm.placeholder')"
+              :disabled="replyCreatePending || topic.isLocked"
+              :pending="replyCreatePending"
+              :submit-disabled="!canCreateReply"
+              :submit-label="$t('forum.detail.replyForm.submit')"
+              :write-label="$t('common.editor.edit')"
+              :preview-label="$t('common.editor.preview')"
+              :preview-empty="$t('common.editor.previewEmpty')"
+              :locked-text="topic.isLocked ? $t('forum.detail.replyForm.locked') : ''"
+              @submit="handleCreateReply"
             />
-          </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.replyForm.title') }}</h2>
-            <form class="mt-4 space-y-3" @submit.prevent="handleCreateReply">
-              <UTextarea v-model="replyContent" class="w-full" :rows="5" :placeholder="$t('forum.detail.replyForm.placeholder')" :disabled="replyCreatePending || topic.isLocked" />
-              <div class="flex justify-end">
-                <UButton type="submit" color="primary" icon="i-lucide-send" :loading="replyCreatePending" :disabled="!canCreateReply">
-                  {{ $t('forum.detail.replyForm.submit') }}
-                </UButton>
-              </div>
-            </form>
+            <ForumReplyList
+              v-model:active-report-id="activeReplyReportId"
+              v-model:report-reason="replyReportReason"
+              :replies="replies"
+              :total="replyTotal"
+              :page="replyPage"
+              :page-size="replySize"
+              :pending="repliesPending"
+              :error="repliesError"
+              :action-pending="replyActionPending"
+              :submit-reward="submitReplyReward"
+              @retry="loadReplies"
+              @page-change="goToReplyPage"
+              @toggle-like="handleToggleReplyLike"
+              @reward-success="handleReplyRewardSuccess"
+              @quote="insertReplyQuote"
+              @report="handleReportReply"
+            />
           </section>
         </main>
 
-        <aside class="space-y-6">
-          <UCard class="rounded-lg">
-            <template #header>
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.info.title') }}</h2>
-            </template>
-
-            <dl class="space-y-3 text-sm">
-              <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.info.author') }}</dt>
-                <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ userDisplayName(topic.author) }}</dd>
-              </div>
-              <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.info.createdAt') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ formatDateTime(topic.createdAt, locale) }}</dd>
-              </div>
-              <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.info.views') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(topic.views) }}</dd>
-              </div>
-              <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.info.replies') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(topic.replyCount) }}</dd>
-              </div>
-            </dl>
-          </UCard>
-
-          <UCard v-if="isStaff" class="rounded-lg">
-            <template #header>
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.admin.title') }}</h2>
-            </template>
-
-            <div class="grid gap-2">
-              <UButton
-                color="neutral"
-                variant="outline"
-                :icon="topic.isLocked ? 'i-lucide-lock-open' : 'i-lucide-lock'"
-                :loading="adminActionPending === 'lock'"
-                @click="handleAdminTopicAction(topic.isLocked ? 'unlock' : 'lock')"
-              >
-                {{ topic.isLocked ? $t('forum.detail.admin.unlock') : $t('forum.detail.admin.lock') }}
-              </UButton>
-              <UButton
-                color="neutral"
-                variant="outline"
-                :icon="topic.isSticky ? 'i-lucide-pin-off' : 'i-lucide-pin'"
-                :loading="adminActionPending === 'pin'"
-                @click="handleAdminTopicAction(topic.isSticky ? 'unpin' : 'pin')"
-              >
-                {{ topic.isSticky ? $t('forum.detail.admin.unpin') : $t('forum.detail.admin.pin') }}
-              </UButton>
-            </div>
-
-            <form class="mt-4 grid gap-2 border-t border-slate-200 pt-4 dark:border-slate-800" @submit.prevent="handleMoveTopic">
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('forum.detail.admin.moveTo') }}</span>
-                <select v-model.number="moveNodeId" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" :disabled="adminNodesPending || adminActionPending === 'move'">
-                  <option v-for="node in adminNodes" :key="node.id" :value="node.id">{{ forumNodeName(node) }}</option>
-                </select>
-              </label>
-              <UButton type="submit" color="primary" variant="soft" icon="i-lucide-move-right" :loading="adminActionPending === 'move'" :disabled="!moveNodeId || moveNodeId === topic.nodeId">
-                {{ $t('forum.detail.admin.move') }}
-              </UButton>
-              <p v-if="adminError" class="text-sm text-red-600 dark:text-red-300">{{ adminError }}</p>
-            </form>
-          </UCard>
-
-          <UCard class="rounded-lg">
-            <template #header>
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.actions.title') }}</h2>
-            </template>
-
-            <div class="grid grid-cols-1 gap-2">
-              <UButton color="neutral" variant="outline" icon="i-lucide-plus-square" :disabled="topic.isLocked" @click="openTopicPanel('append')">
-                {{ $t('forum.detail.actions.append') }}
-              </UButton>
-              <UButton color="neutral" variant="outline" icon="i-lucide-coins" @click="openTopicPanel('reward')">
-                {{ $t('forum.detail.actions.reward') }}
-              </UButton>
-              <UButton color="neutral" variant="outline" icon="i-lucide-flag" @click="openTopicPanel('report')">
-                {{ $t('forum.detail.actions.report') }}
-              </UButton>
-            </div>
-
-            <div v-if="activeTopicPanel" class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800">
-              <form v-if="activeTopicPanel === 'append'" class="space-y-3" @submit.prevent="handleAppendTopic">
-                <UTextarea v-model="topicAppendContent" :rows="4" :placeholder="$t('forum.detail.append.placeholder')" :disabled="topicActionPending === 'append'" />
-                <div class="flex items-center gap-2">
-                  <UButton type="submit" color="primary" size="sm" icon="i-lucide-plus-square" :loading="topicActionPending === 'append'">
-                    {{ $t('forum.detail.append.submit') }}
-                  </UButton>
-                  <UButton type="button" color="neutral" variant="ghost" size="sm" @click="closeTopicPanel">
-                    {{ $t('common.cancel') }}
-                  </UButton>
-                </div>
-              </form>
-
-              <form v-else-if="activeTopicPanel === 'reward'" class="space-y-3" @submit.prevent="handleRewardTopic">
-                <UInput v-model="topicRewardAmount" type="number" min="1" step="1" :placeholder="$t('forum.detail.reward.amount')" :disabled="topicActionPending === 'reward'" />
-                <div class="flex items-center gap-2">
-                  <UButton type="submit" color="primary" size="sm" icon="i-lucide-coins" :loading="topicActionPending === 'reward'">
-                    {{ $t('forum.detail.reward.submit') }}
-                  </UButton>
-                  <UButton type="button" color="neutral" variant="ghost" size="sm" @click="closeTopicPanel">
-                    {{ $t('common.cancel') }}
-                  </UButton>
-                </div>
-              </form>
-
-              <form v-else class="space-y-3" @submit.prevent="handleReportTopic">
-                <UTextarea v-model="topicReportReason" :rows="4" :placeholder="$t('forum.detail.report.reason')" :disabled="topicActionPending === 'report'" />
-                <div class="flex items-center gap-2">
-                  <UButton type="submit" color="primary" size="sm" icon="i-lucide-flag" :loading="topicActionPending === 'report'">
-                    {{ $t('forum.detail.report.submit') }}
-                  </UButton>
-                  <UButton type="button" color="neutral" variant="ghost" size="sm" @click="closeTopicPanel">
-                    {{ $t('common.cancel') }}
-                  </UButton>
-                </div>
-              </form>
-            </div>
-          </UCard>
-        </aside>
+        <ForumTopicSidebar
+          v-model:move-node-id="moveNodeId"
+          :topic="topic"
+          :is-staff="isStaff"
+          :admin-nodes="adminNodes"
+          :admin-categories="adminCategories"
+          :admin-nodes-pending="adminNodesPending"
+          :admin-action-pending="adminActionPending"
+          :admin-error="adminError"
+          :load-rewards="loadTopicRewards"
+          :submit-reward="submitTopicReward"
+          @admin-action="handleAdminTopicAction"
+          @move="handleMoveTopic"
+          @delete="handleAdminDeleteTopic"
+        />
       </div>
     </div>
   </div>
@@ -321,24 +124,24 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { AdminForumNode } from '~/composables/useAdmin'
-import { useForum, type ForumReplyItem, type ForumTopicAppend, type ForumTopicDetail } from '~/composables/useForum'
-import type { UserSummary } from '~/types/iam'
-import { formatDateTime, localizeI18nName } from '~/utils/format'
+import type { AdminForumCategory, AdminForumNode } from '~/composables/useAdmin'
+import { useForum, type ForumNodeCategory, type ForumReplyItem, type ForumTopicAppend, type ForumTopicDetail } from '~/composables/useForum'
 
 definePageMeta({
   middleware: 'auth'
 })
 
-type TopicPanel = 'append' | 'reward' | 'report'
-type ReplyPanelType = 'reward' | 'report'
+type TopicPanel = 'append' | 'report'
+type EditorMode = 'write' | 'preview'
 
 const { t, locale } = useI18n()
 const route = useRoute()
+const router = useRouter()
+const localePath = useLocalePath()
 const toast = useToast()
 const forum = useForum()
 const adminApi = useAdmin()
-const { isStaff } = useAuth()
+const { isStaff, user } = useAuth()
 
 const topicId = computed(() => Number(route.params.id || 0))
 const topic = ref<ForumTopicDetail | null>(null)
@@ -355,23 +158,54 @@ const adminActionPending = ref('')
 const adminNodesPending = ref(false)
 const adminError = ref('')
 const adminNodes = ref<AdminForumNode[]>([])
+const adminCategories = ref<AdminForumCategory[]>([])
 const moveNodeId = ref(0)
+const topicEditOpen = ref(false)
+const editCategories = ref<ForumNodeCategory[]>([])
+const editNodesPending = ref(false)
+const editNodesError = ref('')
+const editSelectedCategoryId = ref(0)
+const editForm = reactive({
+  nodeId: '0',
+  subject: '',
+  content: ''
+})
 
 const replyPage = ref(readPositiveIntQuery('page', 1))
 const replySize = 50
 const activeTopicPanel = ref<TopicPanel | null>(null)
-const activeReplyPanel = ref<{ id: number, type: ReplyPanelType } | null>(null)
+const activeReplyReportId = ref(0)
 const topicAppendContent = ref('')
-const topicRewardAmount = ref('')
+const topicEditEditorMode = ref<EditorMode>('write')
+const topicAppendEditorMode = ref<EditorMode>('write')
 const topicReportReason = ref('')
-const replyRewardAmount = ref('')
 const replyReportReason = ref('')
 const replyContent = ref('')
+const replyEditorMode = ref<EditorMode>('write')
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const replyTotalPages = computed(() => Math.max(1, Math.ceil(replyTotal.value / replySize)))
 const topicAppends = computed<ForumTopicAppend[]>(() => {
   return Array.isArray(topic.value?.appends) ? topic.value.appends.filter((append) => append?.content) : []
+})
+const topicEditWindowMs = 5 * 60 * 1000
+const canEditTopic = computed(() => {
+  if (!topic.value || topic.value.isLocked || !user.value?.id || topic.value.author?.id !== user.value.id) return false
+  const createdAt = Date.parse(topic.value.createdAt || '')
+  return Number.isFinite(createdAt) && Date.now() - createdAt <= topicEditWindowMs
+})
+const canAppendTopic = computed(() => {
+  return Boolean(topic.value && !topic.value.isLocked && user.value?.id && topic.value.author?.id === user.value.id && topicAppends.value.length < 3)
+})
+const canUseTopicOwnerActions = computed(() => canEditTopic.value || canAppendTopic.value || activeTopicPanel.value === 'append')
+const canSubmitTopicEdit = computed(() => {
+  return Boolean(
+    topic.value
+    && Number(editForm.nodeId) > 0
+    && editForm.subject.trim().length >= 2
+    && editForm.content.trim().length >= 2
+    && topicActionPending.value !== 'update'
+  )
 })
 const canCreateReply = computed(() => {
   return Boolean(topic.value && !topic.value.isLocked && replyContent.value.trim().length >= 2 && !replyCreatePending.value)
@@ -384,6 +218,10 @@ useHead(() => ({
 onMounted(() => {
   loadPage()
   if (isStaff.value) loadAdminNodes()
+})
+
+watch(() => route.hash, () => {
+  void nextTick(scrollToReplyHash)
 })
 
 function readFirstQueryValue(key: string) {
@@ -419,6 +257,74 @@ async function loadTopic() {
   moveNodeId.value = topic.value.nodeId
 }
 
+async function openTopicEdit() {
+  if (!topic.value || !canEditTopic.value) return
+
+  closeTopicPanel()
+  editForm.nodeId = String(topic.value.nodeId)
+  editForm.subject = topic.value.subject
+  editForm.content = topic.value.content
+  topicEditEditorMode.value = 'write'
+  topicEditOpen.value = true
+  await loadEditNodes()
+}
+
+function closeTopicEdit() {
+  topicEditOpen.value = false
+  editNodesError.value = ''
+  topicEditEditorMode.value = 'write'
+}
+
+async function loadEditNodes() {
+  editNodesPending.value = true
+  editNodesError.value = ''
+  try {
+    const data = await forum.listNodes({ scope: 'create' })
+    editCategories.value = (data.list || []).filter((category) => category.nodes.length > 0)
+    resolveEditNodeSelection()
+  } catch (error) {
+    editCategories.value = []
+    editSelectedCategoryId.value = 0
+    editForm.nodeId = '0'
+    editNodesError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    editNodesPending.value = false
+  }
+}
+
+function resolveEditNodeSelection() {
+  const flatItems = editCategories.value.flatMap((category) => category.nodes.map((node) => ({ category, node })))
+  const matched = flatItems.find((item) => item.node.id === Number(editForm.nodeId))
+  if (matched) {
+    editSelectedCategoryId.value = matched.category.id
+    return
+  }
+
+  const firstCategory = editCategories.value[0]
+  editSelectedCategoryId.value = firstCategory?.id || 0
+  editForm.nodeId = String(firstCategory?.nodes[0]?.id || 0)
+}
+
+async function handleUpdateTopic() {
+  if (!topic.value || !canSubmitTopicEdit.value) return
+
+  topicActionPending.value = 'update'
+  try {
+    await forum.updateTopic(topic.value.id, {
+      nodeId: Number(editForm.nodeId),
+      subject: editForm.subject.trim(),
+      content: editForm.content.trim()
+    })
+    toast.add({ title: t('forum.detail.edit.success'), color: 'success', icon: 'i-lucide-check-circle' })
+    closeTopicEdit()
+    await loadTopic()
+  } catch (error) {
+    showErrorToast(error)
+  } finally {
+    topicActionPending.value = ''
+  }
+}
+
 async function loadReplies() {
   repliesPending.value = true
   repliesError.value = ''
@@ -430,7 +336,10 @@ async function loadReplies() {
     if (replyPage.value > replyTotalPages.value) {
       replyPage.value = replyTotalPages.value
       await loadReplies()
+      return
     }
+
+    await nextTick(scrollToReplyHash)
   } catch (error) {
     replies.value = []
     replyTotal.value = 0
@@ -443,19 +352,34 @@ async function loadReplies() {
 
 function goToReplyPage(nextPage: number) {
   replyPage.value = Math.min(Math.max(1, nextPage), replyTotalPages.value)
+  void router.replace({
+    path: route.path,
+    query: nextReplyQuery(replyPage.value)
+  })
   loadReplies()
 }
 
-function replyFloor(index: number) {
-  return (replyPage.value - 1) * replySize + index + 1
+function nextReplyQuery(page: number) {
+  return {
+    ...route.query,
+    page: String(page)
+  }
+}
+
+function scrollToReplyHash() {
+  const id = route.hash.replace(/^#/, '')
+  if (!id.startsWith('reply-')) return
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 async function handleToggleTopicLike() {
   if (!topic.value) return
   topicActionPending.value = 'like'
   try {
+    const nextLiked = !topic.value.isLiked
     await forum.toggleTopicLike(topic.value.id)
-    topic.value.isLiked = !topic.value.isLiked
+    topic.value.isLiked = nextLiked
+    topic.value.likeCount = Math.max(0, Number(topic.value.likeCount || 0) + (nextLiked ? 1 : -1))
   } catch (error) {
     showErrorToast(error)
   } finally {
@@ -481,13 +405,17 @@ async function handleToggleTopicBookmark() {
 }
 
 function openTopicPanel(panel: TopicPanel) {
+  if (topicEditOpen.value) closeTopicEdit()
   activeTopicPanel.value = activeTopicPanel.value === panel ? null : panel
+  if (activeTopicPanel.value === 'append') {
+    topicAppendEditorMode.value = 'write'
+  }
 }
 
 function closeTopicPanel() {
   activeTopicPanel.value = null
   topicAppendContent.value = ''
-  topicRewardAmount.value = ''
+  topicAppendEditorMode.value = 'write'
   topicReportReason.value = ''
 }
 
@@ -507,21 +435,14 @@ async function handleAppendTopic() {
   }
 }
 
-async function handleRewardTopic() {
+async function submitTopicReward(amount: number) {
   if (!topic.value) return
-  const amount = Number(topicRewardAmount.value)
-  if (!Number.isFinite(amount) || amount <= 0) return
+  await forum.rewardTopic(topic.value.id, amount)
+}
 
-  topicActionPending.value = 'reward'
-  try {
-    await forum.rewardTopic(topic.value.id, amount)
-    toast.add({ title: t('forum.detail.reward.success'), color: 'success', icon: 'i-lucide-check-circle' })
-    closeTopicPanel()
-  } catch (error) {
-    showErrorToast(error)
-  } finally {
-    topicActionPending.value = ''
-  }
+async function loadTopicRewards(page: number, size: number) {
+  if (!topic.value) return { list: [], total: 0 }
+  return await forum.listTopicRewards(topic.value.id, page, size)
 }
 
 async function handleReportTopic() {
@@ -547,6 +468,8 @@ async function handleCreateReply() {
     await forum.createReply(topic.value.id, replyContent.value.trim())
     toast.add({ title: t('forum.detail.replyForm.success'), color: 'success', icon: 'i-lucide-check-circle' })
     replyContent.value = ''
+    replyEditorMode.value = 'write'
+    replyPage.value = Math.max(1, Math.ceil((replyTotal.value + 1) / replySize))
     await Promise.all([loadTopic(), loadReplies()])
   } catch (error) {
     showErrorToast(error)
@@ -558,8 +481,10 @@ async function handleCreateReply() {
 async function handleToggleReplyLike(reply: ForumReplyItem) {
   replyActionPending.value = `like:${reply.id}`
   try {
+    const nextLiked = !reply.isLiked
     await forum.toggleReplyLike(reply.id)
-    reply.isLiked = !reply.isLiked
+    reply.isLiked = nextLiked
+    reply.likeCount = Math.max(0, Number(reply.likeCount || 0) + (nextLiked ? 1 : -1))
   } catch (error) {
     showErrorToast(error)
   } finally {
@@ -567,48 +492,37 @@ async function handleToggleReplyLike(reply: ForumReplyItem) {
   }
 }
 
-function openReplyPanel(replyId: number, type: ReplyPanelType) {
-  const current = activeReplyPanel.value
-  activeReplyPanel.value = current?.id === replyId && current.type === type ? null : { id: replyId, type }
-  replyRewardAmount.value = ''
-  replyReportReason.value = ''
+async function submitReplyReward(reply: ForumReplyItem, amount: number) {
+  await forum.rewardReply(reply.id, amount)
 }
 
-function closeReplyPanel() {
-  activeReplyPanel.value = null
-  replyRewardAmount.value = ''
-  replyReportReason.value = ''
-}
-
-async function handleRewardReply(replyId: number) {
-  const amount = Number(replyRewardAmount.value)
-  if (!Number.isFinite(amount) || amount <= 0) return
-
-  replyActionPending.value = `reward:${replyId}`
-  try {
-    await forum.rewardReply(replyId, amount)
-    toast.add({ title: t('forum.detail.reward.success'), color: 'success', icon: 'i-lucide-check-circle' })
-    closeReplyPanel()
-  } catch (error) {
-    showErrorToast(error)
-  } finally {
-    replyActionPending.value = ''
-  }
+function handleReplyRewardSuccess(reply: ForumReplyItem) {
+  reply.rewardCount = Number(reply.rewardCount || 0) + 1
 }
 
 async function handleReportReply(replyId: number) {
-  if (!replyReportReason.value.trim()) return
+  const reason = replyReportReason.value.trim()
+  if (reason.length < 5) return
 
   replyActionPending.value = `report:${replyId}`
   try {
-    await forum.reportReply(replyId, replyReportReason.value.trim())
+    await forum.reportReply(replyId, reason)
     toast.add({ title: t('forum.detail.report.success'), color: 'success', icon: 'i-lucide-check-circle' })
-    closeReplyPanel()
+    activeReplyReportId.value = 0
+    replyReportReason.value = ''
   } catch (error) {
     showErrorToast(error)
   } finally {
     replyActionPending.value = ''
   }
+}
+
+function insertReplyQuote(quote: string) {
+  replyContent.value = replyContent.value.trim() ? `${replyContent.value.trim()}\n\n${quote}` : quote
+  replyEditorMode.value = 'write'
+  void nextTick(() => {
+    document.getElementById('forum-reply-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
 }
 
 function showErrorToast(error: unknown) {
@@ -622,10 +536,15 @@ function showErrorToast(error: unknown) {
 async function loadAdminNodes() {
   adminNodesPending.value = true
   try {
-    const data = await adminApi.listForumNodes()
-    adminNodes.value = data.nodes || []
+    const [nodesData, categoriesData] = await Promise.all([
+      adminApi.listForumNodes(),
+      adminApi.listForumCategories()
+    ])
+    adminNodes.value = nodesData.nodes || []
+    adminCategories.value = categoriesData.categories || []
   } catch {
     adminNodes.value = []
+    adminCategories.value = []
   } finally {
     adminNodesPending.value = false
   }
@@ -664,12 +583,19 @@ async function handleMoveTopic() {
   }
 }
 
-function forumNodeName(node: AdminForumNode) {
-  return localizeI18nName(node.nameI18N as any, locale.value, node.slug || `#${node.id}`)
+async function handleAdminDeleteTopic() {
+  if (!topic.value) return
+  adminActionPending.value = 'delete'
+  adminError.value = ''
+  try {
+    await adminApi.deleteForumTopic(topic.value.id)
+    toast.add({ title: t('forum.detail.admin.deleted'), color: 'success', icon: 'i-lucide-check-circle' })
+    await navigateTo(localePath('/forum'))
+  } catch (error) {
+    adminError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    adminActionPending.value = ''
+  }
 }
 
-function userDisplayName(user?: UserSummary | null) {
-  if (!user) return '-'
-  return user.username || (user.id > 0 ? `#${user.id}` : '-')
-}
 </script>

@@ -14,6 +14,11 @@
     "switchLanguage": "切換語言",
     "showPassword": "顯示密碼",
     "hidePassword": "隱藏密碼",
+    "editor": {
+      "edit": "編輯",
+      "preview": "預覽",
+      "previewEmpty": "暫無內容"
+    },
     "pagination": {
       "label": "分頁",
       "total": "共 {total} 筆",
@@ -637,6 +642,7 @@
         "publish": "發布"
       },
       "fields": {
+        "category": "分區",
         "node": "節點",
         "nodePlaceholder": "選擇節點",
         "subject": "標題",
@@ -648,7 +654,21 @@
       },
       "summary": {
         "node": "節點",
-        "subjectLength": "標題長度"
+        "subjectLength": "標題長度",
+        "content": "正文",
+        "contentLength": "{count} 字"
+      },
+      "preview": {
+        "write": "編輯",
+        "preview": "預覽",
+        "empty": "暫無內容"
+      },
+      "guide": {
+        "title": "發帖提示",
+        "search": "發帖前可以先看看是否已有相近討論。",
+        "titleTip": "標題盡量具體，方便別人判斷是否感興趣。",
+        "kindness": "討論請圍繞主題展開，保持友善和克制。",
+        "finality": "主題發布後 5 分鐘內可編輯，之後只能追加附言，不能刪除。"
       }
     },
     "detail": {
@@ -663,9 +683,15 @@
         "liked": "已點讚",
         "bookmark": "收藏",
         "bookmarked": "已收藏",
+        "edit": "編輯主題",
         "append": "追加附言",
         "reward": "打賞",
         "report": "檢舉"
+      },
+      "edit": {
+        "title": "編輯主題",
+        "hint": "發布後 5 分鐘內可以修改標題、節點和正文。",
+        "success": "主題已更新"
       },
       "admin": {
         "title": "管理操作",
@@ -675,21 +701,29 @@
         "unpin": "取消置頂",
         "moveTo": "移動到板塊",
         "move": "移動主題",
-        "saved": "主題已更新"
+        "saved": "主題已更新",
+        "delete": "刪除主題",
+        "confirmDelete": "確認刪除這個主題？此操作不可復原。",
+        "deleted": "主題已刪除"
       },
       "append": {
         "index": "附言 #{index}",
         "placeholder": "追加一段附言",
         "submit": "追加",
-        "success": "附言已追加"
+        "success": "附言已追加",
+        "edit": "編輯",
+        "preview": "預覽",
+        "previewEmpty": "暫無內容"
       },
       "replies": {
         "title": "回覆",
         "summary": "{count} 條回覆",
         "empty": "暫無回覆",
-        "floor": "#{floor} 樓"
+        "floor": "#{floor} 樓",
+        "quote": "引用"
       },
       "reward": {
+        "title": "讚賞主題",
         "amount": "金額",
         "submit": "打賞",
         "success": "打賞成功"
@@ -703,12 +737,21 @@
         "title": "發表回覆",
         "placeholder": "寫下你的回覆",
         "submit": "回覆",
-        "success": "回覆已發布"
+        "success": "回覆已發布",
+        "edit": "編輯",
+        "preview": "預覽",
+        "previewEmpty": "暫無內容",
+        "locked": "主題已鎖定"
       },
       "info": {
         "title": "主題資訊",
         "author": "作者",
         "createdAt": "發布時間",
+        "topic": "主題",
+        "status": "狀態",
+        "statusNormal": "正常",
+        "statusSticky": "置頂",
+        "statusLocked": "已鎖定",
         "views": "瀏覽",
         "replies": "回覆"
       }

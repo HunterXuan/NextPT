@@ -599,6 +599,12 @@ export function useAdmin() {
     })
   }
 
+  async function deleteForumTopic(id: number) {
+    await fetchApi(`/api/admin/forum/topics/${id}`, {
+      method: 'DELETE'
+    })
+  }
+
   return {
     listCatalogCategories,
     createCatalogCategory,
@@ -643,6 +649,7 @@ export function useAdmin() {
     unlockForumTopic,
     pinForumTopic,
     unpinForumTopic,
-    moveForumTopic
+    moveForumTopic,
+    deleteForumTopic
   }
 }

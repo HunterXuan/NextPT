@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  sourcemap: {
+    server: false,
+    client: false
+  },
   routeRules: {
     // Development-only proxy. Production should route /api through the edge gateway.
     ...(process.env.NODE_ENV === 'development'

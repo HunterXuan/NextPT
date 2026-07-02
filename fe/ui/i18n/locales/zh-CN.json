@@ -14,6 +14,11 @@
     "switchLanguage": "切换语言",
     "showPassword": "显示密码",
     "hidePassword": "隐藏密码",
+    "editor": {
+      "edit": "编辑",
+      "preview": "预览",
+      "previewEmpty": "暂无内容"
+    },
     "pagination": {
       "label": "分页",
       "total": "共 {total} 条",
@@ -637,6 +642,7 @@
         "publish": "发布"
       },
       "fields": {
+        "category": "分区",
         "node": "节点",
         "nodePlaceholder": "选择节点",
         "subject": "标题",
@@ -648,7 +654,21 @@
       },
       "summary": {
         "node": "节点",
-        "subjectLength": "标题长度"
+        "subjectLength": "标题长度",
+        "content": "正文",
+        "contentLength": "{count} 字"
+      },
+      "preview": {
+        "write": "编辑",
+        "preview": "预览",
+        "empty": "暂无内容"
+      },
+      "guide": {
+        "title": "发帖提示",
+        "search": "发帖前可以先看看是否已有相近讨论。",
+        "titleTip": "标题尽量具体，方便别人判断是否感兴趣。",
+        "kindness": "讨论请围绕主题展开，保持友善和克制。",
+        "finality": "主题发布后 5 分钟内可编辑，之后只能追加附言，不能删除。"
       }
     },
     "detail": {
@@ -663,9 +683,15 @@
         "liked": "已点赞",
         "bookmark": "收藏",
         "bookmarked": "已收藏",
+        "edit": "编辑主题",
         "append": "追加附言",
         "reward": "打赏",
         "report": "举报"
+      },
+      "edit": {
+        "title": "编辑主题",
+        "hint": "发布后 5 分钟内可以修改标题、节点和正文。",
+        "success": "主题已更新"
       },
       "admin": {
         "title": "管理操作",
@@ -675,21 +701,29 @@
         "unpin": "取消置顶",
         "moveTo": "移动到板块",
         "move": "移动主题",
-        "saved": "主题已更新"
+        "saved": "主题已更新",
+        "delete": "删除主题",
+        "confirmDelete": "确认删除这个主题？此操作不可恢复。",
+        "deleted": "主题已删除"
       },
       "append": {
         "index": "附言 #{index}",
         "placeholder": "追加一段附言",
         "submit": "追加",
-        "success": "附言已追加"
+        "success": "附言已追加",
+        "edit": "编辑",
+        "preview": "预览",
+        "previewEmpty": "暂无内容"
       },
       "replies": {
         "title": "回复",
         "summary": "{count} 条回复",
         "empty": "暂无回复",
-        "floor": "#{floor} 楼"
+        "floor": "#{floor} 楼",
+        "quote": "引用"
       },
       "reward": {
+        "title": "赞赏主题",
         "amount": "金额",
         "submit": "打赏",
         "success": "打赏成功"
@@ -703,12 +737,21 @@
         "title": "发表回复",
         "placeholder": "写下你的回复",
         "submit": "回复",
-        "success": "回复已发布"
+        "success": "回复已发布",
+        "edit": "编辑",
+        "preview": "预览",
+        "previewEmpty": "暂无内容",
+        "locked": "主题已锁定"
       },
       "info": {
         "title": "主题信息",
         "author": "作者",
         "createdAt": "发布时间",
+        "topic": "主题",
+        "status": "状态",
+        "statusNormal": "正常",
+        "statusSticky": "置顶",
+        "statusLocked": "已锁定",
         "views": "浏览",
         "replies": "回复"
       }
