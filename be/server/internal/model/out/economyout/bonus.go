@@ -10,6 +10,7 @@ type BonusLogItem struct {
 	Action       string      `json:"action"`
 	TargetType   string      `json:"targetType"`
 	TargetId     uint64      `json:"targetId"`
+	Period       string      `json:"period"`
 	Remark       string      `json:"remark"`
 	CreatedAt    *gtime.Time `json:"createdAt"`
 }

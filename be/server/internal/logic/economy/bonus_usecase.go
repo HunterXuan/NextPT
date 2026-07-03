@@ -64,6 +64,7 @@ func (s *sEconomyBonusUsecase) ListMyBonusLogs(ctx context.Context, actor *model
 			Action:       l.Action,
 			TargetType:   l.TargetType,
 			TargetId:     l.TargetId,
+			Period:       l.Period,
 			Remark:       l.Remark,
 			CreatedAt:    l.CreatedAt,
 		})
@@ -77,7 +78,7 @@ func (s *sEconomyBonusUsecase) ListMyBonusLogs(ctx context.Context, actor *model
 	}, nil
 }
 
-func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, toUserId uint64, amount float64, targetType string, targetId uint64, remarkFrom, remarkTo string) error {
+func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, toUserId uint64, amount float64, targetType string, targetId uint64) error {
 	normalizedAmount, err := s.normalizeBonusAmount(ctx, amount)
 	if err != nil {
 		return err
@@ -118,7 +119,6 @@ func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, to
 				Action:       consts.EconomyBonusActionTransferSent,
 				TargetType:   targetType,
 				TargetId:     targetId,
-				Remark:       remarkFrom,
 			},
 			{
 				UserId:       toUserId,
@@ -127,7 +127,6 @@ func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, to
 				Action:       consts.EconomyBonusActionTransferReceived,
 				TargetType:   targetType,
 				TargetId:     targetId,
-				Remark:       remarkTo,
 			},
 		}
 		return service.EconomyBonusDomain().InsertBonusLogs(ctx, logs)
@@ -264,7 +263,7 @@ func (s *sEconomyBonusUsecase) DistributeBonusPoints(ctx context.Context) error 
 				continue
 			}
 
-			err := s.AddBonus(ctx, userId, totalBonus, consts.EconomyBonusActionSeedBonus, "", 0, "System hourly seeding bonus distribution", period)
+			err := s.AddBonus(ctx, userId, totalBonus, consts.EconomyBonusActionSeedBonus, "", 0, "", period)
 			if err != nil {
 				if strings.Contains(err.Error(), "1062") {
 					glog.Warningf(ctx, "[Cron] Bonus already distributed for user %d at period %s, skipping", userId, period)

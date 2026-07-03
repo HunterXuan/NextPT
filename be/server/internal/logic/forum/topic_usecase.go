@@ -247,7 +247,7 @@ func (s *sForumTopicUsecase) RewardTopic(ctx context.Context, actor *model.Actor
 		return gerror.New(gi18n.T(ctx, "forum.topic.reward_self_not_allowed"))
 	}
 	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, consts.EconomyBonusTargetTypeForumTopic, in.Id, "Reward topic", "Topic rewarded"); err != nil {
+		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, consts.EconomyBonusTargetTypeForumTopic, in.Id); err != nil {
 			return err
 		}
 		return service.EconomyRewardDomain().InsertRewardRecord(ctx, entity.EconomyRewardRecord{

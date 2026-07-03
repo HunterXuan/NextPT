@@ -201,7 +201,7 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 	}
 
 	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, comment.UserId, in.Amount, consts.EconomyBonusTargetTypeCatalogComment, comment.Id, "", "")
+		err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, comment.UserId, in.Amount, consts.EconomyBonusTargetTypeCatalogComment, comment.Id)
 		if err != nil {
 			return err
 		}

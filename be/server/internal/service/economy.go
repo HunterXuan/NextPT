@@ -26,7 +26,7 @@ type (
 	}
 	IEconomyBonusUsecase interface {
 		ListMyBonusLogs(ctx context.Context, actor *model.Actor, in economyin.BonusLogsInp) (*economyout.BonusLogsOut, error)
-		TransferBonus(ctx context.Context, fromUserId uint64, toUserId uint64, amount float64, targetType string, targetId uint64, remarkFrom string, remarkTo string) error
+		TransferBonus(ctx context.Context, fromUserId uint64, toUserId uint64, amount float64, targetType string, targetId uint64) error
 		AddBonus(ctx context.Context, userId uint64, amount float64, action string, targetType string, targetId uint64, remark string, period string) error
 		GetMyHourlyBonus(ctx context.Context, actor *model.Actor, in economyin.HourlyBonusInp) (*economyout.HourlyBonusOut, error)
 		// DistributeBonusPoints 魔力值自动发放 (NexusPHP Formula)
