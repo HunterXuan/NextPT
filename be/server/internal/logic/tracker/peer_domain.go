@@ -5,17 +5,15 @@ import (
 	"encoding/json"
 	"time"
 
-	libtracker "server/internal/library/tracker"
-	"server/internal/model/entity"
-	"server/internal/service"
-
 	"server/internal/consts"
 	"server/internal/dao"
+	libtracker "server/internal/library/tracker"
+	"server/internal/model/entity"
 	"server/internal/model/in/trackerin"
-
-	"github.com/gogf/gf/v2/os/glog"
+	"server/internal/service"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -29,8 +27,8 @@ func NewTrackerPeerDomain() *sTrackerPeerDomain {
 	return &sTrackerPeerDomain{}
 }
 
-// GetActivePeers 获取种子当前在线的全部做种者和下载者
-func (s *sTrackerPeerDomain) GetActivePeers(ctx context.Context, torrentId uint64) ([]*entity.TrackerPeer, error) {
+// GetPeers 获取种子当前在线的全部做种者和下载者
+func (s *sTrackerPeerDomain) GetPeers(ctx context.Context, torrentId uint64) ([]*entity.TrackerPeer, error) {
 	now := time.Now().Unix()
 
 	seedersKey := service.SysCache().KeyTrackerTorrentSeeders(ctx, torrentId)
@@ -84,7 +82,7 @@ func (s *sTrackerPeerDomain) GetActivePeers(ctx context.Context, torrentId uint6
 		return nil, err
 	}
 
-	var activePeers []*entity.TrackerPeer
+	var peers []*entity.TrackerPeer
 	for _, val := range bytesList.Vars() {
 		if val.IsNil() || val.String() == "" {
 			continue
@@ -93,10 +91,10 @@ func (s *sTrackerPeerDomain) GetActivePeers(ctx context.Context, torrentId uint6
 		if err := json.Unmarshal(val.Bytes(), &peer); err != nil {
 			continue
 		}
-		activePeers = append(activePeers, &peer)
+		peers = append(peers, &peer)
 	}
 
-	return activePeers, nil
+	return peers, nil
 }
 
 func (s *sTrackerPeerDomain) GetSeedingUsers(ctx context.Context) ([]uint64, error) {
@@ -116,7 +114,16 @@ func (s *sTrackerPeerDomain) GetSeedingUsers(ctx context.Context) ([]uint64, err
 
 func (s *sTrackerPeerDomain) GetUserSeedingPeers(ctx context.Context, userId uint64) ([]entity.TrackerPeer, error) {
 	userSeedingKey := service.SysCache().KeyTrackerUserSeeding(ctx, userId)
-	members, err := g.Redis().Do(ctx, "SMEMBERS", userSeedingKey)
+	return s.getUserPeersBySetKey(ctx, userSeedingKey)
+}
+
+func (s *sTrackerPeerDomain) GetUserLeechingPeers(ctx context.Context, userId uint64) ([]entity.TrackerPeer, error) {
+	userLeechingKey := service.SysCache().KeyTrackerUserLeeching(ctx, userId)
+	return s.getUserPeersBySetKey(ctx, userLeechingKey)
+}
+
+func (s *sTrackerPeerDomain) getUserPeersBySetKey(ctx context.Context, key string) ([]entity.TrackerPeer, error) {
+	members, err := g.Redis().Do(ctx, "SMEMBERS", key)
 	if err != nil || members.IsNil() || len(members.Strings()) == 0 {
 		return nil, err
 	}

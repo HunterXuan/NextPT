@@ -83,7 +83,7 @@ func (s *sAccountingSnatchDomain) RecordSnatch(ctx context.Context, in accountin
 	return affected > 0, nil
 }
 
-func (s *sAccountingSnatchDomain) ListSnatches(ctx context.Context, userId uint64, page, size int, isFinished, isActive *bool) ([]*entity.TrackerSnatch, int, error) {
+func (s *sAccountingSnatchDomain) ListSnatches(ctx context.Context, userId uint64, page, size int, isFinished *bool) ([]*entity.TrackerSnatch, int, error) {
 	m := dao.TrackerSnatch.Ctx(ctx).Where("user_id", userId)
 	if isFinished != nil {
 		m = m.Where("is_finished", *isFinished)

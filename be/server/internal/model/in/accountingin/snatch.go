@@ -6,7 +6,6 @@ type SnatchListInp struct {
 	Page       int   `json:"page" d:"1" v:"min:1" description:"页码"`
 	Size       int   `json:"size" d:"20" v:"min:1|max:100" description:"每页数量"`
 	IsFinished *bool `json:"isFinished" in:"query" description:"是否已完成下载"`
-	IsActive   *bool `json:"isActive" in:"query" description:"是否在线做种"`
 }
 
 type SnatchGetInp struct {

@@ -779,7 +779,7 @@ func (s *sCatalogTorrentUsecase) ListPeers(ctx context.Context, actor *model.Act
 		return nil, err
 	}
 
-	peers, err := service.TrackerPeerDomain().GetActivePeers(ctx, in.Id)
+	peers, err := service.TrackerPeerDomain().GetPeers(ctx, in.Id)
 	if err != nil {
 		return nil, err
 	}

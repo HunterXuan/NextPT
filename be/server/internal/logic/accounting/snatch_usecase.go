@@ -37,7 +37,7 @@ func (s *sAccountingSnatchUsecase) ListMySnatches(ctx context.Context, actor *mo
 		size = 20
 	}
 
-	snatches, total, err := service.AccountingSnatchDomain().ListSnatches(ctx, actor.Id, page, size, in.IsFinished, in.IsActive)
+	snatches, total, err := service.AccountingSnatchDomain().ListSnatches(ctx, actor.Id, page, size, in.IsFinished)
 	if err != nil {
 		return nil, err
 	}
@@ -47,10 +47,9 @@ func (s *sAccountingSnatchUsecase) ListMySnatches(ctx context.Context, actor *mo
 		torrentIds = append(torrentIds, sn.TorrentId)
 	}
 
-	torrents, _ := service.CatalogTorrentDomain().GetTorrentsByIds(ctx, torrentIds)
-	torrentMap := make(map[uint64]*entity.CatalogTorrent)
-	for _, t := range torrents {
-		torrentMap[t.Id] = t
+	torrentMap, err := s.loadTorrentMap(ctx, torrentIds)
+	if err != nil {
+		return nil, err
 	}
 
 	var list []accountingout.SnatchItem
@@ -84,6 +83,39 @@ func (s *sAccountingSnatchUsecase) ListMySnatches(ctx context.Context, actor *mo
 		Total: total,
 		List:  list,
 	}, nil
+}
+
+func (s *sAccountingSnatchUsecase) loadTorrentMap(ctx context.Context, torrentIds []uint64) (map[uint64]*entity.CatalogTorrent, error) {
+	if len(torrentIds) == 0 {
+		return map[uint64]*entity.CatalogTorrent{}, nil
+	}
+
+	uniqueIds := make([]uint64, 0, len(torrentIds))
+	seen := make(map[uint64]struct{}, len(torrentIds))
+	for _, id := range torrentIds {
+		if id == 0 {
+			continue
+		}
+		if _, ok := seen[id]; ok {
+			continue
+		}
+		seen[id] = struct{}{}
+		uniqueIds = append(uniqueIds, id)
+	}
+	if len(uniqueIds) == 0 {
+		return map[uint64]*entity.CatalogTorrent{}, nil
+	}
+
+	torrents, err := service.CatalogTorrentDomain().GetTorrentsByIds(ctx, uniqueIds)
+	if err != nil {
+		return nil, err
+	}
+
+	torrentMap := make(map[uint64]*entity.CatalogTorrent, len(torrents))
+	for _, t := range torrents {
+		torrentMap[t.Id] = t
+	}
+	return torrentMap, nil
 }
 
 func (s *sAccountingSnatchUsecase) GetMySnatch(ctx context.Context, actor *model.Actor, in accountingin.SnatchGetInp) (*accountingout.SnatchGetOut, error) {

@@ -26,10 +26,11 @@ type (
 		PushAnnounceEvent(event *trackerin.AnnounceEvent) error
 	}
 	ITrackerPeerDomain interface {
-		// GetActivePeers 获取种子当前在线的全部做种者和下载者
-		GetActivePeers(ctx context.Context, torrentId uint64) ([]*entity.TrackerPeer, error)
+		// GetPeers 获取种子当前在线的全部做种者和下载者
+		GetPeers(ctx context.Context, torrentId uint64) ([]*entity.TrackerPeer, error)
 		GetSeedingUsers(ctx context.Context) ([]uint64, error)
 		GetUserSeedingPeers(ctx context.Context, userId uint64) ([]entity.TrackerPeer, error)
+		GetUserLeechingPeers(ctx context.Context, userId uint64) ([]entity.TrackerPeer, error)
 		// GetEnabledClientWhitelists 获取所有启用的客户端白名单规则
 		GetEnabledClientWhitelists(ctx context.Context) ([]*entity.TrackerAgentWhitelist, error)
 		// calculateTrafficDiff 计算本次汇报的上传下载增量

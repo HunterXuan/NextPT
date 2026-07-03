@@ -16,9 +16,12 @@ import (
 )
 
 type (
+	IAccountingPeerUsecase interface {
+		ListMyPeers(ctx context.Context, actor *model.Actor, in accountingin.PeerListInp) (*accountingout.PeerListOut, error)
+	}
 	IAccountingSnatchDomain interface {
 		RecordSnatch(ctx context.Context, in accountingin.RecordSnatchInp) (bool, error)
-		ListSnatches(ctx context.Context, userId uint64, page int, size int, isFinished *bool, isActive *bool) ([]*entity.TrackerSnatch, int, error)
+		ListSnatches(ctx context.Context, userId uint64, page int, size int, isFinished *bool) ([]*entity.TrackerSnatch, int, error)
 		GetSnatch(ctx context.Context, userId uint64, torrentId uint64) (*entity.TrackerSnatch, error)
 		DeleteSnatchesByTorrentId(ctx context.Context, torrentId uint64) error
 	}
@@ -38,11 +41,23 @@ type (
 )
 
 var (
+	localAccountingPeerUsecase    IAccountingPeerUsecase
 	localAccountingSnatchDomain   IAccountingSnatchDomain
 	localAccountingSnatchUsecase  IAccountingSnatchUsecase
 	localAccountingTrafficDomain  IAccountingTrafficDomain
 	localAccountingTrafficUsecase IAccountingTrafficUsecase
 )
+
+func AccountingPeerUsecase() IAccountingPeerUsecase {
+	if localAccountingPeerUsecase == nil {
+		panic("implement not found for interface IAccountingPeerUsecase, forgot register?")
+	}
+	return localAccountingPeerUsecase
+}
+
+func RegisterAccountingPeerUsecase(i IAccountingPeerUsecase) {
+	localAccountingPeerUsecase = i
+}
 
 func AccountingSnatchDomain() IAccountingSnatchDomain {
 	if localAccountingSnatchDomain == nil {
