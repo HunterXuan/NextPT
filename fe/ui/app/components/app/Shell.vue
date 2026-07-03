@@ -119,6 +119,10 @@ function isActive(path: string) {
   return route.path === localized || route.path.startsWith(`${localized}/`)
 }
 
+function isExactActive(path: string) {
+  return route.path === localePath(path)
+}
+
 function isForumHomeActive() {
   const forumPath = localePath('/forum')
   const topicsPath = localePath('/forum/topics')
@@ -171,7 +175,10 @@ const appNavSections = computed(() => {
       key: 'account',
       label: t('nav.my'),
       items: [
-        { label: t('nav.user'), to: '/iam/users/me', icon: 'i-lucide-user-round', active: isActive('/iam/users/me') }
+        { label: t('user.nav.overview'), to: '/iam/users/me', icon: 'i-lucide-user-round', active: isExactActive('/iam/users/me') },
+        { label: t('user.nav.activity'), to: '/iam/users/me/activity', icon: 'i-lucide-chart-line', active: isActive('/iam/users/me/activity') },
+        { label: t('user.nav.bonus'), to: '/iam/users/me/bonus', icon: 'i-lucide-coins', active: isActive('/iam/users/me/bonus') },
+        { label: t('user.nav.settings'), to: '/iam/users/me/settings', icon: 'i-lucide-settings', active: isActive('/iam/users/me/settings') }
       ]
     }
   ]
@@ -260,6 +267,9 @@ const routeSpecificLabel = computed(() => {
   if (path === '/catalog/subtitles') return t('catalog.subtitles.title')
   if (path === '/forum/topics/create') return t('forum.create.title')
   if (path === '/forum/bookmarks') return t('forum.bookmarks.title')
+  if (path === '/iam/users/me/activity') return t('user.nav.activity')
+  if (path === '/iam/users/me/bonus') return t('user.nav.bonus')
+  if (path === '/iam/users/me/settings') return t('user.nav.settings')
   return ''
 })
 const activeItemLabel = computed(() => routeSpecificLabel.value || activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : t('common.brand')))

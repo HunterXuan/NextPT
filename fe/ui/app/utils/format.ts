@@ -2,10 +2,10 @@ import type { I18nName } from '~/types/i18n'
 
 export function formatBytes(value?: number | null) {
   const bytes = Number(value || 0)
-  if (bytes <= 0) return '0 B'
+  if (!Number.isFinite(bytes) || bytes < 1) return '0 B'
 
   const units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
-  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
+  const exponent = Math.min(Math.max(0, Math.floor(Math.log(bytes) / Math.log(1024))), units.length - 1)
   const amount = bytes / Math.pow(1024, exponent)
 
   return `${amount.toFixed(amount >= 10 || exponent === 0 ? 0 : 1)} ${units[exponent]}`

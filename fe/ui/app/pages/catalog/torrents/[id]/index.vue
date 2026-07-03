@@ -121,7 +121,7 @@
                 <button
                   type="button"
                   :class="peerStatCardClass('seeders')"
-                  :aria-pressed="activePeerView === 'seeders'"
+                  :aria-pressed="peerView === 'seeders'"
                   @click="handlePeerStatClick('seeders')"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
@@ -135,7 +135,7 @@
                 <button
                   type="button"
                   :class="peerStatCardClass('leechers')"
-                  :aria-pressed="activePeerView === 'leechers'"
+                  :aria-pressed="peerView === 'leechers'"
                   @click="handlePeerStatClick('leechers')"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
@@ -149,7 +149,7 @@
                 <button
                   type="button"
                   :class="peerStatCardClass('completed')"
-                  :aria-pressed="activePeerView === 'completed'"
+                  :aria-pressed="peerView === 'completed'"
                   @click="handlePeerStatClick('completed')"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
@@ -258,8 +258,8 @@
               </div>
             </div>
 
-            <div v-if="activePeerView" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <div v-if="activePeerView === 'completed'" class="px-4 py-8 text-center">
+            <div v-if="peerView" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+              <div v-if="peerView === 'completed'" class="px-4 py-8 text-center">
                 <UIcon name="i-lucide-circle-check" class="mx-auto size-8 text-slate-400" />
                 <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
                   {{ $t('catalog.torrents.detail.peers.completedUnavailable') }}
@@ -689,7 +689,7 @@ const subtitleDownloadPendingId = ref(0)
 const commentLikePendingId = ref(0)
 const activeCommentReportId = ref(0)
 const activeSubtitleReportId = ref(0)
-const activePeerView = ref<PeerView | null>(null)
+const peerView = ref<PeerView | null>(null)
 const filePanelOpen = ref(false)
 const subtitlesPanelOpen = ref(false)
 const subtitlesLoaded = ref(false)
@@ -741,8 +741,8 @@ const renderedCommentPreview = computed(() => renderRichText(commentForm.content
 const canUploadSubtitle = computed(() => Boolean(selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
 const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.owner?.id)))
 const visiblePeers = computed(() => {
-  if (activePeerView.value === 'seeders') return peers.value.filter((item) => item.isSeeder)
-  if (activePeerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)
+  if (peerView.value === 'seeders') return peers.value.filter((item) => item.isSeeder)
+  if (peerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)
   return []
 })
 const sectionNavItems = computed<SectionNavItem[]>(() => [
@@ -1008,7 +1008,7 @@ function resetInteractionState() {
   subtitleFileInputKey.value += 1
   activeCommentReportId.value = 0
   activeSubtitleReportId.value = 0
-  activePeerView.value = null
+  peerView.value = null
   filePanelOpen.value = false
   subtitlesPanelOpen.value = false
   subtitlesLoaded.value = false
@@ -1041,13 +1041,13 @@ async function loadPeers(force = false) {
 }
 
 async function handlePeerStatClick(view: PeerView) {
-  if (activePeerView.value === view) {
-    activePeerView.value = null
+  if (peerView.value === view) {
+    peerView.value = null
     return
   }
 
   filePanelOpen.value = false
-  activePeerView.value = view
+  peerView.value = view
   if (view !== 'completed') {
     await loadPeers()
   }
@@ -1057,7 +1057,7 @@ async function handleFileStatClick() {
   filePanelOpen.value = !filePanelOpen.value
   if (!filePanelOpen.value) return
 
-  activePeerView.value = null
+  peerView.value = null
   await loadFiles(true)
 }
 
@@ -1071,7 +1071,7 @@ function fileStatCardClass() {
 
 function peerStatCardClass(view: PeerView) {
   const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
-  if (activePeerView.value === view) {
+  if (peerView.value === view) {
     return `${base} bg-sky-50 dark:bg-sky-950/40`
   }
   return `${base} hover:bg-white dark:hover:bg-slate-950`

@@ -1252,13 +1252,28 @@
     "eyebrow": "用户中心",
     "staff": "Staff",
     "member": "Member",
+    "nav": {
+      "overview": "账号概览",
+      "activity": "分享数据",
+      "bonus": "魔力值",
+      "settings": "账号设置"
+    },
+    "overview": {
+      "enter": "进入",
+      "links": {
+        "activity": "查看流量趋势、做种时长和下载完成记录。",
+        "bonus": "查看魔力值收入、支出和当前余额变化。",
+        "settings": "更新个人资料、管理邀请、查看 Passkey 并修改密码。"
+      }
+    },
     "status": {
       "normal": "正常"
     },
     "fields": {
       "id": "用户 ID",
       "role": "角色",
-      "createdAt": "注册时间"
+      "createdAt": "注册时间",
+      "invites": "可用邀请"
     },
     "stats": {
       "uploaded": "总上传",
@@ -1282,6 +1297,12 @@
       "leechTime": "下载时长",
       "activeTime": "活跃时长",
       "bonus": "魔力值",
+      "summaryTitle": "数据汇总（{range}）",
+      "chartTitle": "趋势图（{range}）",
+      "ranges": {
+        "daily": "近 {count} 天",
+        "monthly": "近 {count} 个月"
+      },
       "periods": {
         "daily": "按天",
         "monthly": "按月"
@@ -1308,6 +1329,23 @@
         "forum_reply": "论坛回复"
       }
     },
+    "peers": {
+      "title": "当前活动种子",
+      "summary": "做种中 {seeding} / 下载中 {leeching}",
+      "empty": "暂无活动中的种子",
+      "status": "状态",
+      "progress": "进度",
+      "traffic": "流量",
+      "client": "客户端",
+      "complete": "已完成",
+      "seeding": "做种中",
+      "leeching": "下载中",
+      "filters": {
+        "all": "全部",
+        "seeding": "做种中",
+        "leeching": "下载中"
+      }
+    },
     "invites": {
       "title": "邀请码",
       "summary": "{available} 个可发送 / 共 {total} 个",
@@ -1331,8 +1369,14 @@
       "empty": "暂无下载或做种记录",
       "finished": "已完成",
       "unfinished": "未完成",
+      "torrent": "种子",
+      "status": "状态",
+      "size": "体积",
       "uploaded": "上传",
       "downloaded": "下载",
+      "duration": "时长",
+      "seed": "做种",
+      "leech": "下载",
       "seedTime": "做种时长",
       "leechTime": "下载时长",
       "lastAction": "最后活动",
@@ -1345,6 +1389,7 @@
     },
     "passkey": {
       "title": "Passkey",
+      "subtitle": "下载种子和 tracker 识别会用到这个密钥，请不要公开。",
       "copied": "Passkey 已复制"
     },
     "profile": {

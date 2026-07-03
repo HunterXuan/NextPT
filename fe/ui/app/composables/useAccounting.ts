@@ -55,6 +55,37 @@ export interface SnatchListOut {
   list: SnatchItem[]
 }
 
+export type PeerStatus = 'all' | 'seeding' | 'leeching'
+
+export interface PeerItem {
+  torrentId: number
+  torrentName: string
+  torrentSize: number
+  uploaded: number
+  downloaded: number
+  remaining: number
+  isSeeder: boolean
+  agent: string
+  startedAt: string | null
+  finishedAt: string | null
+  lastActionAt: string | null
+}
+
+export interface PeerListParams {
+  page?: number
+  size?: number
+  status?: PeerStatus
+}
+
+export interface PeerListOut {
+  page: number
+  size: number
+  total: number
+  seedingTotal: number
+  leechingTotal: number
+  list: PeerItem[]
+}
+
 export function useAccounting() {
   async function getTraffic() {
     return await fetchApi<TrafficSummary>('/api/accounting/users/me/traffic')
@@ -81,9 +112,20 @@ export function useAccounting() {
     return await fetchApi<SnatchListOut>('/api/accounting/users/me/snatches', { query })
   }
 
+  async function listPeers(params: PeerListParams = {}) {
+    const query: Record<string, unknown> = {}
+
+    if (params.page) query.page = params.page
+    if (params.size) query.size = params.size
+    if (params.status && params.status !== 'all') query.status = params.status
+
+    return await fetchApi<PeerListOut>('/api/accounting/users/me/peers', { query })
+  }
+
   return {
     getTraffic,
     listTrafficHistory,
-    listSnatches
+    listSnatches,
+    listPeers
   }
 }

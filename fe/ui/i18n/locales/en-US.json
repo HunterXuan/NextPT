@@ -1252,13 +1252,28 @@
     "eyebrow": "User Center",
     "staff": "Staff",
     "member": "Member",
+    "nav": {
+      "overview": "Account Overview",
+      "activity": "Sharing Activity",
+      "bonus": "Bonus",
+      "settings": "Account Settings"
+    },
+    "overview": {
+      "enter": "Open",
+      "links": {
+        "activity": "View traffic trends, seeding time, and download completion history.",
+        "bonus": "Track bonus income, spending, and balance changes.",
+        "settings": "Update profile, manage invites, view passkey, and change password."
+      }
+    },
     "status": {
       "normal": "Normal"
     },
     "fields": {
       "id": "User ID",
       "role": "Role",
-      "createdAt": "Joined"
+      "createdAt": "Joined",
+      "invites": "Available invites"
     },
     "stats": {
       "uploaded": "Uploaded",
@@ -1282,6 +1297,12 @@
       "leechTime": "Leech time",
       "activeTime": "Active time",
       "bonus": "Bonus",
+      "summaryTitle": "Data summary ({range})",
+      "chartTitle": "Trend chart ({range})",
+      "ranges": {
+        "daily": "the last {count} days",
+        "monthly": "the last {count} months"
+      },
       "periods": {
         "daily": "Daily",
         "monthly": "Monthly"
@@ -1308,6 +1329,23 @@
         "forum_reply": "Forum reply"
       }
     },
+    "peers": {
+      "title": "Current active torrents",
+      "summary": "{seeding} seeding / {leeching} leeching",
+      "empty": "No active torrents right now",
+      "status": "Status",
+      "progress": "Progress",
+      "traffic": "Traffic",
+      "client": "Client",
+      "complete": "Complete",
+      "seeding": "Seeding",
+      "leeching": "Leeching",
+      "filters": {
+        "all": "All",
+        "seeding": "Seeding",
+        "leeching": "Leeching"
+      }
+    },
     "invites": {
       "title": "Invites",
       "summary": "{available} available / {total} total",
@@ -1331,8 +1369,14 @@
       "empty": "No download or seeding records yet",
       "finished": "Finished",
       "unfinished": "Unfinished",
+      "torrent": "Torrent",
+      "status": "Status",
+      "size": "Size",
       "uploaded": "Uploaded",
       "downloaded": "Downloaded",
+      "duration": "Time",
+      "seed": "Seed",
+      "leech": "Leech",
       "seedTime": "Seed time",
       "leechTime": "Leech time",
       "lastAction": "Last active",
@@ -1345,6 +1389,7 @@
     },
     "passkey": {
       "title": "Passkey",
+      "subtitle": "This key is used by torrent downloads and tracker identification. Keep it private.",
       "copied": "Passkey copied"
     },
     "profile": {

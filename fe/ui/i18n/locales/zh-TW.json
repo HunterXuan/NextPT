@@ -1252,13 +1252,28 @@
     "eyebrow": "使用者中心",
     "staff": "Staff",
     "member": "Member",
+    "nav": {
+      "overview": "帳號概覽",
+      "activity": "分享資料",
+      "bonus": "魔力值",
+      "settings": "帳號設定"
+    },
+    "overview": {
+      "enter": "進入",
+      "links": {
+        "activity": "查看流量趨勢、做種時長和下載完成記錄。",
+        "bonus": "查看魔力值收入、支出和目前餘額變化。",
+        "settings": "更新個人資料、管理邀請、查看 Passkey 並修改密碼。"
+      }
+    },
     "status": {
       "normal": "正常"
     },
     "fields": {
       "id": "使用者 ID",
       "role": "角色",
-      "createdAt": "註冊時間"
+      "createdAt": "註冊時間",
+      "invites": "可用邀請"
     },
     "stats": {
       "uploaded": "總上傳",
@@ -1282,6 +1297,12 @@
       "leechTime": "下載時長",
       "activeTime": "活躍時長",
       "bonus": "魔力值",
+      "summaryTitle": "資料彙總（{range}）",
+      "chartTitle": "趨勢圖（{range}）",
+      "ranges": {
+        "daily": "近 {count} 天",
+        "monthly": "近 {count} 個月"
+      },
       "periods": {
         "daily": "按天",
         "monthly": "按月"
@@ -1308,6 +1329,23 @@
         "forum_reply": "論壇回覆"
       }
     },
+    "peers": {
+      "title": "目前活動種子",
+      "summary": "做種中 {seeding} / 下載中 {leeching}",
+      "empty": "暫無活動中的種子",
+      "status": "狀態",
+      "progress": "進度",
+      "traffic": "流量",
+      "client": "客戶端",
+      "complete": "已完成",
+      "seeding": "做種中",
+      "leeching": "下載中",
+      "filters": {
+        "all": "全部",
+        "seeding": "做種中",
+        "leeching": "下載中"
+      }
+    },
     "invites": {
       "title": "邀請碼",
       "summary": "{available} 個可發送 / 共 {total} 個",
@@ -1331,8 +1369,14 @@
       "empty": "暫無下載或做種記錄",
       "finished": "已完成",
       "unfinished": "未完成",
+      "torrent": "種子",
+      "status": "狀態",
+      "size": "體積",
       "uploaded": "上傳",
       "downloaded": "下載",
+      "duration": "時長",
+      "seed": "做種",
+      "leech": "下載",
       "seedTime": "做種時長",
       "leechTime": "下載時長",
       "lastAction": "最後活動",
@@ -1345,6 +1389,7 @@
     },
     "passkey": {
       "title": "Passkey",
+      "subtitle": "下載種子和 tracker 識別會用到這個密鑰，請不要公開。",
       "copied": "Passkey 已複製"
     },
     "profile": {
