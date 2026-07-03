@@ -77,7 +77,7 @@ type (
 		AdminListUsers(ctx context.Context, search string, order string, page int, size int) ([]*entity.IamUser, int, error)
 		AdminUpdateUser(ctx context.Context, id uint64, status *int, role *uint, passkey *string) error
 		AdminGetUserStat(ctx context.Context, id uint64) (*entity.IamUserStat, error)
-		AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64, bonusDiff *float64) (int64, error)
+		AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64) (int64, error)
 		GetUsersByIds(ctx context.Context, ids []uint64) ([]entity.IamUser, error)
 		GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error)
 	}

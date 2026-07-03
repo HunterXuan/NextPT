@@ -4,6 +4,7 @@ const (
 	EconomyBonusActionTransferSent     = "transfer_sent"
 	EconomyBonusActionTransferReceived = "transfer_received"
 	EconomyBonusActionSeedBonus        = "seed_bonus"
+	EconomyBonusActionAdminAdjustment  = "admin_adjustment"
 )
 
 const (

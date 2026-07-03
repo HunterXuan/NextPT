@@ -223,7 +223,7 @@ func (s *sIamUserDomain) AdminGetUserStat(ctx context.Context, id uint64) (*enti
 	return stat, err
 }
 
-func (s *sIamUserDomain) AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64, bonusDiff *float64) (int64, error) {
+func (s *sIamUserDomain) AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64) (int64, error) {
 	data := g.Map{}
 	if uploadedDiff != nil && *uploadedDiff != 0 {
 		diff := *uploadedDiff
@@ -239,14 +239,6 @@ func (s *sIamUserDomain) AdminUpdateUserStat(ctx context.Context, id uint64, upl
 			data[dao.IamUserStat.Columns().Downloaded] = gdb.Raw(fmt.Sprintf("downloaded + %d", diff))
 		} else {
 			data[dao.IamUserStat.Columns().Downloaded] = gdb.Raw(fmt.Sprintf("GREATEST(0, CAST(downloaded AS SIGNED) + %d)", diff))
-		}
-	}
-	if bonusDiff != nil && *bonusDiff != 0 {
-		diff := *bonusDiff
-		if diff > 0 {
-			data[dao.IamUserStat.Columns().Bonus] = gdb.Raw(fmt.Sprintf("bonus + %f", diff))
-		} else {
-			data[dao.IamUserStat.Columns().Bonus] = gdb.Raw(fmt.Sprintf("GREATEST(0, bonus + %f)", diff))
 		}
 	}
 	if len(data) == 0 {

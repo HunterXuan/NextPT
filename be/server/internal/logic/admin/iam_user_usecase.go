@@ -10,7 +10,9 @@ import (
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/os/gcache"
 )
@@ -100,14 +102,44 @@ func (s *sAdminIamUserUsecase) StatDetail(ctx context.Context, actor *model.Acto
 }
 
 func (s *sAdminIamUserUsecase) StatUpdate(ctx context.Context, actor *model.Actor, in adminin.IamUserStatUpdateInp) error {
-	rows, err := service.IamUserDomain().AdminUpdateUserStat(ctx, in.Id, in.UploadedDiff, in.DownloadedDiff, in.BonusDiff)
+	hasStatDiff := s.hasStatDiff(in.UploadedDiff, in.DownloadedDiff)
+	hasBonusDiff := in.BonusDiff != nil && *in.BonusDiff != 0
+	if !hasStatDiff && !hasBonusDiff {
+		return gerror.New(gi18n.T(ctx, "admin.user.stat_no_changes"))
+	}
+
+	changed := false
+	err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		if hasStatDiff {
+			rows, err := service.IamUserDomain().AdminUpdateUserStat(ctx, in.Id, in.UploadedDiff, in.DownloadedDiff)
+			if err != nil {
+				return err
+			}
+			if rows > 0 {
+				changed = true
+			}
+		}
+
+		if hasBonusDiff {
+			if err := service.EconomyBonusUsecase().AddBonus(ctx, in.Id, *in.BonusDiff, consts.EconomyBonusActionAdminAdjustment, "", 0, "", ""); err != nil {
+				return err
+			}
+			changed = true
+		}
+
+		return nil
+	})
 	if err != nil {
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.user.update_stat_failed"))
 	}
-	if rows == 0 {
+	if !changed {
 		return gerror.New(gi18n.T(ctx, "admin.user.stat_no_changes"))
 	}
 	return nil
+}
+
+func (s *sAdminIamUserUsecase) hasStatDiff(uploadedDiff, downloadedDiff *int64) bool {
+	return (uploadedDiff != nil && *uploadedDiff != 0) || (downloadedDiff != nil && *downloadedDiff != 0)
 }
 
 func (s *sAdminIamUserUsecase) Ban(ctx context.Context, actor *model.Actor, in adminin.IamUserBanInp) error {
