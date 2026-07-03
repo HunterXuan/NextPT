@@ -3,6 +3,7 @@ package economy
 import (
 	"context"
 	"fmt"
+	"math"
 	"strings"
 	"time"
 
@@ -23,6 +24,8 @@ import (
 )
 
 type sEconomyBonusUsecase struct{}
+
+const economyBonusAmountScale = 100
 
 func init() {
 	service.RegisterEconomyBonusUsecase(NewEconomyBonusUsecase())
@@ -75,6 +78,11 @@ func (s *sEconomyBonusUsecase) ListMyBonusLogs(ctx context.Context, actor *model
 }
 
 func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, toUserId uint64, amount float64, targetType string, targetId uint64, remarkFrom, remarkTo string) error {
+	normalizedAmount, err := s.normalizeBonusAmount(ctx, amount)
+	if err != nil {
+		return err
+	}
+	amount = normalizedAmount
 	if amount <= 0 {
 		return gerror.New(gi18n.T(ctx, "economy.bonus.invalid_amount"))
 	}
@@ -127,6 +135,11 @@ func (s *sEconomyBonusUsecase) TransferBonus(ctx context.Context, fromUserId, to
 }
 
 func (s *sEconomyBonusUsecase) AddBonus(ctx context.Context, userId uint64, amount float64, action string, targetType string, targetId uint64, remark string, period string) error {
+	normalizedAmount, err := s.normalizeBonusAmount(ctx, amount)
+	if err != nil {
+		return err
+	}
+	amount = normalizedAmount
 	if amount == 0 {
 		return nil
 	}
@@ -242,6 +255,14 @@ func (s *sEconomyBonusUsecase) DistributeBonusPoints(ctx context.Context) error 
 		// 执行单批次的单条无事务积分更新 -> 改为有事务的积分更新
 		for userId, userPeers := range userPeersMap {
 			totalBonus := service.EconomyBonusDomain().CalculateBonusForPeers(userPeers, torrentMap, config, now)
+			totalBonus, err = s.normalizeBonusAmount(ctx, totalBonus)
+			if err != nil {
+				glog.Error(ctx, "[Cron] Bonus calculation produced invalid amount:", err)
+				return err
+			}
+			if totalBonus == 0 {
+				continue
+			}
 
 			err := s.AddBonus(ctx, userId, totalBonus, consts.EconomyBonusActionSeedBonus, "", 0, "System hourly seeding bonus distribution", period)
 			if err != nil {
@@ -258,6 +279,18 @@ func (s *sEconomyBonusUsecase) DistributeBonusPoints(ctx context.Context) error 
 
 	glog.Infof(ctx, "[Cron] Bonus calculation completed. Rewarded %d users in total.", totalRewardedUsers)
 	return nil
+}
+
+func (s *sEconomyBonusUsecase) normalizeBonusAmount(ctx context.Context, amount float64) (float64, error) {
+	if math.IsNaN(amount) || math.IsInf(amount, 0) {
+		return 0, gerror.New(gi18n.T(ctx, "economy.bonus.invalid_amount"))
+	}
+
+	amount = math.Round(amount*economyBonusAmountScale) / economyBonusAmountScale
+	if amount == 0 {
+		return 0, nil
+	}
+	return amount, nil
 }
 
 // CalculateHourlyBonus 计算指定用户当前每小时可获得魔力值
