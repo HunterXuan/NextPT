@@ -6,6 +6,7 @@ export interface BonusLogItem {
   action: string
   targetType: string
   targetId: number
+  period: string
   remark: string
   createdAt: string | null
 }

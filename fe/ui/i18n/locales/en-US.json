@@ -1255,7 +1255,7 @@
     "nav": {
       "overview": "Account Overview",
       "activity": "Sharing Activity",
-      "bonus": "Bonus",
+      "bonus": "Bonus History",
       "settings": "Account Settings"
     },
     "overview": {
@@ -1314,19 +1314,43 @@
       }
     },
     "bonusLogs": {
-      "title": "Bonus logs",
-      "summary": "{total} records, hourly estimate {hourly}",
+      "title": "Bonus History",
+      "description": "Track bonus income, spending, and balance changes.",
+      "detailTitle": "Transaction details",
       "hourly": "Hourly estimate",
       "balance": "Current balance",
-      "empty": "No bonus logs yet",
+      "empty": "No bonus history yet",
       "after": "Balance {balance}",
+      "period": "Settlement period {period}",
       "pageSummary": "Page {page} / {pages}",
       "actions": {
         "transfer_sent": "Transfer sent",
         "transfer_received": "Transfer received",
+        "reward_sent": "Reward sent",
+        "reward_received": "Reward received",
         "seed_bonus": "Seeding bonus",
+        "admin_adjustment": "Admin adjustment",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
+      },
+      "targetTypes": {
+        "catalog_torrent": "Torrent",
+        "catalog_comment": "Torrent comment",
+        "forum_topic": "Forum topic",
+        "forum_reply": "Forum reply"
+      },
+      "formula": {
+        "title": "Hourly estimate rule",
+        "description": "Estimated from active seed size, torrent age, seeder count, and site parameters. Hourly settlement is rounded to database precision.",
+        "score": "A = Σ((1 - 10^(-T / T0)) × S × (1 + √2 × 10^(-(N - 1)/(N0 - 1))))",
+        "volume": "B = B0 × 2 / π × atan(A / L)",
+        "total": "P = base × C + B",
+        "variables": {
+          "size": "S: torrent size in GB.",
+          "age": "T: weeks since the torrent was published.",
+          "seeders": "N: current seeder count, with a minimum of 1.",
+          "params": "C, T0, N0, B0, L, and base are controlled by site rules."
+        }
       }
     },
     "peers": {

@@ -1,80 +1,132 @@
 <template>
   <UCard class="rounded-lg">
     <template #header>
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.title') }}</h2>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            {{ $t('user.bonusLogs.summary', { total: numberFormatter.format(bonusLogTotal), hourly: formatBonus(hourlyBonus) }) }}
-          </p>
-        </div>
-        <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" :loading="bonusLogsPending" @click="loadBonusLogs">
-          {{ $t('common.refresh') }}
-        </UButton>
+      <div>
+        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.title') }}</h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {{ $t('user.bonusLogs.description') }}
+        </p>
       </div>
     </template>
 
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div class="rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
-        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.hourly') }}</p>
-        <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ formatBonus(hourlyBonus) }}</p>
+      <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/50">
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.balance') }}</p>
+          <UIcon name="i-lucide-wallet-cards" class="size-4 text-slate-400" />
+        </div>
+        <p class="mt-1.5 text-xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ formatBonus(user?.bonus || 0) }}</p>
       </div>
-      <div class="rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
-        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.balance') }}</p>
-        <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ formatBonus(user?.bonus || 0) }}</p>
-      </div>
-    </div>
-
-    <div v-if="bonusLogsError" class="mt-4 flex flex-col items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 py-8 text-center dark:border-red-900 dark:bg-red-950">
-      <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
-      <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ bonusLogsError }}</p>
-      <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadBonusLogs">
-        {{ $t('common.retry') }}
-      </UButton>
-    </div>
-    <div v-else-if="bonusLogsPending && bonusLogs.length === 0" class="mt-4 space-y-3">
-      <div v-for="item in 6" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-    </div>
-    <div v-else-if="bonusLogs.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-12 text-center dark:border-slate-800">
-      <UIcon name="i-lucide-coins" class="mx-auto size-8 text-slate-400" />
-      <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.empty') }}</p>
-    </div>
-    <div v-else class="mt-4 divide-y divide-slate-100 dark:divide-slate-800">
-      <article v-for="log in bonusLogs" :key="log.id" class="grid gap-3 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_160px] sm:items-center">
-        <div class="min-w-0">
-          <div class="flex min-w-0 items-center gap-2">
-            <UBadge :color="log.amount >= 0 ? 'success' : 'error'" variant="soft">
-              {{ log.amount >= 0 ? '+' : '' }}{{ formatBonus(log.amount) }}
-            </UBadge>
-            <p class="truncate font-medium text-slate-950 dark:text-white">{{ bonusActionLabel(log.action) }}</p>
+      <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/50">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-1.5">
+            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.hourly') }}</p>
+            <UPopover :content="{ side: 'top', align: 'start', sideOffset: 8 }" :ui="{ content: 'w-80 p-4' }">
+              <UButton
+                color="neutral"
+                variant="ghost"
+                size="xs"
+                icon="i-lucide-info"
+                class="size-6 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                :aria-label="$t('user.bonusLogs.formula.title')"
+              />
+              <template #content>
+                <div class="space-y-3 text-sm">
+                  <div>
+                    <p class="font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.formula.title') }}</p>
+                    <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.formula.description') }}</p>
+                  </div>
+                  <div class="space-y-2 rounded-md bg-slate-50 p-3 font-mono text-xs leading-5 text-slate-700 dark:bg-slate-950 dark:text-slate-200">
+                    <p>{{ $t('user.bonusLogs.formula.score') }}</p>
+                    <p>{{ $t('user.bonusLogs.formula.volume') }}</p>
+                    <p>{{ $t('user.bonusLogs.formula.total') }}</p>
+                  </div>
+                  <ul class="space-y-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                    <li>{{ $t('user.bonusLogs.formula.variables.size') }}</li>
+                    <li>{{ $t('user.bonusLogs.formula.variables.age') }}</li>
+                    <li>{{ $t('user.bonusLogs.formula.variables.seeders') }}</li>
+                    <li>{{ $t('user.bonusLogs.formula.variables.params') }}</li>
+                  </ul>
+                </div>
+              </template>
+            </UPopover>
           </div>
-          <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
-            {{ log.remark || `${log.targetType || '-'} #${log.targetId || '-'}` }}
-          </p>
+          <UIcon name="i-lucide-clock-3" class="size-4 text-slate-400" />
         </div>
-        <div class="text-xs text-slate-500 sm:text-right dark:text-slate-400">
-          <p>{{ formatDateTime(log.createdAt, locale) }}</p>
-          <p class="mt-1">{{ $t('user.bonusLogs.after', { balance: formatBonus(log.balanceAfter) }) }}</p>
-        </div>
-      </article>
+        <p class="mt-1.5 text-xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ formatBonus(hourlyBonus) }}</p>
+      </div>
     </div>
 
-    <AppPager
-      class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
-      size="sm"
-      :page="bonusLogPage"
-      :total="bonusLogTotal"
-      :page-size="bonusLogSize"
-      :disabled="bonusLogsPending"
-      @page-change="goToBonusLogPage"
-    />
+    <div class="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.detailTitle') }}</h3>
+        </div>
+      </div>
+
+      <div v-if="bonusLogsError" class="mt-4 flex flex-col items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 py-8 text-center dark:border-red-900 dark:bg-red-950">
+        <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
+        <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ bonusLogsError }}</p>
+        <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadBonusLogs">
+          {{ $t('common.retry') }}
+        </UButton>
+      </div>
+      <div v-else-if="bonusLogsPending && bonusLogs.length === 0" class="mt-4 space-y-3">
+        <div v-for="item in 6" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+      </div>
+      <div v-else-if="bonusLogs.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-12 text-center dark:border-slate-800">
+        <UIcon name="i-lucide-coins" class="mx-auto size-8 text-slate-400" />
+        <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.empty') }}</p>
+      </div>
+      <div v-else class="mt-2 divide-y divide-slate-100 dark:divide-slate-800">
+        <article v-for="log in bonusLogs" :key="log.id" class="grid gap-3 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
+          <div class="flex min-w-0 items-center gap-3">
+            <div class="flex size-8 shrink-0 items-center justify-center rounded-md" :class="bonusActionIconClass(log)">
+              <UIcon :name="bonusActionIcon(log.action)" class="size-4" />
+            </div>
+            <div class="min-w-0">
+              <p class="truncate font-medium text-slate-950 dark:text-white">{{ bonusActionLabel(log) }}</p>
+              <p v-if="bonusLogDescription(log)" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                {{ bonusLogDescription(log) }}
+              </p>
+            </div>
+          </div>
+          <div class="sm:text-right">
+            <p
+              class="font-semibold tabular-nums"
+              :class="log.amount >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-red-600 dark:text-red-300'"
+            >
+              {{ log.amount >= 0 ? '+' : '' }}{{ formatBonus(log.amount) }}
+            </p>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.after', { balance: formatBonus(log.balanceAfter) }) }}</p>
+            <UTooltip
+              :text="formatDateTime(log.createdAt, locale)"
+              :content="{ side: 'top', sideOffset: 8 }"
+              :delay-duration="120"
+            >
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatDateOnly(log.createdAt, locale) }}</p>
+            </UTooltip>
+          </div>
+        </article>
+      </div>
+
+      <AppPager
+        class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+        size="sm"
+        :page="bonusLogPage"
+        :total="bonusLogTotal"
+        :page-size="bonusLogSize"
+        :disabled="bonusLogsPending"
+        @page-change="goToBonusLogPage"
+      />
+    </div>
   </UCard>
 </template>
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
 import { useEconomy, type BonusLogItem } from '~/composables/useEconomy'
-import { formatDateTime } from '~/utils/format'
+import { formatDateOnly, formatDateTime } from '~/utils/format'
 
 const { t, locale } = useI18n()
 const { user, fetchUser } = useAuth()
@@ -150,10 +202,59 @@ function formatBonus(value?: number | string | null) {
   return numberFormatter.value.format(Number(value || 0))
 }
 
-function bonusActionLabel(action?: string | null) {
+function bonusActionLabel(log: BonusLogItem) {
+  if (isRewardTarget(log.targetType)) {
+    if (log.action === 'transfer_sent') return t('user.bonusLogs.actions.reward_sent')
+    if (log.action === 'transfer_received') return t('user.bonusLogs.actions.reward_received')
+  }
+
+  const action = log.action
   if (!action) return '-'
   const key = `user.bonusLogs.actions.${action}`
   const translated = t(key)
   return translated === key ? action : translated
+}
+
+function bonusActionIcon(action?: string | null) {
+  switch (action) {
+    case 'transfer_sent':
+      return 'i-lucide-arrow-up-right'
+    case 'transfer_received':
+      return 'i-lucide-arrow-down-left'
+    case 'seed_bonus':
+      return 'i-lucide-sprout'
+    case 'admin_adjustment':
+      return 'i-lucide-shield'
+    case 'forum_topic':
+      return 'i-lucide-message-square'
+    case 'forum_reply':
+      return 'i-lucide-message-circle'
+    default:
+      return 'i-lucide-coins'
+  }
+}
+
+function bonusActionIconClass(log: BonusLogItem) {
+  if (log.action === 'seed_bonus') return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-300'
+  if (log.amount < 0) return 'bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-300'
+  return 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300'
+}
+
+function bonusLogDescription(log: BonusLogItem) {
+  if (log.action === 'seed_bonus' && log.period?.trim()) return t('user.bonusLogs.period', { period: log.period.trim() })
+  if (log.targetType && log.targetId) return bonusTargetLabel(log.targetType, log.targetId)
+  if (log.remark?.trim()) return log.remark.trim()
+  return ''
+}
+
+function isRewardTarget(targetType?: string | null) {
+  return ['catalog_torrent', 'catalog_comment', 'forum_topic', 'forum_reply'].includes(targetType || '')
+}
+
+function bonusTargetLabel(targetType: string, targetId: number) {
+  const key = `user.bonusLogs.targetTypes.${targetType}`
+  const translated = t(key)
+  const label = translated === key ? targetType : translated
+  return `${label} #${targetId}`
 }
 </script>

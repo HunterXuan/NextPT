@@ -1255,14 +1255,14 @@
     "nav": {
       "overview": "账号概览",
       "activity": "分享数据",
-      "bonus": "魔力值",
+      "bonus": "魔力记录",
       "settings": "账号设置"
     },
     "overview": {
       "enter": "进入",
       "links": {
         "activity": "查看流量趋势、做种时长和下载完成记录。",
-        "bonus": "查看魔力值收入、支出和当前余额变化。",
+        "bonus": "查看魔力收入、支出和当前余额变化。",
         "settings": "更新个人资料、管理邀请、查看 Passkey 并修改密码。"
       }
     },
@@ -1314,19 +1314,43 @@
       }
     },
     "bonusLogs": {
-      "title": "魔力值流水",
-      "summary": "共 {total} 条记录，预计时产 {hourly}",
+      "title": "魔力记录",
+      "description": "查看魔力收入、支出和余额变化。",
+      "detailTitle": "流水明细",
       "hourly": "预计时产",
       "balance": "当前余额",
-      "empty": "暂无魔力值流水",
+      "empty": "暂无魔力记录",
       "after": "余额 {balance}",
+      "period": "结算周期 {period}",
       "pageSummary": "第 {page} / {pages} 页",
       "actions": {
         "transfer_sent": "支出转账",
         "transfer_received": "收到转账",
+        "reward_sent": "赞赏支出",
+        "reward_received": "收到赞赏",
         "seed_bonus": "做种奖励",
+        "admin_adjustment": "管理员调整",
         "forum_topic": "论坛主题",
         "forum_reply": "论坛回复"
+      },
+      "targetTypes": {
+        "catalog_torrent": "种子",
+        "catalog_comment": "种子评论",
+        "forum_topic": "论坛主题",
+        "forum_reply": "论坛回复"
+      },
+      "formula": {
+        "title": "预计时产规则",
+        "description": "根据当前做种体积、种子发布时间、做种人数和站点参数估算，每小时结算时会按数据库精度取整。",
+        "score": "A = Σ((1 - 10^(-T / T0)) × S × (1 + √2 × 10^(-(N - 1)/(N0 - 1))))",
+        "volume": "B = B0 × 2 / π × atan(A / L)",
+        "total": "P = base × C + B",
+        "variables": {
+          "size": "S：种子体积，单位 GB。",
+          "age": "T：种子发布后的周数。",
+          "seeders": "N：当前做种人数，至少按 1 计算。",
+          "params": "C、T0、N0、B0、L、base 由站点规则决定。"
+        }
       }
     },
     "peers": {
