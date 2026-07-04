@@ -14,7 +14,7 @@
 
       <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_440px]">
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.roles.list') }}</h2>
           </div>
 

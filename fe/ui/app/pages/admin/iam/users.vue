@@ -139,10 +139,36 @@
         </section>
 
         <section class="space-y-4">
-          <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">
+                {{ selectedUser ? selectedUser.username : $t('admin.iam.users.form.empty') }}
+              </p>
+              <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                {{ selectedUser ? selectedUser.email : $t('admin.iam.users.panels.selectHint') }}
+              </p>
+            </div>
+            <div class="mt-3 grid grid-cols-2 gap-1 rounded-md bg-slate-100 p-1 dark:bg-slate-800/80">
+              <button
+                v-for="panel in userPanelOptions"
+                :key="panel.value"
+                type="button"
+                class="inline-flex h-8 items-center justify-center gap-1.5 rounded px-2 text-xs font-medium transition"
+                :class="activeUserPanel === panel.value
+                  ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white'
+                  : 'text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'"
+                @click="activeUserPanel = panel.value"
+              >
+                <UIcon :name="panel.icon" class="size-3.5" />
+                <span>{{ panel.label }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="activeUserPanel === 'profile'" class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
-                {{ selectedUser ? selectedUser.username : $t('admin.iam.users.form.empty') }}
+                {{ $t('admin.iam.users.panels.profile') }}
               </h2>
             </div>
 
@@ -181,7 +207,7 @@
             </form>
           </div>
 
-          <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div v-if="activeUserPanel === 'stat'" class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.stat.title') }}</h2>
             </div>
@@ -234,33 +260,34 @@
             </div>
           </div>
 
-          <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.ban.title') }}</h2>
+          <template v-if="activeUserPanel === 'mod'">
+            <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+              <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.ban.title') }}</h2>
+              </div>
+
+              <form class="space-y-4 p-4" @submit.prevent="banUser">
+                <label class="block">
+                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.ban.reason') }}</span>
+                  <textarea v-model="banForm.reason" rows="3" class="mt-1 w-full resize-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || banning" />
+                </label>
+
+                <label class="block">
+                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.ban.durationDays') }}</span>
+                  <input v-model.number="banForm.durationDays" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || banning">
+                </label>
+
+                <p v-if="banError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
+                  {{ banError }}
+                </p>
+
+                <UButton type="submit" color="error" icon="i-lucide-ban" :loading="banning" :disabled="!selectedUser || !banForm.reason.trim()">
+                  {{ $t('admin.iam.users.ban.submit') }}
+                </UButton>
+              </form>
             </div>
 
-            <form class="space-y-4 p-4" @submit.prevent="banUser">
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.ban.reason') }}</span>
-                <textarea v-model="banForm.reason" rows="3" class="mt-1 w-full resize-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || banning" />
-              </label>
-
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.ban.durationDays') }}</span>
-                <input v-model.number="banForm.durationDays" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || banning">
-              </label>
-
-              <p v-if="banError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
-                {{ banError }}
-              </p>
-
-              <UButton type="submit" color="error" icon="i-lucide-ban" :loading="banning" :disabled="!selectedUser || !banForm.reason.trim()">
-                {{ $t('admin.iam.users.ban.submit') }}
-              </UButton>
-            </form>
-          </div>
-
-          <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <div>
                 <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.mod.title') }}</h2>
@@ -339,8 +366,9 @@
               </div>
             </div>
           </div>
+          </template>
 
-          <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div v-if="activeUserPanel === 'permission'" class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.permission.title') }}</h2>
             </div>

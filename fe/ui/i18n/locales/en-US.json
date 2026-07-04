@@ -1079,14 +1079,31 @@
         }
       },
       "invites": {
-        "title": "Invite credits",
+        "title": "Invite codes",
         "form": {
-          "title": "Grant invite credits",
+          "title": "Generate invite codes",
           "amount": "Amount",
           "isTemp": "Temporary invite",
           "expireAt": "Expires at",
-          "submit": "Grant",
-          "success": "Invite credits granted"
+          "expireAtRequired": "Temporary invite codes require an expiration time",
+          "expireAtDisabled": "Permanent invite codes do not need an expiration time",
+          "submit": "Generate",
+          "success": "Invite codes generated"
+        },
+        "preview": {
+          "amount": "Amount",
+          "type": "Type",
+          "expireAt": "Validity",
+          "permanent": "Permanent",
+          "temporary": "Temporary",
+          "never": "Never expires",
+          "notSet": "Not set"
+        },
+        "guide": {
+          "title": "Generation Notes",
+          "amount": "Generated records become usable invite codes.",
+          "temporary": "Expired temporary invite codes are cleaned up by cron.",
+          "delivery": "Confirm the amount before generating to avoid creating too many unused invite codes."
         }
       }
     },

@@ -1079,14 +1079,31 @@
         }
       },
       "invites": {
-        "title": "邀请名额",
+        "title": "邀请码",
         "form": {
-          "title": "发放邀请名额",
+          "title": "生成邀请码",
           "amount": "数量",
           "isTemp": "临时邀请",
           "expireAt": "过期时间",
-          "submit": "发放",
-          "success": "邀请名额已发放"
+          "expireAtRequired": "临时邀请码需要设置过期时间",
+          "expireAtDisabled": "永久邀请码不需要设置过期时间",
+          "submit": "生成",
+          "success": "邀请码已生成"
+        },
+        "preview": {
+          "amount": "生成数量",
+          "type": "类型",
+          "expireAt": "有效期",
+          "permanent": "永久",
+          "temporary": "临时",
+          "never": "长期有效",
+          "notSet": "未设置"
+        },
+        "guide": {
+          "title": "生成说明",
+          "amount": "生成后会创建可使用的邀请码记录。",
+          "temporary": "临时邀请码到期后由定时任务清理。",
+          "delivery": "生成前请确认数量，避免创建过多未使用的邀请码。"
         }
       }
     },

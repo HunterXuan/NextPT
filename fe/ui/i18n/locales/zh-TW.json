@@ -1079,14 +1079,31 @@
         }
       },
       "invites": {
-        "title": "邀請名額",
+        "title": "邀請碼",
         "form": {
-          "title": "發放邀請名額",
+          "title": "產生邀請碼",
           "amount": "數量",
           "isTemp": "臨時邀請",
           "expireAt": "過期時間",
-          "submit": "發放",
-          "success": "邀請名額已發放"
+          "expireAtRequired": "臨時邀請碼需要設定過期時間",
+          "expireAtDisabled": "永久邀請碼不需要設定過期時間",
+          "submit": "產生",
+          "success": "邀請碼已產生"
+        },
+        "preview": {
+          "amount": "產生數量",
+          "type": "類型",
+          "expireAt": "有效期",
+          "permanent": "永久",
+          "temporary": "臨時",
+          "never": "長期有效",
+          "notSet": "未設定"
+        },
+        "guide": {
+          "title": "產生說明",
+          "amount": "產生後會建立可使用的邀請碼記錄。",
+          "temporary": "臨時邀請碼到期後由定時任務清理。",
+          "delivery": "產生前請確認數量，避免建立過多未使用的邀請碼。"
         }
       }
     },

@@ -27,7 +27,7 @@
 
       <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
             <div class="flex items-center gap-2">
               <UIcon name="i-lucide-settings-2" class="size-5 text-indigo-600 dark:text-indigo-300" />
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.configs.list') }}</h2>
