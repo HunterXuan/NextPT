@@ -20,7 +20,6 @@
     :like-pending-id="likePendingId"
     :report-pending="reportPending"
     :submit-reward="submitReward"
-    @retry="$emit('retry')"
     @page-change="$emit('pageChange', $event)"
     @toggle-like="emitToggleLike"
     @reward-success="emitRewardSuccess"
@@ -53,7 +52,6 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  retry: []
   pageChange: [page: number]
   toggleLike: [comment: CommentItem]
   rewardSuccess: [comment: CommentItem]

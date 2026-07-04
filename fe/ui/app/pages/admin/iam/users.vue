@@ -36,9 +36,6 @@
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.list') }}</h2>
-            <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadUsers">
-              {{ $t('common.refresh') }}
-            </UButton>
           </div>
 
           <div v-if="pending" class="overflow-x-auto">
@@ -69,9 +66,6 @@
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
             <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-            <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadUsers">
-              {{ $t('common.retry') }}
-            </UButton>
           </div>
 
           <div v-else-if="users.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
@@ -188,11 +182,8 @@
           </div>
 
           <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.stat.title') }}</h2>
-              <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-refresh-cw" :loading="statPending" :disabled="!selectedUser" @click="loadSelectedUserStat">
-                {{ $t('common.refresh') }}
-              </UButton>
             </div>
 
             <div class="space-y-4 p-4">
@@ -270,16 +261,13 @@
           </div>
 
           <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
               <div>
                 <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.mod.title') }}</h2>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
                   {{ $t('admin.iam.users.mod.activeSummary', { count: numberFormatter.format(activeUserMods.length) }) }}
                 </p>
               </div>
-              <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-refresh-cw" :loading="modsPending" :disabled="!selectedUser" @click="loadSelectedUserMods">
-                {{ $t('common.refresh') }}
-              </UButton>
             </div>
 
             <div class="space-y-4 p-4">

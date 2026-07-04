@@ -9,9 +9,6 @@
       <div v-else-if="nodesError" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
         <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ nodesError }}</p>
-        <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadForumHome">
-          {{ $t('common.retry') }}
-        </UButton>
       </div>
 
       <div v-else-if="categories.length === 0" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
@@ -69,7 +66,6 @@
             :empty-description="$t('forum.topicList.empty.description')"
             :empty-action-label="$t('forum.actions.createTopic')"
             :empty-action-to="createTopicPath"
-            @retry="loadTopics"
           />
 
           <AppPager

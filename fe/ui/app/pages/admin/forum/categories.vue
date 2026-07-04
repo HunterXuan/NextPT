@@ -5,9 +5,6 @@
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.categories.list') }}</h2>
-            <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadCategories">
-              {{ $t('common.refresh') }}
-            </UButton>
           </div>
 
           <div v-if="pending" class="overflow-x-auto">
@@ -36,9 +33,6 @@
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
             <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-            <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadCategories">
-              {{ $t('common.retry') }}
-            </UButton>
           </div>
 
           <div v-else-if="categories.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">

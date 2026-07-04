@@ -21,7 +21,6 @@
           empty-action-icon="i-lucide-search"
           :empty-action-label="$t('forum.bookmarks.empty.action')"
           :empty-action-to="localePath('/forum')"
-          @retry="loadBookmarks"
         >
           <template #topic-actions="{ topic }">
             <UTooltip

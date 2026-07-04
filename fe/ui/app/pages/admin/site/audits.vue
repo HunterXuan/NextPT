@@ -7,9 +7,6 @@
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.audits.list') }}</h2>
             <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.audits.total', { total: numberFormatter.format(total) }) }}</p>
           </div>
-          <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadAudits">
-            {{ $t('common.refresh') }}
-          </UButton>
         </div>
 
         <div v-if="pending" class="space-y-2 p-4">

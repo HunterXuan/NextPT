@@ -12,9 +12,6 @@
       <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
         <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-        <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadPage">
-          {{ $t('common.retry') }}
-        </UButton>
       </div>
 
       <div v-else-if="torrent" class="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_44px_340px] lg:items-start">
@@ -167,9 +164,6 @@
               <div v-if="filesError" class="flex flex-col items-center justify-center px-4 py-10 text-center">
                 <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
                 <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ filesError }}</p>
-                <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadFiles(true)">
-                  {{ $t('common.retry') }}
-                </UButton>
               </div>
 
               <div v-else-if="fileTree.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
@@ -268,9 +262,6 @@
               <div v-else-if="peersError" class="flex flex-col items-center justify-center px-4 py-8 text-center">
                 <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
                 <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ peersError }}</p>
-                <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadPeers(true)">
-                  {{ $t('common.retry') }}
-                </UButton>
               </div>
               <div v-else-if="peersPending && !peersLoaded" class="space-y-2 px-4 py-4">
                 <div v-for="item in 3" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
@@ -479,7 +470,6 @@
               :like-pending-id="commentLikePendingId"
               :report-pending="reportPending"
               :submit-reward="submitCommentReward"
-              @retry="loadComments"
               @page-change="goToCommentPage"
               @toggle-like="handleCommentLike"
               @reward-success="handleCommentRewardSuccess"

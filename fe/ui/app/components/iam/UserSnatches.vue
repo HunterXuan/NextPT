@@ -31,9 +31,6 @@
     <div v-if="snatchesError" class="m-5 flex flex-col items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 py-8 text-center dark:border-red-900 dark:bg-red-950">
       <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
       <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ snatchesError }}</p>
-      <UButton class="mt-5" color="neutral" variant="outline" size="sm" icon="i-lucide-refresh-cw" @click="loadSnatches">
-        {{ $t('common.retry') }}
-      </UButton>
     </div>
     <div v-else-if="snatchesPending && snatches.length === 0" class="space-y-3 p-5">
       <div v-for="item in 6" :key="item" class="h-20 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />

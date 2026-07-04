@@ -21,9 +21,6 @@
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.mod.cheaters.list') }}</h2>
-            <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadCheaters">
-              {{ $t('common.refresh') }}
-            </UButton>
           </div>
 
           <div v-if="pending" class="space-y-2 p-4">

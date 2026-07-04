@@ -16,9 +16,6 @@
     <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
       <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
       <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-      <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="$emit('retry')">
-        {{ $t('common.retry') }}
-      </UButton>
     </div>
 
     <div v-else-if="topics.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
@@ -102,10 +99,6 @@
 import type { ForumTopicListItem } from '~/composables/useForum'
 import type { UserSummary } from '~/types/iam'
 import { formatDateTime } from '~/utils/format'
-
-defineEmits<{
-  retry: []
-}>()
 
 withDefaults(defineProps<{
   topics: ForumTopicListItem[]

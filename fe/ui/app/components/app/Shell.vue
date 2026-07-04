@@ -207,9 +207,9 @@ const appNavSections = computed(() => {
 const adminNavSections = computed(() => [
   {
     key: 'overview',
-    label: t('admin.nav.overview'),
+    label: '',
     items: [
-      { label: t('admin.dashboard.title'), to: '/admin', icon: 'i-lucide-layout-dashboard', active: route.path === localePath('/admin') }
+      { label: t('admin.nav.overview'), to: '/admin', icon: 'i-lucide-layout-dashboard', active: route.path === localePath('/admin') }
     ]
   },
   {

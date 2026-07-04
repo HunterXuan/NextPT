@@ -23,9 +23,6 @@
               <UIcon name="i-lucide-tags" class="size-5 text-sky-600 dark:text-sky-300" />
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.categories.list') }}</h2>
             </div>
-            <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadCategories">
-              {{ $t('common.refresh') }}
-            </UButton>
           </div>
 
           <div v-if="pending" class="overflow-x-auto">
@@ -65,9 +62,6 @@
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
             <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-            <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadCategories">
-              {{ $t('common.retry') }}
-            </UButton>
           </div>
 
           <div v-else-if="categories.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">

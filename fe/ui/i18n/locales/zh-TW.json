@@ -808,10 +808,10 @@
       "overview": "總覽",
       "catalog": "資源庫",
       "forum": "論壇",
-      "iam": "IAM",
-      "moderation": "Mod",
+      "iam": "使用者與權限",
+      "moderation": "審核風控",
       "site": "站點",
-      "system": "Sys"
+      "system": "系統"
     },
     "dashboard": {
       "title": "後台總覽",

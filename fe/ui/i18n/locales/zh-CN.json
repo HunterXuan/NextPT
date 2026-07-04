@@ -808,10 +808,10 @@
       "overview": "总览",
       "catalog": "资源库",
       "forum": "论坛",
-      "iam": "IAM",
-      "moderation": "Mod",
+      "iam": "用户与权限",
+      "moderation": "审核风控",
       "site": "站点",
-      "system": "Sys"
+      "system": "系统"
     },
     "dashboard": {
       "title": "后台总览",

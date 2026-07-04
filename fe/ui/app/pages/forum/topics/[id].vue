@@ -12,9 +12,6 @@
       <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
         <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-        <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadPage">
-          {{ $t('common.retry') }}
-        </UButton>
       </div>
 
       <div v-else-if="topic && topicEditOpen" class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
@@ -141,7 +138,6 @@
               :error="repliesError"
               :action-pending="replyActionPending"
               :submit-reward="submitReplyReward"
-              @retry="loadReplies"
               @page-change="goToReplyPage"
               @toggle-like="handleToggleReplyLike"
               @reward-success="handleReplyRewardSuccess"

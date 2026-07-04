@@ -808,10 +808,10 @@
       "overview": "Overview",
       "catalog": "Catalog",
       "forum": "Forum",
-      "iam": "IAM",
-      "moderation": "Mod",
+      "iam": "Users & Access",
+      "moderation": "Moderation",
       "site": "Site",
-      "system": "Sys"
+      "system": "System"
     },
     "dashboard": {
       "title": "Admin Overview",

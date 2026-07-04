@@ -32,9 +32,6 @@
               <UIcon name="i-lucide-settings-2" class="size-5 text-indigo-600 dark:text-indigo-300" />
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.configs.list') }}</h2>
             </div>
-            <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadConfigs">
-              {{ $t('common.refresh') }}
-            </UButton>
           </div>
 
           <div v-if="pending" class="overflow-x-auto">
@@ -63,9 +60,6 @@
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
             <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-            <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadConfigs">
-              {{ $t('common.retry') }}
-            </UButton>
           </div>
 
           <div v-else-if="configs.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">

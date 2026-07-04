@@ -16,16 +16,7 @@
             </UButton>
           </form>
 
-          <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end">
-            <UButton
-              color="neutral"
-              variant="outline"
-              icon="i-lucide-refresh-cw"
-              :loading="pending"
-              @click="loadTorrents"
-            >
-              {{ $t('common.refresh') }}
-            </UButton>
+          <div class="grid grid-cols-1 gap-2 sm:flex sm:items-center sm:justify-end">
             <UButton color="primary" icon="i-lucide-upload" :to="localePath('/catalog/torrents/upload')">
               {{ $t('catalog.torrents.upload.action') }}
             </UButton>
@@ -110,9 +101,6 @@
         <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
           <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
           <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
-          <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-refresh-cw" @click="loadTorrents">
-            {{ $t('common.retry') }}
-          </UButton>
         </div>
 
         <div v-else-if="torrents.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">

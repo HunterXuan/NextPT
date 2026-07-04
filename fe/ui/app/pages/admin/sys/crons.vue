@@ -1,12 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <div class="mb-4 flex justify-end">
-        <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="cronsPending || logsPending" @click="reloadAll">
-          {{ $t('common.refresh') }}
-        </UButton>
-      </div>
-
       <div class="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
@@ -42,9 +36,6 @@
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ selectedName || $t('admin.sys.crons.logsTitle') }}</h2>
               <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.sys.crons.logsTotal', { total: numberFormatter.format(logTotal) }) }}</p>
             </div>
-            <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="logsPending" :disabled="!selectedName" @click="loadLogs">
-              {{ $t('common.refresh') }}
-            </UButton>
           </div>
 
           <div v-if="!selectedName" class="flex flex-col items-center justify-center px-4 py-16 text-center">
@@ -120,11 +111,6 @@ const logTotalPages = computed(() => Math.max(1, Math.ceil(logTotal.value / logQ
 
 useHead({ title: t('admin.sys.crons.title') })
 onMounted(loadCrons)
-
-async function reloadAll() {
-  await loadCrons()
-  if (selectedName.value) await loadLogs()
-}
 
 async function loadCrons() {
   cronsPending.value = true

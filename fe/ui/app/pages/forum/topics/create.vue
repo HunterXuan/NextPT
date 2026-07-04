@@ -126,9 +126,6 @@
 
           <section v-if="nodesError" class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
             <p>{{ nodesError }}</p>
-            <UButton type="button" class="mt-3" color="error" variant="soft" size="sm" icon="i-lucide-refresh-cw" :loading="nodesPending" @click="loadNodes">
-              {{ $t('common.retry') }}
-            </UButton>
           </section>
         </aside>
       </form>

@@ -12,9 +12,6 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <UButton color="neutral" variant="outline" icon="i-lucide-refresh-cw" :loading="pending" @click="loadTopics">
-            {{ $t('common.refresh') }}
-          </UButton>
           <UButton color="primary" icon="i-lucide-square-pen" :to="createTopicPath">
             {{ $t('forum.actions.createTopic') }}
           </UButton>
@@ -31,7 +28,6 @@
             :empty-description="$t('forum.topicList.empty.description')"
             :empty-action-label="$t('forum.actions.createTopic')"
             :empty-action-to="createTopicPath"
-            @retry="loadTopics"
           />
         </main>
 
