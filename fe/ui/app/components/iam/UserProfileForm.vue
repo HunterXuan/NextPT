@@ -8,6 +8,15 @@
     </template>
 
     <form class="grid grid-cols-1 gap-4" @submit.prevent="handleProfileSave">
+      <IamUserAvatar
+        :id="user?.id"
+        :username="user?.username"
+        :avatar="profileForm.avatar"
+        :alt="user?.username || $t('user.profile.avatar')"
+        size="xl"
+        class="ring-1 ring-slate-200 dark:ring-slate-800"
+      />
+
       <UFormField :label="$t('user.profile.avatar')">
         <UInput
           v-model="profileForm.avatar"
@@ -36,7 +45,7 @@
       </UFormField>
 
       <div class="flex justify-end">
-        <UButton type="submit" color="primary" :loading="profilePending" :disabled="loading">
+        <UButton type="submit" color="primary" :loading="profilePending" :disabled="loading || !profileChanged">
           {{ $t('common.save') }}
         </UButton>
       </div>
@@ -59,13 +68,39 @@ const profileForm = reactive({
   signature: '',
   info: ''
 })
+const originalProfile = reactive({
+  avatar: '',
+  signature: '',
+  info: ''
+})
+
+const normalizedProfile = computed(() => ({
+  avatar: profileForm.avatar.trim(),
+  signature: profileForm.signature.trim(),
+  info: profileForm.info.trim()
+}))
+
+const profileChanged = computed(() => {
+  return normalizedProfile.value.avatar !== originalProfile.avatar
+    || normalizedProfile.value.signature !== originalProfile.signature
+    || normalizedProfile.value.info !== originalProfile.info
+})
 
 watch(
   user,
   (value) => {
-    profileForm.avatar = value?.avatar || ''
-    profileForm.signature = value?.signature || ''
-    profileForm.info = value?.info || ''
+    const nextProfile = {
+      avatar: value?.avatar || '',
+      signature: value?.signature || '',
+      info: value?.info || ''
+    }
+
+    profileForm.avatar = nextProfile.avatar
+    profileForm.signature = nextProfile.signature
+    profileForm.info = nextProfile.info
+    originalProfile.avatar = nextProfile.avatar.trim()
+    originalProfile.signature = nextProfile.signature.trim()
+    originalProfile.info = nextProfile.info.trim()
   },
   { immediate: true }
 )
@@ -80,14 +115,12 @@ onMounted(async () => {
 })
 
 async function handleProfileSave() {
+  if (!profileChanged.value) return
+
   profilePending.value = true
 
   try {
-    await updateProfile({
-      avatar: profileForm.avatar.trim(),
-      signature: profileForm.signature.trim(),
-      info: profileForm.info.trim()
-    })
+    await updateProfile(normalizedProfile.value)
     toast.add({
       title: t('user.profile.saved'),
       color: 'success',

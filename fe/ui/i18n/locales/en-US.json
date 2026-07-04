@@ -1266,6 +1266,22 @@
         "settings": "Update profile, manage invites, view passkey, and change password."
       }
     },
+    "settings": {
+      "sections": {
+        "profile": {
+          "label": "Profile",
+          "description": "Avatar, signature, and bio"
+        },
+        "security": {
+          "label": "Security",
+          "description": "Passkey and password"
+        },
+        "invites": {
+          "label": "Invites",
+          "description": "Send and review invite codes"
+        }
+      }
+    },
     "status": {
       "normal": "Normal"
     },
@@ -1372,13 +1388,20 @@
     },
     "invites": {
       "title": "Invites",
-      "summary": "{available} available / {total} total",
+      "summary": "{total} invite codes",
+      "sendTitle": "Send invite",
+      "sendDescription": "Choose an available invite code and send it by email.",
+      "noAvailable": "No available invite code in this list.",
       "email": "Invitee email",
       "code": "Invite code",
       "selectCode": "Choose invite code",
       "send": "Send invite",
       "sent": "Invite sent",
       "empty": "No invite codes",
+      "invitee": "Invitee",
+      "statusLabel": "Status",
+      "createdAt": "Created",
+      "updatedAt": "Time",
       "status": {
         "0": "Unused",
         "1": "Sent",
@@ -1414,6 +1437,8 @@
     "passkey": {
       "title": "Passkey",
       "subtitle": "This key is used by torrent downloads and tracker identification. Keep it private.",
+      "show": "Show",
+      "hide": "Hide",
       "copied": "Passkey copied"
     },
     "profile": {
@@ -1429,6 +1454,8 @@
       "subtitle": "You need to log in again after changing password.",
       "oldPassword": "Current password",
       "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "passwordMismatch": "The new passwords do not match",
       "submit": "Change password",
       "changed": "Password changed. Please log in again."
     }

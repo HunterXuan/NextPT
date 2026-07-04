@@ -78,7 +78,7 @@
           :aria-label="user?.username || 'NextPT'"
           :disabled="loggingOut"
         >
-          <UAvatar :src="user?.avatar || undefined" :alt="user?.username || 'NextPT'" size="sm" />
+          <IamUserAvatar :user="user" :alt="user?.username || 'NextPT'" size="sm" />
           <div v-if="!collapsed" class="min-w-0 flex-1">
             <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ user?.username || 'NextPT' }}</p>
             <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ user?.roleName || user?.email || '-' }}</p>
@@ -93,7 +93,7 @@
         :class="collapsed ? 'justify-center px-0' : 'px-2'"
         :title="collapsed ? user?.username || 'NextPT' : undefined"
       >
-        <UAvatar :src="user?.avatar || undefined" :alt="user?.username || 'NextPT'" size="sm" />
+        <IamUserAvatar :user="user" :alt="user?.username || 'NextPT'" size="sm" />
         <div v-if="!collapsed" class="min-w-0">
           <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ user?.username || 'NextPT' }}</p>
           <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ user?.roleName || user?.email || '-' }}</p>
@@ -130,6 +130,7 @@ interface ShellUserMenuItem {
 }
 
 interface ShellUser {
+  id?: number | string
   username?: string
   email?: string
   roleName?: string

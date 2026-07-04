@@ -37,19 +37,12 @@
         class="grid gap-3 px-3 py-3 transition-colors hover:bg-slate-50 md:grid-cols-[minmax(0,1fr)_auto] md:items-center dark:hover:bg-slate-950/70"
       >
         <div class="flex min-w-0 gap-3">
-          <div
-            v-if="!topic.author?.avatar"
-            class="flex size-10 shrink-0 items-center justify-center rounded-md text-sm font-semibold"
-            :class="avatarClass(topic)"
+          <IamUserAvatar
+            :user="topic.author"
+            :id="topic.author?.id || topic.id"
+            :username="topic.author?.username || topicAuthor(topic)"
+            size="md"
             :title="topicAuthor(topic)"
-          >
-            {{ authorInitial(topic) }}
-          </div>
-          <UAvatar
-            v-else
-            :src="topic.author.avatar"
-            :alt="topicAuthor(topic)"
-            class="size-10 shrink-0 rounded-md"
           />
 
           <div class="min-w-0 flex-1">
@@ -140,27 +133,9 @@ const localePath = useLocalePath()
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const relativeTimeFormatter = computed(() => new Intl.RelativeTimeFormat(locale.value, { numeric: 'auto' }))
-const avatarClasses = [
-  'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-200',
-  'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200',
-  'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-200',
-  'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-200',
-  'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-200',
-  'bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-200'
-]
 
 function topicAuthor(topic: ForumTopicListItem) {
   return userDisplayName(topic.author)
-}
-
-function authorInitial(topic: ForumTopicListItem) {
-  const author = topicAuthor(topic)
-  return author === '-' ? '?' : author.slice(0, 1).toUpperCase()
-}
-
-function avatarClass(topic: ForumTopicListItem) {
-  const index = Math.abs(Number(topic.author?.id || topic.id || 0)) % avatarClasses.length
-  return avatarClasses[index]
 }
 
 function userDisplayName(user?: UserSummary | null) {

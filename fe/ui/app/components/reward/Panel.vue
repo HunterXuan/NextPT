@@ -69,7 +69,7 @@
       <div v-else class="mt-4 max-h-72 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
         <div v-for="(reward, index) in previewRewards" :key="rewardKey(reward, index)" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3 text-sm">
           <div class="flex min-w-0 items-center gap-2">
-            <UAvatar :alt="rewardDisplayName(reward)" size="xs" />
+            <IamUserAvatar :user="reward.user" :alt="rewardDisplayName(reward)" size="xs" />
             <div class="min-w-0">
               <p class="truncate font-medium text-slate-950 dark:text-white">{{ rewardDisplayName(reward) }}</p>
               <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ rewardMetaText(reward) }}</p>
@@ -112,7 +112,7 @@
         <div v-else class="divide-y divide-slate-100 dark:divide-slate-800">
           <div v-for="(reward, index) in modalRewards" :key="rewardKey(reward, index)" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3 text-sm">
             <div class="flex min-w-0 items-center gap-2">
-              <UAvatar :alt="rewardDisplayName(reward)" size="xs" />
+              <IamUserAvatar :user="reward.user" :alt="rewardDisplayName(reward)" size="xs" />
               <div class="min-w-0">
                 <p class="truncate font-medium text-slate-950 dark:text-white">{{ rewardDisplayName(reward) }}</p>
                 <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ rewardMetaText(reward) }}</p>

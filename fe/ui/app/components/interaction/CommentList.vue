@@ -23,16 +23,7 @@
       class="scroll-mt-24 px-4 py-4 transition-colors target:bg-sky-50/60 dark:target:bg-sky-950/30"
     >
       <div class="flex min-w-0 items-start gap-4">
-        <img
-          v-if="item.author.avatar"
-          class="size-12 shrink-0 rounded-md border border-slate-200 object-cover dark:border-slate-800"
-          :src="item.author.avatar"
-          :alt="displayName(item)"
-          loading="lazy"
-        >
-        <div v-else :class="avatarClass(item)" :aria-label="displayName(item)">
-          {{ avatarInitial(item) }}
-        </div>
+        <IamUserAvatar :user="item.author" size="lg" />
 
         <div class="min-w-0 flex-1">
           <div class="flex min-w-0 items-start justify-between gap-3">
@@ -186,14 +177,6 @@ const route = useRoute()
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const totalPages = computed(() => Math.max(1, Math.ceil(props.total / props.pageSize)))
-const avatarPalettes = [
-  'bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950 dark:text-sky-200 dark:border-sky-900',
-  'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-900',
-  'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:border-amber-900',
-  'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-900',
-  'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-200 dark:border-violet-900',
-  'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-200 dark:border-cyan-900'
-]
 
 const activeReportIdValue = computed({
   get: () => props.activeReportId,
@@ -215,17 +198,6 @@ function floor(index: number) {
 
 function displayName(item: InteractionCommentItem) {
   return item.author?.username || (item.author?.id ? `#${item.author.id}` : '-')
-}
-
-function avatarInitial(item: InteractionCommentItem) {
-  const value = displayName(item).trim()
-  return value ? Array.from(value)[0].toUpperCase() : '?'
-}
-
-function avatarClass(item: InteractionCommentItem) {
-  const base = 'flex size-12 shrink-0 items-center justify-center rounded-md border text-lg font-semibold'
-  const paletteIndex = Math.abs(Number(item.author?.id || item.id || 0)) % avatarPalettes.length
-  return `${base} ${avatarPalettes[paletteIndex]}`
 }
 
 function anchorId(item: InteractionCommentItem) {

@@ -1266,6 +1266,22 @@
         "settings": "更新個人資料、管理邀請、查看 Passkey 並修改密碼。"
       }
     },
+    "settings": {
+      "sections": {
+        "profile": {
+          "label": "個人資料",
+          "description": "頭像、簽名和介紹"
+        },
+        "security": {
+          "label": "安全",
+          "description": "Passkey 和密碼"
+        },
+        "invites": {
+          "label": "邀請",
+          "description": "發送和查看邀請碼"
+        }
+      }
+    },
     "status": {
       "normal": "正常"
     },
@@ -1372,13 +1388,20 @@
     },
     "invites": {
       "title": "邀請碼",
-      "summary": "{available} 個可發送 / 共 {total} 個",
+      "summary": "共 {total} 個邀請碼",
+      "sendTitle": "發送邀請",
+      "sendDescription": "選擇一個可用邀請碼並發送到對方信箱。",
+      "noAvailable": "目前列表沒有可發送的邀請碼。",
       "email": "受邀信箱",
       "code": "邀請碼",
       "selectCode": "選擇邀請碼",
       "send": "發送邀請",
       "sent": "邀請已發送",
       "empty": "暫無邀請碼",
+      "invitee": "受邀使用者",
+      "statusLabel": "狀態",
+      "createdAt": "建立",
+      "updatedAt": "時間",
       "status": {
         "0": "未發送",
         "1": "已發送",
@@ -1414,6 +1437,8 @@
     "passkey": {
       "title": "Passkey",
       "subtitle": "下載種子和 tracker 識別會用到這個密鑰，請不要公開。",
+      "show": "顯示",
+      "hide": "隱藏",
       "copied": "Passkey 已複製"
     },
     "profile": {
@@ -1429,6 +1454,8 @@
       "subtitle": "修改密碼後需要重新登入。",
       "oldPassword": "目前密碼",
       "newPassword": "新密碼",
+      "confirmPassword": "確認新密碼",
+      "passwordMismatch": "兩次輸入的新密碼不一致",
       "submit": "修改密碼",
       "changed": "密碼已修改，請重新登入"
     }

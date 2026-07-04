@@ -1266,6 +1266,22 @@
         "settings": "更新个人资料、管理邀请、查看 Passkey 并修改密码。"
       }
     },
+    "settings": {
+      "sections": {
+        "profile": {
+          "label": "个人资料",
+          "description": "头像、签名和介绍"
+        },
+        "security": {
+          "label": "安全",
+          "description": "Passkey 和密码"
+        },
+        "invites": {
+          "label": "邀请",
+          "description": "发送和查看邀请码"
+        }
+      }
+    },
     "status": {
       "normal": "正常"
     },
@@ -1372,13 +1388,20 @@
     },
     "invites": {
       "title": "邀请码",
-      "summary": "{available} 个可发送 / 共 {total} 个",
+      "summary": "共 {total} 个邀请码",
+      "sendTitle": "发送邀请",
+      "sendDescription": "选择一个可用邀请码并发送到对方邮箱。",
+      "noAvailable": "当前列表没有可发送的邀请码。",
       "email": "受邀邮箱",
       "code": "邀请码",
       "selectCode": "选择邀请码",
       "send": "发送邀请",
       "sent": "邀请已发送",
       "empty": "暂无邀请码",
+      "invitee": "受邀用户",
+      "statusLabel": "状态",
+      "createdAt": "创建",
+      "updatedAt": "时间",
       "status": {
         "0": "未发送",
         "1": "已发送",
@@ -1414,6 +1437,8 @@
     "passkey": {
       "title": "Passkey",
       "subtitle": "下载种子和 tracker 识别会用到这个密钥，请不要公开。",
+      "show": "显示",
+      "hide": "隐藏",
       "copied": "Passkey 已复制"
     },
     "profile": {
@@ -1429,6 +1454,8 @@
       "subtitle": "修改密码后需要重新登录。",
       "oldPassword": "当前密码",
       "newPassword": "新密码",
+      "confirmPassword": "确认新密码",
+      "passwordMismatch": "两次输入的新密码不一致",
       "submit": "修改密码",
       "changed": "密码已修改，请重新登录"
     }

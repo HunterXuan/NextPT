@@ -2,7 +2,7 @@
   <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
     <div class="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div class="flex min-w-0 items-start gap-4">
-        <UAvatar :src="user?.avatar || undefined" :alt="displayName" size="xl" class="shrink-0 rounded-md" />
+        <IamUserAvatar :user="user" :alt="displayName" size="xl" />
         <div class="min-w-0 pt-0.5">
           <div class="flex flex-wrap items-center gap-2">
             <p class="truncate text-xl font-semibold text-slate-950 dark:text-white">{{ displayName }}</p>
