@@ -197,7 +197,7 @@ const finalTitleCardClass = computed(() => [
 ].join(' '))
 
 useHead(() => ({
-  title: `${t('catalog.torrents.edit.metaTitle')} - NextPT`
+  title: t('catalog.torrents.edit.metaTitle')
 }))
 
 onMounted(loadPage)

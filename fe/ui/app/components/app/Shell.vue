@@ -87,6 +87,8 @@
 </template>
 
 <script setup lang="ts">
+import type { DropdownMenuItem } from '@nuxt/ui'
+
 type ShellMode = 'app' | 'admin'
 
 const props = withDefaults(defineProps<{
@@ -284,15 +286,17 @@ const routeSpecificLabel = computed(() => {
 })
 const activeItemLabel = computed(() => routeSpecificLabel.value || activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : t('common.brand')))
 
-const languageItems = computed(() => [
+const languageItems = computed<DropdownMenuItem[][]>(() => [
   (locales.value as any[]).map((item) => ({
     label: item.name,
-    onSelect: () => handleLanguageSwitch(item.code)
+    onSelect: () => {
+      void handleLanguageSwitch(item.code)
+    }
   }))
 ])
 
-const userMenuItems = computed(() => {
-  const firstGroup = [
+const userMenuItems = computed<DropdownMenuItem[][]>(() => {
+  const firstGroup: DropdownMenuItem[] = [
     {
       label: t('nav.user'),
       icon: 'i-lucide-user-round',
@@ -319,7 +323,9 @@ const userMenuItems = computed(() => {
       {
         label: t('auth.logout'),
         icon: 'i-lucide-log-out',
-        onSelect: handleLogout
+        onSelect: () => {
+          void handleLogout()
+        }
       }
     ]
   ]
@@ -336,7 +342,7 @@ function toggleSidebar() {
 
 function navigateFromUserMenu(path: string) {
   mobileSidebarOpen.value = false
-  return navigateTo(localePath(path))
+  void navigateTo(localePath(path))
 }
 
 async function handleLogout() {

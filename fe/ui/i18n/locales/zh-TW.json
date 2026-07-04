@@ -224,6 +224,7 @@
     "login": {
       "action": "登入",
       "eyebrow": "歡迎回來",
+      "metaTitle": "登入",
       "title": "登入 NextPT",
       "subtitle": "回到資源庫、收藏夾和站內討論，繼續你的瀏覽與分享。",
       "heroTitle": "回到你的私有資源社群",
@@ -249,6 +250,7 @@
     "register": {
       "action": "註冊",
       "eyebrow": "加入社群",
+      "metaTitle": "註冊",
       "title": "建立 NextPT 帳號",
       "subtitle": "填寫基礎資料，加入一個靠整理、做種和互助維持運轉的資源社群。",
       "heroTitle": "加入一個願意把好資源留住的社群",

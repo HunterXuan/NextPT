@@ -312,7 +312,7 @@ const canCreateReply = computed(() => {
 })
 
 useHead(() => ({
-  title: `${topic.value?.subject || t('forum.detail.metaTitle')} - NextPT`
+  title: topic.value?.subject || t('forum.detail.metaTitle')
 }))
 
 onMounted(() => {

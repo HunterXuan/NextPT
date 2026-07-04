@@ -49,7 +49,7 @@ function currentLocale() {
     const htmlLang = document.documentElement.lang
     if (supportedLocales.has(htmlLang)) return htmlLang
 
-    const pathLocale = window.location.pathname.split('/').filter(Boolean)[0]
+    const pathLocale = window.location.pathname.split('/').filter(Boolean)[0] || ''
     if (supportedLocales.has(pathLocale)) return pathLocale
 
     const cookieLocale = readCookie('nextpt_locale')
@@ -167,13 +167,15 @@ async function normalizeFetchError(error: any): Promise<ApiError> {
 
 export function useApi<T = unknown>(
   request: Parameters<typeof useFetch>[0],
-  opts?: UseFetchOptions<ApiEnvelope<T> | T>
+  opts?: UseFetchOptions<ApiEnvelope<T> | T, T>
 ) {
-  return useFetch<ApiEnvelope<T> | T>(request, {
+  const options = {
     ...opts,
     headers: useApiHeaders(opts?.headers as HeadersInit),
     transform: (payload) => unwrapEnvelope<T>(payload)
-  } as UseFetchOptions<ApiEnvelope<T> | T>)
+  } satisfies UseFetchOptions<ApiEnvelope<T> | T, T>
+
+  return useFetch<ApiEnvelope<T> | T, ApiError, any, any, ApiEnvelope<T> | T, T>(request as any, options)
 }
 
 export async function fetchApi<T = unknown>(
@@ -202,16 +204,21 @@ export async function fetchApiBlob(
       responseType: 'blob',
       headers: useApiHeaders(opts?.headers as HeadersInit)
     })
-    const contentType = response.headers.get('content-type') || response._data?.type || ''
+    const blob = response._data
+    if (!blob) {
+      throw new ApiError('Empty response', -1)
+    }
+
+    const contentType = response.headers.get('content-type') || blob.type || ''
     if (contentType.includes('application/json')) {
-      const text = await response._data.text()
+      const text = await blob.text()
       const payload = JSON.parse(text) as ApiEnvelope<unknown>
       unwrapEnvelope(payload)
       throw new ApiError('Unexpected JSON response', -1)
     }
 
     return {
-      blob: response._data as Blob,
+      blob,
       filename: parseContentDispositionFilename(response.headers.get('content-disposition'))
     }
   } catch (error: any) {

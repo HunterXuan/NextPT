@@ -204,7 +204,7 @@ const { t, locale } = useI18n()
 const toast = useToast()
 const adminApi = useAdmin()
 
-useHead({ title: `${t('admin.site.configs.title')} - NextPT` })
+useHead({ title: t('admin.site.configs.title') })
 
 const groups = computed(() => [
   { value: 'tracker', label: t('admin.site.configs.groups.tracker') },

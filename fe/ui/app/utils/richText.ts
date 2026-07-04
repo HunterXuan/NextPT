@@ -20,13 +20,19 @@ const defaultLinkOpenRule = markdown.renderer.rules.link_open
 const defaultImageRule = markdown.renderer.rules.image
 
 markdown.renderer.rules.link_open = (tokens, idx, options, env, self) => {
-  tokens[idx].attrSet('target', '_blank')
-  tokens[idx].attrSet('rel', 'noopener noreferrer')
+  const token = tokens[idx]
+  if (!token) return renderToken(defaultLinkOpenRule, tokens, idx, options, env, self)
+
+  token.attrSet('target', '_blank')
+  token.attrSet('rel', 'noopener noreferrer')
   return renderToken(defaultLinkOpenRule, tokens, idx, options, env, self)
 }
 
 markdown.renderer.rules.image = (tokens, idx, options, env, self) => {
-  tokens[idx].attrSet('loading', 'lazy')
+  const token = tokens[idx]
+  if (!token) return renderToken(defaultImageRule, tokens, idx, options, env, self)
+
+  token.attrSet('loading', 'lazy')
   return renderToken(defaultImageRule, tokens, idx, options, env, self)
 }
 

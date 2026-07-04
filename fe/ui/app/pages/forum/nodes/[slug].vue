@@ -112,7 +112,7 @@ const createTopicPath = computed(() => {
 })
 
 useHead(() => ({
-  title: `${node.value ? nodeDisplayName(node.value) : t('forum.metaTitle')} - NextPT`
+  title: node.value ? nodeDisplayName(node.value) : t('forum.metaTitle')
 }))
 
 onMounted(loadTopics)

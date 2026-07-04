@@ -52,7 +52,7 @@ const form = reactive({
   expireAt: ''
 })
 
-useHead({ title: `${t('admin.iam.invites.title')} - NextPT` })
+useHead({ title: t('admin.iam.invites.title') })
 
 async function grantInvites() {
   saving.value = true

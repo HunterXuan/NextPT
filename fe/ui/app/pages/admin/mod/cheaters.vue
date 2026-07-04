@@ -156,7 +156,7 @@ const statusOptions = computed(() => [
   { value: 1, label: t('admin.mod.status.resolved') }
 ])
 
-useHead({ title: `${t('admin.mod.cheaters.title')} - NextPT` })
+useHead({ title: t('admin.mod.cheaters.title') })
 onMounted(loadCheaters)
 
 async function loadCheaters() {

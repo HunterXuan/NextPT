@@ -247,7 +247,7 @@ const toast = useToast()
 const adminApi = useAdmin()
 
 useHead({
-  title: `${t('admin.catalog.categories.title')} - NextPT`
+  title: t('admin.catalog.categories.title')
 })
 
 const categories = ref<AdminCatalogCategory[]>([])

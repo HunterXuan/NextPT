@@ -402,7 +402,7 @@ const { t, locale } = useI18n()
 const toast = useToast()
 const adminApi = useAdmin()
 
-useHead({ title: `${t('admin.iam.users.title')} - NextPT` })
+useHead({ title: t('admin.iam.users.title') })
 
 const users = ref<AdminIamUser[]>([])
 const roles = ref<AdminIamRole[]>([])

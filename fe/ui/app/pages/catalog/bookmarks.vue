@@ -244,7 +244,7 @@ const categoryNameMap = computed(() => {
 })
 
 useHead(() => ({
-  title: `${t('catalog.bookmarks.metaTitle')} - NextPT`
+  title: t('catalog.bookmarks.metaTitle')
 }))
 
 onMounted(async () => {

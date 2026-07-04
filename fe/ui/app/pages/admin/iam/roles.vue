@@ -208,7 +208,7 @@ const { t, locale } = useI18n()
 const toast = useToast()
 const adminApi = useAdmin()
 
-useHead({ title: `${t('admin.iam.roles.title')} - NextPT` })
+useHead({ title: t('admin.iam.roles.title') })
 
 const roles = ref<AdminIamRole[]>([])
 const permissions = ref<string[]>([])

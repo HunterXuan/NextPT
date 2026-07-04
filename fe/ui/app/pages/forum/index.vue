@@ -224,7 +224,7 @@ const createTopicPath = computed(() => {
 })
 
 useHead(() => ({
-  title: `${t('forum.metaTitle')} - NextPT`
+  title: t('forum.metaTitle')
 }))
 
 onMounted(loadForumHome)

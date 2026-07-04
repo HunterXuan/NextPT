@@ -104,6 +104,8 @@
 </template>
 
 <script setup lang="ts">
+import type { DropdownMenuItem } from '@nuxt/ui'
+
 interface ShellNavItem {
   label: string
   to: string
@@ -123,12 +125,6 @@ interface ShellSidebarAction {
   icon: string
 }
 
-interface ShellUserMenuItem {
-  label: string
-  icon?: string
-  onSelect?: () => void | Promise<void>
-}
-
 interface ShellUser {
   id?: number | string
   username?: string
@@ -140,7 +136,7 @@ interface ShellUser {
 defineProps<{
   sections: ShellNavSection[]
   user?: ShellUser | null
-  userMenuItems?: ShellUserMenuItem[][]
+  userMenuItems?: DropdownMenuItem[][]
   returnAction?: ShellSidebarAction | null
   loggingOut?: boolean
   collapsed?: boolean

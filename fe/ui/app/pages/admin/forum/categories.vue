@@ -153,7 +153,7 @@ const { t, locale } = useI18n()
 const toast = useToast()
 const adminApi = useAdmin()
 
-useHead({ title: `${t('admin.forum.categories.title')} - NextPT` })
+useHead({ title: t('admin.forum.categories.title') })
 
 const categories = ref<AdminForumCategory[]>([])
 const pending = ref(false)

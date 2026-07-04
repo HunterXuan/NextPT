@@ -195,7 +195,7 @@ const size = computed(() => Number(selectedSize.value))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / size.value)))
 
 useHead(() => ({
-  title: `${t('catalog.subtitles.metaTitle')} - NextPT`
+  title: t('catalog.subtitles.metaTitle')
 }))
 
 onMounted(loadSubtitles)

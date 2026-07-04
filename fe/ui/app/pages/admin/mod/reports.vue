@@ -173,7 +173,7 @@ const targetTypeOptions = computed(() => [
   { value: 'forum_reply', label: t('admin.mod.targetTypes.forumReply') }
 ])
 
-useHead({ title: `${t('admin.mod.reports.title')} - NextPT` })
+useHead({ title: t('admin.mod.reports.title') })
 onMounted(loadReports)
 
 async function loadReports() {

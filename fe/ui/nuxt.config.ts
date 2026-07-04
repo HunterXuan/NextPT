@@ -1,4 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const nodeEnv = (globalThis as typeof globalThis & {
+  process?: {
+    env?: {
+      NODE_ENV?: string
+    }
+  }
+}).process?.env?.NODE_ENV
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -8,7 +16,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     // Development-only proxy. Production should route /api through the edge gateway.
-    ...(process.env.NODE_ENV === 'development'
+    ...(nodeEnv === 'development'
       ? { '/api/**': { proxy: 'http://localhost:8000/api/**' } }
       : {})
   },

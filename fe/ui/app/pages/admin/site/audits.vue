@@ -93,7 +93,7 @@ const pageSizes = [20, 30, 50, 100]
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / query.size)))
 
-useHead({ title: `${t('admin.site.audits.title')} - NextPT` })
+useHead({ title: t('admin.site.audits.title') })
 onMounted(loadAudits)
 
 async function loadAudits() {

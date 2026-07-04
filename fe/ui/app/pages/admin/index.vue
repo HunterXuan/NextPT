@@ -168,7 +168,7 @@ const dashboardStats = computed(() => [
 ])
 
 useHead({
-  title: `${t('admin.title')} - NextPT`
+  title: t('admin.title')
 })
 
 onMounted(loadDashboard)

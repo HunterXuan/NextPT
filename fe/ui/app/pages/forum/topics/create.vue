@@ -193,7 +193,7 @@ const canSubmit = computed(() => {
 })
 
 useHead(() => ({
-  title: `${t('forum.create.metaTitle')} - NextPT`
+  title: t('forum.create.metaTitle')
 }))
 
 onMounted(loadNodes)

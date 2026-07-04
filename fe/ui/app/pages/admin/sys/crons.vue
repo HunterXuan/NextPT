@@ -118,7 +118,7 @@ const logQuery = reactive({ page: 1, size: 30 })
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const logTotalPages = computed(() => Math.max(1, Math.ceil(logTotal.value / logQuery.size)))
 
-useHead({ title: `${t('admin.sys.crons.title')} - NextPT` })
+useHead({ title: t('admin.sys.crons.title') })
 onMounted(loadCrons)
 
 async function reloadAll() {

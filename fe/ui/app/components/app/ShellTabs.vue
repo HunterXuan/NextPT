@@ -140,6 +140,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ContextMenuItem, DropdownMenuItem } from '@nuxt/ui'
 import type { WorkspaceTabItem, WorkspaceTabMode } from '~/composables/useWorkspaceTabs'
 
 const props = defineProps<{
@@ -166,69 +167,89 @@ const tabElements = new Map<string, HTMLElement>()
 const activeTab = computed(() => tabs.value.find((tab) => tab.id === activeId.value) || null)
 const fallbackPath = computed(() => localePath(props.mode === 'admin' ? '/admin' : '/'))
 const fallbackTitle = computed(() => props.mode === 'admin' ? t('admin.dashboard.title') : t('nav.home'))
-const tabMenuItems = computed(() => [
+const tabMenuItems = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: t('workspaceTabs.refresh'),
       icon: 'i-lucide-refresh-cw',
       disabled: refreshing.value,
-      onSelect: refreshActiveTab
+      onSelect: () => {
+        void refreshActiveTab()
+      }
     }
   ],
   [
     {
       label: t('workspaceTabs.closeCurrent'),
       icon: 'i-lucide-x',
-      onSelect: () => activeTab.value && closeTab(activeTab.value)
+      onSelect: () => {
+        if (activeTab.value) void closeTab(activeTab.value)
+      }
     },
     {
       label: t('workspaceTabs.closeOther'),
       icon: 'i-lucide-copy-x',
-      onSelect: closeOtherActiveTabs
+      onSelect: () => {
+        void closeOtherActiveTabs()
+      }
     },
     {
       label: t('workspaceTabs.closeRight'),
       icon: 'i-lucide-panel-right-close',
-      onSelect: closeRightActiveTabs
+      onSelect: () => {
+        void closeRightActiveTabs()
+      }
     },
     {
       label: t('workspaceTabs.closeAll'),
       icon: 'i-lucide-circle-x',
-      onSelect: closeAllAndNavigate
+      onSelect: () => {
+        void closeAllAndNavigate()
+      }
     }
   ]
 ])
 
-function tabContextMenuItems(tab: WorkspaceTabItem) {
+function tabContextMenuItems(tab: WorkspaceTabItem): ContextMenuItem[][] {
   return [
     [
       {
         label: t('workspaceTabs.refresh'),
         icon: 'i-lucide-refresh-cw',
         disabled: refreshing.value,
-        onSelect: () => refreshTab(tab)
+        onSelect: () => {
+          void refreshTab(tab)
+        }
       }
     ],
     [
       {
         label: t('workspaceTabs.close'),
         icon: 'i-lucide-x',
-        onSelect: () => closeTab(tab)
+        onSelect: () => {
+          void closeTab(tab)
+        }
       },
       {
         label: t('workspaceTabs.closeOther'),
         icon: 'i-lucide-copy-x',
-        onSelect: () => closeOtherTabsFor(tab)
+        onSelect: () => {
+          void closeOtherTabsFor(tab)
+        }
       },
       {
         label: t('workspaceTabs.closeRight'),
         icon: 'i-lucide-panel-right-close',
-        onSelect: () => closeRightTabsFor(tab)
+        onSelect: () => {
+          void closeRightTabsFor(tab)
+        }
       },
       {
         label: t('workspaceTabs.closeAll'),
         icon: 'i-lucide-circle-x',
-        onSelect: closeAllAndNavigate
+        onSelect: () => {
+          void closeAllAndNavigate()
+        }
       }
     ]
   ]

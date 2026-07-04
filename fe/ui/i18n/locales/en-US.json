@@ -224,6 +224,7 @@
     "login": {
       "action": "Log in",
       "eyebrow": "Welcome back",
+      "metaTitle": "Log in",
       "title": "Log in to NextPT",
       "subtitle": "Return to the catalog, bookmarks, and discussions, then continue browsing and sharing.",
       "heroTitle": "Return to your private resource community",
@@ -249,6 +250,7 @@
     "register": {
       "action": "Register",
       "eyebrow": "Join the community",
+      "metaTitle": "Register",
       "title": "Create a NextPT account",
       "subtitle": "Create a profile and join a resource community sustained by curation, seeding, and member help.",
       "heroTitle": "Join a community that keeps good resources alive",

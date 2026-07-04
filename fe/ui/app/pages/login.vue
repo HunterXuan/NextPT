@@ -177,7 +177,7 @@ async function handleSubmit() {
 }
 
 useSeoMeta({
-  title: t('auth.login.title'),
+  title: t('auth.login.metaTitle'),
   robots: 'noindex, nofollow'
 })
 </script>

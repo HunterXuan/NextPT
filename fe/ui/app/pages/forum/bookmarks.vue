@@ -85,7 +85,7 @@ const selectedSize = ref(String(readPageSizeQuery()))
 
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / Number(selectedSize.value || 20))))
 useHead(() => ({
-  title: `${t('forum.bookmarks.metaTitle')} - NextPT`
+  title: t('forum.bookmarks.metaTitle')
 }))
 
 onMounted(loadBookmarks)
