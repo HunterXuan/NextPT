@@ -828,7 +828,9 @@
       "edit": "編輯",
       "delete": "刪除",
       "reset": "重置",
-      "discardChanges": "撤銷修改"
+      "discardChanges": "撤銷修改",
+      "confirmDeleteTitle": "確認刪除？",
+      "deleteIrreversible": "刪除後將不可復原。"
     },
     "status": {
       "enabled": "啟用",
@@ -844,7 +846,6 @@
         "saved": "分類已儲存",
         "deleted": "分類已刪除",
         "confirmDelete": "確認刪除分類「{name}」？",
-        "confirmDeleteTitle": "確認刪除這個分類？",
         "rules": {
           "plain": "普通標題",
           "custom": "自訂規則",
@@ -919,6 +920,10 @@
       "eyebrow": "管理後台 / 論壇",
       "title": "論壇管理",
       "entryDescription": "管理論壇分類與板塊",
+      "roles": {
+        "level": "等級 {level}",
+        "withLevel": "{name} · {level}"
+      },
       "categories": {
         "title": "論壇分類",
         "list": "分類列表",
@@ -926,7 +931,6 @@
         "saved": "論壇分類已儲存",
         "deleted": "論壇分類已刪除",
         "confirmDelete": "確認刪除論壇分類「{name}」？",
-        "confirmDeleteTitle": "確認刪除這個論壇分類？",
         "stats": {
           "total": "全部"
         },
@@ -934,7 +938,7 @@
           "name": "名稱",
           "description": "描述",
           "sort": "排序",
-          "minRoleView": "可見等級",
+          "minRoleView": "可見角色",
           "actions": "操作"
         },
         "form": {
@@ -950,7 +954,7 @@
           "descZhTW": "繁體中文描述",
           "descEnUS": "英文描述",
           "sortOrder": "排序",
-          "minRoleView": "最低可見等級"
+          "minRoleView": "最低可見角色"
         }
       },
       "nodes": {
@@ -960,20 +964,33 @@
         "saved": "論壇板塊已儲存",
         "deleted": "論壇板塊已刪除",
         "confirmDelete": "確認刪除論壇板塊「{name}」？",
+        "stats": {
+          "total": "全部",
+          "categories": "分類"
+        },
         "table": {
           "name": "名稱",
           "category": "分類",
           "slug": "標識",
-          "permissions": "讀/寫/發",
+          "permissions": "權限要求",
           "counts": "主題/回覆",
           "actions": "操作"
+        },
+        "permissionShort": {
+          "read": "讀",
+          "write": "回",
+          "create": "發"
         },
         "form": {
           "create": "新增板塊",
           "edit": "編輯板塊",
+          "basic": "基礎資訊",
           "category": "所屬分類",
           "selectCategory": "選擇分類",
           "slug": "標識",
+          "name": "名稱",
+          "description": "描述",
+          "primaryLocale": "主語言：{locale}",
           "nameZhCN": "簡體中文名稱",
           "nameZhTW": "繁體中文名稱",
           "nameEnUS": "英文名稱",
@@ -981,9 +998,10 @@
           "descZhTW": "繁體中文描述",
           "descEnUS": "英文描述",
           "sortOrder": "排序",
-          "minRoleRead": "閱讀等級",
-          "minRoleWrite": "回覆等級",
-          "minRoleCreate": "發文等級",
+          "permissions": "權限要求",
+          "minRoleRead": "閱讀角色",
+          "minRoleWrite": "回覆角色",
+          "minRoleCreate": "發文角色",
           "moderators": "版主使用者 ID"
         }
       }

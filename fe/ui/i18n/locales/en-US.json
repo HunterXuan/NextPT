@@ -828,7 +828,9 @@
       "edit": "Edit",
       "delete": "Delete",
       "reset": "Reset",
-      "discardChanges": "Discard changes"
+      "discardChanges": "Discard changes",
+      "confirmDeleteTitle": "Confirm delete?",
+      "deleteIrreversible": "This cannot be undone."
     },
     "status": {
       "enabled": "Enabled",
@@ -844,7 +846,6 @@
         "saved": "Category saved",
         "deleted": "Category deleted",
         "confirmDelete": "Delete category \"{name}\"?",
-        "confirmDeleteTitle": "Delete this category?",
         "rules": {
           "plain": "Plain title",
           "custom": "Custom rule",
@@ -919,6 +920,10 @@
       "eyebrow": "Admin / Forum",
       "title": "Forum Admin",
       "entryDescription": "Manage forum categories and nodes",
+      "roles": {
+        "level": "Level {level}",
+        "withLevel": "{name} · {level}"
+      },
       "categories": {
         "title": "Forum Categories",
         "list": "Category list",
@@ -926,7 +931,6 @@
         "saved": "Forum category saved",
         "deleted": "Forum category deleted",
         "confirmDelete": "Delete forum category \"{name}\"?",
-        "confirmDeleteTitle": "Delete this forum category?",
         "stats": {
           "total": "Total"
         },
@@ -934,7 +938,7 @@
           "name": "Name",
           "description": "Description",
           "sort": "Sort",
-          "minRoleView": "View level",
+          "minRoleView": "View role",
           "actions": "Actions"
         },
         "form": {
@@ -950,7 +954,7 @@
           "descZhTW": "Traditional Chinese description",
           "descEnUS": "English description",
           "sortOrder": "Sort",
-          "minRoleView": "Minimum view level"
+          "minRoleView": "Minimum view role"
         }
       },
       "nodes": {
@@ -960,20 +964,33 @@
         "saved": "Forum node saved",
         "deleted": "Forum node deleted",
         "confirmDelete": "Delete forum node \"{name}\"?",
+        "stats": {
+          "total": "Total",
+          "categories": "Categories"
+        },
         "table": {
           "name": "Name",
           "category": "Category",
           "slug": "Slug",
-          "permissions": "Read/Write/Post",
+          "permissions": "Access",
           "counts": "Topics/Replies",
           "actions": "Actions"
+        },
+        "permissionShort": {
+          "read": "Read",
+          "write": "Reply",
+          "create": "Topic"
         },
         "form": {
           "create": "New node",
           "edit": "Edit node",
+          "basic": "Basic info",
           "category": "Category",
           "selectCategory": "Select category",
           "slug": "Slug",
+          "name": "Name",
+          "description": "Description",
+          "primaryLocale": "Primary: {locale}",
           "nameZhCN": "Simplified Chinese name",
           "nameZhTW": "Traditional Chinese name",
           "nameEnUS": "English name",
@@ -981,9 +998,10 @@
           "descZhTW": "Traditional Chinese description",
           "descEnUS": "English description",
           "sortOrder": "Sort",
-          "minRoleRead": "Read level",
-          "minRoleWrite": "Reply level",
-          "minRoleCreate": "Topic level",
+          "permissions": "Access requirements",
+          "minRoleRead": "Read role",
+          "minRoleWrite": "Reply role",
+          "minRoleCreate": "Topic role",
           "moderators": "Moderator user IDs"
         }
       }

@@ -22,10 +22,10 @@
             <table class="min-w-[760px] w-full table-fixed border-collapse text-left">
               <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
                 <tr>
-                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
+                  <th class="w-[30%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
                   <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.description') }}</th>
                   <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.sort') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
+                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
                   <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.actions') }}</th>
                 </tr>
               </thead>
@@ -58,10 +58,10 @@
             <table class="min-w-[760px] w-full table-fixed border-collapse text-left">
               <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
                 <tr>
-                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
+                  <th class="w-[30%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
                   <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.description') }}</th>
                   <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.sort') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
+                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
                   <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.actions') }}</th>
                 </tr>
               </thead>
@@ -89,7 +89,11 @@
                     {{ numberFormatter.format(category.sortOrder) }}
                   </td>
                   <td class="px-3 py-2.5 text-right align-middle text-sm text-slate-600 dark:text-slate-300">
-                    {{ numberFormatter.format(category.minRoleView) }}
+                    <span class="inline-flex max-w-full items-center justify-end">
+                      <span class="truncate rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                        {{ roleNameByLevel(category.minRoleView) }}
+                      </span>
+                    </span>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
                     <div class="flex items-center justify-end gap-2">
@@ -124,10 +128,10 @@
                         <template #content="{ close }">
                           <div class="space-y-3">
                             <p class="text-sm font-medium text-slate-950 dark:text-white">
-                              {{ $t('admin.forum.categories.confirmDeleteTitle') }}
+                              {{ $t('admin.actions.confirmDeleteTitle') }}
                             </p>
-                            <p class="truncate text-xs text-slate-500 dark:text-slate-400" :title="categoryName(category)">
-                              {{ categoryName(category) }}
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                              {{ $t('admin.actions.deleteIrreversible') }}
                             </p>
                             <div class="flex justify-end gap-2">
                               <UButton color="neutral" variant="ghost" size="xs" type="button" @click="close()">
@@ -217,13 +221,11 @@
               </label>
               <label class="block">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.forum.categories.form.minRoleView') }}</span>
-                <input
+                <AdminIamRoleLevelSelect
                   v-model.number="form.minRoleView"
-                  type="number"
-                  min="0"
-                  class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                  :roles="roles"
                   :disabled="saving"
-                >
+                />
               </label>
             </div>
 
@@ -248,7 +250,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { AdminForumCategory, AdminForumCategoryInput } from '~/composables/useAdmin'
+import type { AdminForumCategory, AdminForumCategoryInput, AdminIamRole } from '~/composables/useAdmin'
 import { formatDateTime, localizeI18nName } from '~/utils/format'
 
 interface LocaleOption {
@@ -265,6 +267,7 @@ const adminApi = useAdmin()
 useHead({ title: t('admin.forum.categories.title') })
 
 const categories = ref<AdminForumCategory[]>([])
+const roles = ref<AdminIamRole[]>([])
 const pending = ref(false)
 const saving = ref(false)
 const deletingId = ref<number | null>(null)
@@ -295,6 +298,7 @@ const primaryLocaleLabel = computed(() => {
   return primary ? `${primary.name} (${primary.code})` : primaryLocaleCode.value
 })
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
+const { roleNameByLevel } = useAdminIamRoleLevels(roles)
 const selectedCategory = computed(() => categories.value.find((item) => item.id === selectedId.value) || null)
 const isFormDirty = computed(() => formSnapshot() !== originalFormSnapshot.value)
 const canSubmit = computed(() => Boolean(nameValue(primaryLocaleCode.value).trim() && isFormDirty.value && !saving.value))
@@ -312,8 +316,12 @@ async function loadCategories() {
   pending.value = true
   errorMessage.value = ''
   try {
-    const data = await adminApi.listForumCategories()
-    categories.value = (data.categories || []).sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)
+    const [categoryData, roleData] = await Promise.all([
+      adminApi.listForumCategories(),
+      adminApi.listIamRoles()
+    ])
+    categories.value = (categoryData.categories || []).sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)
+    roles.value = roleData.roles || []
   } catch (error: unknown) {
     errorMessage.value = error instanceof ApiError ? error.message : t('common.requestFailed')
   } finally {

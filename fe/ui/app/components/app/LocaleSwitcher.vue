@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+import { normalizeLocaleCode } from '~/utils/locale'
+
 const { locale, locales, setLocale } = useI18n()
 
 const languageItems = computed(() => [
@@ -20,7 +22,9 @@ const languageItems = computed(() => [
 ])
 
 async function handleLanguageSwitch(code: string) {
-  if (locale.value === code) return
-  await setLocale(code)
+  const supportedCodes = (locales.value as any[]).map((item) => item.code).filter(Boolean)
+  const normalized = normalizeLocaleCode(code, supportedCodes, supportedCodes[0] || locale.value)
+  if (locale.value === normalized) return
+  await setLocale(normalized)
 }
 </script>

@@ -828,7 +828,9 @@
       "edit": "编辑",
       "delete": "删除",
       "reset": "重置",
-      "discardChanges": "撤销修改"
+      "discardChanges": "撤销修改",
+      "confirmDeleteTitle": "确认删除？",
+      "deleteIrreversible": "删除后将不可恢复。"
     },
     "status": {
       "enabled": "启用",
@@ -844,7 +846,6 @@
         "saved": "分类已保存",
         "deleted": "分类已删除",
         "confirmDelete": "确认删除分类「{name}」？",
-        "confirmDeleteTitle": "确认删除这个分类？",
         "rules": {
           "plain": "普通标题",
           "custom": "自定义规则",
@@ -919,6 +920,10 @@
       "eyebrow": "管理后台 / 论坛",
       "title": "论坛管理",
       "entryDescription": "管理论坛分类与板块",
+      "roles": {
+        "level": "等级 {level}",
+        "withLevel": "{name} · {level}"
+      },
       "categories": {
         "title": "论坛分类",
         "list": "分类列表",
@@ -926,7 +931,6 @@
         "saved": "论坛分类已保存",
         "deleted": "论坛分类已删除",
         "confirmDelete": "确认删除论坛分类「{name}」？",
-        "confirmDeleteTitle": "确认删除这个论坛分类？",
         "stats": {
           "total": "全部"
         },
@@ -934,7 +938,7 @@
           "name": "名称",
           "description": "描述",
           "sort": "排序",
-          "minRoleView": "可见等级",
+          "minRoleView": "可见角色",
           "actions": "操作"
         },
         "form": {
@@ -950,7 +954,7 @@
           "descZhTW": "繁体中文描述",
           "descEnUS": "英文描述",
           "sortOrder": "排序",
-          "minRoleView": "最低可见等级"
+          "minRoleView": "最低可见角色"
         }
       },
       "nodes": {
@@ -960,20 +964,33 @@
         "saved": "论坛板块已保存",
         "deleted": "论坛板块已删除",
         "confirmDelete": "确认删除论坛板块「{name}」？",
+        "stats": {
+          "total": "全部",
+          "categories": "分类"
+        },
         "table": {
           "name": "名称",
           "category": "分类",
           "slug": "标识",
-          "permissions": "读/写/发",
+          "permissions": "权限要求",
           "counts": "主题/回复",
           "actions": "操作"
+        },
+        "permissionShort": {
+          "read": "读",
+          "write": "回",
+          "create": "发"
         },
         "form": {
           "create": "新建板块",
           "edit": "编辑板块",
+          "basic": "基础信息",
           "category": "所属分类",
           "selectCategory": "选择分类",
           "slug": "标识",
+          "name": "名称",
+          "description": "描述",
+          "primaryLocale": "主语言：{locale}",
           "nameZhCN": "简体中文名称",
           "nameZhTW": "繁体中文名称",
           "nameEnUS": "英文名称",
@@ -981,9 +998,10 @@
           "descZhTW": "繁体中文描述",
           "descEnUS": "英文描述",
           "sortOrder": "排序",
-          "minRoleRead": "阅读等级",
-          "minRoleWrite": "回复等级",
-          "minRoleCreate": "发帖等级",
+          "permissions": "权限要求",
+          "minRoleRead": "阅读角色",
+          "minRoleWrite": "回复角色",
+          "minRoleCreate": "发帖角色",
           "moderators": "版主用户 ID"
         }
       }

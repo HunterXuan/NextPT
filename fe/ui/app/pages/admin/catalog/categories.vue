@@ -154,10 +154,10 @@
                         <template #content="{ close }">
                           <div class="space-y-3">
                             <p class="text-sm font-medium text-slate-950 dark:text-white">
-                              {{ $t('admin.catalog.categories.confirmDeleteTitle') }}
+                              {{ $t('admin.actions.confirmDeleteTitle') }}
                             </p>
-                            <p class="truncate text-xs text-slate-500 dark:text-slate-400" :title="categoryDisplayName(category)">
-                              {{ categoryDisplayName(category) }}
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                              {{ $t('admin.actions.deleteIrreversible') }}
                             </p>
                             <div class="flex justify-end gap-2">
                               <UButton color="neutral" variant="ghost" size="xs" type="button" @click="close()">
