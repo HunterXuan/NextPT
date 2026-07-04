@@ -4,6 +4,7 @@
     "cancel": "取消",
     "confirm": "确认",
     "copy": "复制",
+    "close": "关闭",
     "next": "下一页",
     "previous": "上一页",
     "refresh": "刷新",
@@ -826,7 +827,8 @@
       "new": "新建",
       "edit": "编辑",
       "delete": "删除",
-      "reset": "重置"
+      "reset": "重置",
+      "discardChanges": "撤销修改"
     },
     "status": {
       "enabled": "启用",
@@ -842,6 +844,12 @@
         "saved": "分类已保存",
         "deleted": "分类已删除",
         "confirmDelete": "确认删除分类「{name}」？",
+        "confirmDeleteTitle": "确认删除这个分类？",
+        "rules": {
+          "plain": "普通标题",
+          "custom": "自定义规则",
+          "fieldCount": "{count} 个字段"
+        },
         "stats": {
           "total": "全部",
           "enabled": "启用",
@@ -850,6 +858,7 @@
         "table": {
           "name": "名称",
           "slug": "标识",
+          "rule": "发布规则",
           "sort": "排序",
           "status": "状态",
           "actions": "操作"
@@ -857,6 +866,8 @@
         "form": {
           "create": "新建分类",
           "edit": "编辑分类",
+          "name": "名称",
+          "primaryLocale": "主语言：{locale}",
           "nameZhCN": "简体中文名称",
           "nameZhTW": "繁体中文名称",
           "nameEnUS": "英文名称",
@@ -865,7 +876,42 @@
           "enabled": "启用",
           "uploadConfig": "发布配置 JSON",
           "uploadConfigPlaceholder": "留空表示使用普通标题发布",
-          "uploadConfigInvalid": "发布配置不是有效的 JSON"
+          "uploadConfigInvalid": "发布配置不是有效的 JSON",
+          "uploadRule": "发布规则",
+          "uploadRuleDescription": "轻量摘要用于快速确认规则，具体配置仍通过 JSON 管理。",
+          "uploadConfigClear": "普通标题",
+          "uploadConfigFormat": "格式化",
+          "uploadConfigJson": "JSON 配置",
+          "uploadConfigValid": "有效",
+          "uploadConfigInvalidShort": "无效",
+          "uploadConfigEditorHint": "Tab 插入两个空格，全屏适合编辑较长规则。",
+          "uploadConfigFullscreen": "全屏编辑",
+          "uploadConfigObjectInvalid": "发布配置必须是 JSON 对象或 null",
+          "uploadConfigFieldsInvalid": "fields 必须是数组",
+          "uploadConfigFieldInvalid": "字段 #{index} 必须是对象",
+          "uploadConfigFieldKeyRequired": "字段 #{index} 缺少 key",
+          "uploadConfigFieldKeyDuplicate": "字段 key 重复：{key}",
+          "uploadConfigOptionsRequired": "{field} 需要配置 options",
+          "uploadConfigStaticOptionsRequired": "{field} 的静态选项不能为空",
+          "uploadConfigTagGroupSlugRequired": "{field} 的 tagGroup 需要配置 slug",
+          "uploadConfigUnsupportedOptionSource": "{field} 的选项来源暂不支持：{source}",
+          "uploadConfigTitleInvalid": "title 必须是对象",
+          "uploadConfigTitlePartsInvalid": "title.parts 必须是数组",
+          "uploadConfigTitlePartInvalid": "标题片段 #{index} 必须是对象",
+          "uploadConfigTitlePartFieldRequired": "标题片段 #{index} 缺少 field",
+          "uploadConfigTitlePartFieldUnknown": "标题片段引用了不存在的字段：{field}",
+          "uploadConfigGeneratedPartsRequired": "生成标题需要至少一个 title.parts 片段",
+          "uploadRuleSummaryType": "规则类型",
+          "uploadRuleSummaryTitle": "标题方式",
+          "uploadRuleSummaryFields": "字段",
+          "uploadRulePlain": "普通标题",
+          "uploadRuleStructured": "结构化发布",
+          "uploadRuleCustom": "自定义规则",
+          "uploadTitlePlain": "手动填写",
+          "uploadTitleManual": "手动标题",
+          "uploadTitleGenerated": "{count} 个片段生成",
+          "uploadTitleCustom": "自定义标题",
+          "uploadRuleNoFields": "无字段"
         }
       }
     },

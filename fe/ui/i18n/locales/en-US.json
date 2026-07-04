@@ -4,6 +4,7 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "copy": "Copy",
+    "close": "Close",
     "next": "Next",
     "previous": "Previous",
     "refresh": "Refresh",
@@ -826,7 +827,8 @@
       "new": "New",
       "edit": "Edit",
       "delete": "Delete",
-      "reset": "Reset"
+      "reset": "Reset",
+      "discardChanges": "Discard changes"
     },
     "status": {
       "enabled": "Enabled",
@@ -842,6 +844,12 @@
         "saved": "Category saved",
         "deleted": "Category deleted",
         "confirmDelete": "Delete category \"{name}\"?",
+        "confirmDeleteTitle": "Delete this category?",
+        "rules": {
+          "plain": "Plain title",
+          "custom": "Custom rule",
+          "fieldCount": "{count} fields"
+        },
         "stats": {
           "total": "Total",
           "enabled": "Enabled",
@@ -850,6 +858,7 @@
         "table": {
           "name": "Name",
           "slug": "Slug",
+          "rule": "Release rule",
           "sort": "Sort",
           "status": "Status",
           "actions": "Actions"
@@ -857,6 +866,8 @@
         "form": {
           "create": "New category",
           "edit": "Edit category",
+          "name": "Name",
+          "primaryLocale": "Primary: {locale}",
           "nameZhCN": "Simplified Chinese name",
           "nameZhTW": "Traditional Chinese name",
           "nameEnUS": "English name",
@@ -865,7 +876,42 @@
           "enabled": "Enabled",
           "uploadConfig": "Upload config JSON",
           "uploadConfigPlaceholder": "Leave empty to use plain title upload",
-          "uploadConfigInvalid": "Upload config is not valid JSON"
+          "uploadConfigInvalid": "Upload config is not valid JSON",
+          "uploadRule": "Release rule",
+          "uploadRuleDescription": "A lightweight summary helps review the rule. Detailed changes still use JSON.",
+          "uploadConfigClear": "Plain title",
+          "uploadConfigFormat": "Format",
+          "uploadConfigJson": "JSON config",
+          "uploadConfigValid": "Valid",
+          "uploadConfigInvalidShort": "Invalid",
+          "uploadConfigEditorHint": "Tab inserts two spaces. Use fullscreen for longer rules.",
+          "uploadConfigFullscreen": "Edit fullscreen",
+          "uploadConfigObjectInvalid": "Upload config must be a JSON object or null",
+          "uploadConfigFieldsInvalid": "fields must be an array",
+          "uploadConfigFieldInvalid": "Field #{index} must be an object",
+          "uploadConfigFieldKeyRequired": "Field #{index} is missing key",
+          "uploadConfigFieldKeyDuplicate": "Duplicate field key: {key}",
+          "uploadConfigOptionsRequired": "{field} needs options",
+          "uploadConfigStaticOptionsRequired": "{field} static options cannot be empty",
+          "uploadConfigTagGroupSlugRequired": "{field} tagGroup options need a slug",
+          "uploadConfigUnsupportedOptionSource": "{field} option source is not supported yet: {source}",
+          "uploadConfigTitleInvalid": "title must be an object",
+          "uploadConfigTitlePartsInvalid": "title.parts must be an array",
+          "uploadConfigTitlePartInvalid": "Title part #{index} must be an object",
+          "uploadConfigTitlePartFieldRequired": "Title part #{index} is missing field",
+          "uploadConfigTitlePartFieldUnknown": "Title part references a missing field: {field}",
+          "uploadConfigGeneratedPartsRequired": "Generated title needs at least one title.parts item",
+          "uploadRuleSummaryType": "Rule type",
+          "uploadRuleSummaryTitle": "Title mode",
+          "uploadRuleSummaryFields": "Fields",
+          "uploadRulePlain": "Plain title",
+          "uploadRuleStructured": "Structured release",
+          "uploadRuleCustom": "Custom rule",
+          "uploadTitlePlain": "Manual input",
+          "uploadTitleManual": "Manual title",
+          "uploadTitleGenerated": "{count} parts",
+          "uploadTitleCustom": "Custom title",
+          "uploadRuleNoFields": "No fields"
         }
       }
     },

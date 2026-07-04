@@ -4,6 +4,7 @@
     "cancel": "取消",
     "confirm": "確認",
     "copy": "複製",
+    "close": "關閉",
     "next": "下一頁",
     "previous": "上一頁",
     "refresh": "重新整理",
@@ -826,7 +827,8 @@
       "new": "新增",
       "edit": "編輯",
       "delete": "刪除",
-      "reset": "重置"
+      "reset": "重置",
+      "discardChanges": "撤銷修改"
     },
     "status": {
       "enabled": "啟用",
@@ -842,6 +844,12 @@
         "saved": "分類已儲存",
         "deleted": "分類已刪除",
         "confirmDelete": "確認刪除分類「{name}」？",
+        "confirmDeleteTitle": "確認刪除這個分類？",
+        "rules": {
+          "plain": "普通標題",
+          "custom": "自訂規則",
+          "fieldCount": "{count} 個欄位"
+        },
         "stats": {
           "total": "全部",
           "enabled": "啟用",
@@ -850,6 +858,7 @@
         "table": {
           "name": "名稱",
           "slug": "標識",
+          "rule": "發布規則",
           "sort": "排序",
           "status": "狀態",
           "actions": "操作"
@@ -857,6 +866,8 @@
         "form": {
           "create": "新增分類",
           "edit": "編輯分類",
+          "name": "名稱",
+          "primaryLocale": "主語言：{locale}",
           "nameZhCN": "簡體中文名稱",
           "nameZhTW": "繁體中文名稱",
           "nameEnUS": "英文名稱",
@@ -865,7 +876,42 @@
           "enabled": "啟用",
           "uploadConfig": "發布配置 JSON",
           "uploadConfigPlaceholder": "留空表示使用普通標題發布",
-          "uploadConfigInvalid": "發布配置不是有效的 JSON"
+          "uploadConfigInvalid": "發布配置不是有效的 JSON",
+          "uploadRule": "發布規則",
+          "uploadRuleDescription": "輕量摘要用於快速確認規則，具體配置仍透過 JSON 管理。",
+          "uploadConfigClear": "普通標題",
+          "uploadConfigFormat": "格式化",
+          "uploadConfigJson": "JSON 配置",
+          "uploadConfigValid": "有效",
+          "uploadConfigInvalidShort": "無效",
+          "uploadConfigEditorHint": "Tab 插入兩個空格，全屏適合編輯較長規則。",
+          "uploadConfigFullscreen": "全屏編輯",
+          "uploadConfigObjectInvalid": "發布配置必須是 JSON 物件或 null",
+          "uploadConfigFieldsInvalid": "fields 必須是陣列",
+          "uploadConfigFieldInvalid": "欄位 #{index} 必須是物件",
+          "uploadConfigFieldKeyRequired": "欄位 #{index} 缺少 key",
+          "uploadConfigFieldKeyDuplicate": "欄位 key 重複：{key}",
+          "uploadConfigOptionsRequired": "{field} 需要配置 options",
+          "uploadConfigStaticOptionsRequired": "{field} 的靜態選項不能為空",
+          "uploadConfigTagGroupSlugRequired": "{field} 的 tagGroup 需要配置 slug",
+          "uploadConfigUnsupportedOptionSource": "{field} 的選項來源暫不支援：{source}",
+          "uploadConfigTitleInvalid": "title 必須是物件",
+          "uploadConfigTitlePartsInvalid": "title.parts 必須是陣列",
+          "uploadConfigTitlePartInvalid": "標題片段 #{index} 必須是物件",
+          "uploadConfigTitlePartFieldRequired": "標題片段 #{index} 缺少 field",
+          "uploadConfigTitlePartFieldUnknown": "標題片段引用了不存在的欄位：{field}",
+          "uploadConfigGeneratedPartsRequired": "生成標題需要至少一個 title.parts 片段",
+          "uploadRuleSummaryType": "規則類型",
+          "uploadRuleSummaryTitle": "標題方式",
+          "uploadRuleSummaryFields": "欄位",
+          "uploadRulePlain": "普通標題",
+          "uploadRuleStructured": "結構化發布",
+          "uploadRuleCustom": "自訂規則",
+          "uploadTitlePlain": "手動填寫",
+          "uploadTitleManual": "手動標題",
+          "uploadTitleGenerated": "{count} 個片段生成",
+          "uploadTitleCustom": "自訂標題",
+          "uploadRuleNoFields": "無欄位"
         }
       }
     },
