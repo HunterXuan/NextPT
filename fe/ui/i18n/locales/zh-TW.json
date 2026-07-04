@@ -42,6 +42,17 @@
       "times": "讚賞 {count} 次"
     }
   },
+  "workspaceTabs": {
+    "title": "開啟的頁面",
+    "refresh": "重新整理目前標籤",
+    "close": "關閉標籤",
+    "closeCurrent": "關閉目前",
+    "closeOther": "關閉其它",
+    "closeRight": "關閉右側",
+    "closeAll": "關閉全部",
+    "scrollLeft": "向左捲動標籤",
+    "scrollRight": "向右捲動標籤"
+  },
   "nav": {
     "home": "首頁",
     "resources": "資源庫",

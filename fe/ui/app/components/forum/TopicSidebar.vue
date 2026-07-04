@@ -1,5 +1,5 @@
 <template>
-  <aside class="space-y-6 lg:sticky lg:top-20">
+  <aside class="app-sticky-offset space-y-6 lg:sticky">
     <UCard class="rounded-lg">
       <template #header>
         <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('forum.detail.info.title') }}</h2>

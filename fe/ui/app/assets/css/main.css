@@ -50,6 +50,15 @@ h6 {
   background-size: 28px 28px;
 }
 
+.app-sticky-offset {
+  top: var(--app-sticky-top, 5rem);
+}
+
+.app-sticky-rail {
+  top: var(--app-sticky-top, 5rem);
+  height: calc(100vh - var(--app-sticky-top, 5rem) - 1rem);
+}
+
 .rich-text {
   overflow-wrap: anywhere;
   color: rgb(51 65 85);

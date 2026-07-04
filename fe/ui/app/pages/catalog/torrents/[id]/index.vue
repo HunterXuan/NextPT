@@ -491,7 +491,7 @@
         </main>
 
         <nav
-          class="hidden lg:sticky lg:top-[5.5rem] lg:flex lg:h-[calc(100vh-7rem)] lg:items-center lg:justify-center"
+          class="app-sticky-rail hidden lg:sticky lg:flex lg:items-center lg:justify-center"
           :aria-label="$t('catalog.torrents.detail.navigation.title')"
         >
           <div class="relative flex min-h-56 w-full justify-center">
@@ -518,7 +518,7 @@
           </div>
         </nav>
 
-        <aside class="min-w-0 space-y-3 lg:sticky lg:top-[5.5rem]">
+        <aside class="app-sticky-offset min-w-0 space-y-3 lg:sticky">
           <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center justify-between gap-3">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
@@ -655,6 +655,7 @@ const route = useRoute()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
 const adminApi = useAdmin()
+const workspaceTabs = useWorkspaceTabs('app')
 const { user, isStaff } = useAuth()
 
 const torrent = ref<TorrentDetail | null>(null)
@@ -715,6 +716,15 @@ const subtitleForm = reactive({
   language: 'zh-CN',
   anonymous: false
 })
+
+watch(
+  () => torrent.value?.name,
+  (name) => {
+    if (name) {
+      workspaceTabs.updateTabTitle(route.fullPath, name)
+    }
+  }
+)
 
 const subtitleLanguageOptions = [
   { value: 'zh-CN', label: '简体中文' },

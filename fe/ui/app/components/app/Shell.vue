@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-950 antialiased dark:bg-slate-950 dark:text-white">
+  <div class="min-h-screen bg-slate-50 text-slate-950 antialiased dark:bg-slate-950 dark:text-white" style="--app-sticky-top: 7.5rem;">
     <div
       v-if="mobileSidebarOpen"
       class="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden"
@@ -76,9 +76,10 @@
             <AppThemeToggle />
           </div>
         </div>
+        <AppShellTabs :mode="props.mode" :current-title="activeItemLabel" @refresh="refreshCurrentPage" />
       </header>
 
-      <main class="min-w-0">
+      <main :key="pageRefreshKey" class="min-w-0">
         <slot />
       </main>
     </div>
@@ -102,6 +103,7 @@ const { user, isStaff, logout } = useAuth()
 const mobileSidebarOpen = ref(false)
 const sidebarCollapsed = ref(false)
 const loggingOut = ref(false)
+const pageRefreshKey = ref(0)
 const sidebarStorageKey = 'nextpt_sidebar_collapsed'
 
 onMounted(() => {
@@ -133,6 +135,10 @@ function isForumHomeActive() {
 function isCatalogTorrentsActive() {
   const torrentsPath = localePath('/catalog/torrents')
   return route.path === torrentsPath || route.path.startsWith(`${torrentsPath}/`)
+}
+
+function refreshCurrentPage() {
+  pageRefreshKey.value += 1
 }
 
 const currentAppPath = computed(() => {
@@ -261,10 +267,14 @@ const adminReturnAction = computed(() => props.mode === 'admin'
 const activeItem = computed(() => navSections.value.flatMap((section) => section.items).find((item) => item.active))
 const routeSpecificLabel = computed(() => {
   const path = currentAppPath.value
+  const torrentDetailMatch = path.match(/^\/catalog\/torrents\/([^/]+)$/)
+  if (torrentDetailMatch?.[1]) return t('catalog.torrents.detail.titleFallback', { id: torrentDetailMatch[1] })
   if (path === '/catalog/torrents/upload') return t('catalog.torrents.upload.title')
   if (/^\/catalog\/torrents\/[^/]+\/edit$/.test(path)) return t('catalog.torrents.edit.title')
   if (path === '/catalog/bookmarks') return t('catalog.bookmarks.title')
   if (path === '/catalog/subtitles') return t('catalog.subtitles.title')
+  const forumTopicMatch = path.match(/^\/forum\/topics\/([^/]+)$/)
+  if (forumTopicMatch?.[1]) return t('forum.detail.titleFallback', { id: forumTopicMatch[1] })
   if (path === '/forum/topics/create') return t('forum.create.title')
   if (path === '/forum/bookmarks') return t('forum.bookmarks.title')
   if (path === '/iam/users/me/activity') return t('user.nav.activity')

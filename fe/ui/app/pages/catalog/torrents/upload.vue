@@ -123,7 +123,7 @@
           </section>
         </main>
 
-        <aside class="min-w-0 space-y-4 lg:sticky lg:top-[5.5rem]">
+        <aside class="app-sticky-offset min-w-0 space-y-4 lg:sticky">
           <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.publish') }}</h2>
 

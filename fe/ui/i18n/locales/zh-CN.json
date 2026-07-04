@@ -42,6 +42,17 @@
       "times": "赞赏 {count} 次"
     }
   },
+  "workspaceTabs": {
+    "title": "打开的页面",
+    "refresh": "刷新当前标签",
+    "close": "关闭标签",
+    "closeCurrent": "关闭当前",
+    "closeOther": "关闭其它",
+    "closeRight": "关闭右侧",
+    "closeAll": "关闭全部",
+    "scrollLeft": "向左滚动标签",
+    "scrollRight": "向右滚动标签"
+  },
   "nav": {
     "home": "首页",
     "resources": "资源库",

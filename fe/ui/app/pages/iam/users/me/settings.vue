@@ -2,7 +2,7 @@
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
-        <aside class="xl:sticky xl:top-20">
+        <aside class="app-sticky-offset xl:sticky">
           <nav class="flex gap-2 overflow-x-auto rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-900 xl:block xl:space-y-1 xl:overflow-visible">
             <button
               v-for="section in settingSections"

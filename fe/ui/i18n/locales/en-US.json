@@ -42,6 +42,17 @@
       "times": "Rewarded {count} times"
     }
   },
+  "workspaceTabs": {
+    "title": "Open pages",
+    "refresh": "Refresh current tab",
+    "close": "Close tab",
+    "closeCurrent": "Close current",
+    "closeOther": "Close others",
+    "closeRight": "Close tabs to the right",
+    "closeAll": "Close all",
+    "scrollLeft": "Scroll tabs left",
+    "scrollRight": "Scroll tabs right"
+  },
   "nav": {
     "home": "Home",
     "resources": "Catalog",

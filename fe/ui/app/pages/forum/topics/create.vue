@@ -82,7 +82,7 @@
           </section>
         </main>
 
-        <aside class="space-y-3 xl:sticky xl:top-20">
+        <aside class="app-sticky-offset space-y-3 xl:sticky">
           <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
             <UButton type="submit" color="primary" icon="i-lucide-square-pen" block :loading="pending" :disabled="!canSubmit">
               {{ $t('forum.create.submit') }}

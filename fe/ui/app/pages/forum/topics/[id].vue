@@ -37,7 +37,7 @@
           />
         </main>
 
-        <aside class="space-y-3 xl:sticky xl:top-20">
+        <aside class="app-sticky-offset space-y-3 xl:sticky">
           <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.edit.guide.title') }}</h2>
             <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
@@ -196,6 +196,7 @@ const localePath = useLocalePath()
 const toast = useToast()
 const forum = useForum()
 const adminApi = useAdmin()
+const workspaceTabs = useWorkspaceTabs('app')
 const { isStaff, user } = useAuth()
 
 const topicId = computed(() => Number(route.params.id || 0))
@@ -246,6 +247,14 @@ const replyTotalPages = computed(() => Math.max(1, Math.ceil(replyTotal.value / 
 const topicAppends = computed<ForumTopicAppend[]>(() => {
   return Array.isArray(topic.value?.appends) ? topic.value.appends.filter((append) => append?.content) : []
 })
+watch(
+  () => topic.value?.subject,
+  (subject) => {
+    if (subject) {
+      workspaceTabs.updateTabTitle(route.fullPath, subject)
+    }
+  }
+)
 const topicEditWindowMs = 5 * 60 * 1000
 const topicEditExpiresAtMs = computed(() => {
   const createdAt = Date.parse(topic.value?.createdAt || '')
