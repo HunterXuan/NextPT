@@ -926,6 +926,10 @@
         "saved": "論壇分類已儲存",
         "deleted": "論壇分類已刪除",
         "confirmDelete": "確認刪除論壇分類「{name}」？",
+        "confirmDeleteTitle": "確認刪除這個論壇分類？",
+        "stats": {
+          "total": "全部"
+        },
         "table": {
           "name": "名稱",
           "description": "描述",
@@ -936,6 +940,9 @@
         "form": {
           "create": "新增分類",
           "edit": "編輯分類",
+          "name": "名稱",
+          "description": "描述",
+          "primaryLocale": "主語言：{locale}",
           "nameZhCN": "簡體中文名稱",
           "nameZhTW": "繁體中文名稱",
           "nameEnUS": "英文名稱",

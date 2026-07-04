@@ -926,6 +926,10 @@
         "saved": "论坛分类已保存",
         "deleted": "论坛分类已删除",
         "confirmDelete": "确认删除论坛分类「{name}」？",
+        "confirmDeleteTitle": "确认删除这个论坛分类？",
+        "stats": {
+          "total": "全部"
+        },
         "table": {
           "name": "名称",
           "description": "描述",
@@ -936,6 +940,9 @@
         "form": {
           "create": "新建分类",
           "edit": "编辑分类",
+          "name": "名称",
+          "description": "描述",
+          "primaryLocale": "主语言：{locale}",
           "nameZhCN": "简体中文名称",
           "nameZhTW": "繁体中文名称",
           "nameEnUS": "英文名称",

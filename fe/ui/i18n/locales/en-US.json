@@ -926,6 +926,10 @@
         "saved": "Forum category saved",
         "deleted": "Forum category deleted",
         "confirmDelete": "Delete forum category \"{name}\"?",
+        "confirmDeleteTitle": "Delete this forum category?",
+        "stats": {
+          "total": "Total"
+        },
         "table": {
           "name": "Name",
           "description": "Description",
@@ -936,6 +940,9 @@
         "form": {
           "create": "New category",
           "edit": "Edit category",
+          "name": "Name",
+          "description": "Description",
+          "primaryLocale": "Primary: {locale}",
           "nameZhCN": "Simplified Chinese name",
           "nameZhTW": "Traditional Chinese name",
           "nameEnUS": "English name",
