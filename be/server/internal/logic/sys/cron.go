@@ -50,6 +50,17 @@ func (s *sSysCron) Start(ctx context.Context) {
 		return nil
 	}), "mod_user_expiry_cleanup")
 
+	gcron.AddSingleton(ctx, "45 * * * * *", s.runWrapper("iam_invite_expiry_cleanup", 300, func(ctx context.Context) error {
+		rows, err := service.IamInviteUsecase().CleanupExpired(ctx)
+		if err != nil {
+			return err
+		}
+		if rows > 0 {
+			glog.Infof(ctx, "[Cron] Cleanup expired invites completed. Expired %d invite records.", rows)
+		}
+		return nil
+	}), "iam_invite_expiry_cleanup")
+
 	gcron.AddSingleton(ctx, "@hourly", s.runWrapper("tracker_bonus_points", 1800, func(ctx context.Context) error {
 		return service.EconomyBonusUsecase().DistributeBonusPoints(ctx)
 	}), "tracker_bonus_points")

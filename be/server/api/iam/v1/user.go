@@ -37,3 +37,11 @@ type IamUserPasswordChangeReq struct {
 }
 
 type IamUserPasswordChangeRes struct{}
+
+type IamUserPasskeyResetReq struct {
+	g.Meta `path:"/users/me:resetPasskey" method:"post" tags:"IamUser" summary:"重置当前用户 Passkey"`
+}
+
+type IamUserPasskeyResetRes struct {
+	Passkey string `json:"passkey"`
+}

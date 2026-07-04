@@ -113,6 +113,17 @@ func (s *sIamUserDomain) UpdatePasswordHash(ctx context.Context, userId uint64, 
 	return err
 }
 
+func (s *sIamUserDomain) UpdatePasskey(ctx context.Context, userId uint64, passkey string) error {
+	columns := dao.IamUser.Columns()
+	_, err := dao.IamUser.Ctx(ctx).
+		Where(columns.Id, userId).
+		Data(g.Map{
+			columns.Passkey: passkey,
+		}).
+		Update()
+	return err
+}
+
 // GetUserByPasskey 通过 Passkey 获取用户（无缓存，纯领域逻辑）
 func (s *sIamUserDomain) GetUserByPasskey(ctx context.Context, passkey string) (*entity.IamUser, error) {
 	var user *entity.IamUser

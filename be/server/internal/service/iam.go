@@ -22,7 +22,8 @@ type (
 		GetInviteByHashForUpdate(ctx context.Context, hash string) (*entity.IamInvite, error)
 		GetInviteByHash(ctx context.Context, hash string) (*entity.IamInvite, error)
 		GetInvitesByInviterIdAndHash(ctx context.Context, inviterId uint64, hash string) (*entity.IamInvite, error)
-		QueryInvitesByInviter(ctx context.Context, inviterId uint64, page int, size int) ([]entity.IamInvite, int, error)
+		QueryInvitesByInviter(ctx context.Context, inviterId uint64, page int, size int, status *uint) ([]entity.IamInvite, int, error)
+		ExpireInvites(ctx context.Context, now *gtime.Time) (int64, error)
 		UpdateInviteStatus(ctx context.Context, id uint64, status uint) error
 		UpdateInvite(ctx context.Context, id uint64, data do.IamInvite) error
 		AdminCreateInvites(ctx context.Context, invites []do.IamInvite) error
@@ -31,6 +32,7 @@ type (
 		List(ctx context.Context, actor *model.Actor, in iamin.InviteListInp) (*iamout.InviteListOut, error)
 		Send(ctx context.Context, actor *model.Actor, in iamin.InviteSendInp) error
 		Check(ctx context.Context, in iamin.InviteCheckInp) (*iamout.InviteCheckOut, error)
+		CleanupExpired(ctx context.Context) (int64, error)
 	}
 	IIamPermissionDomain interface {
 		CheckPermissionWithList(ctx context.Context, rolePerms []string, userAcls []string, permKey string) (bool, error)
@@ -72,6 +74,7 @@ type (
 		InsertUserStat(ctx context.Context, data do.IamUserStat) error
 		UpdateUserProfile(ctx context.Context, userId uint64, avatar string, info string, signature string) error
 		UpdatePasswordHash(ctx context.Context, userId uint64, passwordHash string) error
+		UpdatePasskey(ctx context.Context, userId uint64, passkey string) error
 		// GetUserByPasskey 通过 Passkey 获取用户（无缓存，纯领域逻辑）
 		GetUserByPasskey(ctx context.Context, passkey string) (*entity.IamUser, error)
 		AdminListUsers(ctx context.Context, search string, order string, page int, size int) ([]*entity.IamUser, int, error)
@@ -91,6 +94,7 @@ type (
 		Me(ctx context.Context, actor *model.Actor) (*iamout.UserMeOut, error)
 		UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error
 		ChangePassword(ctx context.Context, actor *model.Actor, in iamin.UserPasswordChangeInp) error
+		ResetPasskey(ctx context.Context, actor *model.Actor) (string, error)
 	}
 )
 

@@ -31,7 +31,7 @@ func (s *sIamInviteUsecase) List(ctx context.Context, actor *model.Actor, in iam
 		return nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
 	}
 
-	list, total, err := service.IamInviteDomain().QueryInvitesByInviter(ctx, actor.Id, in.Page, in.Size)
+	list, total, err := service.IamInviteDomain().QueryInvitesByInviter(ctx, actor.Id, in.Page, in.Size, in.Status)
 	if err != nil {
 		return nil, err
 	}
@@ -93,8 +93,7 @@ func (s *sIamInviteUsecase) Send(ctx context.Context, actor *model.Actor, in iam
 	if invite.Status != consts.IamInviteStatusUnused {
 		return gerror.New(gi18n.T(ctx, "iam.invite.invalid_status"))
 	}
-	if invite.IsTemporary && invite.ExpireAt != nil && invite.ExpireAt.Before(gtime.Now()) {
-		_ = service.IamInviteDomain().UpdateInviteStatus(ctx, invite.Id, consts.IamInviteStatusExpired)
+	if invite.ExpireAt != nil && !invite.ExpireAt.After(gtime.Now()) {
 		return gerror.New(gi18n.T(ctx, "iam.invite.expired"))
 	}
 
@@ -115,8 +114,7 @@ func (s *sIamInviteUsecase) Check(ctx context.Context, in iamin.InviteCheckInp) 
 	if invite.Status != consts.IamInviteStatusSent && invite.Status != consts.IamInviteStatusUnused {
 		return nil, gerror.New(gi18n.T(ctx, "iam.invite.invalid_status"))
 	}
-	if invite.IsTemporary && invite.ExpireAt != nil && invite.ExpireAt.Before(gtime.Now()) {
-		_ = service.IamInviteDomain().UpdateInviteStatus(ctx, invite.Id, consts.IamInviteStatusExpired)
+	if invite.ExpireAt != nil && !invite.ExpireAt.After(gtime.Now()) {
 		return nil, gerror.New(gi18n.T(ctx, "iam.invite.expired"))
 	}
 
@@ -135,4 +133,8 @@ func (s *sIamInviteUsecase) Check(ctx context.Context, in iamin.InviteCheckInp) 
 		InviterId:       invite.InviterId,
 		InviterUsername: inviterUsername,
 	}, nil
+}
+
+func (s *sIamInviteUsecase) CleanupExpired(ctx context.Context) (int64, error) {
+	return service.IamInviteDomain().ExpireInvites(ctx, gtime.Now())
 }

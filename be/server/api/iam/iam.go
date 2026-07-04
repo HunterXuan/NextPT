@@ -20,4 +20,5 @@ type IIamV1 interface {
 	IamUserMe(ctx context.Context, req *v1.IamUserMeReq) (res *v1.IamUserMeRes, err error)
 	IamUserProfileUpdate(ctx context.Context, req *v1.IamUserProfileUpdateReq) (res *v1.IamUserProfileUpdateRes, err error)
 	IamUserPasswordChange(ctx context.Context, req *v1.IamUserPasswordChangeReq) (res *v1.IamUserPasswordChangeRes, err error)
+	IamUserPasskeyReset(ctx context.Context, req *v1.IamUserPasskeyResetReq) (res *v1.IamUserPasskeyResetRes, err error)
 }

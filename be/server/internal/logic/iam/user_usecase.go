@@ -49,9 +49,7 @@ func (s *sIamUserUsecase) InvalidateUserCache(ctx context.Context, userId uint64
 	// 3. Invalidate tracker passkey actor cache
 	user, err := service.IamUserDomain().GetUserById(ctx, userId)
 	if err == nil && user != nil && user.Passkey != "" {
-		passkeyKey := service.SysCache().KeyIamPasskeyActor(ctx, user.Passkey)
-		_, _ = gcache.Remove(ctx, passkeyKey)
-		_ = service.SysCache().PublishInvalidate(ctx, passkeyKey)
+		s.invalidatePasskeyActorCache(ctx, user.Passkey)
 	}
 }
 
@@ -256,8 +254,7 @@ func (s *sIamUserUsecase) Create(ctx context.Context, in iamin.UserCreateInp) (u
 			if invite.Status != consts.IamInviteStatusSent && invite.Status != consts.IamInviteStatusUnused {
 				return gerror.New(gi18n.T(ctx, "iam.invite.invalid_status"))
 			}
-			if invite.IsTemporary && invite.ExpireAt != nil && invite.ExpireAt.Before(gtime.Now()) {
-				_ = service.IamInviteDomain().UpdateInviteStatus(ctx, invite.Id, consts.IamInviteStatusExpired)
+			if invite.ExpireAt != nil && !invite.ExpireAt.After(gtime.Now()) {
 				return gerror.New(gi18n.T(ctx, "iam.invite.expired"))
 			}
 			if invite.Status == consts.IamInviteStatusSent && invite.InviteeEmail != "" && invite.InviteeEmail != in.Email {
@@ -437,6 +434,39 @@ func (s *sIamUserUsecase) ChangePassword(ctx context.Context, actor *model.Actor
 		return err
 	}
 	return service.IamSessionDomain().RemoveToken(ctx, gconv.String(actor.Id))
+}
+
+func (s *sIamUserUsecase) ResetPasskey(ctx context.Context, actor *model.Actor) (string, error) {
+	if actor == nil {
+		return "", gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
+	}
+
+	user, err := service.IamUserDomain().GetUserById(ctx, actor.Id)
+	if err != nil {
+		return "", err
+	}
+	if user == nil {
+		return "", gerror.New(gi18n.T(ctx, "iam.user.not_found"))
+	}
+
+	oldPasskey := user.Passkey
+	newPasskey := gmd5.MustEncryptString(grand.S(32))
+	if err := service.IamUserDomain().UpdatePasskey(ctx, actor.Id, newPasskey); err != nil {
+		return "", err
+	}
+
+	s.invalidatePasskeyActorCache(ctx, oldPasskey)
+	s.InvalidateUserCache(ctx, actor.Id)
+	return newPasskey, nil
+}
+
+func (s *sIamUserUsecase) invalidatePasskeyActorCache(ctx context.Context, passkey string) {
+	if passkey == "" {
+		return
+	}
+	passkeyKey := service.SysCache().KeyIamPasskeyActor(ctx, passkey)
+	_, _ = gcache.Remove(ctx, passkeyKey)
+	_ = service.SysCache().PublishInvalidate(ctx, passkeyKey)
 }
 
 func (s *sIamUserUsecase) calculateShareRatio(uploaded, downloaded uint64) float64 {

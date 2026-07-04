@@ -177,7 +177,7 @@ CREATE TABLE `iam_invite` (
     PRIMARY KEY (`id`),
     KEY `idx_inviter` (`inviter_id`),
     UNIQUE KEY `uk_hash` (`hash`),
-    KEY `idx_status` (`status`)
+    KEY `idx_status_expire` (`status`, `expire_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='邀请表';
 
 -- ============================================================

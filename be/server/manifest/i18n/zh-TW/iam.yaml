@@ -16,6 +16,7 @@ iam.invite.not_found: 邀請碼不存在
 iam.invite.page_min: 頁碼最小為1
 iam.invite.register_disabled: 全站開放註冊已關閉，必須使用邀請碼
 iam.invite.size_max: 單頁條數最大為100
+iam.invite.status_max: 邀請碼狀態無效
 iam.invite.user_id_req: 請指定用戶ID
 
 iam.session.account_banned: 賬號已被禁用或封禁

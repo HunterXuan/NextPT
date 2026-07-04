@@ -16,6 +16,7 @@ iam.invite.not_found: Invite code not found
 iam.invite.page_min: Page number must be at least 1
 iam.invite.register_disabled: Registration is invite-only, but no invite code was provided
 iam.invite.size_max: Page size cannot exceed 100
+iam.invite.status_max: Invalid invite code status
 iam.invite.user_id_req: Please specify user ID
 
 iam.session.account_banned: Account disabled or banned

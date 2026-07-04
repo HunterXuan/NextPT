@@ -18,6 +18,11 @@ import (
 
 type sAdminIamInviteUsecase struct{}
 
+const (
+	inviteHashAlphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
+	inviteHashLength   = 32
+)
+
 func NewAdminIamInviteUsecase() *sAdminIamInviteUsecase {
 	return &sAdminIamInviteUsecase{}
 }
@@ -28,13 +33,14 @@ func init() {
 
 func (s *sAdminIamInviteUsecase) Grant(ctx context.Context, actor *model.Actor, in adminin.IamInviteGrantInp) error {
 	var list []do.IamInvite
+	isTemporary := in.IsTemp || in.ExpireAt != nil
 	for i := 0; i < in.Amount; i++ {
 		list = append(list, do.IamInvite{
-			InviterId: 0,
-			Hash:      grand.S(32),
-			Status:    0,
-
-			ExpireAt: in.ExpireAt,
+			InviterId:   0,
+			Hash:        s.generateInviteHash(),
+			Status:      0,
+			IsTemporary: isTemporary,
+			ExpireAt:    in.ExpireAt,
 		})
 	}
 
@@ -46,4 +52,8 @@ func (s *sAdminIamInviteUsecase) Grant(ctx context.Context, actor *model.Actor, 
 	}
 
 	return nil
+}
+
+func (s *sAdminIamInviteUsecase) generateInviteHash() string {
+	return grand.Str(inviteHashAlphabet, inviteHashLength)
 }
