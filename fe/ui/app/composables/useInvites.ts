@@ -15,6 +15,7 @@ export interface InviteItem {
 export interface InviteListParams {
   page?: number
   size?: number
+  status?: number
 }
 
 export interface InviteListOut {
@@ -30,11 +31,16 @@ export interface InviteCheckOut {
 
 export function useInvites() {
   async function listInvites(params: InviteListParams = {}) {
+    const query: Record<string, number> = {
+      page: params.page || 1,
+      size: params.size || 20
+    }
+    if (params.status !== undefined) {
+      query.status = params.status
+    }
+
     return await fetchApi<InviteListOut>('/api/iam/invites', {
-      query: {
-        page: params.page || 1,
-        size: params.size || 20
-      }
+      query
     })
   }
 

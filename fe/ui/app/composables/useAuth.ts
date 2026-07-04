@@ -38,6 +38,10 @@ export interface PasswordInput {
   newPassword: string
 }
 
+export interface PasskeyResetOut {
+  passkey: string
+}
+
 export function useAuth() {
   const token = useCookie<string | null>('nextpt_token', {
     sameSite: 'lax',
@@ -105,6 +109,14 @@ export function useAuth() {
     clearLocalSession()
   }
 
+  async function resetPasskey() {
+    const data = await fetchApi<PasskeyResetOut>('/api/iam/users/me:resetPasskey', {
+      method: 'POST'
+    })
+    await fetchUser()
+    return data
+  }
+
   async function logout(remote = true) {
     if (remote && token.value) {
       try {
@@ -127,6 +139,7 @@ export function useAuth() {
     fetchUser,
     updateProfile,
     changePassword,
+    resetPasskey,
     logout,
     clearLocalSession
   }

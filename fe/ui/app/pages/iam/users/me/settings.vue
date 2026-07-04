@@ -32,16 +32,20 @@
         </aside>
 
         <main class="min-w-0">
-          <div v-if="activeSection === 'profile'">
+          <div v-if="visitedSections.includes('profile')" v-show="activeSection === 'profile'">
             <IamUserProfileForm />
           </div>
 
-          <div v-else-if="activeSection === 'security'" class="space-y-4">
-            <IamUserPasskeyCard />
+          <div
+            v-if="visitedSections.includes('security')"
+            v-show="activeSection === 'security'"
+            class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,430px)] xl:items-start"
+          >
             <IamUserSecurityForm />
+            <IamUserPasskeyCard />
           </div>
 
-          <div v-else>
+          <div v-if="visitedSections.includes('invites')" v-show="activeSection === 'invites'">
             <IamUserInvitesPanel />
           </div>
         </main>
@@ -83,11 +87,12 @@ const settingSections = computed(() => [
 ])
 
 const activeSection = ref<SettingSection>(normalizeSection(route.query.section))
+const visitedSections = ref<SettingSection[]>([activeSection.value])
 
 watch(
   () => route.query.section,
   (section) => {
-    activeSection.value = normalizeSection(section)
+    setActiveSectionValue(normalizeSection(section))
   }
 )
 
@@ -105,6 +110,13 @@ function setActiveSection(section: SettingSection) {
     query.section = section
   }
   router.replace({ query })
+}
+
+function setActiveSectionValue(section: SettingSection) {
+  activeSection.value = section
+  if (!visitedSections.value.includes(section)) {
+    visitedSections.value.push(section)
+  }
 }
 
 useSeoMeta({

@@ -6,6 +6,7 @@
     :alt="displayName"
     :class="imageClass"
     loading="lazy"
+    @load="handleImageLoad"
     @error="handleImageError"
   >
   <div
@@ -44,6 +45,11 @@ const props = withDefaults(defineProps<{
   alt: '',
   size: 'md'
 })
+
+const emit = defineEmits<{
+  loadError: []
+  loadSuccess: []
+}>()
 
 const attrs = useAttrs()
 const imageFailed = ref(false)
@@ -92,6 +98,11 @@ watch(avatarSrc, () => {
 
 function handleImageError() {
   imageFailed.value = true
+  emit('loadError')
+}
+
+function handleImageLoad() {
+  emit('loadSuccess')
 }
 
 function stableIndex(value: number | string) {

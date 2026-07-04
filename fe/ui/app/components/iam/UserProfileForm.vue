@@ -15,6 +15,8 @@
         :alt="user?.username || $t('user.profile.avatar')"
         size="xl"
         class="ring-1 ring-slate-200 dark:ring-slate-800"
+        @load-error="avatarLoadFailed = true"
+        @load-success="avatarLoadFailed = false"
       />
 
       <UFormField :label="$t('user.profile.avatar')">
@@ -24,6 +26,9 @@
           icon="i-lucide-image"
           :disabled="profilePending || loading"
         />
+        <p v-if="avatarLoadFailed && normalizedProfile.avatar" class="mt-1 text-xs text-amber-600 dark:text-amber-300">
+          {{ $t('user.profile.avatarLoadFailed') }}
+        </p>
       </UFormField>
 
       <UFormField :label="$t('user.profile.signature')">
@@ -62,6 +67,7 @@ const { user, fetchUser, updateProfile } = useAuth()
 
 const loading = ref(true)
 const profilePending = ref(false)
+const avatarLoadFailed = ref(false)
 
 const profileForm = reactive({
   avatar: '',
@@ -84,6 +90,10 @@ const profileChanged = computed(() => {
   return normalizedProfile.value.avatar !== originalProfile.avatar
     || normalizedProfile.value.signature !== originalProfile.signature
     || normalizedProfile.value.info !== originalProfile.info
+})
+
+watch(() => normalizedProfile.value.avatar, () => {
+  avatarLoadFailed.value = false
 })
 
 watch(

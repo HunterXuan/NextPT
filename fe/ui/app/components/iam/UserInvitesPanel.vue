@@ -13,11 +13,11 @@
       <div class="mb-4 flex flex-col gap-1">
         <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.invites.sendTitle') }}</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">
-          {{ availableInvites.length > 0 ? $t('user.invites.sendDescription') : $t('user.invites.noAvailable') }}
+          {{ availableInvitesPending ? $t('user.invites.loadingAvailable') : availableInvites.length > 0 ? $t('user.invites.sendDescription') : $t('user.invites.noAvailable') }}
         </p>
       </div>
 
-      <form class="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px_auto] md:items-end" @submit.prevent="handleInviteSend">
+      <form class="grid gap-3 md:grid-cols-[minmax(0,1fr)_260px_auto] md:items-start" @submit.prevent="handleInviteSend">
         <UFormField :label="$t('user.invites.email')" required>
           <UInput
             v-model="inviteEmail"
@@ -25,21 +25,26 @@
             type="email"
             size="lg"
             icon="i-lucide-mail"
-            :disabled="inviteSendPending || availableInvites.length === 0"
+            :disabled="inviteSendPending || availableInvitesPending || availableInvites.length === 0"
           />
         </UFormField>
         <UFormField :label="$t('user.invites.code')" required>
-          <USelect
-            v-model="selectedInviteHash"
-            class="w-full"
-            size="lg"
-            :items="inviteOptions"
-            value-key="value"
-            :placeholder="$t('user.invites.selectCode')"
-            :disabled="inviteSendPending || availableInvites.length === 0"
-          />
+          <div>
+            <USelect
+              v-model="selectedInviteHash"
+              class="w-full"
+              size="lg"
+              :items="inviteOptions"
+              value-key="value"
+              :placeholder="$t('user.invites.selectCode')"
+              :disabled="inviteSendPending || availableInvitesPending || availableInvites.length === 0"
+            />
+            <p v-if="selectedInviteValidityLabel" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              {{ selectedInviteValidityLabel }}
+            </p>
+          </div>
         </UFormField>
-        <UButton type="submit" color="primary" size="lg" icon="i-lucide-send" :loading="inviteSendPending" :disabled="!canSendInvite">
+        <UButton class="md:mt-6" type="submit" color="primary" size="lg" icon="i-lucide-send" :loading="inviteSendPending" :disabled="!canSendInvite">
           {{ $t('user.invites.send') }}
         </UButton>
       </form>
@@ -55,21 +60,51 @@
       {{ $t('user.invites.empty') }}
     </div>
     <div v-else class="mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
-      <div class="hidden grid-cols-[minmax(0,1fr)_minmax(0,1fr)_112px_132px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-medium text-slate-500 md:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+      <div class="hidden grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_136px_112px_132px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-medium text-slate-500 md:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
         <span>{{ $t('user.invites.code') }}</span>
         <span>{{ $t('user.invites.invitee') }}</span>
+        <span>{{ $t('user.invites.validUntil') }}</span>
         <span class="text-center">{{ $t('user.invites.statusLabel') }}</span>
         <span class="text-right">{{ $t('user.invites.updatedAt') }}</span>
       </div>
 
       <div class="divide-y divide-slate-100 dark:divide-slate-800">
-        <div v-for="invite in invites" :key="invite.id" class="grid gap-3 px-4 py-3 text-sm md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_112px_132px] md:items-center md:gap-4">
+        <div v-for="invite in invites" :key="invite.id" class="grid gap-3 px-4 py-3 text-sm md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_136px_112px_132px] md:items-center md:gap-4">
           <div class="min-w-0">
-            <p class="font-mono text-xs text-slate-700 dark:text-slate-300">{{ formatInviteHash(invite.hash) }}</p>
+            <div class="flex min-w-0 items-center gap-1">
+              <UTooltip
+                :text="invite.hash || '-'"
+                :content="{ side: 'top', sideOffset: 8 }"
+                :delay-duration="120"
+              >
+                <span class="min-w-0 truncate font-mono text-xs text-slate-700 dark:text-slate-300">
+                  {{ formatInviteHash(invite.hash) }}
+                </span>
+              </UTooltip>
+              <UTooltip
+                :text="$t('common.copy')"
+                :content="{ side: 'top', sideOffset: 8 }"
+                :delay-duration="120"
+              >
+                <UButton
+                  color="neutral"
+                  variant="ghost"
+                  size="xs"
+                  icon="i-lucide-copy"
+                  :aria-label="$t('common.copy')"
+                  :disabled="!invite.hash"
+                  @click="copyInviteHash(invite)"
+                />
+              </UTooltip>
+            </div>
+            <p class="mt-1 text-xs text-slate-500 md:hidden dark:text-slate-400">{{ $t('user.invites.validUntil') }} {{ inviteValidUntilText(invite) }}</p>
             <p class="mt-1 text-xs text-slate-500 md:hidden dark:text-slate-400">{{ $t('user.invites.createdAt') }} {{ formatDateTime(invite.createdAt, locale) }}</p>
           </div>
           <p class="min-w-0 truncate text-sm text-slate-600 dark:text-slate-300">
             {{ invite.inviteeEmail || invite.inviteeName || '-' }}
+          </p>
+          <p class="hidden text-xs text-slate-500 md:block dark:text-slate-400">
+            {{ inviteValidUntilText(invite) }}
           </p>
           <UBadge class="w-fit md:justify-self-center" :color="inviteStatusColor(invite.status)" variant="soft">
             {{ inviteStatusLabel(invite.status) }}
@@ -105,27 +140,37 @@ const { fetchUser } = useAuth()
 const inviteService = useInvites()
 
 const invites = ref<InviteItem[]>([])
+const availableInvites = ref<InviteItem[]>([])
 const inviteTotal = ref(0)
 const invitePage = ref(1)
 const inviteSize = 10
 const invitesPending = ref(true)
+const availableInvitesPending = ref(true)
 const invitesError = ref('')
 const inviteSendPending = ref(false)
 const inviteEmail = ref('')
 const selectedInviteHash = ref('')
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
-const availableInvites = computed(() => invites.value.filter((invite) => invite.status === 0))
 const inviteOptions = computed(() => availableInvites.value.map((invite) => ({
   label: formatInviteHash(invite.hash),
   value: invite.hash
 })))
+const selectedInvite = computed(() => availableInvites.value.find((invite) => invite.hash === selectedInviteHash.value))
+const selectedInviteValidityLabel = computed(() => {
+  if (!selectedInvite.value) return ''
+  if (!selectedInvite.value.expireAt) return t('user.invites.permanent')
+  return t('user.invites.expiresAt', { time: formatDateTime(selectedInvite.value.expireAt, locale.value) })
+})
 const inviteTotalPages = computed(() => Math.max(1, Math.ceil(inviteTotal.value / inviteSize)))
 const canSendInvite = computed(() => {
-  return Boolean(selectedInviteHash.value && inviteEmail.value.trim() && !inviteSendPending.value && availableInvites.value.length > 0)
+  return Boolean(selectedInviteHash.value && inviteEmail.value.trim() && !inviteSendPending.value && !availableInvitesPending.value && availableInvites.value.length > 0)
 })
 
-onMounted(loadInvites)
+onMounted(() => {
+  void loadInvites()
+  void loadAvailableInvites()
+})
 
 async function loadInvites() {
   if (invitesPending.value && invites.value.length > 0) return
@@ -152,16 +197,33 @@ async function loadInvites() {
     invites.value = data.list || []
     inviteTotal.value = data.total || 0
 
-    if (!selectedInviteHash.value || !availableInvites.value.some((invite) => invite.hash === selectedInviteHash.value)) {
-      selectedInviteHash.value = availableInvites.value[0]?.hash || ''
-    }
   } catch (error) {
     invites.value = []
     inviteTotal.value = 0
-    selectedInviteHash.value = ''
     invitesError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
   } finally {
     invitesPending.value = false
+  }
+}
+
+async function loadAvailableInvites() {
+  availableInvitesPending.value = true
+
+  try {
+    const data = await inviteService.listInvites({
+      page: 1,
+      size: 100,
+      status: 0
+    })
+    availableInvites.value = data.list || []
+    if (!selectedInviteHash.value || !availableInvites.value.some((invite) => invite.hash === selectedInviteHash.value)) {
+      selectedInviteHash.value = availableInvites.value[0]?.hash || ''
+    }
+  } catch {
+    availableInvites.value = []
+    selectedInviteHash.value = ''
+  } finally {
+    availableInvitesPending.value = false
   }
 }
 
@@ -182,7 +244,7 @@ async function handleInviteSend() {
       icon: 'i-lucide-check-circle'
     })
     inviteEmail.value = ''
-    await Promise.all([loadInvites(), fetchUser()])
+    await Promise.all([loadInvites(), loadAvailableInvites(), fetchUser()])
   } catch (error) {
     toast.add({
       title: error instanceof ApiError ? error.message : t('common.requestFailed'),
@@ -194,6 +256,17 @@ async function handleInviteSend() {
   }
 }
 
+async function copyInviteHash(invite: InviteItem) {
+  if (!invite.hash || typeof navigator === 'undefined' || !navigator.clipboard) return
+
+  await navigator.clipboard.writeText(invite.hash)
+  toast.add({
+    title: t('user.invites.copied'),
+    color: 'success',
+    icon: 'i-lucide-check-circle'
+  })
+}
+
 function formatInviteHash(hash: string) {
   if (!hash) return '-'
   if (hash.length <= 12) return hash
@@ -202,8 +275,11 @@ function formatInviteHash(hash: string) {
 
 function inviteTimeLabel(invite: InviteItem) {
   if (invite.usedAt) return formatDateTime(invite.usedAt, locale.value)
-  if (invite.expireAt) return formatDateTime(invite.expireAt, locale.value)
   return formatDateTime(invite.createdAt, locale.value)
+}
+
+function inviteValidUntilText(invite: InviteItem) {
+  return invite.expireAt ? formatDateTime(invite.expireAt, locale.value) : t('user.invites.permanent')
 }
 
 function inviteStatusLabel(status: number) {
