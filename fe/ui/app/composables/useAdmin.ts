@@ -293,14 +293,33 @@ export interface AdminSysCronLogListOut {
 export interface AdminModReportItem {
   id: number
   reporter_id: number
+  reporter: AdminUserSummary
   target_type: string
   target_id: number
+  target: AdminModReportTarget
   reason: string
   status: number
   dealt_by: number
+  dealt_user: AdminUserSummary
   dealt_comment: string
   dealt_at?: string | null
   created_at?: string | null
+}
+
+export interface AdminUserSummary {
+  id: number
+  username: string
+  avatar: string
+}
+
+export interface AdminModReportTarget {
+  type: string
+  id: number
+  title: string
+  parent_type: string
+  parent_id: number
+  status: 'normal' | 'deleted' | 'unavailable' | string
+  author: AdminUserSummary
 }
 
 export interface AdminModReportListOut {
