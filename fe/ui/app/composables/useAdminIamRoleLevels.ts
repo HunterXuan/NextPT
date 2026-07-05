@@ -18,7 +18,7 @@ export function useAdminIamRoleLevels(roles: Ref<AdminIamRole[]>) {
   }
 
   function roleNameWithLevel(role: AdminIamRole) {
-    return t('admin.forum.roles.withLevel', {
+    return t('admin.iam.roles.withLevel', {
       name: roleName(role),
       level: numberFormatter.value.format(Number(role.level || 0))
     })
@@ -30,7 +30,7 @@ export function useAdminIamRoleLevels(roles: Ref<AdminIamRole[]>) {
   }
 
   function roleLevelLabel(level: number) {
-    return t('admin.forum.roles.level', { level: numberFormatter.value.format(Number(level || 0)) })
+    return t('admin.iam.roles.levelValue', { level: numberFormatter.value.format(Number(level || 0)) })
   }
 
   function hasRoleLevel(level: number) {

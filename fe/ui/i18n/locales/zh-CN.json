@@ -1041,6 +1041,13 @@
           "confirmed": "正常",
           "disabled": "停用"
         },
+        "panels": {
+          "selectHint": "从左侧列表选择一个用户后，可以查看资料、统计、限制和权限。",
+          "profile": "账号资料",
+          "stat": "分享数据",
+          "mod": "账号限制",
+          "permission": "手动权限"
+        },
         "form": {
           "empty": "选择用户",
           "status": "状态",
@@ -1051,14 +1058,9 @@
           "saved": "用户已更新",
           "kick": "踢下线",
           "confirmKick": "确认踢下线「{name}」？",
+          "confirmKickTitle": "确认踢下线？",
+          "confirmKickDescription": "该用户当前登录会话将被清理，需要重新登录。",
           "kicked": "用户会话已清理"
-        },
-        "ban": {
-          "title": "封禁",
-          "reason": "原因",
-          "durationDays": "天数",
-          "submit": "封禁用户",
-          "success": "封禁已生效"
         },
         "mod": {
           "title": "账号限制",
@@ -1074,6 +1076,8 @@
           "remove": "解除",
           "removed": "账号限制已解除",
           "confirmRemove": "确认解除「{type}」账号限制？",
+          "confirmRemoveTitle": "确认解除限制？",
+          "confirmRemoveDescription": "将解除当前用户的「{type}」限制。",
           "empty": "暂无账号限制记录",
           "status": {
             "active": "生效中",
@@ -1091,11 +1095,26 @@
         "permission": {
           "title": "手动权限",
           "key": "权限",
+          "placeholder": "搜索通配权限，或输入 * / xxx:*",
+          "empty": "没有匹配的权限，可继续手动输入",
           "deny": "作为拒绝权限",
           "grant": "添加",
           "revoke": "撤销",
-          "granted": "权限已添加",
-          "revoked": "权限已撤销"
+          "grantSelected": "添加 {count} 条",
+          "revokeSelected": "撤销 {count} 条",
+          "granted": "已添加 {count} 条权限",
+          "revoked": "已撤销 {count} 条权限",
+          "roleTitle": "角色权限",
+          "userTitle": "用户权限",
+          "availableTitle": "可添加权限",
+          "selectedCount": "已选 {count} 条",
+          "manualHint": "只能在这里撤销手动权限",
+          "noRolePermissions": "该角色暂无权限",
+          "noUserPermissions": "该用户暂无额外权限",
+          "sources": {
+            "manual": "手动",
+            "mod": "限制"
+          }
         },
         "stat": {
           "title": "用户统计",
@@ -1117,6 +1136,8 @@
         "saved": "角色已保存",
         "deleted": "角色已删除",
         "confirmDelete": "确认删除角色「{name}」？",
+        "levelValue": "等级 {level}",
+        "withLevel": "{name} · {level}",
         "stats": {
           "total": "全部",
           "staff": "管理组"

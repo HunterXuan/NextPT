@@ -19,14 +19,13 @@
           </div>
 
           <div v-if="pending" class="overflow-x-auto">
-            <table class="min-w-[760px] w-full table-fixed border-collapse text-left">
+            <table class="min-w-[700px] w-full table-fixed border-collapse text-left">
               <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
                 <tr>
-                  <th class="w-[30%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
-                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.description') }}</th>
+                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
+                  <th class="w-[40%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.description') }}</th>
                   <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.sort') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.actions') }}</th>
+                  <th class="w-[16%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -38,7 +37,6 @@
                   <td class="px-3 py-3"><div class="h-4 w-40 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
                   <td class="px-3 py-3"><div class="ml-auto h-4 w-10 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
                   <td class="px-3 py-3"><div class="ml-auto h-4 w-10 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="ml-auto h-4 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
                 </tr>
               </tbody>
             </table>
@@ -55,32 +53,36 @@
           </div>
 
           <div v-else class="overflow-x-auto">
-            <table class="min-w-[760px] w-full table-fixed border-collapse text-left">
+            <table class="min-w-[700px] w-full table-fixed border-collapse text-left">
               <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
                 <tr>
-                  <th class="w-[30%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
-                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.description') }}</th>
+                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.name') }}</th>
+                  <th class="w-[40%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.categories.table.description') }}</th>
                   <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.sort') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.actions') }}</th>
+                  <th class="w-[16%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.categories.table.minRoleView') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="category in categories"
                   :key="category.id"
-                  class="border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
+                  class="cursor-pointer border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
                   :class="selectedId === category.id ? 'bg-cyan-50/70 dark:bg-cyan-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+                  role="button"
+                  tabindex="0"
+                  @click="selectCategory(category)"
+                  @keydown.enter.prevent="selectCategory(category)"
+                  @keydown.space.prevent="selectCategory(category)"
                 >
                   <td class="px-3 py-2.5 align-middle">
-                    <button type="button" class="block max-w-full text-left" @click="selectCategory(category)">
+                    <div class="block max-w-full text-left">
                       <span class="block truncate text-sm font-semibold text-slate-950 hover:text-cyan-700 dark:text-white dark:hover:text-cyan-300">
                         {{ categoryName(category) }}
                       </span>
                       <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">
                         {{ formatDateTime(category.updatedAt || category.createdAt, locale) }}
                       </span>
-                    </button>
+                    </div>
                   </td>
                   <td class="px-3 py-2.5 align-middle text-sm text-slate-600 dark:text-slate-300">
                     <span class="block truncate">{{ categoryDescription(category) || '-' }}</span>
@@ -94,57 +96,6 @@
                         {{ roleNameByLevel(category.minRoleView) }}
                       </span>
                     </span>
-                  </td>
-                  <td class="px-3 py-2.5 align-middle">
-                    <div class="flex items-center justify-end gap-2">
-                      <UTooltip
-                        :text="$t('admin.actions.edit')"
-                        :content="{ side: 'top', sideOffset: 8 }"
-                        :delay-duration="120"
-                      >
-                        <UButton
-                          color="neutral"
-                          variant="ghost"
-                          size="sm"
-                          icon="i-lucide-pencil"
-                          :aria-label="$t('admin.actions.edit')"
-                          @click="selectCategory(category)"
-                        />
-                      </UTooltip>
-                      <UPopover
-                        :content="{ side: 'top', align: 'end', sideOffset: 8 }"
-                        :ui="{ content: 'w-72 p-3' }"
-                      >
-                        <UButton
-                          color="error"
-                          variant="ghost"
-                          size="sm"
-                          icon="i-lucide-trash-2"
-                          :loading="deletingId === category.id"
-                          :disabled="deletingId !== null"
-                          :aria-label="$t('admin.actions.delete')"
-                        />
-
-                        <template #content="{ close }">
-                          <div class="space-y-3">
-                            <p class="text-sm font-medium text-slate-950 dark:text-white">
-                              {{ $t('admin.actions.confirmDeleteTitle') }}
-                            </p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">
-                              {{ $t('admin.actions.deleteIrreversible') }}
-                            </p>
-                            <div class="flex justify-end gap-2">
-                              <UButton color="neutral" variant="ghost" size="xs" type="button" @click="close()">
-                                {{ $t('common.cancel') }}
-                              </UButton>
-                              <UButton color="error" size="xs" type="button" icon="i-lucide-trash-2" :loading="deletingId === category.id" :disabled="deletingId !== null" @click="deleteCategory(category, close)">
-                                {{ $t('admin.actions.delete') }}
-                              </UButton>
-                            </div>
-                          </div>
-                        </template>
-                      </UPopover>
-                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -233,13 +184,51 @@
               {{ formError }}
             </p>
 
-            <div class="flex flex-col gap-2 border-t border-slate-200 pt-4 sm:flex-row sm:justify-end dark:border-slate-800">
-              <UButton type="button" color="neutral" variant="outline" icon="i-lucide-rotate-ccw" :disabled="saving || !isFormDirty" @click="resetFormChanges">
-                {{ selectedId ? $t('admin.actions.discardChanges') : $t('admin.actions.reset') }}
-              </UButton>
-              <UButton type="submit" color="primary" icon="i-lucide-save" :loading="saving" :disabled="!canSubmit">
-                {{ $t('common.save') }}
-              </UButton>
+            <div class="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+              <div class="flex justify-start">
+                <UPopover
+                  v-if="selectedCategory"
+                  :content="{ side: 'top', align: 'start', sideOffset: 8 }"
+                  :ui="{ content: 'w-72 p-3' }"
+                >
+                  <UButton
+                    color="error"
+                    variant="soft"
+                    icon="i-lucide-trash-2"
+                    :loading="deletingId === selectedCategory.id"
+                    :disabled="deletingId !== null || saving"
+                  >
+                    {{ $t('admin.actions.delete') }}
+                  </UButton>
+
+                  <template #content="{ close }">
+                    <div class="space-y-3">
+                      <p class="text-sm font-medium text-slate-950 dark:text-white">
+                        {{ $t('admin.actions.confirmDeleteTitle') }}
+                      </p>
+                      <p class="text-xs text-slate-500 dark:text-slate-400">
+                        {{ $t('admin.actions.deleteIrreversible') }}
+                      </p>
+                      <div class="flex justify-end gap-2">
+                        <UButton color="neutral" variant="ghost" size="xs" type="button" @click="close()">
+                          {{ $t('common.cancel') }}
+                        </UButton>
+                        <UButton color="error" size="xs" type="button" icon="i-lucide-trash-2" :loading="deletingId === selectedCategory.id" :disabled="deletingId !== null" @click="deleteCategory(selectedCategory, close)">
+                          {{ $t('admin.actions.delete') }}
+                        </UButton>
+                      </div>
+                    </div>
+                  </template>
+                </UPopover>
+              </div>
+              <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                <UButton type="button" color="neutral" variant="outline" icon="i-lucide-rotate-ccw" :disabled="saving || !isFormDirty" @click="resetFormChanges">
+                  {{ selectedId ? $t('admin.actions.discardChanges') : $t('admin.actions.reset') }}
+                </UButton>
+                <UButton type="submit" color="primary" icon="i-lucide-save" :loading="saving" :disabled="!canSubmit">
+                  {{ $t('common.save') }}
+                </UButton>
+              </div>
             </div>
           </form>
         </section>

@@ -1041,6 +1041,13 @@
           "confirmed": "Active",
           "disabled": "Disabled"
         },
+        "panels": {
+          "selectHint": "Select a user from the list to manage profile, stats, restrictions, and permissions.",
+          "profile": "Profile",
+          "stat": "Sharing",
+          "mod": "Restrictions",
+          "permission": "Permissions"
+        },
         "form": {
           "empty": "Select a user",
           "status": "Status",
@@ -1051,14 +1058,9 @@
           "saved": "User updated",
           "kick": "Kick sessions",
           "confirmKick": "Kick sessions for \"{name}\"?",
+          "confirmKickTitle": "Kick sessions?",
+          "confirmKickDescription": "The user's active sessions will be cleared and they will need to sign in again.",
           "kicked": "User sessions cleared"
-        },
-        "ban": {
-          "title": "Ban",
-          "reason": "Reason",
-          "durationDays": "Days",
-          "submit": "Ban user",
-          "success": "Ban applied"
         },
         "mod": {
           "title": "Account restrictions",
@@ -1074,6 +1076,8 @@
           "remove": "Remove",
           "removed": "Restriction removed",
           "confirmRemove": "Remove \"{type}\" restriction?",
+          "confirmRemoveTitle": "Remove restriction?",
+          "confirmRemoveDescription": "This will remove the current \"{type}\" restriction from the user.",
           "empty": "No account restriction records",
           "status": {
             "active": "Active",
@@ -1091,11 +1095,26 @@
         "permission": {
           "title": "Manual permission",
           "key": "Permission",
+          "placeholder": "Search wildcard permissions, or enter * / xxx:*",
+          "empty": "No matching permission. You can keep typing manually.",
           "deny": "Deny permission",
           "grant": "Add",
           "revoke": "Revoke",
-          "granted": "Permission added",
-          "revoked": "Permission revoked"
+          "grantSelected": "Add {count}",
+          "revokeSelected": "Revoke {count}",
+          "granted": "{count} permissions added",
+          "revoked": "{count} permissions revoked",
+          "roleTitle": "Role permissions",
+          "userTitle": "User permissions",
+          "availableTitle": "Available permissions",
+          "selectedCount": "{count} selected",
+          "manualHint": "Only manual permissions can be revoked here",
+          "noRolePermissions": "This role has no permissions",
+          "noUserPermissions": "This user has no extra permissions",
+          "sources": {
+            "manual": "Manual",
+            "mod": "Restriction"
+          }
         },
         "stat": {
           "title": "User stats",
@@ -1117,6 +1136,8 @@
         "saved": "Role saved",
         "deleted": "Role deleted",
         "confirmDelete": "Delete role \"{name}\"?",
+        "levelValue": "Level {level}",
+        "withLevel": "{name} · {level}",
         "stats": {
           "total": "Total",
           "staff": "Staff"

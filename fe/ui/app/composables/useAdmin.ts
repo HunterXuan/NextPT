@@ -88,6 +88,7 @@ export interface AdminIamUser {
   vipUntil?: string | null
   vipRemark?: string
   invitedBy?: number
+  avatar?: string | null
   lastLogin?: string | null
   lastIp?: string
   createdAt?: string | null
@@ -112,14 +113,40 @@ export interface AdminIamUserUpdateInput {
   passkey?: string
 }
 
-export interface AdminIamUserBanInput {
-  reason: string
-  durationDays: number
+export interface AdminIamUserPermissionInput {
+  permKeys: string[]
+  isDeny: boolean
 }
 
-export interface AdminIamUserPermissionInput {
+export interface AdminIamUserPermissionRevokeInput {
+  ids: number[]
+}
+
+export interface AdminIamUserPermissionQuery {
+  sourceType?: number
+  wildcardOnly?: boolean
+  page?: number
+  size?: number
+}
+
+export interface AdminIamUserAcl {
+  id: number
+  userId: number
   permKey: string
+  rawPermKey: string
   isDeny: boolean
+  sourceType: number
+  sourceId: number
+  expireAt?: string | null
+  isActive: boolean
+  createdAt?: string | null
+}
+
+export interface AdminIamUserPermissionDetailOut {
+  userAcls: AdminIamUserAcl[]
+  total: number
+  page: number
+  size: number
 }
 
 export interface AdminIamUserStat {
@@ -425,13 +452,6 @@ export function useAdmin() {
     })
   }
 
-  async function banIamUser(id: number, input: AdminIamUserBanInput) {
-    await fetchApi(`/api/admin/iam/users/${id}:ban`, {
-      method: 'POST',
-      body: input
-    })
-  }
-
   async function deleteIamUserSessions(id: number) {
     await fetchApi(`/api/admin/iam/users/${id}/sessions`, {
       method: 'DELETE'
@@ -449,6 +469,10 @@ export function useAdmin() {
     })
   }
 
+  async function getIamUserPermissions(id: number, query?: AdminIamUserPermissionQuery) {
+    return await fetchApi<AdminIamUserPermissionDetailOut>(`/api/admin/iam/users/${id}/permissions`, { query })
+  }
+
   async function grantIamUserPermission(id: number, input: AdminIamUserPermissionInput) {
     await fetchApi(`/api/admin/iam/users/${id}/permissions:grant`, {
       method: 'POST',
@@ -456,7 +480,7 @@ export function useAdmin() {
     })
   }
 
-  async function revokeIamUserPermission(id: number, input: AdminIamUserPermissionInput) {
+  async function revokeIamUserPermission(id: number, input: AdminIamUserPermissionRevokeInput) {
     await fetchApi(`/api/admin/iam/users/${id}/permissions:revoke`, {
       method: 'POST',
       body: input
@@ -620,10 +644,10 @@ export function useAdmin() {
     deleteForumNode,
     listIamUsers,
     updateIamUser,
-    banIamUser,
     deleteIamUserSessions,
     getIamUserStat,
     incrementIamUserStat,
+    getIamUserPermissions,
     grantIamUserPermission,
     revokeIamUserPermission,
     grantIamInvites,
