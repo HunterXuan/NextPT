@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"server/internal/model"
+	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/modin"
 	"server/internal/model/out/modout"
@@ -80,7 +81,7 @@ func (s *sModCheaterUsecase) Resolve(ctx context.Context, actor *model.Actor, in
 		return gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
 	}
 
-	return service.ModCheaterDomain().Update(ctx, in.Id, entity.ModCheaterLog{
+	return service.ModCheaterDomain().Update(ctx, in.Id, do.ModCheaterLog{
 		IsDealt: true,
 		DealtBy: actor.Id,
 		Comment: in.Comment,

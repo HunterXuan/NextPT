@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"server/internal/model"
+	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/modin"
 	"server/internal/model/out/modout"
@@ -94,7 +95,7 @@ func (s *sModReportUsecase) Resolve(ctx context.Context, actor *model.Actor, in 
 		return gerror.New(gi18n.T(ctx, "moderation.report.already_resolved"))
 	}
 
-	return service.ModReportDomain().Update(ctx, in.Id, entity.ModReport{
+	return service.ModReportDomain().Update(ctx, in.Id, do.ModReport{
 		Status:       in.Status,
 		DealtBy:      actor.Id,
 		DealtComment: in.Comment,

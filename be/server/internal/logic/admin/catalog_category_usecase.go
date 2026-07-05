@@ -42,11 +42,15 @@ func (s *sAdminCatalogCategoryUsecase) Update(ctx context.Context, actor *model.
 	if in.NameI18N != nil {
 		nameI18N, _ = gjson.Encode(in.NameI18N)
 	}
-	uploadConfig, err := s.encodeUploadConfig(in.UploadConfig)
-	if err != nil {
-		return err
+	var uploadConfig *[]byte
+	if in.UploadConfig != nil {
+		encodedConfig, err := s.encodeUploadConfig(in.UploadConfig)
+		if err != nil {
+			return err
+		}
+		uploadConfig = &encodedConfig
 	}
-	return service.CatalogCategoryDomain().AdminUpdateCategory(ctx, in.Id, nameI18N, in.Slug, in.SortOrder, in.Enabled, &uploadConfig)
+	return service.CatalogCategoryDomain().AdminUpdateCategory(ctx, in.Id, nameI18N, in.Slug, in.SortOrder, in.Enabled, uploadConfig)
 }
 
 func (s *sAdminCatalogCategoryUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryDeleteInp) error {
