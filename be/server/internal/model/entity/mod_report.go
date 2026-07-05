@@ -12,7 +12,7 @@ import (
 type ModReport struct {
 	Id           uint64      `json:"id"           orm:"id"            description:""`
 	ReporterId   uint64      `json:"reporterId"   orm:"reporter_id"   description:""`
-	TargetType   string      `json:"targetType"   orm:"target_type"   description:"torrent/user/offer/request/forum_post/comment/subtitle"`
+	TargetType   string      `json:"targetType"   orm:"target_type"   description:"catalog_torrent/catalog_comment/catalog_subtitle/forum_topic/forum_reply"`
 	TargetId     uint64      `json:"targetId"     orm:"target_id"     description:""`
 	Reason       string      `json:"reason"       orm:"reason"        description:""`
 	Status       int         `json:"status"       orm:"status"        description:"0=pending 1=resolved 2=rejected"`

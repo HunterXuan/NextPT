@@ -23,7 +23,7 @@ type ModReportDao struct {
 type ModReportColumns struct {
 	Id           string //
 	ReporterId   string //
-	TargetType   string // torrent/user/offer/request/forum_post/comment/subtitle
+	TargetType   string // catalog_torrent/catalog_comment/catalog_subtitle/forum_topic/forum_reply
 	TargetId     string //
 	Reason       string //
 	Status       string // 0=pending 1=resolved 2=rejected

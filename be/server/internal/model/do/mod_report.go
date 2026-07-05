@@ -14,7 +14,7 @@ type ModReport struct {
 	g.Meta       `orm:"table:mod_report, do:true"`
 	Id           any         //
 	ReporterId   any         //
-	TargetType   any         // torrent/user/offer/request/forum_post/comment/subtitle
+	TargetType   any         // catalog_torrent/catalog_comment/catalog_subtitle/forum_topic/forum_reply
 	TargetId     any         //
 	Reason       any         //
 	Status       any         // 0=pending 1=resolved 2=rejected
