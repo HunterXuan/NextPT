@@ -1157,6 +1157,8 @@
         "form": {
           "create": "New role",
           "edit": "Edit role",
+          "name": "Name",
+          "primaryLocale": "Primary: {locale}",
           "nameZhCN": "Simplified Chinese name",
           "nameZhTW": "Traditional Chinese name",
           "nameEnUS": "English name",
@@ -1164,9 +1166,14 @@
           "isStaff": "Staff",
           "permissions": "Permissions",
           "noPermissions": "No permissions available",
-          "customPermission": "Custom permission",
-          "addPermission": "Add",
           "rules": "Rules JSON",
+          "rulesPlaceholder": "Enter a JSON object",
+          "rulesEditorHint": "Tab inserts two spaces. Use fullscreen for longer rules.",
+          "rulesFullscreen": "Edit rules fullscreen",
+          "rulesFormat": "Format",
+          "rulesValid": "Valid",
+          "rulesInvalidShort": "Invalid",
+          "rulesJsonInvalid": "Rules JSON is invalid",
           "rulesInvalid": "Rules must be a JSON object"
         }
       },

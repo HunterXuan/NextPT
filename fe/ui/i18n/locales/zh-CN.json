@@ -1157,6 +1157,8 @@
         "form": {
           "create": "新建角色",
           "edit": "编辑角色",
+          "name": "名称",
+          "primaryLocale": "主语言：{locale}",
           "nameZhCN": "简体中文名称",
           "nameZhTW": "繁体中文名称",
           "nameEnUS": "英文名称",
@@ -1164,9 +1166,14 @@
           "isStaff": "管理组",
           "permissions": "权限",
           "noPermissions": "暂无可选权限",
-          "customPermission": "自定义权限",
-          "addPermission": "添加",
           "rules": "规则 JSON",
+          "rulesPlaceholder": "输入 JSON 对象",
+          "rulesEditorHint": "Tab 插入两个空格，全屏适合编辑较长规则。",
+          "rulesFullscreen": "全屏编辑规则",
+          "rulesFormat": "格式化",
+          "rulesValid": "有效",
+          "rulesInvalidShort": "无效",
+          "rulesJsonInvalid": "规则不是有效的 JSON",
           "rulesInvalid": "规则必须是 JSON 对象"
         }
       },
