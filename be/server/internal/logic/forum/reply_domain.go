@@ -72,6 +72,15 @@ func (s *sForumReplyDomain) GetReplyById(ctx context.Context, replyId uint64) (*
 	return &reply, nil
 }
 
+func (s *sForumReplyDomain) GetRepliesByIds(ctx context.Context, ids []uint64) ([]entity.ForumReply, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var replies []entity.ForumReply
+	err := dao.ForumReply.Ctx(ctx).WhereIn(dao.ForumReply.Columns().Id, ids).Scan(&replies)
+	return replies, err
+}
+
 func (s *sForumReplyDomain) ToggleLike(ctx context.Context, actor *model.Actor, replyId uint64) (bool, error) {
 	likeColumns := dao.ForumReplyLike.Columns()
 	replyColumns := dao.ForumReply.Columns()

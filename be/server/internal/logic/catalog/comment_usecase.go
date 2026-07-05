@@ -38,7 +38,7 @@ func (s *sCatalogCommentUsecase) Create(ctx context.Context, actor *model.Actor,
 		return nil, err
 	}
 
-	id, err := service.CatalogCommentDomain().CreateComment(ctx, "torrent", in.Id, actor.Id, in.Content)
+	id, err := service.CatalogCommentDomain().CreateComment(ctx, consts.CatalogCommentTargetTypeCatalogTorrent, in.Id, actor.Id, in.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (s *sCatalogCommentUsecase) List(ctx context.Context, actor *model.Actor, i
 		return nil, err
 	}
 
-	comments, total, err := service.CatalogCommentDomain().QueryCommentsByTarget(ctx, "torrent", in.Id, in.Page, in.Size)
+	comments, total, err := service.CatalogCommentDomain().QueryCommentsByTarget(ctx, consts.CatalogCommentTargetTypeCatalogTorrent, in.Id, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +154,7 @@ func (s *sCatalogCommentUsecase) ToggleLike(ctx context.Context, actor *model.Ac
 	if err != nil {
 		return nil, err
 	}
-	if comment.TargetType != "torrent" || comment.TargetId != in.Id {
+	if comment.TargetType != consts.CatalogCommentTargetTypeCatalogTorrent || comment.TargetId != in.Id {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.comment.not_found"))
 	}
 
@@ -186,7 +186,7 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 	if err != nil {
 		return err
 	}
-	if comment.TargetType != "torrent" || comment.TargetId != in.Id {
+	if comment.TargetType != consts.CatalogCommentTargetTypeCatalogTorrent || comment.TargetId != in.Id {
 		return gerror.New(gi18n.T(ctx, "catalog.comment.not_found"))
 	}
 
@@ -230,15 +230,17 @@ func (s *sCatalogCommentUsecase) Report(ctx context.Context, actor *model.Actor,
 	if err != nil {
 		return err
 	}
-	if comment.TargetType == "torrent" {
-		_, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, comment.TargetId)
-		if err != nil {
-			return err
-		}
+	if comment.TargetType != consts.CatalogCommentTargetTypeCatalogTorrent || comment.TargetId != in.Id {
+		return gerror.New(gi18n.T(ctx, "catalog.comment.not_found"))
+	}
+
+	_, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, comment.TargetId)
+	if err != nil {
+		return err
 	}
 
 	return service.ModReportUsecase().Create(ctx, actor, modin.CreateReportInp{
-		TargetType: "comment",
+		TargetType: consts.ModReportTargetTypeCatalogComment,
 		TargetId:   in.Cid,
 		Reason:     in.Reason,
 	})

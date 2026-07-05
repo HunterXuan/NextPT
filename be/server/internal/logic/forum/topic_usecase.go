@@ -318,7 +318,7 @@ func (s *sForumTopicUsecase) ReportTopic(ctx context.Context, actor *model.Actor
 		return err
 	}
 	return service.ModReportUsecase().Create(ctx, actor, modin.CreateReportInp{
-		TargetType: "forum_topic",
+		TargetType: consts.ModReportTargetTypeForumTopic,
 		TargetId:   in.Id,
 		Reason:     in.Reason,
 	})

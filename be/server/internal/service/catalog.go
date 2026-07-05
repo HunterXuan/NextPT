@@ -32,6 +32,7 @@ type (
 	ICatalogCommentDomain interface {
 		CreateComment(ctx context.Context, targetType string, targetId uint64, userId uint64, content string) (uint64, error)
 		GetCommentById(ctx context.Context, id uint64) (*entity.CatalogComment, error)
+		GetCommentsByIds(ctx context.Context, ids []uint64) ([]entity.CatalogComment, error)
 		QueryCommentsByTarget(ctx context.Context, targetType string, targetId uint64, page int, size int) ([]entity.CatalogComment, int, error)
 		ToggleLike(ctx context.Context, userId uint64, commentId uint64) (bool, error)
 		GetCommentLikesByUser(ctx context.Context, userId uint64, commentIds []uint64) ([]entity.CatalogCommentLike, error)
@@ -50,6 +51,7 @@ type (
 		InsertSubtitle(ctx context.Context, torrentId uint64, userId uint64, fileName string, ext string, size int, language string, anonymous bool) (uint64, error)
 		UpdateSubtitleStoragePath(ctx context.Context, id uint64, path string) error
 		GetSubtitleById(ctx context.Context, id uint64) (*entity.CatalogSubtitle, error)
+		GetSubtitlesByIds(ctx context.Context, ids []uint64) ([]entity.CatalogSubtitle, error)
 		IncrementDownloadCount(ctx context.Context, id uint64) error
 		QuerySubtitles(ctx context.Context, torrentId uint64, page int, size int) ([]entity.CatalogSubtitle, int, error)
 		UpdateSubtitle(ctx context.Context, id uint64, language string, userId uint64, isAdmin bool) error

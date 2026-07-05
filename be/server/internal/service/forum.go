@@ -43,6 +43,7 @@ type (
 		QueryRepliesByTopic(ctx context.Context, topicId uint64, page int, size int) ([]entity.ForumReply, int, error)
 		QueryReplyIdsByTopic(ctx context.Context, topicId uint64) ([]uint64, error)
 		GetReplyById(ctx context.Context, replyId uint64) (*entity.ForumReply, error)
+		GetRepliesByIds(ctx context.Context, ids []uint64) ([]entity.ForumReply, error)
 		ToggleLike(ctx context.Context, actor *model.Actor, replyId uint64) (bool, error)
 		GetReplyLikesByUser(ctx context.Context, userId uint64, replyIds []uint64) ([]entity.ForumReplyLike, error)
 		IncrementRewardStats(ctx context.Context, replyId uint64) error
@@ -56,6 +57,7 @@ type (
 	}
 	IForumTopicDomain interface {
 		GetTopicById(ctx context.Context, topicId uint64) (*entity.ForumTopic, error)
+		GetTopicsByIds(ctx context.Context, ids []uint64) ([]entity.ForumTopic, error)
 		CheckTopicWritePolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error
 		CheckTopicEditPolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error
 		CheckTopicAppendPolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error

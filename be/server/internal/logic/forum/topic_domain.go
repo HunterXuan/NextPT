@@ -38,6 +38,15 @@ func (s *sForumTopicDomain) GetTopicById(ctx context.Context, topicId uint64) (*
 	return &topic, nil
 }
 
+func (s *sForumTopicDomain) GetTopicsByIds(ctx context.Context, ids []uint64) ([]entity.ForumTopic, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var topics []entity.ForumTopic
+	err := dao.ForumTopic.Ctx(ctx).WhereIn(dao.ForumTopic.Columns().Id, ids).Scan(&topics)
+	return topics, err
+}
+
 func (s *sForumTopicDomain) CheckTopicWritePolicy(ctx context.Context, actor *model.Actor, topic *entity.ForumTopic) error {
 	if topic.IsLocked {
 		return gerror.New(gi18n.T(ctx, "forum.topic.is_locked"))

@@ -58,6 +58,15 @@ func (s *sCatalogSubtitleDomain) GetSubtitleById(ctx context.Context, id uint64)
 	return &sub, nil
 }
 
+func (s *sCatalogSubtitleDomain) GetSubtitlesByIds(ctx context.Context, ids []uint64) ([]entity.CatalogSubtitle, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var subtitles []entity.CatalogSubtitle
+	err := dao.CatalogSubtitle.Ctx(ctx).WhereIn(dao.CatalogSubtitle.Columns().Id, ids).Scan(&subtitles)
+	return subtitles, err
+}
+
 func (s *sCatalogSubtitleDomain) IncrementDownloadCount(ctx context.Context, id uint64) error {
 	_, err := dao.CatalogSubtitle.Ctx(ctx).Where(dao.CatalogSubtitle.Columns().Id, id).Increment(dao.CatalogSubtitle.Columns().DownloadCount, 1)
 	return err

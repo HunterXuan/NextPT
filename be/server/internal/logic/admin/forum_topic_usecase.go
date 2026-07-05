@@ -62,10 +62,10 @@ func (s *sAdminForumTopicUsecase) Delete(ctx context.Context, actor *model.Actor
 		if err := service.EconomyRewardDomain().DeleteRewardRecordsByTargets(ctx, consts.EconomyBonusTargetTypeForumReply, replyIds); err != nil {
 			return err
 		}
-		if err := service.ModReportDomain().DeleteReportsByTarget(ctx, consts.EconomyBonusTargetTypeForumTopic, topic.Id); err != nil {
+		if err := service.ModReportDomain().DeleteReportsByTarget(ctx, consts.ModReportTargetTypeForumTopic, topic.Id); err != nil {
 			return err
 		}
-		if err := service.ModReportDomain().DeleteReportsByTargets(ctx, consts.EconomyBonusTargetTypeForumReply, replyIds); err != nil {
+		if err := service.ModReportDomain().DeleteReportsByTargets(ctx, consts.ModReportTargetTypeForumReply, replyIds); err != nil {
 			return err
 		}
 		if err := service.ForumTopicDomain().DeleteTopic(ctx, topic, replyIds); err != nil {

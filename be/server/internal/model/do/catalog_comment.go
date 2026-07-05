@@ -13,7 +13,7 @@ import (
 type CatalogComment struct {
 	g.Meta      `orm:"table:catalog_comment, do:true"`
 	Id          any         //
-	TargetType  any         // torrent/offer/request
+	TargetType  any         // catalog_torrent
 	TargetId    any         //
 	UserId      any         //
 	Content     any         // 评论内容 (Markdown/BBCode)

@@ -43,6 +43,15 @@ func (s *sCatalogCommentDomain) GetCommentById(ctx context.Context, id uint64) (
 	return &comment, nil
 }
 
+func (s *sCatalogCommentDomain) GetCommentsByIds(ctx context.Context, ids []uint64) ([]entity.CatalogComment, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var comments []entity.CatalogComment
+	err := dao.CatalogComment.Ctx(ctx).WhereIn(dao.CatalogComment.Columns().Id, ids).Scan(&comments)
+	return comments, err
+}
+
 func (s *sCatalogCommentDomain) QueryCommentsByTarget(ctx context.Context, targetType string, targetId uint64, page int, size int) ([]entity.CatalogComment, int, error) {
 	m := dao.CatalogComment.Ctx(ctx).Where(dao.CatalogComment.Columns().TargetType, targetType).Where(dao.CatalogComment.Columns().TargetId, targetId)
 

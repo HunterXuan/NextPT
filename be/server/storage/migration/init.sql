@@ -418,10 +418,10 @@ CREATE TABLE `mod_cheater_log` (
 -- 模块: 通用评论系统
 -- ============================================================
 
--- 通用评论表（支持 torrent/offer/request 等多种对象）
+-- 通用评论表（支持域/资源形式的多种对象）
 CREATE TABLE `catalog_comment` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `target_type`     VARCHAR(20)     NOT NULL COMMENT 'torrent/offer/request',
+    `target_type`     VARCHAR(20)     NOT NULL COMMENT 'catalog_torrent',
     `target_id`       BIGINT UNSIGNED NOT NULL,
     `user_id`         BIGINT UNSIGNED NOT NULL,
     `content`         TEXT            NOT NULL COMMENT '评论内容 (Markdown/BBCode)',
@@ -621,7 +621,7 @@ CREATE TABLE `tracker_event_idempotency` (
 CREATE TABLE `mod_report` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `reporter_id`     BIGINT UNSIGNED NOT NULL,
-    `target_type`     VARCHAR(20)     NOT NULL COMMENT 'torrent/user/offer/request/forum_post/comment/subtitle',
+    `target_type`     VARCHAR(20)     NOT NULL COMMENT 'catalog_torrent/catalog_comment/catalog_subtitle/forum_topic/forum_reply',
     `target_id`       BIGINT UNSIGNED NOT NULL,
     `reason`          VARCHAR(500)    NOT NULL DEFAULT '',
     `status`          TINYINT         NOT NULL DEFAULT 0  COMMENT '0=pending 1=resolved 2=rejected',

@@ -202,7 +202,9 @@ func (s *sCatalogTorrentUsecase) HardDeleteTorrent(ctx context.Context, torrentI
 	// 1. 搜集需要删除的文件路径（字幕）
 	subtitles, _ := service.CatalogSubtitleDomain().GetSubtitlesByTorrentId(ctx, torrentId)
 	var subtitlePaths []string
+	var subtitleIds []uint64
 	for _, sub := range subtitles {
+		subtitleIds = append(subtitleIds, sub.Id)
 		if sub.StoragePath != "" {
 			subtitlePaths = append(subtitlePaths, sub.StoragePath)
 		}
@@ -210,7 +212,7 @@ func (s *sCatalogTorrentUsecase) HardDeleteTorrent(ctx context.Context, torrentI
 
 	// 2. 执行跨域的 DB 大事务硬删除
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		commentIds, err := service.CatalogCommentDomain().QueryCommentIdsByTarget(ctx, "torrent", torrentId)
+		commentIds, err := service.CatalogCommentDomain().QueryCommentIdsByTarget(ctx, consts.CatalogCommentTargetTypeCatalogTorrent, torrentId)
 		if err != nil {
 			return err
 		}
@@ -235,10 +237,16 @@ func (s *sCatalogTorrentUsecase) HardDeleteTorrent(ctx context.Context, torrentI
 		if err := service.ModCheaterDomain().DeleteCheaterLogsByTorrentId(ctx, torrentId); err != nil {
 			return err
 		}
-		if err := service.CatalogCommentDomain().DeleteCommentsByTarget(ctx, "torrent", torrentId); err != nil {
+		if err := service.CatalogCommentDomain().DeleteCommentsByTarget(ctx, consts.CatalogCommentTargetTypeCatalogTorrent, torrentId); err != nil {
 			return err
 		}
-		if err := service.ModReportDomain().DeleteReportsByTarget(ctx, "torrent", torrentId); err != nil {
+		if err := service.ModReportDomain().DeleteReportsByTarget(ctx, consts.ModReportTargetTypeCatalogTorrent, torrentId); err != nil {
+			return err
+		}
+		if err := service.ModReportDomain().DeleteReportsByTargets(ctx, consts.ModReportTargetTypeCatalogComment, commentIds); err != nil {
+			return err
+		}
+		if err := service.ModReportDomain().DeleteReportsByTargets(ctx, consts.ModReportTargetTypeCatalogSubtitle, subtitleIds); err != nil {
 			return err
 		}
 		return nil
@@ -817,7 +825,7 @@ func (s *sCatalogTorrentUsecase) Report(ctx context.Context, actor *model.Actor,
 	}
 
 	err = service.ModReportUsecase().Create(ctx, actor, modin.CreateReportInp{
-		TargetType: "torrent",
+		TargetType: consts.ModReportTargetTypeCatalogTorrent,
 		TargetId:   in.Id,
 		Reason:     in.Reason,
 	})

@@ -3,6 +3,7 @@ package mod
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/dao"
 	"server/internal/model/entity"
 	"server/internal/service"
@@ -22,7 +23,7 @@ func (s *sModReportDomain) GetPendingCount(ctx context.Context, reporterId uint6
 	return dao.ModReport.Ctx(ctx).Where(dao.ModReport.Columns().ReporterId, reporterId).
 		Where(dao.ModReport.Columns().TargetType, targetType).
 		Where(dao.ModReport.Columns().TargetId, targetId).
-		Where(dao.ModReport.Columns().Status, 0).
+		Where(dao.ModReport.Columns().Status, consts.ModReportStatusPending).
 		Count()
 }
 

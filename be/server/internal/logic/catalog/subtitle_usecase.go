@@ -10,6 +10,7 @@ import (
 
 	"github.com/gogf/gf/v2/database/gdb"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/catalogin"
@@ -249,7 +250,7 @@ func (s *sCatalogSubtitleUsecase) Report(ctx context.Context, actor *model.Actor
 	}
 
 	return service.ModReportUsecase().Create(ctx, actor, modin.CreateReportInp{
-		TargetType: "subtitle",
+		TargetType: consts.ModReportTargetTypeCatalogSubtitle,
 		TargetId:   in.Id,
 		Reason:     in.Reason,
 	})

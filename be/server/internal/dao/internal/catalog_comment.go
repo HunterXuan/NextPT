@@ -22,7 +22,7 @@ type CatalogCommentDao struct {
 // CatalogCommentColumns defines and stores column names for the table catalog_comment.
 type CatalogCommentColumns struct {
 	Id          string //
-	TargetType  string // torrent/offer/request
+	TargetType  string // catalog_torrent
 	TargetId    string //
 	UserId      string //
 	Content     string // 评论内容 (Markdown/BBCode)
