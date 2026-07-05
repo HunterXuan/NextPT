@@ -24,9 +24,3 @@ type IamUserStatUpdateInp struct {
 	DownloadedDiff *int64   `json:"downloadedDiff" description:"下载量增量(正加负减)"`
 	BonusDiff      *float64 `json:"bonusDiff" description:"魔力值增量(正加负减)"`
 }
-
-type IamUserBanInp struct {
-	Id           uint64 `json:"id" in:"path" v:"required"`
-	Reason       string `json:"reason" v:"required"`
-	DurationDays int    `json:"durationDays" description:"0 for permanent"`
-}

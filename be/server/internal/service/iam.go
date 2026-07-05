@@ -37,11 +37,14 @@ type (
 	IIamPermissionDomain interface {
 		CheckPermissionWithList(ctx context.Context, rolePerms []string, userAcls []string, permKey string) (bool, error)
 		GrantUserPermission(ctx context.Context, userId uint64, permKey string, isDeny bool) error
+		GrantUserPermissions(ctx context.Context, userId uint64, permKeys []string, isDeny bool) error
 		RevokeUserPermission(ctx context.Context, userId uint64, permKey string, isDeny bool) error
+		RevokeUserPermissionsByIds(ctx context.Context, userId uint64, ids []uint64) error
 		GrantUserPermissionsBySource(ctx context.Context, userId uint64, permKeys []string, sourceType int, sourceId uint64, expireAt *gtime.Time) error
 		DeactivateUserPermissionsBySource(ctx context.Context, userId uint64, sourceType int, sourceId uint64) error
 		GetAllPermissions(ctx context.Context) []string
 		GetUserPermissions(ctx context.Context, userId uint64) ([]entity.IamUserPermission, error)
+		ListUserPermissions(ctx context.Context, userId uint64, options model.IamUserPermissionListOptions) ([]entity.IamUserPermission, int, error)
 	}
 	IIamRoleDomain interface {
 		GetRoleById(ctx context.Context, roleId uint) (*entity.IamRole, error)

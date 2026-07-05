@@ -41,7 +41,7 @@ type IAdminV1 interface {
 	IamUserUpdate(ctx context.Context, req *v1.IamUserUpdateReq) (res *v1.IamUserUpdateRes, err error)
 	IamUserStatDetail(ctx context.Context, req *v1.IamUserStatDetailReq) (res *v1.IamUserStatDetailRes, err error)
 	IamUserStatUpdate(ctx context.Context, req *v1.IamUserStatUpdateReq) (res *v1.IamUserStatUpdateRes, err error)
-	IamUserBan(ctx context.Context, req *v1.IamUserBanReq) (res *v1.IamUserBanRes, err error)
+	IamUserPermissionDetail(ctx context.Context, req *v1.IamUserPermissionDetailReq) (res *v1.IamUserPermissionDetailRes, err error)
 	IamUserPermissionGrant(ctx context.Context, req *v1.IamUserPermissionGrantReq) (res *v1.IamUserPermissionGrantRes, err error)
 	IamUserPermissionRevoke(ctx context.Context, req *v1.IamUserPermissionRevokeReq) (res *v1.IamUserPermissionRevokeRes, err error)
 	ModCheaterList(ctx context.Context, req *v1.ModCheaterListReq) (res *v1.ModCheaterListRes, err error)

@@ -19,6 +19,6 @@ admin.user.stat_not_found: 用户统计数据不存在
 admin.user.update_failed: 更新用户失败
 admin.user.update_stat_failed: 更新用户统计失败
 admin.invite.grant_failed: 发放邀请码失败
+admin.permission.wildcard_only: 只能操作通配权限
+admin.permission.empty: 请选择要操作的权限
 admin.role.delete_has_users: 无法删除角色：当前有 %d 名用户属于该角色
-admin.user.ban_failed_iam: 禁用用户失败 (IAM)
-admin.user.ban_failed_mod: 禁用用户失败 (Mod)

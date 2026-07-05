@@ -5,3 +5,10 @@ type IamUserSummary struct {
 	Username string `json:"username"`
 	Avatar   string `json:"avatar"`
 }
+
+type IamUserPermissionListOptions struct {
+	SourceType   *int
+	WildcardOnly bool
+	Page         int
+	Size         int
+}

@@ -6,6 +6,7 @@ import (
 
 	"server/internal/consts"
 	"server/internal/dao"
+	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/service"
 
@@ -14,6 +15,8 @@ import (
 )
 
 type sIamPermissionDomain struct{}
+
+const iamUserPermissionListMaxSize = 1000
 
 func init() {
 	service.RegisterIamPermissionDomain(NewIamPermissionDomain())
@@ -76,6 +79,34 @@ func (s *sIamPermissionDomain) GrantUserPermission(ctx context.Context, userId u
 	return err
 }
 
+func (s *sIamPermissionDomain) GrantUserPermissions(ctx context.Context, userId uint64, permKeys []string, isDeny bool) error {
+	if userId == 0 || len(permKeys) == 0 {
+		return nil
+	}
+
+	columns := dao.IamUserPermission.Columns()
+	rows := make([]g.Map, 0, len(permKeys))
+	for _, permKey := range permKeys {
+		permKey = strings.TrimSpace(permKey)
+		if permKey == "" {
+			continue
+		}
+		rows = append(rows, g.Map{
+			columns.UserId:     userId,
+			columns.PermKey:    s.normalizePermissionKey(permKey, isDeny),
+			columns.SourceType: consts.IamUserPermissionSourceManual,
+			columns.SourceId:   0,
+			columns.IsActive:   true,
+		})
+	}
+	if len(rows) == 0 {
+		return nil
+	}
+
+	_, err := dao.IamUserPermission.Ctx(ctx).Data(rows).Batch(100).InsertIgnore()
+	return err
+}
+
 func (s *sIamPermissionDomain) RevokeUserPermission(ctx context.Context, userId uint64, permKey string, isDeny bool) error {
 	permKey = s.normalizePermissionKey(permKey, isDeny)
 
@@ -83,6 +114,21 @@ func (s *sIamPermissionDomain) RevokeUserPermission(ctx context.Context, userId 
 	_, err := dao.IamUserPermission.Ctx(ctx).
 		Where(columns.UserId, userId).
 		Where(columns.PermKey, permKey).
+		Where(columns.SourceType, consts.IamUserPermissionSourceManual).
+		Where(columns.SourceId, 0).
+		Delete()
+	return err
+}
+
+func (s *sIamPermissionDomain) RevokeUserPermissionsByIds(ctx context.Context, userId uint64, ids []uint64) error {
+	if userId == 0 || len(ids) == 0 {
+		return nil
+	}
+
+	columns := dao.IamUserPermission.Columns()
+	_, err := dao.IamUserPermission.Ctx(ctx).
+		Where(columns.UserId, userId).
+		WhereIn(columns.Id, ids).
 		Where(columns.SourceType, consts.IamUserPermissionSourceManual).
 		Where(columns.SourceId, 0).
 		Delete()
@@ -157,4 +203,53 @@ func (s *sIamPermissionDomain) GetUserPermissions(ctx context.Context, userId ui
 		Where(m.Builder().WhereNull(columns.ExpireAt).WhereOrGT(columns.ExpireAt, gtime.Now())).
 		Scan(&acls)
 	return acls, err
+}
+
+func (s *sIamPermissionDomain) ListUserPermissions(ctx context.Context, userId uint64, options model.IamUserPermissionListOptions) ([]entity.IamUserPermission, int, error) {
+	var acls []entity.IamUserPermission
+	if userId == 0 {
+		return acls, 0, nil
+	}
+
+	page, size := s.normalizeUserPermissionListPage(options.Page, options.Size)
+	columns := dao.IamUserPermission.Columns()
+	m := dao.IamUserPermission.Ctx(ctx)
+
+	m = m.
+		Where(columns.UserId, userId).
+		Where(columns.IsActive, true).
+		Where(m.Builder().WhereNull(columns.ExpireAt).WhereOrGT(columns.ExpireAt, gtime.Now()))
+	if options.SourceType != nil {
+		m = m.Where(columns.SourceType, *options.SourceType)
+	}
+	if options.WildcardOnly {
+		m = m.Where(m.Builder().
+			Where(columns.PermKey, consts.IamPermissionAll).
+			WhereOr(columns.PermKey, "-"+consts.IamPermissionAll).
+			WhereOrLike(columns.PermKey, "%:*"))
+	}
+
+	total, err := m.Count()
+	if err != nil {
+		return nil, 0, err
+	}
+
+	err = m.
+		Page(page, size).
+		OrderDesc(columns.Id).
+		Scan(&acls)
+	return acls, total, err
+}
+
+func (s *sIamPermissionDomain) normalizeUserPermissionListPage(page int, size int) (int, int) {
+	if page <= 0 {
+		page = 1
+	}
+	if size <= 0 {
+		size = 20
+	}
+	if size > iamUserPermissionListMaxSize {
+		size = iamUserPermissionListMaxSize
+	}
+	return page, size
 }

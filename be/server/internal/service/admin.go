@@ -50,6 +50,7 @@ type (
 		GrantUserAcl(ctx context.Context, actor *model.Actor, in adminin.IamUserPermissionGrantInp) error
 		RevokeUserAcl(ctx context.Context, actor *model.Actor, in adminin.IamUserPermissionRevokeInp) error
 		List(ctx context.Context, actor *model.Actor, in adminin.IamPermissionListInp) (*adminout.IamPermissionListOut, error)
+		UserDetail(ctx context.Context, actor *model.Actor, in adminin.IamUserPermissionDetailInp) (*adminout.IamUserPermissionDetailOut, error)
 	}
 	IAdminIamRoleUsecase interface {
 		List(ctx context.Context, actor *model.Actor) (*adminout.IamRoleListOut, error)
@@ -65,7 +66,6 @@ type (
 		Update(ctx context.Context, actor *model.Actor, in adminin.IamUserUpdateInp) error
 		StatDetail(ctx context.Context, actor *model.Actor, in adminin.IamUserStatDetailInp) (*adminout.IamUserStatDetailOut, error)
 		StatUpdate(ctx context.Context, actor *model.Actor, in adminin.IamUserStatUpdateInp) error
-		Ban(ctx context.Context, actor *model.Actor, in adminin.IamUserBanInp) error
 	}
 	IAdminModCheaterUsecase interface {
 		List(ctx context.Context, actor *model.Actor, in adminin.ModCheaterListInp) (*modout.ListCheaterLogsOut, error)

@@ -5,8 +5,8 @@ import (
 
 	"server/internal/consts"
 	"server/internal/model"
+	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
-	"server/internal/model/in/modin"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -32,10 +32,74 @@ func (s *sAdminIamUserUsecase) List(ctx context.Context, actor *model.Actor, in 
 	if err != nil {
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "admin.user.fetch_failed"))
 	}
+	items, err := s.buildUserItems(ctx, users)
+	if err != nil {
+		return nil, gerror.Wrap(err, gi18n.T(ctx, "admin.user.fetch_failed"))
+	}
 	return &adminout.IamUserListOut{
-		Users: users,
+		Users: items,
 		Total: total,
 	}, nil
+}
+
+func (s *sAdminIamUserUsecase) buildUserItems(ctx context.Context, users []*entity.IamUser) ([]adminout.IamUserItem, error) {
+	items := make([]adminout.IamUserItem, 0, len(users))
+	if len(users) == 0 {
+		return items, nil
+	}
+
+	userIds := make([]uint64, 0, len(users))
+	for _, user := range users {
+		if user != nil && user.Id > 0 {
+			userIds = append(userIds, user.Id)
+		}
+	}
+	profileMap, err := s.loadUserProfileMap(ctx, userIds)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range users {
+		if user == nil {
+			continue
+		}
+		item := adminout.IamUserItem{
+			Id:        user.Id,
+			Username:  user.Username,
+			Email:     user.Email,
+			Passkey:   user.Passkey,
+			Status:    user.Status,
+			Role:      user.Role,
+			VipUntil:  user.VipUntil,
+			VipRemark: user.VipRemark,
+			InvitedBy: user.InvitedBy,
+			LastLogin: user.LastLogin,
+			LastIp:    user.LastIp,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+		}
+		if profile, ok := profileMap[user.Id]; ok {
+			item.Avatar = profile.Avatar
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+func (s *sAdminIamUserUsecase) loadUserProfileMap(ctx context.Context, userIds []uint64) (map[uint64]entity.IamUserProfile, error) {
+	profileMap := make(map[uint64]entity.IamUserProfile)
+	if len(userIds) == 0 {
+		return profileMap, nil
+	}
+
+	profiles, err := service.IamUserDomain().GetUserProfilesByUserIds(ctx, userIds)
+	if err != nil {
+		return nil, err
+	}
+	for _, profile := range profiles {
+		profileMap[profile.UserId] = profile
+	}
+	return profileMap, nil
 }
 
 func (s *sAdminIamUserUsecase) Update(ctx context.Context, actor *model.Actor, in adminin.IamUserUpdateInp) error {
@@ -140,17 +204,4 @@ func (s *sAdminIamUserUsecase) StatUpdate(ctx context.Context, actor *model.Acto
 
 func (s *sAdminIamUserUsecase) hasStatDiff(uploadedDiff, downloadedDiff *int64) bool {
 	return (uploadedDiff != nil && *uploadedDiff != 0) || (downloadedDiff != nil && *downloadedDiff != 0)
-}
-
-func (s *sAdminIamUserUsecase) Ban(ctx context.Context, actor *model.Actor, in adminin.IamUserBanInp) error {
-	err := service.ModUserUsecase().Apply(ctx, actor, modin.ApplyModInp{
-		UserId:       in.Id,
-		ModType:      consts.ModUserTypeBanned,
-		Reason:       in.Reason,
-		DurationDays: in.DurationDays,
-	})
-	if err != nil {
-		return gerror.Wrap(err, gi18n.T(ctx, "admin.user.ban_failed_mod"))
-	}
-	return nil
 }

@@ -19,6 +19,6 @@ admin.user.stat_not_found: user stat not found
 admin.user.update_failed: failed to update user
 admin.user.update_stat_failed: failed to update user stat
 admin.invite.grant_failed: Failed to grant invites
+admin.permission.wildcard_only: Only wildcard permissions can be managed here
+admin.permission.empty: Select permissions to manage
 admin.role.delete_has_users: Cannot delete role: %d users are currently assigned to this role
-admin.user.ban_failed_iam: Failed to ban user in IAM
-admin.user.ban_failed_mod: Failed to ban user in Mod

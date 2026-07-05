@@ -38,10 +38,3 @@ type IamUserStatUpdateReq struct {
 }
 
 type IamUserStatUpdateRes struct{}
-
-type IamUserBanReq struct {
-	g.Meta `path:"/iam/users/{id}:ban" method:"post" tags:"AdminIAM" summary:"封禁用户" perm:"admin:iam/user:*"`
-	adminin.IamUserBanInp
-}
-
-type IamUserBanRes struct{}
