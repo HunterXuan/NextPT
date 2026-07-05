@@ -166,7 +166,7 @@ const tabElements = new Map<string, HTMLElement>()
 
 const activeTab = computed(() => tabs.value.find((tab) => tab.id === activeId.value) || null)
 const fallbackPath = computed(() => localePath(props.mode === 'admin' ? '/admin' : '/'))
-const fallbackTitle = computed(() => props.mode === 'admin' ? t('admin.dashboard.title') : t('nav.home'))
+const fallbackTitle = computed(() => props.mode === 'admin' ? t('admin.nav.overview') : t('nav.home'))
 const tabMenuItems = computed<DropdownMenuItem[][]>(() => [
   [
     {
