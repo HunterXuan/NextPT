@@ -1,3 +1,9 @@
+export const IamInviteStatusUnused = 0
+export const IamInviteStatusSent = 1
+export const IamInviteStatusUsed = 2
+export const IamInviteStatusExpired = 3
+export const IamInviteStatusRecycled = 4
+
 export interface InviteItem {
   id: number
   inviterId: number
@@ -44,10 +50,10 @@ export function useInvites() {
     })
   }
 
-  async function sendInvite(hash: string, email: string) {
+  async function sendInvite(id: number, email: string) {
     await fetchApi('/api/iam/invites:send', {
       method: 'POST',
-      body: { hash, email }
+      body: { id, email }
     })
   }
 

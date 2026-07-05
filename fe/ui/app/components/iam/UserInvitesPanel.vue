@@ -31,7 +31,7 @@
         <UFormField :label="$t('user.invites.code')" required>
           <div>
             <USelect
-              v-model="selectedInviteHash"
+              v-model="selectedInviteId"
               class="w-full"
               size="lg"
               :items="inviteOptions"
@@ -92,7 +92,7 @@
                   size="xs"
                   icon="i-lucide-copy"
                   :aria-label="$t('common.copy')"
-                  :disabled="!invite.hash"
+                  :disabled="!canCopyInviteHash(invite)"
                   @click="copyInviteHash(invite)"
                 />
               </UTooltip>
@@ -131,7 +131,14 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import { useInvites, type InviteItem } from '~/composables/useInvites'
+import {
+  IamInviteStatusExpired,
+  IamInviteStatusSent,
+  IamInviteStatusUnused,
+  IamInviteStatusUsed,
+  useInvites,
+  type InviteItem
+} from '~/composables/useInvites'
 import { formatDateTime } from '~/utils/format'
 
 const { t, locale } = useI18n()
@@ -149,14 +156,14 @@ const availableInvitesPending = ref(true)
 const invitesError = ref('')
 const inviteSendPending = ref(false)
 const inviteEmail = ref('')
-const selectedInviteHash = ref('')
+const selectedInviteId = ref<number | null>(null)
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const inviteOptions = computed(() => availableInvites.value.map((invite) => ({
   label: formatInviteHash(invite.hash),
-  value: invite.hash
+  value: invite.id
 })))
-const selectedInvite = computed(() => availableInvites.value.find((invite) => invite.hash === selectedInviteHash.value))
+const selectedInvite = computed(() => availableInvites.value.find((invite) => invite.id === selectedInviteId.value))
 const selectedInviteValidityLabel = computed(() => {
   if (!selectedInvite.value) return ''
   if (!selectedInvite.value.expireAt) return t('user.invites.permanent')
@@ -164,7 +171,7 @@ const selectedInviteValidityLabel = computed(() => {
 })
 const inviteTotalPages = computed(() => Math.max(1, Math.ceil(inviteTotal.value / inviteSize)))
 const canSendInvite = computed(() => {
-  return Boolean(selectedInviteHash.value && inviteEmail.value.trim() && !inviteSendPending.value && !availableInvitesPending.value && availableInvites.value.length > 0)
+  return Boolean(selectedInviteId.value && inviteEmail.value.trim() && !inviteSendPending.value && !availableInvitesPending.value && availableInvites.value.length > 0)
 })
 
 onMounted(() => {
@@ -213,15 +220,15 @@ async function loadAvailableInvites() {
     const data = await inviteService.listInvites({
       page: 1,
       size: 100,
-      status: 0
+      status: IamInviteStatusUnused
     })
     availableInvites.value = data.list || []
-    if (!selectedInviteHash.value || !availableInvites.value.some((invite) => invite.hash === selectedInviteHash.value)) {
-      selectedInviteHash.value = availableInvites.value[0]?.hash || ''
+    if (!selectedInviteId.value || !availableInvites.value.some((invite) => invite.id === selectedInviteId.value)) {
+      selectedInviteId.value = availableInvites.value[0]?.id || null
     }
   } catch {
     availableInvites.value = []
-    selectedInviteHash.value = ''
+    selectedInviteId.value = null
   } finally {
     availableInvitesPending.value = false
   }
@@ -237,7 +244,7 @@ async function handleInviteSend() {
 
   inviteSendPending.value = true
   try {
-    await inviteService.sendInvite(selectedInviteHash.value, inviteEmail.value.trim())
+    await inviteService.sendInvite(Number(selectedInviteId.value), inviteEmail.value.trim())
     toast.add({
       title: t('user.invites.sent'),
       color: 'success',
@@ -257,7 +264,7 @@ async function handleInviteSend() {
 }
 
 async function copyInviteHash(invite: InviteItem) {
-  if (!invite.hash || typeof navigator === 'undefined' || !navigator.clipboard) return
+  if (!canCopyInviteHash(invite) || typeof navigator === 'undefined' || !navigator.clipboard) return
 
   await navigator.clipboard.writeText(invite.hash)
   toast.add({
@@ -265,6 +272,10 @@ async function copyInviteHash(invite: InviteItem) {
     color: 'success',
     icon: 'i-lucide-check-circle'
   })
+}
+
+function canCopyInviteHash(invite: InviteItem) {
+  return Boolean(invite.hash && invite.status !== IamInviteStatusUnused)
 }
 
 function formatInviteHash(hash: string) {
@@ -289,10 +300,10 @@ function inviteStatusLabel(status: number) {
 }
 
 function inviteStatusColor(status: number) {
-  if (status === 0) return 'success'
-  if (status === 1) return 'primary'
-  if (status === 2) return 'neutral'
-  if (status === 3) return 'error'
+  if (status === IamInviteStatusUnused) return 'success'
+  if (status === IamInviteStatusSent) return 'primary'
+  if (status === IamInviteStatusUsed) return 'neutral'
+  if (status === IamInviteStatusExpired) return 'error'
   return 'warning'
 }
 </script>

@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <dl class="grid gap-2 text-sm sm:grid-cols-3 lg:w-[min(560px,48vw)]">
+      <dl class="grid gap-2 text-sm sm:grid-cols-2 lg:w-[min(380px,36vw)]">
         <div v-for="item in identityItems" :key="item.label" class="rounded-md bg-slate-50 px-3 py-2 dark:bg-slate-950/60">
           <dt class="text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</dt>
           <dd class="mt-1 truncate font-medium text-slate-950 dark:text-white">{{ item.value }}</dd>
@@ -36,7 +36,6 @@ const props = defineProps<{
 }>()
 
 const { t, locale } = useI18n()
-const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 
 const displayName = computed(() => props.user?.username || t('user.fallbackName'))
 const roleDisplayName = computed(() => props.user?.roleName || (props.user?.isStaff ? t('user.staff') : t('user.member')))
@@ -48,10 +47,6 @@ const identityItems = computed(() => [
   {
     label: t('user.fields.createdAt'),
     value: formatDateTime(props.user?.createdAt, locale.value)
-  },
-  {
-    label: t('user.fields.invites'),
-    value: numberFormatter.value.format(Number(props.user?.invites || 0))
   }
 ])
 </script>

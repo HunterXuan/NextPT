@@ -4,6 +4,7 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "copy": "Copy",
+    "clear": "Clear",
     "close": "Close",
     "next": "Next",
     "previous": "Previous",
@@ -1178,10 +1179,18 @@
         }
       },
       "invites": {
-        "title": "Invite codes",
+        "title": "Invite Management",
         "form": {
           "title": "Generate invite codes",
           "amount": "Amount",
+          "targetMode": "Target mode",
+          "siteTarget": "Site-level",
+          "roleTarget": "Roles",
+          "roleIds": "Grant target",
+          "roleIdsHint": "Select one or more roles to grant the amount to each user in those roles.",
+          "roleRequired": "Select at least one role for role-based grants",
+          "rolesLoading": "Loading roles",
+          "rolesEmpty": "No roles available",
           "isTemp": "Temporary invite",
           "expireAt": "Expires at",
           "expireAtRequired": "Temporary invite codes require an expiration time",
@@ -1191,6 +1200,9 @@
         },
         "preview": {
           "amount": "Amount",
+          "target": "Target",
+          "site": "Site-level",
+          "rolesRequired": "Select roles",
           "type": "Type",
           "expireAt": "Validity",
           "permanent": "Permanent",
@@ -1201,8 +1213,22 @@
         "guide": {
           "title": "Generation Notes",
           "amount": "Generated records become usable invite codes.",
+          "target": "Site-level invites are not bound to a user. Role targets grant invite codes to users in the selected roles.",
           "temporary": "Expired temporary invite codes are cleaned up by cron.",
           "delivery": "Confirm the amount before generating to avoid creating too many unused invite codes."
+        },
+        "siteList": {
+          "title": "Site-level Invites",
+          "description": "Copy these for external users. Used codes keep their registration record.",
+          "all": "All statuses",
+          "empty": "No site-level invite codes",
+          "createdAt": "Created",
+          "expireAt": "Valid until",
+          "usedBy": "Used by",
+          "recycle": "Recycle",
+          "recycled": "Invite code recycled",
+          "confirmRecycleTitle": "Recycle invite?",
+          "confirmRecycleDescription": "After recycling, this invite code can no longer be used for registration."
         }
       }
     },
@@ -1418,8 +1444,7 @@
     "fields": {
       "id": "User ID",
       "role": "Role",
-      "createdAt": "Joined",
-      "invites": "Available invites"
+      "createdAt": "Joined"
     },
     "stats": {
       "uploaded": "Uploaded",

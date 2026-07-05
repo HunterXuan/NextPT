@@ -170,8 +170,35 @@ export interface AdminIamUserStatUpdateInput {
 
 export interface AdminIamInviteGrantInput {
   amount: number
+  targetMode: 'site' | 'roles'
   isTemp: boolean
   expireAt?: string | null
+  roleIds?: number[]
+}
+
+export interface AdminIamInvite {
+  id: number
+  inviterId: number
+  inviteeEmail: string
+  inviteeId: number
+  inviteeName: string
+  hash: string
+  status: number
+  isTemporary: boolean
+  expireAt?: string | null
+  usedAt?: string | null
+  createdAt?: string | null
+}
+
+export interface AdminIamInviteListParams {
+  page?: number
+  size?: number
+  status?: number
+}
+
+export interface AdminIamInviteListOut {
+  invites: AdminIamInvite[]
+  total: number
 }
 
 export interface AdminIamRole {
@@ -494,6 +521,18 @@ export function useAdmin() {
     })
   }
 
+  async function listIamInvites(params: AdminIamInviteListParams = {}) {
+    return await fetchApi<AdminIamInviteListOut>('/api/admin/iam/invites', {
+      query: params
+    })
+  }
+
+  async function recycleIamInvite(id: number) {
+    await fetchApi(`/api/admin/iam/invites/${id}:recycle`, {
+      method: 'POST'
+    })
+  }
+
   async function listIamRoles() {
     return await fetchApi<AdminIamRoleListOut>('/api/admin/iam/roles')
   }
@@ -651,6 +690,8 @@ export function useAdmin() {
     grantIamUserPermission,
     revokeIamUserPermission,
     grantIamInvites,
+    listIamInvites,
+    recycleIamInvite,
     listIamRoles,
     createIamRole,
     updateIamRole,

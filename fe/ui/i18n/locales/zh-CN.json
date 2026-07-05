@@ -4,6 +4,7 @@
     "cancel": "取消",
     "confirm": "确认",
     "copy": "复制",
+    "clear": "清空",
     "close": "关闭",
     "next": "下一页",
     "previous": "上一页",
@@ -1178,10 +1179,18 @@
         }
       },
       "invites": {
-        "title": "邀请码",
+        "title": "邀请管理",
         "form": {
           "title": "生成邀请码",
           "amount": "数量",
+          "targetMode": "发放方式",
+          "siteTarget": "站点级",
+          "roleTarget": "指定角色",
+          "roleIds": "发放目标",
+          "roleIdsHint": "选择一个或多个角色后，会给这些角色下的用户各生成指定数量的邀请码。",
+          "roleRequired": "指定角色发放时至少选择一个角色",
+          "rolesLoading": "正在加载角色",
+          "rolesEmpty": "暂无可选角色",
           "isTemp": "临时邀请",
           "expireAt": "过期时间",
           "expireAtRequired": "临时邀请码需要设置过期时间",
@@ -1191,6 +1200,9 @@
         },
         "preview": {
           "amount": "生成数量",
+          "target": "目标",
+          "site": "站点级",
+          "rolesRequired": "请选择角色",
           "type": "类型",
           "expireAt": "有效期",
           "permanent": "永久",
@@ -1201,8 +1213,22 @@
         "guide": {
           "title": "生成说明",
           "amount": "生成后会创建可使用的邀请码记录。",
+          "target": "站点级邀请码不绑定用户；指定角色时会按角色下的用户批量发放。",
           "temporary": "临时邀请码到期后由定时任务清理。",
           "delivery": "生成前请确认数量，避免创建过多未使用的邀请码。"
+        },
+        "siteList": {
+          "title": "站点级邀请",
+          "description": "可复制给站外用户使用，已使用的邀请码会保留注册记录。",
+          "all": "全部状态",
+          "empty": "暂无站点级邀请码",
+          "createdAt": "生成",
+          "expireAt": "有效期",
+          "usedBy": "使用者",
+          "recycle": "回收",
+          "recycled": "邀请码已回收",
+          "confirmRecycleTitle": "确认回收？",
+          "confirmRecycleDescription": "回收后该邀请码将无法继续用于注册。"
         }
       }
     },
@@ -1418,8 +1444,7 @@
     "fields": {
       "id": "用户 ID",
       "role": "角色",
-      "createdAt": "注册时间",
-      "invites": "可用邀请"
+      "createdAt": "注册时间"
     },
     "stats": {
       "uploaded": "总上传",

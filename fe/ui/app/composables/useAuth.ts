@@ -15,7 +15,6 @@ export interface AuthUser {
   uploaded: number
   downloaded: number
   bonus: number
-  invites: number
   shareRatio: number
   createdAt?: string | null
 }
