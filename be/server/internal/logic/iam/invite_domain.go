@@ -34,9 +34,13 @@ func (s *sIamInviteDomain) GetInviteByHash(ctx context.Context, hash string) (*e
 	return invite, err
 }
 
-func (s *sIamInviteDomain) GetInvitesByInviterIdAndHash(ctx context.Context, inviterId uint64, hash string) (*entity.IamInvite, error) {
+func (s *sIamInviteDomain) GetInviteByInviterIdAndId(ctx context.Context, inviterId uint64, id uint64) (*entity.IamInvite, error) {
 	var invite *entity.IamInvite
-	err := dao.IamInvite.Ctx(ctx).Where(dao.IamInvite.Columns().InviterId, inviterId).Where(dao.IamInvite.Columns().Hash, hash).Scan(&invite)
+	columns := dao.IamInvite.Columns()
+	err := dao.IamInvite.Ctx(ctx).
+		Where(columns.InviterId, inviterId).
+		Where(columns.Id, id).
+		Scan(&invite)
 	return invite, err
 }
 
@@ -53,6 +57,41 @@ func (s *sIamInviteDomain) QueryInvitesByInviter(ctx context.Context, inviterId 
 	var list []entity.IamInvite
 	err = m.Page(page, size).OrderDesc(columns.Id).Scan(&list)
 	return list, total, err
+}
+
+func (s *sIamInviteDomain) AdminQuerySiteInvites(ctx context.Context, page, size int, status *uint) ([]entity.IamInvite, int, error) {
+	columns := dao.IamInvite.Columns()
+	m := dao.IamInvite.Ctx(ctx).Where(columns.InviterId, 0)
+	if status != nil {
+		m = m.Where(columns.Status, *status)
+	}
+	total, err := m.Count()
+	if err != nil {
+		return nil, 0, err
+	}
+	var list []entity.IamInvite
+	err = m.Page(page, size).OrderDesc(columns.Id).Scan(&list)
+	return list, total, err
+}
+
+func (s *sIamInviteDomain) AdminGetSiteInviteById(ctx context.Context, id uint64) (*entity.IamInvite, error) {
+	var invite *entity.IamInvite
+	columns := dao.IamInvite.Columns()
+	err := dao.IamInvite.Ctx(ctx).
+		Where(columns.Id, id).
+		Where(columns.InviterId, 0).
+		Scan(&invite)
+	return invite, err
+}
+
+func (s *sIamInviteDomain) AdminUpdateSiteInviteStatus(ctx context.Context, id uint64, status int) error {
+	columns := dao.IamInvite.Columns()
+	_, err := dao.IamInvite.Ctx(ctx).
+		Where(columns.Id, id).
+		Where(columns.InviterId, 0).
+		Data(columns.Status, status).
+		Update()
+	return err
 }
 
 func (s *sIamInviteDomain) ExpireInvites(ctx context.Context, now *gtime.Time) (int64, error) {

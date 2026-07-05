@@ -63,7 +63,7 @@ func (s *sIamInviteUsecase) List(ctx context.Context, actor *model.Actor, in iam
 			InviteeEmail: item.InviteeEmail,
 			InviteeId:    item.InviteeId,
 			InviteeName:  usernameMap[item.InviteeId],
-			Hash:         item.Hash,
+			Hash:         s.inviteListHash(item),
 			Status:       item.Status,
 			IsTemporary:  item.IsTemporary,
 			ExpireAt:     item.ExpireAt,
@@ -83,7 +83,7 @@ func (s *sIamInviteUsecase) Send(ctx context.Context, actor *model.Actor, in iam
 		return gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
 	}
 
-	invite, err := service.IamInviteDomain().GetInvitesByInviterIdAndHash(ctx, actor.Id, in.Hash)
+	invite, err := service.IamInviteDomain().GetInviteByInviterIdAndId(ctx, actor.Id, in.Id)
 	if err != nil {
 		return err
 	}
@@ -137,4 +137,18 @@ func (s *sIamInviteUsecase) Check(ctx context.Context, in iamin.InviteCheckInp) 
 
 func (s *sIamInviteUsecase) CleanupExpired(ctx context.Context) (int64, error) {
 	return service.IamInviteDomain().ExpireInvites(ctx, gtime.Now())
+}
+
+func (s *sIamInviteUsecase) inviteListHash(invite entity.IamInvite) string {
+	if invite.Status == consts.IamInviteStatusUnused {
+		return s.maskInviteHash(invite.Hash)
+	}
+	return invite.Hash
+}
+
+func (s *sIamInviteUsecase) maskInviteHash(hash string) string {
+	if len(hash) <= 12 {
+		return hash
+	}
+	return hash[:6] + "..." + hash[len(hash)-6:]
 }

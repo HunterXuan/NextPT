@@ -8,7 +8,7 @@ import (
 )
 
 type InviteListReq struct {
-	g.Meta `path:"/invites" method:"get" tags:"IamInvite" summary:"获取我的邀请码列表"`
+	g.Meta `path:"/invites" method:"get" tags:"IamInvite" summary:"获取我的邀请码列表" perm:"read:iam/invite:*"`
 	iamin.InviteListInp
 }
 
@@ -17,7 +17,7 @@ type InviteListRes struct {
 }
 
 type InviteSendReq struct {
-	g.Meta `path:"/invites:send" method:"post" tags:"IamInvite" summary:"发送邀请码"`
+	g.Meta `path:"/invites:send" method:"post" tags:"IamInvite" summary:"发送邀请码" perm:"create:iam/invite:*"`
 	iamin.InviteSendInp
 }
 

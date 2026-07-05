@@ -11,6 +11,7 @@ iam.invite.expired: Invite code has expired
 iam.invite.grant_failed: Failed to grant invite code
 iam.invite.hash_len: Invite code length must be 32 characters
 iam.invite.hash_req: Please enter invite code
+iam.invite.id_req: Please select an invite code
 iam.invite.invalid_status: Invalid invite code status
 iam.invite.not_found: Invite code not found
 iam.invite.page_min: Page number must be at least 1

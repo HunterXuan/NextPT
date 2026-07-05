@@ -10,6 +10,7 @@ admin.forum.node_has_topics: 無法刪除：該板塊下仍有主題
 admin.forum.topic_not_found: 主題不存在
 
 admin.role.check_users_failed: 檢查關聯用戶失敗
+admin.role.not_found: 角色不存在
 
 admin.user.count_failed: 獲取用戶總數失敗
 admin.user.fetch_failed: 獲取用戶列表失敗
@@ -18,7 +19,14 @@ admin.user.stat_no_changes: 統計數據不存在或未作修改
 admin.user.stat_not_found: 用戶統計數據不存在
 admin.user.update_failed: 更新用戶失敗
 admin.user.update_stat_failed: 更新用戶統計失敗
-admin.invite.grant_failed: 发放邀请码失败
+admin.invite.grant_failed: 發放邀請碼失敗
+admin.invite.invalid_status: 邀請碼狀態不允許回收
+admin.invite.invalid_target: 邀請發放目標無效
+admin.invite.no_target_users: 所選角色下沒有可發放邀請碼的使用者
+admin.invite.not_found: 邀請碼不存在
+admin.invite.recycle_failed: 回收邀請碼失敗
+admin.invite.role_required: 請選擇要發放邀請碼的角色
+admin.invite.target_required: 請選擇邀請發放目標
 admin.permission.wildcard_only: 只能操作通配權限
 admin.permission.empty: 請選擇要操作的權限
 admin.role.delete_has_users: 无法删除角色：当前有 %d 名用户属于该角色

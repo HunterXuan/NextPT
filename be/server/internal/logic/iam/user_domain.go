@@ -271,6 +271,30 @@ func (s *sIamUserDomain) GetUsersByIds(ctx context.Context, ids []uint64) ([]ent
 	return users, err
 }
 
+func (s *sIamUserDomain) GetUserIdsByRoles(ctx context.Context, roleIds []uint) ([]uint64, error) {
+	if len(roleIds) == 0 {
+		return nil, nil
+	}
+	var users []entity.IamUser
+	err := dao.IamUser.Ctx(ctx).
+		Fields(dao.IamUser.Columns().Id).
+		WhereIn(dao.IamUser.Columns().Role, roleIds).
+		OrderAsc(dao.IamUser.Columns().Id).
+		Scan(&users)
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]uint64, 0, len(users))
+	for _, user := range users {
+		if user.Id == 0 {
+			continue
+		}
+		ids = append(ids, user.Id)
+	}
+	return ids, nil
+}
+
 func (s *sIamUserDomain) GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error) {
 	if len(userIds) == 0 {
 		return nil, nil

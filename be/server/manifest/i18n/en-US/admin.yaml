@@ -10,6 +10,7 @@ admin.forum.node_has_topics: "cannot delete node: it still contains topics"
 admin.forum.topic_not_found: topic not found
 
 admin.role.check_users_failed: failed to check associated users
+admin.role.not_found: Role not found
 
 admin.user.count_failed: failed to count users
 admin.user.fetch_failed: failed to fetch users
@@ -19,6 +20,13 @@ admin.user.stat_not_found: user stat not found
 admin.user.update_failed: failed to update user
 admin.user.update_stat_failed: failed to update user stat
 admin.invite.grant_failed: Failed to grant invites
+admin.invite.invalid_status: Invite code cannot be recycled in its current status
+admin.invite.invalid_target: Invalid invite grant target
+admin.invite.no_target_users: No users found in the selected roles
+admin.invite.not_found: Invite code not found
+admin.invite.recycle_failed: Failed to recycle invite code
+admin.invite.role_required: Select roles to grant invite codes
+admin.invite.target_required: Select an invite grant target
 admin.permission.wildcard_only: Only wildcard permissions can be managed here
 admin.permission.empty: Select permissions to manage
 admin.role.delete_has_users: Cannot delete role: %d users are currently assigned to this role

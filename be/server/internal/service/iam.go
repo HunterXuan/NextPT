@@ -21,8 +21,11 @@ type (
 	IIamInviteDomain interface {
 		GetInviteByHashForUpdate(ctx context.Context, hash string) (*entity.IamInvite, error)
 		GetInviteByHash(ctx context.Context, hash string) (*entity.IamInvite, error)
-		GetInvitesByInviterIdAndHash(ctx context.Context, inviterId uint64, hash string) (*entity.IamInvite, error)
+		GetInviteByInviterIdAndId(ctx context.Context, inviterId uint64, id uint64) (*entity.IamInvite, error)
 		QueryInvitesByInviter(ctx context.Context, inviterId uint64, page int, size int, status *uint) ([]entity.IamInvite, int, error)
+		AdminQuerySiteInvites(ctx context.Context, page int, size int, status *uint) ([]entity.IamInvite, int, error)
+		AdminGetSiteInviteById(ctx context.Context, id uint64) (*entity.IamInvite, error)
+		AdminUpdateSiteInviteStatus(ctx context.Context, id uint64, status int) error
 		ExpireInvites(ctx context.Context, now *gtime.Time) (int64, error)
 		UpdateInviteStatus(ctx context.Context, id uint64, status uint) error
 		UpdateInvite(ctx context.Context, id uint64, data do.IamInvite) error
@@ -48,6 +51,7 @@ type (
 	}
 	IIamRoleDomain interface {
 		GetRoleById(ctx context.Context, roleId uint) (*entity.IamRole, error)
+		GetRolesByIds(ctx context.Context, roleIds []uint) ([]entity.IamRole, error)
 		AdminListRoles(ctx context.Context) ([]entity.IamRole, error)
 		AdminCreateRole(ctx context.Context, level int, nameI18N []byte, rules []byte, permissions []byte, isStaff bool) (uint, error)
 		AdminUpdateRole(ctx context.Context, id uint, level *int, nameI18N []byte, rules []byte, permissions []byte, isStaff *bool) error
@@ -85,6 +89,7 @@ type (
 		AdminGetUserStat(ctx context.Context, id uint64) (*entity.IamUserStat, error)
 		AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64) (int64, error)
 		GetUsersByIds(ctx context.Context, ids []uint64) ([]entity.IamUser, error)
+		GetUserIdsByRoles(ctx context.Context, roleIds []uint) ([]uint64, error)
 		GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error)
 	}
 	IIamUserUsecase interface {

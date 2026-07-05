@@ -44,7 +44,9 @@ type (
 		Delete(ctx context.Context, actor *model.Actor, in adminin.ForumTopicDeleteInp) error
 	}
 	IAdminIamInviteUsecase interface {
+		List(ctx context.Context, actor *model.Actor, in adminin.IamInviteListInp) (*adminout.IamInviteListOut, error)
 		Grant(ctx context.Context, actor *model.Actor, in adminin.IamInviteGrantInp) error
+		Recycle(ctx context.Context, actor *model.Actor, in adminin.IamInviteRecycleInp) error
 	}
 	IAdminIamPermissionUsecase interface {
 		GrantUserAcl(ctx context.Context, actor *model.Actor, in adminin.IamUserPermissionGrantInp) error

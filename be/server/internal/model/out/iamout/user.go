@@ -19,7 +19,6 @@ type UserMeOut struct {
 	Uploaded   uint64      `json:"uploaded"`
 	Downloaded uint64      `json:"downloaded"`
 	Bonus      float64     `json:"bonus"`
-	Invites    int         `json:"invites"`
 	ShareRatio float64     `json:"shareRatio"`
 	CreatedAt  *gtime.Time `json:"createdAt"`
 }

@@ -7,7 +7,7 @@ type InviteListInp struct {
 }
 
 type InviteSendInp struct {
-	Hash  string `json:"hash" v:"required|length:32,32#{#iam.invite.hash_req}|{#iam.invite.hash_len}"`
+	Id    uint64 `json:"id" v:"required#{#iam.invite.id_req}"`
 	Email string `json:"email" v:"required|email#{#iam.invite.email_req}|{#iam.invite.email_fmt}"`
 }
 

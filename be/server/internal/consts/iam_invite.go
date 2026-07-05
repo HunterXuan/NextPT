@@ -7,3 +7,8 @@ const (
 	IamInviteStatusExpired         // 3=已过期
 	IamInviteStatusRecycled        // 4=已回收
 )
+
+const (
+	IamInviteGrantTargetSite  = "site"
+	IamInviteGrantTargetRoles = "roles"
+)

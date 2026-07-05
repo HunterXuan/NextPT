@@ -11,6 +11,7 @@ iam.invite.expired: 邀請碼已過期
 iam.invite.grant_failed: 發放邀請碼失敗
 iam.invite.hash_len: 邀請碼長度應為32位
 iam.invite.hash_req: 請輸入邀請碼
+iam.invite.id_req: 請選擇邀請碼
 iam.invite.invalid_status: 邀請碼狀態無效
 iam.invite.not_found: 邀請碼不存在
 iam.invite.page_min: 頁碼最小為1
