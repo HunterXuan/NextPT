@@ -1260,9 +1260,11 @@
         },
         "form": {
           "empty": "Select a config",
+          "emptyHint": "Select a config from the list to edit it.",
           "group": "Group",
           "key": "Key",
           "type": "Type",
+          "updatedAt": "Updated",
           "value": "Value",
           "booleanValue": "Enabled",
           "intInvalid": "Enter an integer",
@@ -1280,6 +1282,26 @@
         "boolean": {
           "true": "Yes",
           "false": "No"
+        },
+        "descriptions": {
+          "tracker": {
+            "announce_interval": "Regular client announce interval in seconds, affecting how often clients refresh seeding and leeching state.",
+            "announce_min_interval": "Minimum allowed client announce interval in seconds, used to limit overly frequent tracker requests.",
+            "announce_url": "Tracker announce URL written into torrent files. User passkeys are injected when downloading.",
+            "bonus_T0": "Time decay parameter for seeding bonus calculation, in weeks.",
+            "bonus_N0": "Seeder crowding penalty base used by the seeding bonus formula.",
+            "bonus_B0": "Hourly bonus cap a user can earn from seeded torrent size.",
+            "bonus_L": "Bonus convergence parameter controlling how rewards grow for large torrents.",
+            "bonus_base": "Base hourly bonus for each qualifying seeded torrent."
+          },
+          "iam": {
+            "default_role": "Default role key for newly registered users.",
+            "default_register_role": "Default role ID assigned after a new user completes registration.",
+            "register_enabled": "Whether open registration is enabled. When disabled, users usually need an invite."
+          },
+          "catalog": {
+            "torrent_source": "Site identifier written into the private torrent source field."
+          }
         }
       },
       "audits": {

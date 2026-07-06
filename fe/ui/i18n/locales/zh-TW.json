@@ -1260,9 +1260,11 @@
         },
         "form": {
           "empty": "選擇配置項",
+          "emptyHint": "從左側列表選擇一項配置後即可編輯。",
           "group": "分組",
           "key": "配置項",
           "type": "類型",
+          "updatedAt": "更新時間",
           "value": "配置值",
           "booleanValue": "啟用",
           "intInvalid": "請輸入整數",
@@ -1280,6 +1282,26 @@
         "boolean": {
           "true": "是",
           "false": "否"
+        },
+        "descriptions": {
+          "tracker": {
+            "announce_interval": "客戶端常規 announce 間隔，單位為秒，影響客戶端刷新做種和下載狀態的頻率。",
+            "announce_min_interval": "客戶端最小允許 announce 間隔，單位為秒，用於限制過於頻繁的 Tracker 請求。",
+            "announce_url": "寫入種子檔案的 Tracker announce 地址，下載時會注入使用者 passkey。",
+            "bonus_T0": "魔力值做種獎勵的時間衰減參數，單位為週。",
+            "bonus_N0": "魔力值做種獎勵的做種人數擁擠懲罰基數。",
+            "bonus_B0": "使用者每小時透過體積做種獲得魔力的上限。",
+            "bonus_L": "魔力值收益收斂參數，控制大體積種子的收益增長速度。",
+            "bonus_base": "每個達標種子的基礎每小時魔力獎勵。"
+          },
+          "iam": {
+            "default_role": "新註冊使用者的預設角色標識。",
+            "default_register_role": "新註冊使用者註冊完成後分配的預設角色 ID。",
+            "register_enabled": "是否開放全站註冊；關閉後通常只能透過邀請註冊。"
+          },
+          "catalog": {
+            "torrent_source": "寫入私有種子 source 欄位的站點標識。"
+          }
         }
       },
       "audits": {

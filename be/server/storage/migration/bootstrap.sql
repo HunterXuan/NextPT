@@ -112,6 +112,8 @@ ON DUPLICATE KEY UPDATE
 -- Site config defaults
 -- ------------------------------------------------------------
 
+DELETE FROM `site_config` WHERE `group` = 'iam' AND `key` = 'default_role';
+
 INSERT INTO `site_config`
     (`group`, `key`, `value`, `created_at`, `updated_at`)
 VALUES
@@ -123,7 +125,6 @@ VALUES
     ('tracker', 'bonus_B0', '{"val":100.0}', NOW(), NOW()),
     ('tracker', 'bonus_L', '{"val":300.0}', NOW(), NOW()),
     ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
-    ('iam', 'default_role', '{"val":"user"}', NOW(), NOW()),
     ('iam', 'default_register_role', '{"val":1}', NOW(), NOW()),
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
     ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW())

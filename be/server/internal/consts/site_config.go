@@ -48,9 +48,6 @@ const (
 // 2. IAM 用户系统相关配置 (Group: iam)
 // ==============================================================================
 const (
-	// SiteConfigIamDefaultRole 新注册用户的默认角色标识(字符串)
-	SiteConfigIamDefaultRole = "iam.default_role"
-
 	// SiteConfigIamDefaultRegisterRole 新注册用户的默认角色ID(整型)
 	SiteConfigIamDefaultRegisterRole = "iam.default_register_role"
 
@@ -79,7 +76,6 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigTrackerBonusB0:             100.0,
 	SiteConfigTrackerBonusL:              300.0,
 	SiteConfigTrackerBonusBase:           0.4,
-	SiteConfigIamDefaultRole:             "user",
 	SiteConfigIamDefaultRegisterRole:     1,
 	SiteConfigIamRegisterEnabled:         true,
 	SiteConfigCatalogTorrentSource:       "NextPT",

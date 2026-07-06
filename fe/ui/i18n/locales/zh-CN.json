@@ -1260,9 +1260,11 @@
         },
         "form": {
           "empty": "选择配置项",
+          "emptyHint": "从左侧列表选择一项配置后即可编辑。",
           "group": "分组",
           "key": "配置项",
           "type": "类型",
+          "updatedAt": "更新时间",
           "value": "配置值",
           "booleanValue": "启用",
           "intInvalid": "请输入整数",
@@ -1280,6 +1282,26 @@
         "boolean": {
           "true": "是",
           "false": "否"
+        },
+        "descriptions": {
+          "tracker": {
+            "announce_interval": "客户端常规 announce 间隔，单位为秒，影响客户端刷新做种和下载状态的频率。",
+            "announce_min_interval": "客户端最小允许 announce 间隔，单位为秒，用于限制过于频繁的 Tracker 请求。",
+            "announce_url": "写入种子文件的 Tracker announce 地址，下载时会注入用户 passkey。",
+            "bonus_T0": "魔力值做种奖励的时间衰减参数，单位为周。",
+            "bonus_N0": "魔力值做种奖励的做种人数拥挤惩罚基数。",
+            "bonus_B0": "用户每小时通过体积做种获得魔力的上限。",
+            "bonus_L": "魔力值收益收敛参数，控制大体积种子的收益增长速度。",
+            "bonus_base": "每个达标种子的基础每小时魔力奖励。"
+          },
+          "iam": {
+            "default_role": "新注册用户的默认角色标识。",
+            "default_register_role": "新注册用户注册完成后分配的默认角色 ID。",
+            "register_enabled": "是否开放全站注册；关闭后通常只能通过邀请注册。"
+          },
+          "catalog": {
+            "torrent_source": "写入私有种子 source 字段的站点标识。"
+          }
         }
       },
       "audits": {

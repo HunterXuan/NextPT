@@ -234,7 +234,6 @@ export interface AdminSiteConfig {
   key: string
   value: unknown
   valueType: 'string' | 'int' | 'float' | 'boolean' | 'json'
-  description: string
   createdAt?: string | null
   updatedAt?: string | null
 }
