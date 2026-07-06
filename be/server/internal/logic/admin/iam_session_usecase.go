@@ -3,8 +3,10 @@ package admin
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -27,5 +29,14 @@ func (s *sAdminIamSessionUsecase) DeleteByUser(ctx context.Context, actor *model
 	if err != nil {
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.session.delete_failed"))
 	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionRemoveSession,
+		TargetType: consts.SiteAuditTargetTypeIamSession,
+		TargetId:   in.UserId,
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"userId": in.UserId,
+		},
+	})
 	return nil
 }

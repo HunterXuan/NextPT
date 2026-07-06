@@ -35,15 +35,15 @@ func (s *sCatalogCategoryDomain) GetCategoryById(ctx context.Context, id uint) (
 	return category, err
 }
 
-func (s *sCatalogCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool, uploadConfig []byte) error {
-	_, err := dao.CatalogCategory.Ctx(ctx).Data(g.Map{
+func (s *sCatalogCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool, uploadConfig []byte) (uint, error) {
+	id, err := dao.CatalogCategory.Ctx(ctx).Data(g.Map{
 		dao.CatalogCategory.Columns().NameI18N:     nameI18N,
 		dao.CatalogCategory.Columns().Slug:         slug,
 		dao.CatalogCategory.Columns().SortOrder:    sortOrder,
 		dao.CatalogCategory.Columns().Enabled:      enabled,
 		dao.CatalogCategory.Columns().UploadConfig: uploadConfig,
-	}).Insert()
-	return err
+	}).InsertAndGetId()
+	return uint(id), err
 }
 
 func (s *sCatalogCategoryDomain) AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool, uploadConfig *[]byte) error {

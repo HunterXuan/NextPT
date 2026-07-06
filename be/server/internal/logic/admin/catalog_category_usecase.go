@@ -3,8 +3,10 @@ package admin
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -34,7 +36,21 @@ func (s *sAdminCatalogCategoryUsecase) Create(ctx context.Context, actor *model.
 	if err != nil {
 		return err
 	}
-	return service.CatalogCategoryDomain().AdminCreateCategory(ctx, nameI18N, in.Slug, in.SortOrder, enabled, uploadConfig)
+	id, err := service.CatalogCategoryDomain().AdminCreateCategory(ctx, nameI18N, in.Slug, in.SortOrder, enabled, uploadConfig)
+	if err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionCreate,
+		TargetType: consts.SiteAuditTargetTypeCatalogCategory,
+		TargetId:   uint64(id),
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"slug":    in.Slug,
+			"enabled": enabled,
+		},
+	})
+	return nil
 }
 
 func (s *sAdminCatalogCategoryUsecase) Update(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryUpdateInp) error {
@@ -50,7 +66,23 @@ func (s *sAdminCatalogCategoryUsecase) Update(ctx context.Context, actor *model.
 		}
 		uploadConfig = &encodedConfig
 	}
-	return service.CatalogCategoryDomain().AdminUpdateCategory(ctx, in.Id, nameI18N, in.Slug, in.SortOrder, in.Enabled, uploadConfig)
+	if err := service.CatalogCategoryDomain().AdminUpdateCategory(ctx, in.Id, nameI18N, in.Slug, in.SortOrder, in.Enabled, uploadConfig); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionUpdate,
+		TargetType: consts.SiteAuditTargetTypeCatalogCategory,
+		TargetId:   uint64(in.Id),
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"slugChanged":         in.Slug != nil,
+			"sortOrderChanged":    in.SortOrder != nil,
+			"enabledChanged":      in.Enabled != nil,
+			"nameChanged":         in.NameI18N != nil,
+			"uploadConfigChanged": in.UploadConfig != nil,
+		},
+	})
+	return nil
 }
 
 func (s *sAdminCatalogCategoryUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryDeleteInp) error {
@@ -62,7 +94,16 @@ func (s *sAdminCatalogCategoryUsecase) Delete(ctx context.Context, actor *model.
 		return gerror.New(gi18n.T(ctx, "admin.catalog.category_has_torrents"))
 	}
 
-	return service.CatalogCategoryDomain().AdminDeleteCategory(ctx, in.Id)
+	if err := service.CatalogCategoryDomain().AdminDeleteCategory(ctx, in.Id); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionDelete,
+		TargetType: consts.SiteAuditTargetTypeCatalogCategory,
+		TargetId:   uint64(in.Id),
+		Level:      consts.SiteAuditLevelCritical,
+	})
+	return nil
 }
 
 func (s *sAdminCatalogCategoryUsecase) List(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryListInp) (*adminout.CatalogCategoryListOut, error) {

@@ -15,7 +15,7 @@ import (
 
 type (
 	IForumCategoryDomain interface {
-		AdminCreateCategory(ctx context.Context, nameI18N string, descI18N string, sortOrder int, minRoleView int) error
+		AdminCreateCategory(ctx context.Context, nameI18N string, descI18N string, sortOrder int, minRoleView int) (uint, error)
 		AdminUpdateCategory(ctx context.Context, id uint, nameI18N *string, descI18N *string, sortOrder *int, minRoleView *int) error
 		AdminDeleteCategory(ctx context.Context, id uint) (int, error)
 		AdminListCategories(ctx context.Context) ([]entity.ForumCategory, error)
@@ -27,7 +27,7 @@ type (
 		CheckNodeWritePolicy(ctx context.Context, actor *model.Actor, node *entity.ForumNode) error
 		CheckNodeCreatePolicy(ctx context.Context, actor *model.Actor, node *entity.ForumNode) error
 		UpdateStats(ctx context.Context, nodeId uint, topicDelta int, replyDelta int) error
-		AdminCreateNode(ctx context.Context, categoryId uint, slug string, nameI18N string, descI18N string, sortOrder int, minRoleRead int, minRoleWrite int, minRoleCreate int, moderators []byte) error
+		AdminCreateNode(ctx context.Context, categoryId uint, slug string, nameI18N string, descI18N string, sortOrder int, minRoleRead int, minRoleWrite int, minRoleCreate int, moderators []byte) (uint, error)
 		AdminUpdateNode(ctx context.Context, id uint, categoryId *uint, slug *string, nameI18N *string, descI18N *string, sortOrder *int, minRoleRead *int, minRoleWrite *int, minRoleCreate *int, moderators []byte) error
 		AdminDeleteNode(ctx context.Context, id uint) (int, error)
 		AdminListNodes(ctx context.Context) ([]entity.ForumNode, error)

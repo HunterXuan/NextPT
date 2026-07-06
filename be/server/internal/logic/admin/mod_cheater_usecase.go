@@ -3,9 +3,11 @@ package admin
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/modout"
 	"server/internal/service"
 )
@@ -33,8 +35,17 @@ func (s *sAdminModCheaterUsecase) List(ctx context.Context, actor *model.Actor, 
 }
 
 func (s *sAdminModCheaterUsecase) Resolve(ctx context.Context, actor *model.Actor, in adminin.ModCheaterResolveInp) error {
-	return service.ModCheaterUsecase().Resolve(ctx, actor, modin.ResolveCheaterLogInp{
+	if err := service.ModCheaterUsecase().Resolve(ctx, actor, modin.ResolveCheaterLogInp{
 		Id:      in.Id,
 		Comment: in.Comment,
+	}); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionResolve,
+		TargetType: consts.SiteAuditTargetTypeModCheaterLog,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
 	})
+	return nil
 }

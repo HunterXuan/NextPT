@@ -3,8 +3,10 @@ package admin
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -23,11 +25,40 @@ func init() {
 }
 
 func (s *sAdminForumCategoryUsecase) Create(ctx context.Context, actor *model.Actor, in adminin.ForumCategoryCreateInp) error {
-	return service.ForumCategoryDomain().AdminCreateCategory(ctx, in.NameI18N, in.DescI18N, in.SortOrder, in.MinRoleView)
+	id, err := service.ForumCategoryDomain().AdminCreateCategory(ctx, in.NameI18N, in.DescI18N, in.SortOrder, in.MinRoleView)
+	if err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionCreate,
+		TargetType: consts.SiteAuditTargetTypeForumCategory,
+		TargetId:   uint64(id),
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"sortOrder":   in.SortOrder,
+			"minRoleView": in.MinRoleView,
+		},
+	})
+	return nil
 }
 
 func (s *sAdminForumCategoryUsecase) Update(ctx context.Context, actor *model.Actor, in adminin.ForumCategoryUpdateInp) error {
-	return service.ForumCategoryDomain().AdminUpdateCategory(ctx, in.Id, in.NameI18N, in.DescI18N, in.SortOrder, in.MinRoleView)
+	if err := service.ForumCategoryDomain().AdminUpdateCategory(ctx, in.Id, in.NameI18N, in.DescI18N, in.SortOrder, in.MinRoleView); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionUpdate,
+		TargetType: consts.SiteAuditTargetTypeForumCategory,
+		TargetId:   uint64(in.Id),
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"nameChanged":        in.NameI18N != nil,
+			"descriptionChanged": in.DescI18N != nil,
+			"sortOrderChanged":   in.SortOrder != nil,
+			"minRoleViewChanged": in.MinRoleView != nil,
+		},
+	})
+	return nil
 }
 
 func (s *sAdminForumCategoryUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.ForumCategoryDeleteInp) error {
@@ -38,6 +69,12 @@ func (s *sAdminForumCategoryUsecase) Delete(ctx context.Context, actor *model.Ac
 	if count > 0 {
 		return gerror.New(gi18n.T(ctx, "admin.forum.category_has_nodes"))
 	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionDelete,
+		TargetType: consts.SiteAuditTargetTypeForumCategory,
+		TargetId:   uint64(in.Id),
+		Level:      consts.SiteAuditLevelCritical,
+	})
 	return nil
 }
 

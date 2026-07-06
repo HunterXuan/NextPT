@@ -5,8 +5,10 @@ import (
 	"sort"
 	"strings"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -33,6 +35,17 @@ func (s *sAdminIamPermissionUsecase) GrantUserAcl(ctx context.Context, actor *mo
 	err = service.IamPermissionDomain().GrantUserPermissions(ctx, in.UserId, permKeys, in.IsDeny)
 	if err == nil {
 		service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
+		service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+			Action:     consts.SiteAuditActionGrantPermission,
+			TargetType: consts.SiteAuditTargetTypeIamUserPermission,
+			TargetId:   in.UserId,
+			Level:      consts.SiteAuditLevelCritical,
+			Detail: map[string]any{
+				"userId":   in.UserId,
+				"permKeys": permKeys,
+				"isDeny":   in.IsDeny,
+			},
+		})
 	}
 	return err
 }
@@ -46,6 +59,16 @@ func (s *sAdminIamPermissionUsecase) RevokeUserAcl(ctx context.Context, actor *m
 	err := service.IamPermissionDomain().RevokeUserPermissionsByIds(ctx, in.UserId, ids)
 	if err == nil {
 		service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
+		service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+			Action:     consts.SiteAuditActionRevokePermission,
+			TargetType: consts.SiteAuditTargetTypeIamUserPermission,
+			TargetId:   in.UserId,
+			Level:      consts.SiteAuditLevelCritical,
+			Detail: map[string]any{
+				"userId": in.UserId,
+				"ids":    ids,
+			},
+		})
 	}
 	return err
 }

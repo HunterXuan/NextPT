@@ -7,6 +7,7 @@ package service
 
 import (
 	"context"
+	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/siteout"
@@ -17,6 +18,10 @@ import (
 type (
 	ISiteAuditDomain interface {
 		AdminListAudits(ctx context.Context, page int, size int) ([]entity.SiteAudit, int, error)
+		Create(ctx context.Context, in sitein.AuditCreateInp) error
+	}
+	ISiteAuditUsecase interface {
+		Record(ctx context.Context, actor *model.Actor, in sitein.AuditRecordInp)
 	}
 	ISiteConfigDomain interface {
 		// Get 获取后台业务配置项，支持传入默认值兜底（直接查库，无缓存）
@@ -31,6 +36,7 @@ type (
 
 var (
 	localSiteAuditDomain  ISiteAuditDomain
+	localSiteAuditUsecase ISiteAuditUsecase
 	localSiteConfigDomain ISiteConfigDomain
 )
 
@@ -43,6 +49,17 @@ func SiteAuditDomain() ISiteAuditDomain {
 
 func RegisterSiteAuditDomain(i ISiteAuditDomain) {
 	localSiteAuditDomain = i
+}
+
+func SiteAuditUsecase() ISiteAuditUsecase {
+	if localSiteAuditUsecase == nil {
+		panic("implement not found for interface ISiteAuditUsecase, forgot register?")
+	}
+	return localSiteAuditUsecase
+}
+
+func RegisterSiteAuditUsecase(i ISiteAuditUsecase) {
+	localSiteAuditUsecase = i
 }
 
 func SiteConfigDomain() ISiteConfigDomain {

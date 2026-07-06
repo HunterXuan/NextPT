@@ -17,6 +17,6 @@ type SiteAudit struct {
 	TargetId   uint64      `json:"targetId"   orm:"target_id"   description:""`
 	Detail     string      `json:"detail"     orm:"detail"      description:""`
 	Ip         string      `json:"ip"         orm:"ip"          description:""`
-	Level      int         `json:"level"      orm:"level"       description:"0=normal 1=mod 2=admin"`
+	Level      int         `json:"level"      orm:"level"       description:"0=normal 1=important 2=critical"`
 	CreatedAt  *gtime.Time `json:"createdAt"  orm:"created_at"  description:""`
 }

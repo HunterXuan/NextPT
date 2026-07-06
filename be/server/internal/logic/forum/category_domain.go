@@ -20,14 +20,14 @@ func NewForumCategoryDomain() *sForumCategoryDomain {
 	return &sForumCategoryDomain{}
 }
 
-func (s *sForumCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N, descI18N string, sortOrder, minRoleView int) error {
-	_, err := dao.ForumCategory.Ctx(ctx).Data(g.Map{
+func (s *sForumCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N, descI18N string, sortOrder, minRoleView int) (uint, error) {
+	id, err := dao.ForumCategory.Ctx(ctx).Data(g.Map{
 		dao.ForumCategory.Columns().NameI18N:    nameI18N,
 		dao.ForumCategory.Columns().DescI18N:    descI18N,
 		dao.ForumCategory.Columns().SortOrder:   sortOrder,
 		dao.ForumCategory.Columns().MinRoleView: minRoleView,
-	}).Insert()
-	return err
+	}).InsertAndGetId()
+	return uint(id), err
 }
 
 func (s *sForumCategoryDomain) AdminUpdateCategory(ctx context.Context, id uint, nameI18N, descI18N *string, sortOrder, minRoleView *int) error {

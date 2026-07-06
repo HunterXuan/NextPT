@@ -19,6 +19,6 @@ type SiteAudit struct {
 	TargetId   any         //
 	Detail     any         //
 	Ip         any         //
-	Level      any         // 0=normal 1=mod 2=admin
+	Level      any         // 0=normal 1=important 2=critical
 	CreatedAt  *gtime.Time //
 }

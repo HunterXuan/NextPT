@@ -86,8 +86,8 @@ func (s *sForumNodeDomain) UpdateStats(ctx context.Context, nodeId uint, topicDe
 	return err
 }
 
-func (s *sForumNodeDomain) AdminCreateNode(ctx context.Context, categoryId uint, slug, nameI18N, descI18N string, sortOrder, minRoleRead, minRoleWrite, minRoleCreate int, moderators []byte) error {
-	_, err := dao.ForumNode.Ctx(ctx).Data(g.Map{
+func (s *sForumNodeDomain) AdminCreateNode(ctx context.Context, categoryId uint, slug, nameI18N, descI18N string, sortOrder, minRoleRead, minRoleWrite, minRoleCreate int, moderators []byte) (uint, error) {
+	id, err := dao.ForumNode.Ctx(ctx).Data(g.Map{
 		dao.ForumNode.Columns().CategoryId:    categoryId,
 		dao.ForumNode.Columns().Slug:          slug,
 		dao.ForumNode.Columns().NameI18N:      nameI18N,
@@ -97,8 +97,8 @@ func (s *sForumNodeDomain) AdminCreateNode(ctx context.Context, categoryId uint,
 		dao.ForumNode.Columns().MinRoleWrite:  minRoleWrite,
 		dao.ForumNode.Columns().MinRoleCreate: minRoleCreate,
 		dao.ForumNode.Columns().Moderators:    moderators,
-	}).Insert()
-	return err
+	}).InsertAndGetId()
+	return uint(id), err
 }
 
 func (s *sForumNodeDomain) AdminUpdateNode(ctx context.Context, id uint, categoryId *uint, slug, nameI18N, descI18N *string, sortOrder, minRoleRead, minRoleWrite, minRoleCreate *int, moderators []byte) error {

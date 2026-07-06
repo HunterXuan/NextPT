@@ -7,6 +7,7 @@ import (
 	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/database/gdb"
@@ -24,25 +25,74 @@ func init() {
 }
 
 func (s *sAdminForumTopicUsecase) Lock(ctx context.Context, actor *model.Actor, in adminin.ForumTopicLockInp) error {
-	return service.ForumTopicDomain().AdminSetTopicLock(ctx, in.Id, true)
+	if err := service.ForumTopicDomain().AdminSetTopicLock(ctx, in.Id, true); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionLock,
+		TargetType: consts.SiteAuditTargetTypeForumTopic,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
+	})
+	return nil
 }
 
 func (s *sAdminForumTopicUsecase) Unlock(ctx context.Context, actor *model.Actor, in adminin.ForumTopicUnlockInp) error {
-	return service.ForumTopicDomain().AdminSetTopicLock(ctx, in.Id, false)
+	if err := service.ForumTopicDomain().AdminSetTopicLock(ctx, in.Id, false); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionUnlock,
+		TargetType: consts.SiteAuditTargetTypeForumTopic,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
+	})
+	return nil
 }
 
 func (s *sAdminForumTopicUsecase) Pin(ctx context.Context, actor *model.Actor, in adminin.ForumTopicPinInp) error {
-	return service.ForumTopicDomain().AdminSetTopicSticky(ctx, in.Id, true)
+	if err := service.ForumTopicDomain().AdminSetTopicSticky(ctx, in.Id, true); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionPin,
+		TargetType: consts.SiteAuditTargetTypeForumTopic,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
+	})
+	return nil
 }
 
 func (s *sAdminForumTopicUsecase) Unpin(ctx context.Context, actor *model.Actor, in adminin.ForumTopicUnpinInp) error {
-	return service.ForumTopicDomain().AdminSetTopicSticky(ctx, in.Id, false)
+	if err := service.ForumTopicDomain().AdminSetTopicSticky(ctx, in.Id, false); err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionUnpin,
+		TargetType: consts.SiteAuditTargetTypeForumTopic,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
+	})
+	return nil
 }
 
 func (s *sAdminForumTopicUsecase) Move(ctx context.Context, actor *model.Actor, in adminin.ForumTopicMoveInp) error {
-	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+	err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		return service.ForumTopicDomain().AdminMoveTopic(ctx, in.Id, in.NodeId)
 	})
+	if err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionMove,
+		TargetType: consts.SiteAuditTargetTypeForumTopic,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
+		Detail: map[string]any{
+			"nodeId": in.NodeId,
+		},
+	})
+	return nil
 }
 
 func (s *sAdminForumTopicUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.ForumTopicDeleteInp) error {
@@ -55,7 +105,7 @@ func (s *sAdminForumTopicUsecase) Delete(ctx context.Context, actor *model.Actor
 		return err
 	}
 
-	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		if err := service.EconomyRewardDomain().DeleteRewardRecordsByTarget(ctx, consts.EconomyBonusTargetTypeForumTopic, topic.Id); err != nil {
 			return err
 		}
@@ -73,4 +123,17 @@ func (s *sAdminForumTopicUsecase) Delete(ctx context.Context, actor *model.Actor
 		}
 		return service.IamPermissionDomain().RevokeUserPermission(ctx, topic.UserId, fmt.Sprintf("update:forum/topic:%d", topic.Id), false)
 	})
+	if err != nil {
+		return err
+	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionDelete,
+		TargetType: consts.SiteAuditTargetTypeForumTopic,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelImportant,
+		Detail: map[string]any{
+			"replyCount": len(replyIds),
+		},
+	})
+	return nil
 }

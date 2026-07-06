@@ -645,7 +645,7 @@ CREATE TABLE `site_audit` (
     `target_id`       BIGINT UNSIGNED NOT NULL DEFAULT 0,
     `detail`          TEXT            NULL,
     `ip`              VARCHAR(64)     NOT NULL DEFAULT '',
-    `level`           TINYINT         NOT NULL DEFAULT 0  COMMENT '0=normal 1=mod 2=admin',
+    `level`           TINYINT         NOT NULL DEFAULT 0  COMMENT '0=normal 1=important 2=critical',
     `created_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
     KEY `idx_created` (`created_at`),

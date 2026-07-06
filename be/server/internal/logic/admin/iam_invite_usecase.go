@@ -8,6 +8,7 @@ import (
 	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -88,6 +89,19 @@ func (s *sAdminIamInviteUsecase) Grant(ctx context.Context, actor *model.Actor, 
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.invite.grant_failed"))
 	}
 
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionGrant,
+		TargetType: consts.SiteAuditTargetTypeIamInvite,
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"amount":       in.Amount,
+			"targetMode":   in.TargetMode,
+			"roleIds":      in.RoleIds,
+			"inviterCount": len(inviterIds),
+			"isTemporary":  isTemporary,
+			"expireAt":     in.ExpireAt,
+		},
+	})
 	return nil
 }
 
@@ -105,6 +119,12 @@ func (s *sAdminIamInviteUsecase) Recycle(ctx context.Context, actor *model.Actor
 	if err := service.IamInviteDomain().AdminUpdateSiteInviteStatus(ctx, in.Id, consts.IamInviteStatusRecycled); err != nil {
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.invite.recycle_failed"))
 	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionRecycle,
+		TargetType: consts.SiteAuditTargetTypeIamInvite,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelCritical,
+	})
 	return nil
 }
 

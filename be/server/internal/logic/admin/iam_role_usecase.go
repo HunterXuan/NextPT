@@ -3,8 +3,10 @@ package admin
 import (
 	"context"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -42,6 +44,16 @@ func (s *sAdminIamRoleUsecase) Create(ctx context.Context, actor *model.Actor, i
 	if err != nil {
 		return 0, err
 	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionCreate,
+		TargetType: consts.SiteAuditTargetTypeIamRole,
+		TargetId:   uint64(id),
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"level":   in.Level,
+			"isStaff": in.IsStaff,
+		},
+	})
 	return id, nil
 }
 
@@ -66,6 +78,19 @@ func (s *sAdminIamRoleUsecase) Update(ctx context.Context, actor *model.Actor, i
 				return err
 			}
 		}
+		service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+			Action:     consts.SiteAuditActionUpdate,
+			TargetType: consts.SiteAuditTargetTypeIamRole,
+			TargetId:   uint64(in.Id),
+			Level:      consts.SiteAuditLevelCritical,
+			Detail: map[string]any{
+				"levelChanged":       in.Level != nil,
+				"nameChanged":        in.NameI18N != nil,
+				"rulesChanged":       in.Rules != nil,
+				"permissionsChanged": in.Permissions != nil,
+				"isStaffChanged":     in.IsStaff != nil,
+			},
+		})
 	}
 	return err
 }
@@ -92,5 +117,11 @@ func (s *sAdminIamRoleUsecase) Delete(ctx context.Context, actor *model.Actor, i
 	if count > 0 {
 		return gerror.Newf(gi18n.T(ctx, "admin.role.delete_has_users"), count)
 	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionDelete,
+		TargetType: consts.SiteAuditTargetTypeIamRole,
+		TargetId:   uint64(in.Id),
+		Level:      consts.SiteAuditLevelCritical,
+	})
 	return nil
 }

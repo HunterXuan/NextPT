@@ -28,7 +28,7 @@ type SiteAuditColumns struct {
 	TargetId   string //
 	Detail     string //
 	Ip         string //
-	Level      string // 0=normal 1=mod 2=admin
+	Level      string // 0=normal 1=important 2=critical
 	CreatedAt  string //
 }
 

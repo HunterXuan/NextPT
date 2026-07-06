@@ -7,6 +7,7 @@ import (
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -131,6 +132,17 @@ func (s *sAdminIamUserUsecase) Update(ctx context.Context, actor *model.Actor, i
 		s.invalidatePasskeyActorCache(ctx, oldPasskey)
 	}
 
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionUpdate,
+		TargetType: consts.SiteAuditTargetTypeIamUser,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"statusChanged":  in.Status != nil,
+			"roleChanged":    in.Role != nil,
+			"passkeyChanged": in.Passkey != nil,
+		},
+	})
 	return nil
 }
 
@@ -199,6 +211,17 @@ func (s *sAdminIamUserUsecase) StatUpdate(ctx context.Context, actor *model.Acto
 	if !changed {
 		return gerror.New(gi18n.T(ctx, "admin.user.stat_no_changes"))
 	}
+	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
+		Action:     consts.SiteAuditActionUpdateStat,
+		TargetType: consts.SiteAuditTargetTypeIamUser,
+		TargetId:   in.Id,
+		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"uploadedDiff":   in.UploadedDiff,
+			"downloadedDiff": in.DownloadedDiff,
+			"bonusDiff":      in.BonusDiff,
+		},
+	})
 	return nil
 }
 
