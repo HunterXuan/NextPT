@@ -23,7 +23,7 @@ type CatalogTorrent struct {
 	FileCount      uint        `json:"fileCount"      orm:"file_count"      description:"文件数量"`
 	OwnerId        uint64      `json:"ownerId"        orm:"owner_id"        description:"上传者"`
 	Anonymous      bool        `json:"anonymous"      orm:"anonymous"       description:"匿名上传"`
-	SpState        int         `json:"spState"        orm:"sp_state"        description:"0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom"`
+	SpState        int         `json:"spState"        orm:"sp_state"        description:"0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off"`
 	SpExpireAt     *gtime.Time `json:"spExpireAt"     orm:"sp_expire_at"    description:"促销到期时间"`
 	IsFeatured     bool        `json:"isFeatured"     orm:"is_featured"     description:"是否推荐"`
 	IsPinned       bool        `json:"isPinned"       orm:"is_pinned"       description:"是否置顶"`

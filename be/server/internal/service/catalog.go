@@ -13,6 +13,7 @@ import (
 	"server/internal/model/out/catalogout"
 
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type (
@@ -81,6 +82,9 @@ type (
 		ToggleLike(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		QueryTorrentLikes(ctx context.Context, torrentId uint64, page int, size int) ([]entity.CatalogTorrentLike, int, error)
 		UpdateTorrent(ctx context.Context, id uint64, data model.CatalogTorrentUpdate) error
+		AdminSetTorrentPinned(ctx context.Context, id uint64, pinned bool, pinWeight int) error
+		AdminSetTorrentFeatured(ctx context.Context, id uint64, featured bool) error
+		AdminSetTorrentPromotion(ctx context.Context, id uint64, spState int, spExpireAt *gtime.Time) error
 		GetTorrentFiles(ctx context.Context, torrentId uint64) ([]entity.CatalogTorrentFile, error)
 		GetTorrentsByIds(ctx context.Context, ids []uint64) ([]*entity.CatalogTorrent, error)
 		DeleteTorrent(ctx context.Context, id uint64) error

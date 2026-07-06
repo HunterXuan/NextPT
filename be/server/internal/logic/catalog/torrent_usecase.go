@@ -552,6 +552,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			SpExpireAt: s.formatTime(e.SpExpireAt),
 			IsFeatured: e.IsFeatured,
 			IsPinned:   e.IsPinned,
+			PinWeight:  e.PinWeight,
 			Seeders:    e.Seeders,
 			Leechers:   e.Leechers,
 			Snatched:   e.TimesCompleted,

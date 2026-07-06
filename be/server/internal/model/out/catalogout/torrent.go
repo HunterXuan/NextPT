@@ -21,6 +21,7 @@ type TorrentListItem struct {
 	SpExpireAt string               `json:"spExpireAt" description:"促销到期时间"`
 	IsFeatured bool                 `json:"isFeatured" description:"是否推荐"`
 	IsPinned   bool                 `json:"isPinned" description:"是否置顶"`
+	PinWeight  int                  `json:"pinWeight" description:"置顶权重"`
 	Seeders    uint                 `json:"seeders" description:"做种数"`
 	Leechers   uint                 `json:"leechers" description:"下载数"`
 	Snatched   uint                 `json:"snatched" description:"完成数"`

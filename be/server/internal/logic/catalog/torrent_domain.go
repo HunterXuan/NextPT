@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"server/internal/consts"
 	"server/internal/dao"
 	"server/internal/model"
 	"server/internal/model/entity"
@@ -280,6 +281,38 @@ func (s *sCatalogTorrentDomain) UpdateTorrent(ctx context.Context, id uint64, da
 	}
 
 	_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, id).Data(updateMap).Update()
+	return err
+}
+
+func (s *sCatalogTorrentDomain) AdminSetTorrentPinned(ctx context.Context, id uint64, pinned bool, pinWeight int) error {
+	if !pinned {
+		pinWeight = 0
+	}
+	_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, id).Data(g.Map{
+		dao.CatalogTorrent.Columns().IsPinned:  pinned,
+		dao.CatalogTorrent.Columns().PinWeight: pinWeight,
+		dao.CatalogTorrent.Columns().UpdatedAt: gtime.Now(),
+	}).Update()
+	return err
+}
+
+func (s *sCatalogTorrentDomain) AdminSetTorrentFeatured(ctx context.Context, id uint64, featured bool) error {
+	_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, id).Data(g.Map{
+		dao.CatalogTorrent.Columns().IsFeatured: featured,
+		dao.CatalogTorrent.Columns().UpdatedAt:  gtime.Now(),
+	}).Update()
+	return err
+}
+
+func (s *sCatalogTorrentDomain) AdminSetTorrentPromotion(ctx context.Context, id uint64, spState int, spExpireAt *gtime.Time) error {
+	if spState == consts.ResourceTorrentSpNormal {
+		spExpireAt = nil
+	}
+	_, err := dao.CatalogTorrent.Ctx(ctx).Where(dao.CatalogTorrent.Columns().Id, id).Data(g.Map{
+		dao.CatalogTorrent.Columns().SpState:    spState,
+		dao.CatalogTorrent.Columns().SpExpireAt: spExpireAt,
+		dao.CatalogTorrent.Columns().UpdatedAt:  gtime.Now(),
+	}).Update()
 	return err
 }
 

@@ -241,7 +241,7 @@ CREATE TABLE `catalog_torrent` (
     `anonymous`       BIT(1)      NOT NULL DEFAULT 0  COMMENT '匿名上传',
 
     -- 促销
-    `sp_state`        TINYINT         NOT NULL DEFAULT 0  COMMENT '0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom',
+    `sp_state`        TINYINT         NOT NULL DEFAULT 0  COMMENT '0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off',
     `sp_expire_at`    DATETIME        NULL     COMMENT '促销到期时间',
     `is_featured`     BIT(1)      NOT NULL DEFAULT 0  COMMENT '是否推荐',
     `is_pinned`       BIT(1)      NOT NULL DEFAULT 0  COMMENT '是否置顶',

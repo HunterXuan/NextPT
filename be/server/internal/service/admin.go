@@ -21,6 +21,12 @@ type (
 		List(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryListInp) (*adminout.CatalogCategoryListOut, error)
 	}
 	IAdminCatalogTorrentUsecase interface {
+		Pin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentPinInp) error
+		Unpin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentUnpinInp) error
+		Feature(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentFeatureInp) error
+		Unfeature(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentUnfeatureInp) error
+		Promotion(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentPromotionInp) error
+		ClearPromotion(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentClearPromotionInp) error
 		Delete(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentDeleteInp) error
 	}
 	IAdminForumCategoryUsecase interface {

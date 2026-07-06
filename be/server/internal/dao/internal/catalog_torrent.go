@@ -33,7 +33,7 @@ type CatalogTorrentColumns struct {
 	FileCount      string // 文件数量
 	OwnerId        string // 上传者
 	Anonymous      string // 匿名上传
-	SpState        string // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom
+	SpState        string // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off
 	SpExpireAt     string // 促销到期时间
 	IsFeatured     string // 是否推荐
 	IsPinned       string // 是否置顶

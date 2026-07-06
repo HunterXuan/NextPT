@@ -25,7 +25,7 @@ type CatalogTorrent struct {
 	FileCount      any         // 文件数量
 	OwnerId        any         // 上传者
 	Anonymous      any         // 匿名上传
-	SpState        any         // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off 7=custom
+	SpState        any         // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off
 	SpExpireAt     *gtime.Time // 促销到期时间
 	IsFeatured     any         // 是否推荐
 	IsPinned       any         // 是否置顶
