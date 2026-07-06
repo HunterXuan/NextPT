@@ -21,6 +21,8 @@ type ModCheaterLog struct {
 	HitCount     uint        `json:"hitCount"     orm:"hit_count"     description:""`
 	DealtBy      uint64      `json:"dealtBy"      orm:"dealt_by"      description:""`
 	IsDealt      bool        `json:"isDealt"      orm:"is_dealt"      description:""`
-	Comment      string      `json:"comment"      orm:"comment"       description:""`
+	Comment      string      `json:"comment"      orm:"comment"       description:"检测备注"`
+	DealtComment string      `json:"dealtComment" orm:"dealt_comment" description:"处理说明"`
+	DealtAt      *gtime.Time `json:"dealtAt"      orm:"dealt_at"      description:""`
 	CreatedAt    *gtime.Time `json:"createdAt"    orm:"created_at"    description:""`
 }

@@ -32,7 +32,9 @@ type ModCheaterLogColumns struct {
 	HitCount     string //
 	DealtBy      string //
 	IsDealt      string //
-	Comment      string //
+	Comment      string // 检测备注
+	DealtComment string // 处理说明
+	DealtAt      string //
 	CreatedAt    string //
 }
 
@@ -50,6 +52,8 @@ var modCheaterLogColumns = ModCheaterLogColumns{
 	DealtBy:      "dealt_by",
 	IsDealt:      "is_dealt",
 	Comment:      "comment",
+	DealtComment: "dealt_comment",
+	DealtAt:      "dealt_at",
 	CreatedAt:    "created_at",
 }
 

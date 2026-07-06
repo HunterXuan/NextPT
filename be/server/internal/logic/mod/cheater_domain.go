@@ -4,8 +4,11 @@ import (
 	"context"
 
 	"server/internal/dao"
+	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/service"
+
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sModCheaterDomain struct{}
@@ -23,8 +26,13 @@ func (s *sModCheaterDomain) Create(ctx context.Context, log entity.ModCheaterLog
 	return err
 }
 
-func (s *sModCheaterDomain) Update(ctx context.Context, id uint64, data interface{}) error {
-	_, err := dao.ModCheaterLog.Ctx(ctx).WherePri(id).Data(data).Update()
+func (s *sModCheaterDomain) Resolve(ctx context.Context, id uint64, dealtBy uint64, dealtComment string, dealtAt *gtime.Time) error {
+	_, err := dao.ModCheaterLog.Ctx(ctx).WherePri(id).Data(do.ModCheaterLog{
+		IsDealt:      true,
+		DealtBy:      dealtBy,
+		DealtComment: dealtComment,
+		DealtAt:      dealtAt,
+	}).Update()
 	return err
 }
 

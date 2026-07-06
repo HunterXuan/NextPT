@@ -344,7 +344,9 @@ export interface AdminModResolveInput {
 export interface AdminModCheaterItem {
   id: number
   user_id: number
+  user: AdminUserSummary
   torrent_id: number
+  torrent: AdminCatalogTorrentSummary
   uploaded: number
   downloaded: number
   announce_time: number
@@ -352,9 +354,19 @@ export interface AdminModCheaterItem {
   leechers: number
   hit_count: number
   dealt_by: number
+  dealt_user: AdminUserSummary
   is_dealt: boolean
   comment: string
+  dealt_comment: string
+  dealt_at?: string | null
   created_at?: string | null
+}
+
+export interface AdminCatalogTorrentSummary {
+  id: number
+  name: string
+  size: number
+  exist: boolean
 }
 
 export interface AdminModCheaterListOut {

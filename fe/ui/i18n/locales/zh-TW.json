@@ -1371,16 +1371,33 @@
         "list": "作弊記錄",
         "empty": "暫無作弊記錄",
         "select": "選擇一筆記錄",
+        "selectHint": "點擊左側記錄後查看完整上下文，並在這裡完成處理。",
+        "current": "目前記錄",
+        "logId": "記錄 #{id}",
         "resolveTitle": "處理記錄 #{id}",
         "resolved": "作弊記錄已處理",
+        "resolvedDetail": "處理記錄",
+        "recordComment": "記錄備註",
+        "resolvedComment": "處理說明",
+        "commentPlaceholder": "填寫處理說明，便於後續追蹤",
+        "openTorrent": "開啟種子",
         "userId": "使用者 #{id}",
         "torrentId": "種子 #{id}",
         "uploaded": "上傳 {value}",
         "downloaded": "下載 {value}",
         "announceTime": "間隔 {value}s",
         "swarm": "做種 {seeders} / 下載 {leechers} / 命中 {hits}",
+        "fields": {
+          "uploaded": "上傳",
+          "downloaded": "下載",
+          "announceTime": "匯報間隔",
+          "hitCount": "命中次數",
+          "seeders": "做種",
+          "leechers": "下載"
+        },
         "table": {
           "user": "使用者/種子",
+          "subject": "使用者/種子",
           "traffic": "流量",
           "swarm": "集群"
         }

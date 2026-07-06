@@ -1371,16 +1371,33 @@
         "list": "Cheater log list",
         "empty": "No cheater logs",
         "select": "Select a log",
+        "selectHint": "Select a log on the left to inspect context and resolve it here.",
+        "current": "Current log",
+        "logId": "Log #{id}",
         "resolveTitle": "Resolve log #{id}",
         "resolved": "Cheater log resolved",
+        "resolvedDetail": "Resolution record",
+        "recordComment": "Log note",
+        "resolvedComment": "Resolution note",
+        "commentPlaceholder": "Add a resolution note for future review",
+        "openTorrent": "Open torrent",
         "userId": "User #{id}",
         "torrentId": "Torrent #{id}",
         "uploaded": "Uploaded {value}",
         "downloaded": "Downloaded {value}",
         "announceTime": "Interval {value}s",
         "swarm": "Seeders {seeders} / Leechers {leechers} / Hits {hits}",
+        "fields": {
+          "uploaded": "Uploaded",
+          "downloaded": "Downloaded",
+          "announceTime": "Announce interval",
+          "hitCount": "Hits",
+          "seeders": "Seeders",
+          "leechers": "Leechers"
+        },
         "table": {
           "user": "User/Torrent",
+          "subject": "User/Torrent",
           "traffic": "Traffic",
           "swarm": "Swarm"
         }

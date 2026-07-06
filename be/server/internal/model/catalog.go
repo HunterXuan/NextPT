@@ -9,6 +9,13 @@ type CatalogTorrentUpdate struct {
 	ReleaseFields any
 }
 
+type CatalogTorrentSummary struct {
+	Id    uint64 `json:"id"`
+	Name  string `json:"name"`
+	Size  uint64 `json:"size"`
+	Exist bool   `json:"exist"`
+}
+
 type CatalogUploadConfig struct {
 	Title  CatalogUploadTitleConfig   `json:"title"`
 	Fields []CatalogUploadFieldConfig `json:"fields"`

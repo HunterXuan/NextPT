@@ -23,6 +23,8 @@ type ModCheaterLog struct {
 	HitCount     any         //
 	DealtBy      any         //
 	IsDealt      any         //
-	Comment      any         //
+	Comment      any         // 检测备注
+	DealtComment any         // 处理说明
+	DealtAt      *gtime.Time //
 	CreatedAt    *gtime.Time //
 }

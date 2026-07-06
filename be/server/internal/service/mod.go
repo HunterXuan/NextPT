@@ -18,7 +18,7 @@ import (
 type (
 	IModCheaterDomain interface {
 		Create(ctx context.Context, log entity.ModCheaterLog) error
-		Update(ctx context.Context, id uint64, data interface{}) error
+		Resolve(ctx context.Context, id uint64, dealtBy uint64, dealtComment string, dealtAt *gtime.Time) error
 		QueryCheaterLogs(ctx context.Context, isDealt *int, page int, size int) ([]entity.ModCheaterLog, int, error)
 		DeleteCheaterLogsByTorrentId(ctx context.Context, torrentId uint64) error
 	}

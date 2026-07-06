@@ -1371,16 +1371,33 @@
         "list": "作弊记录",
         "empty": "暂无作弊记录",
         "select": "选择一条记录",
+        "selectHint": "点击左侧记录后查看完整上下文，并在这里完成处理。",
+        "current": "当前记录",
+        "logId": "记录 #{id}",
         "resolveTitle": "处理记录 #{id}",
         "resolved": "作弊记录已处理",
+        "resolvedDetail": "处理记录",
+        "recordComment": "记录备注",
+        "resolvedComment": "处理说明",
+        "commentPlaceholder": "填写处理说明，便于后续追溯",
+        "openTorrent": "打开种子",
         "userId": "用户 #{id}",
         "torrentId": "种子 #{id}",
         "uploaded": "上传 {value}",
         "downloaded": "下载 {value}",
         "announceTime": "间隔 {value}s",
         "swarm": "做种 {seeders} / 下载 {leechers} / 命中 {hits}",
+        "fields": {
+          "uploaded": "上传",
+          "downloaded": "下载",
+          "announceTime": "汇报间隔",
+          "hitCount": "命中次数",
+          "seeders": "做种",
+          "leechers": "下载"
+        },
         "table": {
           "user": "用户/种子",
+          "subject": "用户/种子",
           "traffic": "流量",
           "swarm": "集群"
         }
