@@ -1,22 +1,38 @@
 export interface AuthUser {
+  user: AuthUserAccount
+  role: AuthUserRole
+  profile: AuthUserProfile
+  stat: AuthUserStat
+}
+
+export interface AuthUserAccount {
   id: number
   username: string
   email: string
   passkey: string
   status: number
-  role: number
-  roleName: string
-  roleLevel: number
-  isStaff: boolean
   vipUntil?: string | null
+  createdAt?: string | null
+}
+
+export interface AuthUserRole {
+  id: number
+  name: string
+  level: number
+  isStaff: boolean
+}
+
+export interface AuthUserProfile {
   avatar?: string
   info?: string
   signature?: string
+}
+
+export interface AuthUserStat {
   uploaded: number
   downloaded: number
   bonus: number
   shareRatio: number
-  createdAt?: string | null
 }
 
 export interface RegisterInput {
@@ -41,6 +57,10 @@ export interface PasskeyResetOut {
   passkey: string
 }
 
+export interface AuthPermissionListOut {
+  permissions: string[]
+}
+
 export function useAuth() {
   const token = useCookie<string | null>('nextpt_token', {
     sameSite: 'lax',
@@ -48,8 +68,10 @@ export function useAuth() {
     watch: true
   })
   const user = useState<AuthUser | null>('auth:user', () => null)
+  const permissions = useState<string[]>('auth:permissions', () => [])
+  const permissionsLoaded = useState<boolean>('auth:permissionsLoaded', () => false)
   const isLoggedIn = computed(() => Boolean(token.value))
-  const isStaff = computed(() => Boolean(user.value?.isStaff))
+  const isStaff = computed(() => Boolean(user.value?.role.isStaff))
 
   setApiAuthToken(token.value)
 
@@ -60,6 +82,8 @@ export function useAuth() {
 
   function clearLocalSession() {
     user.value = null
+    permissions.value = []
+    permissionsLoaded.value = false
     setToken(null)
   }
 
@@ -89,7 +113,29 @@ export function useAuth() {
 
     const data = await fetchApi<AuthUser>('/api/iam/users/me')
     user.value = data
+    permissions.value = []
+    permissionsLoaded.value = false
     return data
+  }
+
+  async function fetchPermissions(force = false) {
+    if (!token.value) {
+      permissions.value = []
+      permissionsLoaded.value = false
+      return []
+    }
+    if (!force && permissionsLoaded.value) {
+      return permissions.value
+    }
+
+    const data = await fetchApi<AuthPermissionListOut>('/api/iam/users/me/permissions')
+    permissions.value = data.permissions || []
+    permissionsLoaded.value = true
+    return permissions.value
+  }
+
+  function hasPermission(permission: string) {
+    return matchesPermissionList(permissions.value, permission)
   }
 
   async function updateProfile(input: ProfileInput) {
@@ -131,15 +177,31 @@ export function useAuth() {
   return {
     token,
     user,
+    permissions,
     isLoggedIn,
     isStaff,
     login,
     register,
     fetchUser,
+    fetchPermissions,
+    hasPermission,
     updateProfile,
     changePassword,
     resetPasskey,
     logout,
     clearLocalSession
   }
+}
+
+function matchesPermissionList(permissions: string[], permission: string) {
+  if (!permission) return false
+
+  return permissions.some((pattern) => {
+    if (!pattern) return false
+    if (pattern === permission) return true
+    if (pattern.endsWith('*')) {
+      return permission.startsWith(pattern.slice(0, -1))
+    }
+    return false
+  })
 }

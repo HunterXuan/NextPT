@@ -15,7 +15,7 @@
           <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.balance') }}</p>
           <UIcon name="i-lucide-wallet-cards" class="size-4 text-slate-400" />
         </div>
-        <p class="mt-1.5 text-xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ formatBonus(user?.bonus || 0) }}</p>
+        <p class="mt-1.5 text-xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ formatBonus(user?.stat.bonus || 0) }}</p>
       </div>
       <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/50">
         <div class="flex items-center justify-between gap-3">

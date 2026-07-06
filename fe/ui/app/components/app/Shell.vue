@@ -12,7 +12,7 @@
     >
       <AppShellSidebar
         :sections="navSections"
-        :user="user"
+        :user="shellUser"
         :user-menu-items="userMenuItems"
         :return-action="adminReturnAction"
         :logging-out="loggingOut"
@@ -27,7 +27,7 @@
     >
       <AppShellSidebar
         :sections="navSections"
-        :user="user"
+        :user="shellUser"
         :user-menu-items="userMenuItems"
         :return-action="adminReturnAction"
         :logging-out="loggingOut"
@@ -263,6 +263,16 @@ const adminNavSections = computed(() => [
 ])
 
 const navSections = computed(() => props.mode === 'admin' ? adminNavSections.value : appNavSections.value)
+const shellUser = computed(() => user.value
+  ? {
+      id: user.value.user.id,
+      username: user.value.user.username,
+      email: user.value.user.email,
+      roleName: user.value.role.name,
+      avatar: user.value.profile.avatar
+    }
+  : null
+)
 const adminReturnAction = computed(() => props.mode === 'admin'
   ? { label: t('nav.backToUser'), to: '/', icon: 'i-lucide-arrow-left' }
   : null

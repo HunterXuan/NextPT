@@ -9,10 +9,10 @@
 
     <form class="grid grid-cols-1 gap-4" @submit.prevent="handleProfileSave">
       <IamUserAvatar
-        :id="user?.id"
-        :username="user?.username"
+        :id="user?.user.id"
+        :username="user?.user.username"
         :avatar="profileForm.avatar"
-        :alt="user?.username || $t('user.profile.avatar')"
+        :alt="user?.user.username || $t('user.profile.avatar')"
         size="xl"
         class="ring-1 ring-slate-200 dark:ring-slate-800"
         @load-error="avatarLoadFailed = true"
@@ -100,9 +100,9 @@ watch(
   user,
   (value) => {
     const nextProfile = {
-      avatar: value?.avatar || '',
-      signature: value?.signature || '',
-      info: value?.info || ''
+      avatar: value?.profile.avatar || '',
+      signature: value?.profile.signature || '',
+      info: value?.profile.info || ''
     }
 
     profileForm.avatar = nextProfile.avatar

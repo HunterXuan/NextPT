@@ -268,12 +268,12 @@ const topicEditStatusText = computed(() => {
   return t('forum.detail.edit.remaining', { time: formatTopicEditRemaining(topicEditRemainingSeconds.value) })
 })
 const canEditTopic = computed(() => {
-  if (!topic.value || topic.value.isLocked || !user.value?.id || topic.value.author?.id !== user.value.id) return false
+  if (!topic.value || topic.value.isLocked || !user.value?.user.id || topic.value.author?.id !== user.value.user.id) return false
   const createdAt = Date.parse(topic.value.createdAt || '')
   return Number.isFinite(createdAt) && currentTimeMs.value - createdAt <= topicEditWindowMs
 })
 const canAppendTopic = computed(() => {
-  return Boolean(topic.value && !topic.value.isLocked && user.value?.id && topic.value.author?.id === user.value.id && topicAppends.value.length < 3)
+  return Boolean(topic.value && !topic.value.isLocked && user.value?.user.id && topic.value.author?.id === user.value.user.id && topicAppends.value.length < 3)
 })
 const canUseTopicOwnerActions = computed(() => canEditTopic.value || canAppendTopic.value || activeTopicPanel.value === 'append')
 const isTopicEditDirty = computed(() => {

@@ -4,7 +4,7 @@
       <div class="mb-4 flex justify-end">
         <div class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
           <UIcon name="i-lucide-shield-check" class="size-4 text-emerald-600 dark:text-emerald-400" />
-          <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ user?.roleName || $t('user.staff') }}</span>
+          <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ user?.role.name || $t('user.staff') }}</span>
         </div>
       </div>
 

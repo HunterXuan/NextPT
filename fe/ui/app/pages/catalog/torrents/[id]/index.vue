@@ -739,7 +739,7 @@ const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expan
 const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
 const renderedCommentPreview = computed(() => renderRichText(commentForm.content))
 const canUploadSubtitle = computed(() => Boolean(selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
-const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.id === torrent.value.owner?.id)))
+const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.user.id === torrent.value.owner?.id)))
 const visiblePeers = computed(() => {
   if (peerView.value === 'seeders') return peers.value.filter((item) => item.isSeeder)
   if (peerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)

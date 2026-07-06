@@ -30,9 +30,9 @@ const props = defineProps<{
 const { t, locale } = useI18n()
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 
-const trafficUploaded = computed(() => props.traffic?.uploaded ?? props.user?.uploaded ?? 0)
-const trafficDownloaded = computed(() => props.traffic?.downloaded ?? props.user?.downloaded ?? 0)
-const ratio = computed(() => props.traffic?.shareRatio ?? props.user?.shareRatio ?? 0)
+const trafficUploaded = computed(() => props.traffic?.uploaded ?? props.user?.stat.uploaded ?? 0)
+const trafficDownloaded = computed(() => props.traffic?.downloaded ?? props.user?.stat.downloaded ?? 0)
+const ratio = computed(() => props.traffic?.shareRatio ?? props.user?.stat.shareRatio ?? 0)
 
 const statCards = computed(() => [
   {
@@ -58,7 +58,7 @@ const statCards = computed(() => [
   },
   {
     label: t('user.stats.bonus'),
-    value: numberFormatter.value.format(Number(props.user?.bonus || 0)),
+    value: numberFormatter.value.format(Number(props.user?.stat.bonus || 0)),
     icon: 'i-lucide-coins',
     iconClass: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300',
     dotClass: 'bg-violet-500'

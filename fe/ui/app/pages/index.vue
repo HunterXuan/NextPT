@@ -119,7 +119,7 @@
             <div>
               <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('home.member.eyebrow') }}</p>
               <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">
-                {{ $t('home.member.title', { name: user?.username || $t('nav.user') }) }}
+                {{ $t('home.member.title', { name: user?.user.username || $t('nav.user') }) }}
               </h1>
               <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $t('home.member.description') }}</p>
             </div>
@@ -169,11 +169,11 @@
               <dl class="mt-4 space-y-3 text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.role') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">{{ user?.roleName || '-' }}</dd>
+                  <dd class="font-medium text-slate-950 dark:text-white">{{ user?.role.name || '-' }}</dd>
                 </div>
                 <div class="flex items-center justify-between gap-3">
                   <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.id') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">#{{ user?.id || '-' }}</dd>
+                  <dd class="font-medium text-slate-950 dark:text-white">#{{ user?.user.id || '-' }}</dd>
                 </div>
               </dl>
               <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-user-round" block :to="localePath('/iam/users/me')">

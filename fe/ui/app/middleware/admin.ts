@@ -14,7 +14,7 @@ export default defineNuxtRouteMiddleware(async () => {
     }
   }
 
-  if (!user.value?.isStaff) {
+  if (!user.value?.role.isStaff) {
     return navigateTo(localePath('/iam/users/me'))
   }
 })

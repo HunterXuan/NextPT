@@ -16,7 +16,7 @@
         variant="outline"
         :icon="showPasskey ? 'i-lucide-eye-off' : 'i-lucide-eye'"
         block
-        :disabled="!user?.passkey"
+        :disabled="!user?.user.passkey"
         @click="showPasskey = !showPasskey"
       >
         {{ showPasskey ? $t('user.passkey.hide') : $t('user.passkey.show') }}
@@ -26,7 +26,7 @@
         variant="outline"
         icon="i-lucide-copy"
         block
-        :disabled="!user?.passkey"
+        :disabled="!user?.user.passkey"
         @click="copyPasskey"
       >
         {{ $t('common.copy') }}
@@ -80,7 +80,7 @@ const resetConfirmOpen = ref(false)
 const resetPending = ref(false)
 
 const displayPasskey = computed(() => {
-  const passkey = user.value?.passkey || ''
+  const passkey = user.value?.user.passkey || ''
   if (!passkey) return '-'
   if (showPasskey.value) return passkey
   return maskPasskey(passkey)
@@ -93,9 +93,9 @@ onMounted(async () => {
 })
 
 async function copyPasskey() {
-  if (!user.value?.passkey || !navigator?.clipboard) return
+  if (!user.value?.user.passkey || !navigator?.clipboard) return
 
-  await navigator.clipboard.writeText(user.value.passkey)
+  await navigator.clipboard.writeText(user.value.user.passkey)
   toast.add({
     title: t('user.passkey.copied'),
     color: 'success',
