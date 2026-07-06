@@ -1267,6 +1267,7 @@
           "updatedAt": "更新時間",
           "value": "配置值",
           "booleanValue": "啟用",
+          "unknownRole": "未知角色 #{id}",
           "intInvalid": "請輸入整數",
           "numberInvalid": "請輸入有效數字",
           "jsonInvalid": "JSON 格式不正確"
@@ -1283,6 +1284,25 @@
           "true": "是",
           "false": "否"
         },
+        "labels": {
+          "tracker": {
+            "announce_interval": "匯報間隔",
+            "announce_min_interval": "最小匯報間隔",
+            "announce_url": "Tracker 地址",
+            "bonus_T0": "時間衰減 T0",
+            "bonus_N0": "擁擠懲罰 N0",
+            "bonus_B0": "體積收益上限 B0",
+            "bonus_L": "收益收斂 L",
+            "bonus_base": "基礎做種獎勵"
+          },
+          "iam": {
+            "default_register_role": "註冊預設角色",
+            "register_enabled": "開放註冊"
+          },
+          "catalog": {
+            "torrent_source": "種子 Source 標識"
+          }
+        },
         "descriptions": {
           "tracker": {
             "announce_interval": "客戶端常規 announce 間隔，單位為秒，影響客戶端刷新做種和下載狀態的頻率。",
@@ -1295,7 +1315,6 @@
             "bonus_base": "每個達標種子的基礎每小時魔力獎勵。"
           },
           "iam": {
-            "default_role": "新註冊使用者的預設角色標識。",
             "default_register_role": "新註冊使用者註冊完成後分配的預設角色 ID。",
             "register_enabled": "是否開放全站註冊；關閉後通常只能透過邀請註冊。"
           },

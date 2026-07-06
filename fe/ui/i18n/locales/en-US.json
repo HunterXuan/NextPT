@@ -1267,6 +1267,7 @@
           "updatedAt": "Updated",
           "value": "Value",
           "booleanValue": "Enabled",
+          "unknownRole": "Unknown role #{id}",
           "intInvalid": "Enter an integer",
           "numberInvalid": "Enter a valid number",
           "jsonInvalid": "Invalid JSON"
@@ -1283,6 +1284,25 @@
           "true": "Yes",
           "false": "No"
         },
+        "labels": {
+          "tracker": {
+            "announce_interval": "Announce interval",
+            "announce_min_interval": "Minimum announce interval",
+            "announce_url": "Tracker URL",
+            "bonus_T0": "Time decay T0",
+            "bonus_N0": "Crowding penalty N0",
+            "bonus_B0": "Size reward cap B0",
+            "bonus_L": "Reward convergence L",
+            "bonus_base": "Base seeding bonus"
+          },
+          "iam": {
+            "default_register_role": "Registration default role",
+            "register_enabled": "Open registration"
+          },
+          "catalog": {
+            "torrent_source": "Torrent source identifier"
+          }
+        },
         "descriptions": {
           "tracker": {
             "announce_interval": "Regular client announce interval in seconds, affecting how often clients refresh seeding and leeching state.",
@@ -1295,7 +1315,6 @@
             "bonus_base": "Base hourly bonus for each qualifying seeded torrent."
           },
           "iam": {
-            "default_role": "Default role key for newly registered users.",
             "default_register_role": "Default role ID assigned after a new user completes registration.",
             "register_enabled": "Whether open registration is enabled. When disabled, users usually need an invite."
           },

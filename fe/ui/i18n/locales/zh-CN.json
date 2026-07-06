@@ -1267,6 +1267,7 @@
           "updatedAt": "更新时间",
           "value": "配置值",
           "booleanValue": "启用",
+          "unknownRole": "未知角色 #{id}",
           "intInvalid": "请输入整数",
           "numberInvalid": "请输入有效数字",
           "jsonInvalid": "JSON 格式不正确"
@@ -1283,6 +1284,25 @@
           "true": "是",
           "false": "否"
         },
+        "labels": {
+          "tracker": {
+            "announce_interval": "汇报间隔",
+            "announce_min_interval": "最小汇报间隔",
+            "announce_url": "Tracker 地址",
+            "bonus_T0": "时间衰减 T0",
+            "bonus_N0": "拥挤惩罚 N0",
+            "bonus_B0": "体积收益上限 B0",
+            "bonus_L": "收益收敛 L",
+            "bonus_base": "基础做种奖励"
+          },
+          "iam": {
+            "default_register_role": "注册默认角色",
+            "register_enabled": "开放注册"
+          },
+          "catalog": {
+            "torrent_source": "种子 Source 标识"
+          }
+        },
         "descriptions": {
           "tracker": {
             "announce_interval": "客户端常规 announce 间隔，单位为秒，影响客户端刷新做种和下载状态的频率。",
@@ -1295,7 +1315,6 @@
             "bonus_base": "每个达标种子的基础每小时魔力奖励。"
           },
           "iam": {
-            "default_role": "新注册用户的默认角色标识。",
             "default_register_role": "新注册用户注册完成后分配的默认角色 ID。",
             "register_enabled": "是否开放全站注册；关闭后通常只能通过邀请注册。"
           },

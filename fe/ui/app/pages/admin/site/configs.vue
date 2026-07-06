@@ -81,10 +81,10 @@
                   @keydown.space.prevent="selectConfig(config)"
                 >
                   <td class="px-3 py-2.5 align-middle">
-                    <code class="block truncate text-sm font-semibold text-slate-950 dark:text-white">
-                      {{ config.key }}
-                    </code>
-                    <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">{{ config.group }}</span>
+                    <span class="block truncate text-sm font-semibold text-slate-950 dark:text-white">
+                      {{ displayConfigLabel(config) }}
+                    </span>
+                    <code class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">{{ config.group }}.{{ config.key }}</code>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
                     <code class="block truncate rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-200">
@@ -108,7 +108,7 @@
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
                 <h2 class="truncate text-sm font-semibold text-slate-950 dark:text-white">
-                  {{ selectedConfig ? selectedConfig.key : $t('admin.site.configs.form.empty') }}
+                  {{ selectedConfig ? selectedConfigLabel : $t('admin.site.configs.form.empty') }}
                 </h2>
                 <p v-if="selectedConfig" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
                   {{ selectedConfigPath }}
@@ -163,6 +163,19 @@
               </button>
             </label>
 
+            <label v-else-if="selectedUsesRoleSelect" class="block">
+              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <select
+                v-model.number="selectedRoleId"
+                class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-slate-900 dark:disabled:text-slate-500"
+                :disabled="saving || rolesPending || roleOptions.length === 0"
+              >
+                <option v-if="!hasSelectedRole" :value="selectedRoleId">{{ $t('admin.site.configs.form.unknownRole', { id: selectedRoleId }) }}</option>
+                <option v-for="role in roleOptions" :key="role.id" :value="role.id">{{ roleNameWithLevel(role) }}</option>
+              </select>
+              <p v-if="rolesError" class="mt-1 text-xs text-red-600 dark:text-red-300">{{ rolesError }}</p>
+            </label>
+
             <label v-else-if="selectedKind === 'int' || selectedKind === 'float'" class="block">
               <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
               <input
@@ -214,7 +227,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { AdminSiteConfig } from '~/composables/useAdmin'
+import type { AdminIamRole, AdminSiteConfig } from '~/composables/useAdmin'
 import { formatDateTime } from '~/utils/format'
 
 type ConfigValueKind = 'string' | 'int' | 'float' | 'boolean' | 'json'
@@ -241,6 +254,9 @@ const saving = ref(false)
 const errorMessage = ref('')
 const formError = ref('')
 const originalFormSnapshot = ref('')
+const roles = ref<AdminIamRole[]>([])
+const rolesPending = ref(false)
+const rolesError = ref('')
 
 const form = reactive({
   textValue: '',
@@ -252,6 +268,7 @@ const currentGroupLabel = computed(() => groups.value.find((item) => item.value 
 const selectedRawValue = computed(() => selectedConfig.value ? selectedConfig.value.value : null)
 const selectedKind = computed<ConfigValueKind>(() => selectedConfig.value ? normalizeValueKind(selectedConfig.value.valueType, selectedRawValue.value) : 'string')
 const selectedKindLabel = computed(() => t(`admin.site.configs.types.${selectedKind.value}`))
+const selectedConfigLabel = computed(() => selectedConfig.value ? displayConfigLabel(selectedConfig.value) : '')
 const selectedConfigPath = computed(() => selectedConfig.value ? `${selectedConfig.value.group}.${selectedConfig.value.key}` : '')
 const selectedDescription = computed(() => selectedConfig.value ? displayConfigDescription(selectedConfig.value) : '')
 const selectedUpdatedAtLabel = computed(() => {
@@ -260,6 +277,15 @@ const selectedUpdatedAtLabel = computed(() => {
 })
 const isFormDirty = computed(() => Boolean(selectedConfig.value && formSnapshot() !== originalFormSnapshot.value))
 const canSave = computed(() => Boolean(selectedConfig.value && isFormDirty.value && !saving.value))
+const selectedUsesRoleSelect = computed(() => selectedConfigPath.value === 'iam.default_register_role')
+const { roleOptions, roleNameWithLevel } = useAdminIamRoleLevels(roles)
+const selectedRoleId = computed({
+  get: () => Number.parseInt(getTextFormValue(), 10) || 0,
+  set: (value) => {
+    form.textValue = String(Number(value || 0))
+  }
+})
+const hasSelectedRole = computed(() => roleOptions.value.some((role) => role.id === selectedRoleId.value))
 
 onMounted(loadConfigs)
 
@@ -289,12 +315,32 @@ function selectGroup(group: string) {
   selectedConfig.value = null
   formError.value = ''
   loadConfigs()
+  if (group === 'iam') {
+    loadRoles()
+  }
 }
 
 function selectConfig(config: AdminSiteConfig | null) {
   selectedConfig.value = config
   formError.value = ''
   resetFormFromSelected(true)
+  if (selectedUsesRoleSelect.value) {
+    loadRoles()
+  }
+}
+
+async function loadRoles() {
+  if (rolesPending.value || roles.value.length > 0) return
+  rolesPending.value = true
+  rolesError.value = ''
+  try {
+    const data = await adminApi.listIamRoles()
+    roles.value = data.roles || []
+  } catch (error: unknown) {
+    rolesError.value = error instanceof ApiError ? error.message : error instanceof Error ? error.message : t('common.requestFailed')
+  } finally {
+    rolesPending.value = false
+  }
 }
 
 function resetFormFromSelected(updateSnapshot = false) {
@@ -347,6 +393,10 @@ function previewConfigValue(config: AdminSiteConfig) {
   if (typeof value === 'string') return value
   if (typeof value === 'boolean') return previewBooleanValue(value)
   return JSON.stringify(value)
+}
+
+function displayConfigLabel(config: AdminSiteConfig) {
+  return t(`admin.site.configs.labels.${config.group}.${config.key}`)
 }
 
 function displayConfigDescription(config: AdminSiteConfig) {
