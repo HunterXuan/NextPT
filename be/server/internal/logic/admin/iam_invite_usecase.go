@@ -90,10 +90,11 @@ func (s *sAdminIamInviteUsecase) Grant(ctx context.Context, actor *model.Actor, 
 	}
 
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionGrant,
+		Action:     consts.SiteAuditActionCreate,
 		TargetType: consts.SiteAuditTargetTypeIamInvite,
 		Level:      consts.SiteAuditLevelCritical,
 		Detail: map[string]any{
+			"operation":    consts.SiteAuditOperationGrant,
 			"amount":       in.Amount,
 			"targetMode":   in.TargetMode,
 			"roleIds":      in.RoleIds,
@@ -120,10 +121,13 @@ func (s *sAdminIamInviteUsecase) Recycle(ctx context.Context, actor *model.Actor
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.invite.recycle_failed"))
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionRecycle,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeIamInvite,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"operation": consts.SiteAuditOperationRecycle,
+		},
 	})
 	return nil
 }

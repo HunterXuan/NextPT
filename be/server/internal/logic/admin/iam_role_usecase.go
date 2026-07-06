@@ -5,6 +5,7 @@ import (
 
 	"server/internal/consts"
 	"server/internal/model"
+	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
@@ -110,6 +111,10 @@ func (s *sAdminIamRoleUsecase) invalidateCacheKey(ctx context.Context, key strin
 }
 
 func (s *sAdminIamRoleUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.IamRoleDeleteInp) error {
+	role, err := service.IamRoleDomain().GetRoleById(ctx, in.Id)
+	if err != nil {
+		return gerror.Wrap(err, gi18n.T(ctx, "admin.role.check_users_failed"))
+	}
 	count, err := service.IamRoleDomain().AdminDeleteRole(ctx, in.Id)
 	if err != nil {
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.role.check_users_failed"))
@@ -122,6 +127,32 @@ func (s *sAdminIamRoleUsecase) Delete(ctx context.Context, actor *model.Actor, i
 		TargetType: consts.SiteAuditTargetTypeIamRole,
 		TargetId:   uint64(in.Id),
 		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"snapshot": s.iamRoleAuditSnapshot(role),
+		},
 	})
 	return nil
+}
+
+func (s *sAdminIamRoleUsecase) iamRoleAuditSnapshot(role *entity.IamRole) map[string]any {
+	if role == nil {
+		return nil
+	}
+	return map[string]any{
+		"id":       role.Id,
+		"level":    role.Level,
+		"nameI18N": s.iamRoleJSONMap(role.NameI18N),
+		"isStaff":  role.IsStaff,
+	}
+}
+
+func (s *sAdminIamRoleUsecase) iamRoleJSONMap(value *gjson.Json) map[string]any {
+	if value == nil {
+		return nil
+	}
+	var data map[string]any
+	if err := value.Scan(&data); err != nil {
+		return nil
+	}
+	return data
 }

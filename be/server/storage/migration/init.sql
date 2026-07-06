@@ -651,7 +651,10 @@ CREATE TABLE `site_audit` (
     KEY `idx_created` (`created_at`),
     KEY `idx_user` (`user_id`),
     KEY `idx_action` (`action`),
-    KEY `idx_target` (`target_type`, `target_id`)
+    KEY `idx_target` (`target_type`, `target_id`),
+    KEY `idx_level_created` (`level`, `created_at`),
+    KEY `idx_user_created` (`user_id`, `created_at`),
+    KEY `idx_action_created` (`action`, `created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审计日志';
 
 -- 用户 IP 历史记录（用于防多开/马甲查询）

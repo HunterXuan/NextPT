@@ -29,10 +29,13 @@ func (s *sAdminForumTopicUsecase) Lock(ctx context.Context, actor *model.Actor, 
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionLock,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeForumTopic,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
+		Detail: map[string]any{
+			"operation": consts.SiteAuditOperationLock,
+		},
 	})
 	return nil
 }
@@ -42,10 +45,13 @@ func (s *sAdminForumTopicUsecase) Unlock(ctx context.Context, actor *model.Actor
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionUnlock,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeForumTopic,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
+		Detail: map[string]any{
+			"operation": consts.SiteAuditOperationUnlock,
+		},
 	})
 	return nil
 }
@@ -55,10 +61,13 @@ func (s *sAdminForumTopicUsecase) Pin(ctx context.Context, actor *model.Actor, i
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionPin,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeForumTopic,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
+		Detail: map[string]any{
+			"operation": consts.SiteAuditOperationPin,
+		},
 	})
 	return nil
 }
@@ -68,10 +77,13 @@ func (s *sAdminForumTopicUsecase) Unpin(ctx context.Context, actor *model.Actor,
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionUnpin,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeForumTopic,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
+		Detail: map[string]any{
+			"operation": consts.SiteAuditOperationUnpin,
+		},
 	})
 	return nil
 }
@@ -84,12 +96,13 @@ func (s *sAdminForumTopicUsecase) Move(ctx context.Context, actor *model.Actor, 
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionMove,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeForumTopic,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
 		Detail: map[string]any{
-			"nodeId": in.NodeId,
+			"operation": consts.SiteAuditOperationMove,
+			"nodeId":    in.NodeId,
 		},
 	})
 	return nil
@@ -133,6 +146,13 @@ func (s *sAdminForumTopicUsecase) Delete(ctx context.Context, actor *model.Actor
 		Level:      consts.SiteAuditLevelImportant,
 		Detail: map[string]any{
 			"replyCount": len(replyIds),
+			"snapshot": map[string]any{
+				"id":         topic.Id,
+				"nodeId":     topic.NodeId,
+				"subject":    topic.Subject,
+				"userId":     topic.UserId,
+				"replyCount": topic.ReplyCount,
+			},
 		},
 	})
 	return nil

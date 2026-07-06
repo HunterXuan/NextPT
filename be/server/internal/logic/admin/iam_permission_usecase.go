@@ -36,14 +36,14 @@ func (s *sAdminIamPermissionUsecase) GrantUserAcl(ctx context.Context, actor *mo
 	if err == nil {
 		service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
 		service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-			Action:     consts.SiteAuditActionGrantPermission,
-			TargetType: consts.SiteAuditTargetTypeIamUserPermission,
+			Action:     consts.SiteAuditActionUpdate,
+			TargetType: consts.SiteAuditTargetTypeIamUser,
 			TargetId:   in.UserId,
 			Level:      consts.SiteAuditLevelCritical,
 			Detail: map[string]any{
-				"userId":   in.UserId,
-				"permKeys": permKeys,
-				"isDeny":   in.IsDeny,
+				"operation": consts.SiteAuditOperationGrantPermission,
+				"permKeys":  permKeys,
+				"isDeny":    in.IsDeny,
 			},
 		})
 	}
@@ -60,13 +60,13 @@ func (s *sAdminIamPermissionUsecase) RevokeUserAcl(ctx context.Context, actor *m
 	if err == nil {
 		service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
 		service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-			Action:     consts.SiteAuditActionRevokePermission,
-			TargetType: consts.SiteAuditTargetTypeIamUserPermission,
+			Action:     consts.SiteAuditActionUpdate,
+			TargetType: consts.SiteAuditTargetTypeIamUser,
 			TargetId:   in.UserId,
 			Level:      consts.SiteAuditLevelCritical,
 			Detail: map[string]any{
-				"userId": in.UserId,
-				"ids":    ids,
+				"operation": consts.SiteAuditOperationRevokePermission,
+				"ids":       ids,
 			},
 		})
 	}

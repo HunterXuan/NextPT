@@ -20,6 +20,12 @@ func NewForumCategoryDomain() *sForumCategoryDomain {
 	return &sForumCategoryDomain{}
 }
 
+func (s *sForumCategoryDomain) GetCategoryById(ctx context.Context, id uint) (*entity.ForumCategory, error) {
+	var category *entity.ForumCategory
+	err := dao.ForumCategory.Ctx(ctx).Where(dao.ForumCategory.Columns().Id, id).Scan(&category)
+	return category, err
+}
+
 func (s *sForumCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N, descI18N string, sortOrder, minRoleView int) (uint, error) {
 	id, err := dao.ForumCategory.Ctx(ctx).Data(g.Map{
 		dao.ForumCategory.Columns().NameI18N:    nameI18N,

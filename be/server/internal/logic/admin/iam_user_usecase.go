@@ -212,11 +212,12 @@ func (s *sAdminIamUserUsecase) StatUpdate(ctx context.Context, actor *model.Acto
 		return gerror.New(gi18n.T(ctx, "admin.user.stat_no_changes"))
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionUpdateStat,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeIamUser,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelCritical,
 		Detail: map[string]any{
+			"operation":      consts.SiteAuditOperationUpdateStat,
 			"uploadedDiff":   in.UploadedDiff,
 			"downloadedDiff": in.DownloadedDiff,
 			"bonusDiff":      in.BonusDiff,

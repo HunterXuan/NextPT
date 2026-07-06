@@ -35,6 +35,14 @@ func (s *sCatalogCategoryDomain) GetCategoryById(ctx context.Context, id uint) (
 	return category, err
 }
 
+func (s *sCatalogCategoryDomain) AdminGetCategoryById(ctx context.Context, id uint) (*entity.CatalogCategory, error) {
+	var category *entity.CatalogCategory
+	err := dao.CatalogCategory.Ctx(ctx).
+		Where(dao.CatalogCategory.Columns().Id, id).
+		Scan(&category)
+	return category, err
+}
+
 func (s *sCatalogCategoryDomain) AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool, uploadConfig []byte) (uint, error) {
 	id, err := dao.CatalogCategory.Ctx(ctx).Data(g.Map{
 		dao.CatalogCategory.Columns().NameI18N:     nameI18N,

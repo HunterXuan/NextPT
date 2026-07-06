@@ -17,7 +17,7 @@ import (
 
 type (
 	ISiteAuditDomain interface {
-		AdminListAudits(ctx context.Context, page int, size int) ([]entity.SiteAudit, int, error)
+		AdminListAudits(ctx context.Context, in sitein.AuditListInp) ([]entity.SiteAudit, int, error)
 		Create(ctx context.Context, in sitein.AuditCreateInp) error
 	}
 	ISiteAuditUsecase interface {

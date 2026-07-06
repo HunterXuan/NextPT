@@ -5,6 +5,7 @@ import (
 
 	"server/internal/consts"
 	"server/internal/model"
+	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
@@ -76,6 +77,10 @@ func (s *sAdminForumNodeUsecase) Update(ctx context.Context, actor *model.Actor,
 }
 
 func (s *sAdminForumNodeUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.ForumNodeDeleteInp) error {
+	node, err := service.ForumNodeDomain().GetNodeById(ctx, in.Id)
+	if err != nil {
+		return err
+	}
 	count, err := service.ForumNodeDomain().AdminDeleteNode(ctx, in.Id)
 	if err != nil {
 		return err
@@ -88,6 +93,9 @@ func (s *sAdminForumNodeUsecase) Delete(ctx context.Context, actor *model.Actor,
 		TargetType: consts.SiteAuditTargetTypeForumNode,
 		TargetId:   uint64(in.Id),
 		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"snapshot": s.forumNodeAuditSnapshot(node),
+		},
 	})
 	return nil
 }
@@ -98,4 +106,31 @@ func (s *sAdminForumNodeUsecase) List(ctx context.Context, actor *model.Actor, i
 		return nil, err
 	}
 	return &adminout.ForumNodeListOut{Nodes: list}, nil
+}
+
+func (s *sAdminForumNodeUsecase) forumNodeAuditSnapshot(node *entity.ForumNode) map[string]any {
+	if node == nil {
+		return nil
+	}
+	return map[string]any{
+		"id":            node.Id,
+		"categoryId":    node.CategoryId,
+		"slug":          node.Slug,
+		"nameI18N":      s.forumNodeJSONMap(node.NameI18N),
+		"sortOrder":     node.SortOrder,
+		"minRoleRead":   node.MinRoleRead,
+		"minRoleWrite":  node.MinRoleWrite,
+		"minRoleCreate": node.MinRoleCreate,
+	}
+}
+
+func (s *sAdminForumNodeUsecase) forumNodeJSONMap(value *gjson.Json) map[string]any {
+	if value == nil {
+		return nil
+	}
+	var data map[string]any
+	if err := value.Scan(&data); err != nil {
+		return nil
+	}
+	return data
 }

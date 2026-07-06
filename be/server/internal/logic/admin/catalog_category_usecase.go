@@ -5,6 +5,7 @@ import (
 
 	"server/internal/consts"
 	"server/internal/model"
+	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
@@ -94,6 +95,10 @@ func (s *sAdminCatalogCategoryUsecase) Delete(ctx context.Context, actor *model.
 		return gerror.New(gi18n.T(ctx, "admin.catalog.category_has_torrents"))
 	}
 
+	category, err := service.CatalogCategoryDomain().AdminGetCategoryById(ctx, in.Id)
+	if err != nil {
+		return err
+	}
 	if err := service.CatalogCategoryDomain().AdminDeleteCategory(ctx, in.Id); err != nil {
 		return err
 	}
@@ -102,6 +107,9 @@ func (s *sAdminCatalogCategoryUsecase) Delete(ctx context.Context, actor *model.
 		TargetType: consts.SiteAuditTargetTypeCatalogCategory,
 		TargetId:   uint64(in.Id),
 		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"snapshot": s.catalogCategoryAuditSnapshot(category),
+		},
 	})
 	return nil
 }
@@ -145,4 +153,28 @@ func (s *sAdminCatalogCategoryUsecase) scanUploadConfig(value *gjson.Json) *mode
 		return nil
 	}
 	return &config
+}
+
+func (s *sAdminCatalogCategoryUsecase) catalogCategoryAuditSnapshot(category *entity.CatalogCategory) map[string]any {
+	if category == nil {
+		return nil
+	}
+	return map[string]any{
+		"id":        category.Id,
+		"nameI18N":  s.catalogCategoryJSONMap(category.NameI18N),
+		"slug":      category.Slug,
+		"sortOrder": category.SortOrder,
+		"enabled":   category.Enabled,
+	}
+}
+
+func (s *sAdminCatalogCategoryUsecase) catalogCategoryJSONMap(value *gjson.Json) map[string]any {
+	if value == nil {
+		return nil
+	}
+	var data map[string]any
+	if err := value.Scan(&data); err != nil {
+		return nil
+	}
+	return data
 }

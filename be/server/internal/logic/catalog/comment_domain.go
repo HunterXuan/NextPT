@@ -109,12 +109,24 @@ func (s *sCatalogCommentDomain) IncrementCommentRewardStats(ctx context.Context,
 }
 
 func (s *sCatalogCommentDomain) QueryCommentIdsByTarget(ctx context.Context, targetType string, targetId uint64) ([]uint64, error) {
-	var commentIds []uint64
+	columns := dao.CatalogComment.Columns()
+	var rows []struct {
+		Id uint64
+	}
 	err := dao.CatalogComment.Ctx(ctx).
-		Where(dao.CatalogComment.Columns().TargetType, targetType).
-		Where(dao.CatalogComment.Columns().TargetId, targetId).
-		ScanList(&commentIds, "Id")
-	return commentIds, err
+		Fields(columns.Id).
+		Where(columns.TargetType, targetType).
+		Where(columns.TargetId, targetId).
+		Scan(&rows)
+	if err != nil {
+		return nil, err
+	}
+
+	commentIds := make([]uint64, 0, len(rows))
+	for _, row := range rows {
+		commentIds = append(commentIds, row.Id)
+	}
+	return commentIds, nil
 }
 
 func (s *sCatalogCommentDomain) DeleteCommentsByTarget(ctx context.Context, targetType string, targetId uint64) error {

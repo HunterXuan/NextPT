@@ -44,12 +44,13 @@ func (s *sAdminModReportUsecase) Resolve(ctx context.Context, actor *model.Actor
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionResolve,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeModReport,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
 		Detail: map[string]any{
-			"status": in.Status,
+			"operation": consts.SiteAuditOperationResolve,
+			"status":    in.Status,
 		},
 	})
 	return nil

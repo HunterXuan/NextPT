@@ -30,12 +30,13 @@ func (s *sAdminIamSessionUsecase) DeleteByUser(ctx context.Context, actor *model
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.session.delete_failed"))
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionRemoveSession,
+		Action:     consts.SiteAuditActionDelete,
 		TargetType: consts.SiteAuditTargetTypeIamSession,
 		TargetId:   in.UserId,
 		Level:      consts.SiteAuditLevelCritical,
 		Detail: map[string]any{
-			"userId": in.UserId,
+			"operation": consts.SiteAuditOperationRemoveSession,
+			"userId":    in.UserId,
 		},
 	})
 	return nil

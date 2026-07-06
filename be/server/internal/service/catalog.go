@@ -19,6 +19,7 @@ type (
 	ICatalogCategoryDomain interface {
 		ListCategories(ctx context.Context) ([]entity.CatalogCategory, error)
 		GetCategoryById(ctx context.Context, id uint) (*entity.CatalogCategory, error)
+		AdminGetCategoryById(ctx context.Context, id uint) (*entity.CatalogCategory, error)
 		AdminCreateCategory(ctx context.Context, nameI18N []byte, slug string, sortOrder int, enabled bool, uploadConfig []byte) (uint, error)
 		AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool, uploadConfig *[]byte) error
 		AdminDeleteCategory(ctx context.Context, id uint) error

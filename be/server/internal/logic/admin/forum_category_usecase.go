@@ -5,11 +5,13 @@ import (
 
 	"server/internal/consts"
 	"server/internal/model"
+	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/i18n/gi18n"
 )
@@ -62,6 +64,10 @@ func (s *sAdminForumCategoryUsecase) Update(ctx context.Context, actor *model.Ac
 }
 
 func (s *sAdminForumCategoryUsecase) Delete(ctx context.Context, actor *model.Actor, in adminin.ForumCategoryDeleteInp) error {
+	category, err := service.ForumCategoryDomain().GetCategoryById(ctx, in.Id)
+	if err != nil {
+		return err
+	}
 	count, err := service.ForumCategoryDomain().AdminDeleteCategory(ctx, in.Id)
 	if err != nil {
 		return err
@@ -74,6 +80,9 @@ func (s *sAdminForumCategoryUsecase) Delete(ctx context.Context, actor *model.Ac
 		TargetType: consts.SiteAuditTargetTypeForumCategory,
 		TargetId:   uint64(in.Id),
 		Level:      consts.SiteAuditLevelCritical,
+		Detail: map[string]any{
+			"snapshot": s.forumCategoryAuditSnapshot(category),
+		},
 	})
 	return nil
 }
@@ -84,4 +93,27 @@ func (s *sAdminForumCategoryUsecase) List(ctx context.Context, actor *model.Acto
 		return nil, err
 	}
 	return &adminout.ForumCategoryListOut{Categories: list}, nil
+}
+
+func (s *sAdminForumCategoryUsecase) forumCategoryAuditSnapshot(category *entity.ForumCategory) map[string]any {
+	if category == nil {
+		return nil
+	}
+	return map[string]any{
+		"id":          category.Id,
+		"nameI18N":    s.forumCategoryJSONMap(category.NameI18N),
+		"sortOrder":   category.SortOrder,
+		"minRoleView": category.MinRoleView,
+	}
+}
+
+func (s *sAdminForumCategoryUsecase) forumCategoryJSONMap(value *gjson.Json) map[string]any {
+	if value == nil {
+		return nil
+	}
+	var data map[string]any
+	if err := value.Scan(&data); err != nil {
+		return nil
+	}
+	return data
 }

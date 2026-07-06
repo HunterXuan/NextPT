@@ -15,6 +15,7 @@ import (
 
 type (
 	IForumCategoryDomain interface {
+		GetCategoryById(ctx context.Context, id uint) (*entity.ForumCategory, error)
 		AdminCreateCategory(ctx context.Context, nameI18N string, descI18N string, sortOrder int, minRoleView int) (uint, error)
 		AdminUpdateCategory(ctx context.Context, id uint, nameI18N *string, descI18N *string, sortOrder *int, minRoleView *int) error
 		AdminDeleteCategory(ctx context.Context, id uint) (int, error)

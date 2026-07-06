@@ -1,17 +1,22 @@
 package adminout
 
-import "github.com/gogf/gf/v2/os/gtime"
+import (
+	"server/internal/model"
+
+	"github.com/gogf/gf/v2/os/gtime"
+)
 
 type SiteAuditItem struct {
-	Id         uint64      `json:"id"`
-	UserId     uint64      `json:"userId"`
-	Action     string      `json:"action"`
-	TargetType string      `json:"targetType"`
-	TargetId   uint64      `json:"targetId"`
-	Level      int         `json:"level"`
-	Ip         string      `json:"ip"`
-	Detail     string      `json:"detail"`
-	CreatedAt  *gtime.Time `json:"createdAt"`
+	Id         uint64               `json:"id"`
+	UserId     uint64               `json:"userId"`
+	Actor      model.IamUserSummary `json:"actor"`
+	Action     string               `json:"action"`
+	TargetType string               `json:"targetType"`
+	TargetId   uint64               `json:"targetId"`
+	Level      int                  `json:"level"`
+	Ip         string               `json:"ip"`
+	Detail     string               `json:"detail"`
+	CreatedAt  *gtime.Time          `json:"createdAt"`
 }
 
 type SiteAuditListOut struct {

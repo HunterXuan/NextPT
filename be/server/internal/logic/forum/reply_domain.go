@@ -53,11 +53,23 @@ func (s *sForumReplyDomain) QueryRepliesByTopic(ctx context.Context, topicId uin
 }
 
 func (s *sForumReplyDomain) QueryReplyIdsByTopic(ctx context.Context, topicId uint64) ([]uint64, error) {
-	var replyIds []uint64
+	columns := dao.ForumReply.Columns()
+	var rows []struct {
+		Id uint64
+	}
 	err := dao.ForumReply.Ctx(ctx).
-		Where(dao.ForumReply.Columns().TopicId, topicId).
-		ScanList(&replyIds, "Id")
-	return replyIds, err
+		Fields(columns.Id).
+		Where(columns.TopicId, topicId).
+		Scan(&rows)
+	if err != nil {
+		return nil, err
+	}
+
+	replyIds := make([]uint64, 0, len(rows))
+	for _, row := range rows {
+		replyIds = append(replyIds, row.Id)
+	}
+	return replyIds, nil
 }
 
 func (s *sForumReplyDomain) GetReplyById(ctx context.Context, replyId uint64) (*entity.ForumReply, error) {

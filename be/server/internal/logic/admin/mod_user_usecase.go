@@ -38,11 +38,12 @@ func (s *sAdminModUserUsecase) Apply(ctx context.Context, actor *model.Actor, in
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionApply,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeIamUser,
 		TargetId:   in.Id,
 		Level:      consts.SiteAuditLevelImportant,
 		Detail: map[string]any{
+			"operation":       consts.SiteAuditOperationApply,
 			"modType":         in.Type,
 			"durationSeconds": in.Duration,
 			"reason":          in.Reason,
@@ -59,12 +60,13 @@ func (s *sAdminModUserUsecase) Remove(ctx context.Context, actor *model.Actor, i
 		return err
 	}
 	service.SiteAuditUsecase().Record(ctx, actor, sitein.AuditRecordInp{
-		Action:     consts.SiteAuditActionRemove,
+		Action:     consts.SiteAuditActionUpdate,
 		TargetType: consts.SiteAuditTargetTypeModUserLog,
 		TargetId:   in.ModId,
 		Level:      consts.SiteAuditLevelImportant,
 		Detail: map[string]any{
-			"userId": in.Id,
+			"operation": consts.SiteAuditOperationRemove,
+			"userId":    in.Id,
 		},
 	})
 	return nil
