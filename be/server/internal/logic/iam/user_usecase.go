@@ -2,6 +2,7 @@ package iam
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"server/internal/consts"
@@ -169,6 +170,47 @@ func (s *sIamUserUsecase) getRoleActorVersion(ctx context.Context, roleId uint) 
 }
 
 func (s *sIamUserUsecase) CheckPermission(ctx context.Context, actor *model.Actor, permKey string) (bool, error) {
+	rolePerms, userAcls, err := s.loadPermissionLists(ctx, actor)
+	if err != nil {
+		return false, err
+	}
+
+	return service.IamPermissionDomain().CheckPermissionWithList(ctx, rolePerms, userAcls, permKey)
+}
+
+func (s *sIamUserUsecase) Permissions(ctx context.Context, actor *model.Actor) (*iamout.UserPermissionListOut, error) {
+	if actor == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
+	}
+
+	rolePerms, userAcls, err := s.loadPermissionLists(ctx, actor)
+	if err != nil {
+		return nil, err
+	}
+
+	permissions := make([]string, 0)
+	for _, permission := range service.IamPermissionDomain().GetAllPermissions(ctx) {
+		permission = strings.TrimSpace(permission)
+		if permission == "" || permission == consts.IamPermissionAll || !strings.HasSuffix(permission, ":*") {
+			continue
+		}
+		ok, err := service.IamPermissionDomain().CheckPermissionWithList(ctx, rolePerms, userAcls, permission)
+		if err != nil {
+			return nil, err
+		}
+		if ok {
+			permissions = append(permissions, permission)
+		}
+	}
+
+	return &iamout.UserPermissionListOut{Permissions: permissions}, nil
+}
+
+func (s *sIamUserUsecase) loadPermissionLists(ctx context.Context, actor *model.Actor) ([]string, []string, error) {
+	if actor == nil {
+		return nil, nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
+	}
+
 	// 1. Get role perms from cache or DB
 	rolePermsKey := service.SysCache().KeyIamRolePerms(ctx, actor.RoleId)
 	rolePermsVar, err := gcache.GetOrSetFunc(ctx, rolePermsKey, func(ctx context.Context) (value interface{}, err error) {
@@ -183,7 +225,7 @@ func (s *sIamUserUsecase) CheckPermission(ctx context.Context, actor *model.Acto
 		return perms, nil
 	}, 24*time.Hour)
 	if err != nil {
-		return false, err
+		return nil, nil, err
 	}
 	var rolePerms []string
 	_ = rolePermsVar.Scan(&rolePerms)
@@ -202,12 +244,12 @@ func (s *sIamUserUsecase) CheckPermission(ctx context.Context, actor *model.Acto
 		return list, nil
 	}, time.Minute)
 	if err != nil {
-		return false, err
+		return nil, nil, err
 	}
 	var userAcls []string
 	_ = userAclsVar.Scan(&userAcls)
 
-	return service.IamPermissionDomain().CheckPermissionWithList(ctx, rolePerms, userAcls, permKey)
+	return rolePerms, userAcls, nil
 }
 
 func (s *sIamUserUsecase) Create(ctx context.Context, in iamin.UserCreateInp) (uint64, error) {
@@ -349,24 +391,32 @@ func (s *sIamUserUsecase) Me(ctx context.Context, actor *model.Actor) (*iamout.U
 	}
 
 	return &iamout.UserMeOut{
-		Id:         user.Id,
-		Username:   user.Username,
-		Email:      user.Email,
-		Passkey:    user.Passkey,
-		Role:       user.Role,
-		RoleName:   s.localizeRoleName(ctx, role),
-		RoleLevel:  actor.RoleLevel,
-		IsStaff:    actor.IsStaff,
-		Status:     user.Status,
-		VipUntil:   user.VipUntil,
-		Avatar:     profile.Avatar,
-		Info:       profile.Info,
-		Signature:  profile.Signature,
-		Uploaded:   stat.Uploaded,
-		Downloaded: stat.Downloaded,
-		Bonus:      stat.Bonus,
-		ShareRatio: s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
-		CreatedAt:  user.CreatedAt,
+		User: iamout.UserMeAccountOut{
+			Id:        user.Id,
+			Username:  user.Username,
+			Email:     user.Email,
+			Passkey:   user.Passkey,
+			Status:    user.Status,
+			VipUntil:  user.VipUntil,
+			CreatedAt: user.CreatedAt,
+		},
+		Role: iamout.UserMeRoleOut{
+			Id:      user.Role,
+			Name:    s.localizeRoleName(ctx, role),
+			Level:   actor.RoleLevel,
+			IsStaff: actor.IsStaff,
+		},
+		Profile: iamout.UserMeProfileOut{
+			Avatar:    profile.Avatar,
+			Info:      profile.Info,
+			Signature: profile.Signature,
+		},
+		Stat: iamout.UserMeStatOut{
+			Uploaded:   stat.Uploaded,
+			Downloaded: stat.Downloaded,
+			Bonus:      stat.Bonus,
+			ShareRatio: s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
+		},
 	}, nil
 }
 

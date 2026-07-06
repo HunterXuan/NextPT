@@ -24,6 +24,14 @@ type IamUserMeRes struct {
 	iamout.UserMeOut
 }
 
+type IamUserPermissionListReq struct {
+	g.Meta `path:"/users/me/permissions" method:"get" tags:"IamUser" summary:"获取当前用户通配权限列表"`
+}
+
+type IamUserPermissionListRes struct {
+	iamout.UserPermissionListOut
+}
+
 type IamUserProfileUpdateReq struct {
 	g.Meta `path:"/users/me" method:"patch" tags:"IamUser" summary:"更新当前用户资料"`
 	iamin.UserProfileUpdateInp

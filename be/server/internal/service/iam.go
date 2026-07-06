@@ -98,6 +98,7 @@ type (
 		LoadActorByPasskey(ctx context.Context, passkey string) (*model.Actor, error)
 		EnsureCanAuthenticate(ctx context.Context, user *entity.IamUser) error
 		CheckPermission(ctx context.Context, actor *model.Actor, permKey string) (bool, error)
+		Permissions(ctx context.Context, actor *model.Actor) (*iamout.UserPermissionListOut, error)
 		Create(ctx context.Context, in iamin.UserCreateInp) (uint64, error)
 		Me(ctx context.Context, actor *model.Actor) (*iamout.UserMeOut, error)
 		UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error
