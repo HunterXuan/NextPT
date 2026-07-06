@@ -245,6 +245,7 @@ export interface AdminSiteConfigListOut {
 export interface AdminSiteAuditItem {
   id: number
   userId: number
+  actor: AdminUserSummary
   action: string
   targetType: string
   targetId: number
@@ -252,6 +253,17 @@ export interface AdminSiteAuditItem {
   ip: string
   detail: string
   createdAt?: string | null
+}
+
+export interface AdminSiteAuditListParams {
+  page?: number
+  size?: number
+  level?: number
+  action?: string
+  targetType?: string
+  userId?: number
+  startAt?: string
+  endAt?: string
 }
 
 export interface AdminSiteAuditListOut {
@@ -604,7 +616,7 @@ export function useAdmin() {
     })
   }
 
-  async function listSiteAudits(params: { page?: number, size?: number } = {}) {
+  async function listSiteAudits(params: AdminSiteAuditListParams = {}) {
     return await fetchApi<AdminSiteAuditListOut>('/api/admin/site/audits', {
       query: params
     })
