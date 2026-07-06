@@ -9,7 +9,7 @@ import (
 )
 
 func (c *ControllerV1) SysCronLogList(ctx context.Context, req *v1.SysCronLogListReq) (res *v1.SysCronLogListRes, err error) {
-	out, err := service.AdminSysCronUsecase().LogList(ctx, contexts.GetActor(ctx), req.Name, req.Page, req.Size)
+	out, err := service.AdminSysCronUsecase().LogList(ctx, contexts.GetActor(ctx), req.SysCronLogListInp)
 	if err != nil {
 		return nil, err
 	}

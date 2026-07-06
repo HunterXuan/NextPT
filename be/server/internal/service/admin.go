@@ -91,7 +91,7 @@ type (
 	}
 	IAdminSysCronUsecase interface {
 		List(ctx context.Context, actor *model.Actor) (*adminout.SysCronListOut, error)
-		LogList(ctx context.Context, actor *model.Actor, jobName string, page int, size int) (*adminout.SysCronLogListOut, error)
+		LogList(ctx context.Context, actor *model.Actor, in adminin.SysCronLogListInp) (*adminout.SysCronLogListOut, error)
 	}
 )
 

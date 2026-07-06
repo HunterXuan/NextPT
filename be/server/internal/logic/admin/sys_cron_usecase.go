@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"server/internal/model"
+	"server/internal/model/in/adminin"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
 
@@ -34,8 +35,8 @@ func (s *sAdminSysCronUsecase) List(ctx context.Context, actor *model.Actor) (*a
 	return &adminout.SysCronListOut{List: list}, nil
 }
 
-func (s *sAdminSysCronUsecase) LogList(ctx context.Context, actor *model.Actor, jobName string, page, size int) (*adminout.SysCronLogListOut, error) {
-	logs, total, err := service.SysCron().AdminListCronLogs(ctx, jobName, page, size)
+func (s *sAdminSysCronUsecase) LogList(ctx context.Context, actor *model.Actor, in adminin.SysCronLogListInp) (*adminout.SysCronLogListOut, error) {
+	logs, total, err := service.SysCron().AdminListCronLogs(ctx, in.Name, in.Status, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +58,7 @@ func (s *sAdminSysCronUsecase) LogList(ctx context.Context, actor *model.Actor, 
 	return &adminout.SysCronLogListOut{
 		List:  list,
 		Total: total,
-		Page:  page,
-		Size:  size,
+		Page:  in.Page,
+		Size:  in.Size,
 	}, nil
 }

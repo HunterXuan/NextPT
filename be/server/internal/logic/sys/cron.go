@@ -168,8 +168,11 @@ func (s *sSysCron) runWrapper(jobName string, lockExpire int, jobFunc func(ctx c
 	}
 }
 
-func (s *sSysCron) AdminListCronLogs(ctx context.Context, jobName string, page, size int) ([]*entity.SysCronLog, int, error) {
+func (s *sSysCron) AdminListCronLogs(ctx context.Context, jobName string, status int, page, size int) ([]*entity.SysCronLog, int, error) {
 	m := dao.SysCronLog.Ctx(ctx).Where("job_name", jobName)
+	if status >= 0 {
+		m = m.Where("status", status)
+	}
 	total, err := m.Count()
 	if err != nil {
 		return nil, 0, err

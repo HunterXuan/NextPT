@@ -41,7 +41,7 @@ type (
 	ISysCron interface {
 		// Start 启动所有系统定时任务，在全局 Init 中调用
 		Start(ctx context.Context)
-		AdminListCronLogs(ctx context.Context, jobName string, page int, size int) ([]*entity.SysCronLog, int, error)
+		AdminListCronLogs(ctx context.Context, jobName string, status int, page int, size int) ([]*entity.SysCronLog, int, error)
 	}
 	ISysStorage interface {
 		// Upload 将数据上传到存储引擎
