@@ -294,6 +294,12 @@ export interface AdminSysCronLogItem {
   updatedAt?: string | null
 }
 
+export interface AdminSysCronLogListParams {
+  page?: number
+  size?: number
+  status?: number
+}
+
 export interface AdminSysCronLogListOut {
   list: AdminSysCronLogItem[]
   total: number
@@ -626,7 +632,7 @@ export function useAdmin() {
     return await fetchApi<AdminSysCronListOut>('/api/admin/sys/crons')
   }
 
-  async function listSysCronLogs(name: string, params: { page?: number, size?: number } = {}) {
+  async function listSysCronLogs(name: string, params: AdminSysCronLogListParams = {}) {
     return await fetchApi<AdminSysCronLogListOut>(`/api/admin/sys/crons/${encodeURIComponent(name)}/logs`, {
       query: params
     })

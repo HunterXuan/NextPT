@@ -1577,7 +1577,16 @@
         "select": "选择一个任务",
         "logsTitle": "任务日志",
         "logsEmpty": "暂无任务日志",
-        "logsTotal": "共 {total} 条日志",
+        "tasksCount": "{count} 个任务",
+        "registeredAt": "注册于 {time}",
+        "logId": "记录 #{id}",
+        "errorModal": {
+          "title": "错误详情"
+        },
+        "filters": {
+          "status": "日志状态",
+          "allStatuses": "全部状态"
+        },
         "status": {
           "runnable": "可运行",
           "running": "运行中",

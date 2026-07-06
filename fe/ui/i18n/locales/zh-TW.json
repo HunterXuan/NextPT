@@ -1577,7 +1577,16 @@
         "select": "選擇一個任務",
         "logsTitle": "任務日誌",
         "logsEmpty": "暫無任務日誌",
-        "logsTotal": "共 {total} 筆日誌",
+        "tasksCount": "{count} 個任務",
+        "registeredAt": "註冊於 {time}",
+        "logId": "記錄 #{id}",
+        "errorModal": {
+          "title": "錯誤詳情"
+        },
+        "filters": {
+          "status": "日誌狀態",
+          "allStatuses": "全部狀態"
+        },
         "status": {
           "runnable": "可執行",
           "running": "執行中",

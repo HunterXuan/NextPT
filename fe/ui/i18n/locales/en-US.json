@@ -1577,7 +1577,16 @@
         "select": "Select a job",
         "logsTitle": "Job logs",
         "logsEmpty": "No job logs",
-        "logsTotal": "{total} logs",
+        "tasksCount": "{count} jobs",
+        "registeredAt": "Registered at {time}",
+        "logId": "Log #{id}",
+        "errorModal": {
+          "title": "Error Detail"
+        },
+        "filters": {
+          "status": "Log status",
+          "allStatuses": "All statuses"
+        },
         "status": {
           "runnable": "Runnable",
           "running": "Running",
