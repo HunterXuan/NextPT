@@ -1,29 +1,44 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <section class="mb-3 rounded-lg border border-slate-200 bg-white p-2.5 dark:border-slate-800 dark:bg-slate-900">
-        <div class="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
-          <form class="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]" @submit.prevent="handleSearchSubmit">
+      <section class="mb-3 rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex items-center gap-2">
+          <form class="flex min-w-0 flex-1 items-center gap-2" @submit.prevent="handleSearchSubmit">
             <UInput
               v-model="keyword"
-              class="w-full"
+              class="min-w-0 flex-1"
+              :ui="{ base: 'h-10' }"
               icon="i-lucide-search"
               :placeholder="$t('catalog.torrents.search.placeholder')"
               :disabled="pending"
             />
-            <UButton type="submit" color="primary" icon="i-lucide-search" :loading="pending">
-              {{ $t('catalog.torrents.search.submit') }}
+            <UButton
+              type="submit"
+              color="primary"
+              icon="i-lucide-search"
+              :loading="pending"
+              class="h-10 w-10 shrink-0 justify-center p-0 sm:w-auto sm:px-3"
+              :aria-label="$t('catalog.torrents.search.submit')"
+            >
+              <span class="hidden sm:inline">{{ $t('catalog.torrents.search.submit') }}</span>
             </UButton>
           </form>
 
-          <div class="grid grid-cols-1 gap-2 sm:flex sm:items-center sm:justify-end">
-            <UButton color="primary" icon="i-lucide-upload" :to="localePath('/catalog/torrents/upload')">
-              {{ $t('catalog.torrents.upload.action') }}
+          <div class="flex shrink-0 items-center">
+            <UButton
+              color="primary"
+              variant="soft"
+              icon="i-lucide-upload"
+              :to="localePath('/catalog/torrents/upload')"
+              class="h-10 w-10 justify-center p-0 sm:w-auto sm:px-3"
+              :aria-label="$t('catalog.torrents.upload.action')"
+            >
+              <span class="hidden sm:inline">{{ $t('catalog.torrents.upload.action') }}</span>
             </UButton>
           </div>
         </div>
 
-        <div class="mt-2 -mx-1 overflow-x-auto px-1 pb-1">
+        <div class="mt-3 -mx-1 overflow-x-auto px-1 pb-1">
           <div class="flex min-w-max items-center gap-1.5">
             <button
               type="button"
