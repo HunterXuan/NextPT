@@ -21,24 +21,22 @@ type SiteConfigDao struct {
 
 // SiteConfigColumns defines and stores column names for the table site_config.
 type SiteConfigColumns struct {
-	Id          string //
-	Group       string //
-	Key         string //
-	Value       string // 支持存 boolean/number/array
-	Description string //
-	CreatedAt   string //
-	UpdatedAt   string //
+	Id        string //
+	Group     string //
+	Key       string //
+	Value     string // 支持存 boolean/number/array
+	CreatedAt string //
+	UpdatedAt string //
 }
 
 // siteConfigColumns holds the columns for the table site_config.
 var siteConfigColumns = SiteConfigColumns{
-	Id:          "id",
-	Group:       "group",
-	Key:         "key",
-	Value:       "value",
-	Description: "description",
-	CreatedAt:   "created_at",
-	UpdatedAt:   "updated_at",
+	Id:        "id",
+	Group:     "group",
+	Key:       "key",
+	Value:     "value",
+	CreatedAt: "created_at",
+	UpdatedAt: "updated_at",
 }
 
 // NewSiteConfigDao creates and returns a new DAO object for table data access.

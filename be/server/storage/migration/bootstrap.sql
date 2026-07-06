@@ -113,23 +113,22 @@ ON DUPLICATE KEY UPDATE
 -- ------------------------------------------------------------
 
 INSERT INTO `site_config`
-    (`group`, `key`, `value`, `description`, `created_at`, `updated_at`)
+    (`group`, `key`, `value`, `created_at`, `updated_at`)
 VALUES
-    ('tracker', 'announce_interval', '{"val":1800}', '客户端心跳汇报间隔（秒）', NOW(), NOW()),
-    ('tracker', 'announce_min_interval', '{"val":900}', '客户端心跳最小汇报间隔（秒）', NOW(), NOW()),
-    ('tracker', 'announce_url', '{"val":"http://127.0.0.1:8000/api/tracker/announce"}', 'Tracker 宣告地址', NOW(), NOW()),
-    ('tracker', 'bonus_T0', '{"val":8.0}', '魔力值衰减参数 T0', NOW(), NOW()),
-    ('tracker', 'bonus_N0', '{"val":7.0}', '魔力值做种人数拥挤惩罚基数 N0', NOW(), NOW()),
-    ('tracker', 'bonus_B0', '{"val":100.0}', '魔力值每小时体积收益硬上限 B0', NOW(), NOW()),
-    ('tracker', 'bonus_L', '{"val":300.0}', '魔力值收益收敛平滑参数 L', NOW(), NOW()),
-    ('tracker', 'bonus_base', '{"val":0.4}', '每个达标种子的基础每小时奖励', NOW(), NOW()),
-    ('iam', 'default_role', '{"val":"user"}', '新注册用户默认角色标识', NOW(), NOW()),
-    ('iam', 'default_register_role', '{"val":1}', '新注册用户默认角色ID', NOW(), NOW()),
-    ('iam', 'register_enabled', '{"val":true}', '是否开放全站注册', NOW(), NOW()),
-    ('catalog', 'torrent_source', '{"val":"NextPT"}', '私有种子 source 标识', NOW(), NOW())
+    ('tracker', 'announce_interval', '{"val":1800}', NOW(), NOW()),
+    ('tracker', 'announce_min_interval', '{"val":900}', NOW(), NOW()),
+    ('tracker', 'announce_url', '{"val":"http://127.0.0.1:8000/api/tracker/announce"}', NOW(), NOW()),
+    ('tracker', 'bonus_T0', '{"val":8.0}', NOW(), NOW()),
+    ('tracker', 'bonus_N0', '{"val":7.0}', NOW(), NOW()),
+    ('tracker', 'bonus_B0', '{"val":100.0}', NOW(), NOW()),
+    ('tracker', 'bonus_L', '{"val":300.0}', NOW(), NOW()),
+    ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
+    ('iam', 'default_role', '{"val":"user"}', NOW(), NOW()),
+    ('iam', 'default_register_role', '{"val":1}', NOW(), NOW()),
+    ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
+    ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW())
 ON DUPLICATE KEY UPDATE
     `value` = VALUES(`value`),
-    `description` = VALUES(`description`),
     `updated_at` = NOW();
 
 -- ------------------------------------------------------------

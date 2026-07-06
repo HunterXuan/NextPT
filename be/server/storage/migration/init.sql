@@ -677,7 +677,6 @@ CREATE TABLE `site_config` (
     `group`           VARCHAR(30)     NOT NULL DEFAULT 'general',
     `key`             VARCHAR(64)     NOT NULL,
     `value`           JSON            NOT NULL COMMENT '配置值(JSON: {"val": ...})',
-    `description`     VARCHAR(255)    NOT NULL DEFAULT '',
     `created_at`      DATETIME        NULL,
     `updated_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),

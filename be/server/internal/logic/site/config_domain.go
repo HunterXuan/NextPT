@@ -108,14 +108,13 @@ func (s *sSiteConfigDomain) AdminListConfigs(ctx context.Context, in sitein.Site
 
 func (s *sSiteConfigDomain) buildSiteConfigItem(cfg *entity.SiteConfig) *siteout.SiteConfigItem {
 	return &siteout.SiteConfigItem{
-		Id:          cfg.Id,
-		Group:       cfg.Group,
-		Key:         cfg.Key,
-		Value:       s.getConfigValue(cfg),
-		ValueType:   string(s.getConfigValueType(cfg.Group, cfg.Key)),
-		Description: cfg.Description,
-		CreatedAt:   cfg.CreatedAt,
-		UpdatedAt:   cfg.UpdatedAt,
+		Id:        cfg.Id,
+		Group:     cfg.Group,
+		Key:       cfg.Key,
+		Value:     s.getConfigValue(cfg),
+		ValueType: string(s.getConfigValueType(cfg.Group, cfg.Key)),
+		CreatedAt: cfg.CreatedAt,
+		UpdatedAt: cfg.UpdatedAt,
 	}
 }
 
