@@ -15,9 +15,9 @@ func (c *ControllerV1) Scrape(ctx context.Context, req *v1.ScrapeReq) (res *v1.S
 	r := ghttp.RequestFromCtx(ctx)
 
 	// info_hash is raw bytes, we should parse it from URL query directly to support multiple
-	infoHashes := r.GetQuery("info_hash").Strings()
+	req.InfoHash = r.GetQuery("info_hash").Strings()
 
-	out, err := service.TrackerPeerUsecase().Scrape(ctx, contexts.GetActor(ctx), infoHashes)
+	out, err := service.TrackerPeerUsecase().Scrape(ctx, contexts.GetActor(ctx), req.ScrapeInp)
 	if err != nil {
 		r.Response.Write(bencodeError("Database error"))
 		r.ExitAll()

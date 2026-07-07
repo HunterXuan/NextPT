@@ -19,7 +19,7 @@ func (c *ControllerV1) Announce(ctx context.Context, req *v1.AnnounceReq) (res *
 	req.InfoHash = r.GetQuery("info_hash").String()
 	req.PeerId = r.GetQuery("peer_id").String()
 
-	out, err := service.TrackerPeerUsecase().Announce(ctx, contexts.GetActor(ctx), req)
+	out, err := service.TrackerPeerUsecase().Announce(ctx, contexts.GetActor(ctx), req.AnnounceInp)
 	if err != nil {
 		r.Response.Write(bencodeError(err.Error()))
 		r.ExitAll()

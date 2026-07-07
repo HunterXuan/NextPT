@@ -14,7 +14,7 @@ import (
 
 func (c *ControllerV1) Download(ctx context.Context, req *v1.DownloadReq) (res *v1.DownloadRes, err error) {
 	in := catalogin.TorrentDownloadInp{
-		Id: req.Id,
+		Id: req.DownloadInp.Id,
 	}
 
 	out, err := service.CatalogTorrentUsecase().Download(ctx, contexts.GetActor(ctx), in)

@@ -7,7 +7,6 @@ package service
 
 import (
 	"context"
-	v1 "server/api/tracker/v1"
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/trackerin"
@@ -42,9 +41,9 @@ type (
 		DeletePeersByTorrentId(ctx context.Context, torrentId uint64) error
 	}
 	ITrackerPeerUsecase interface {
-		Announce(ctx context.Context, actor *model.Actor, req *v1.AnnounceReq) (*trackerout.AnnounceOut, error)
+		Announce(ctx context.Context, actor *model.Actor, in trackerin.AnnounceInp) (*trackerout.AnnounceOut, error)
 		// Scrape 批量查询种子的做种、下载和完成数
-		Scrape(ctx context.Context, actor *model.Actor, infoHashes []string) (*trackerout.ScrapeOut, error)
+		Scrape(ctx context.Context, actor *model.Actor, in trackerin.ScrapeInp) (*trackerout.ScrapeOut, error)
 		// CheckClientWhitelist 检查客户端白名单 (内存全量缓存)
 		CheckClientWhitelist(ctx context.Context, peerId string, userAgent string) bool
 	}

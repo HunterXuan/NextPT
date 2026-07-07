@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	v1 "server/api/tracker/v1"
 	"server/internal/consts"
 	libtracker "server/internal/library/tracker"
 	"server/internal/model"
@@ -46,10 +45,10 @@ func NewTrackerPeerUsecase() *sTrackerPeerUsecase {
 	return &sTrackerPeerUsecase{}
 }
 
-func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, req *v1.AnnounceReq) (*trackerout.AnnounceOut, error) {
+func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, in trackerin.AnnounceInp) (*trackerout.AnnounceOut, error) {
 	r := ghttp.RequestFromCtx(ctx)
-	infoHash := req.InfoHash
-	peerId := req.PeerId
+	infoHash := in.InfoHash
+	peerId := in.PeerId
 
 	if len(infoHash) != 20 || len(peerId) != 20 {
 		return nil, errors.New("invalid info_hash or peer_id")
@@ -59,7 +58,7 @@ func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, 
 	}
 
 	// 1. 获取种子信息 (带10分钟缓存)
-	torrent, err := s.getTorrentByInfoHashCache(ctx, req.InfoHash)
+	torrent, err := s.getTorrentByInfoHashCache(ctx, in.InfoHash)
 	if err != nil {
 		return nil, err
 	}
@@ -80,23 +79,23 @@ func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, 
 	}
 
 	// 解析客户端 IP 与端口
-	ipv4, ipv6, port, err := s.resolveClientAddress(r, req.Port)
+	ipv4, ipv6, port, err := s.resolveClientAddress(r, in.Port)
 	if err != nil {
 		return nil, err
 	}
 
 	// 设置默认 NumWant
-	numWant := s.resolveNumWant(req.NumWant)
+	numWant := s.resolveNumWant(in.NumWant)
 
-	isSeeder := req.Left == 0
+	isSeeder := in.Left == 0
 
 	// 只投递异步账务所需的最小事件数据，避免队列契约依赖 catalog 实体结构。
 	event := &trackerin.AnnounceEvent{
-		Event:      req.Event,
+		Event:      in.Event,
 		TorrentId:  torrent.Id,
-		Uploaded:   req.Uploaded,
-		Downloaded: req.Downloaded,
-		Left:       req.Left,
+		Uploaded:   in.Uploaded,
+		Downloaded: in.Downloaded,
+		Left:       in.Left,
 		UserId:     user.Id,
 		PeerId:     peerId,
 		Ipv4:       ipv4,
@@ -132,7 +131,7 @@ func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, 
 		Incomplete:  int(torrent.Leechers),
 	}
 
-	out.Peers, out.Peers6 = s.encodePeers(req.Compact, peers)
+	out.Peers, out.Peers6 = s.encodePeers(in.Compact, peers)
 
 	return out, nil
 }
@@ -426,16 +425,16 @@ func (s *sTrackerPeerUsecase) encodePeers(compact int, peers []*entity.TrackerPe
 }
 
 // Scrape 批量查询种子的做种、下载和完成数
-func (s *sTrackerPeerUsecase) Scrape(ctx context.Context, actor *model.Actor, infoHashes []string) (*trackerout.ScrapeOut, error) {
-	if len(infoHashes) == 0 {
+func (s *sTrackerPeerUsecase) Scrape(ctx context.Context, actor *model.Actor, in trackerin.ScrapeInp) (*trackerout.ScrapeOut, error) {
+	if len(in.InfoHash) == 0 {
 		return &trackerout.ScrapeOut{Files: make(map[string]trackerout.ScrapeFile)}, nil
 	}
 
 	out := &trackerout.ScrapeOut{
-		Files: make(map[string]trackerout.ScrapeFile, len(infoHashes)),
+		Files: make(map[string]trackerout.ScrapeFile, len(in.InfoHash)),
 	}
 
-	for _, hashStr := range infoHashes {
+	for _, hashStr := range in.InfoHash {
 		// 复用 Resource 模块的高效缓存 (10分钟有效期)，完美避免 DB 扫表
 		t, err := s.getTorrentByInfoHashCache(ctx, hashStr)
 		if err != nil || t == nil {
