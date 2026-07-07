@@ -14,6 +14,7 @@
       <div v-else class="space-y-4">
         <IamUserIdentityCard :user="user" />
         <IamUserStatCards :user="user" :traffic="traffic" />
+        <IamUserRoleStandards :user="user" :roles="roles" :pending="rolesPending" :error="rolesError" />
         <IamUserQuickLinks />
       </div>
     </div>
@@ -22,6 +23,8 @@
 
 <script setup lang="ts">
 import { useAccounting, type TrafficSummary } from '~/composables/useAccounting'
+import { ApiError } from '~/composables/useApi'
+import type { AuthRoleItem } from '~/composables/useAuth'
 
 definePageMeta({
   middleware: 'auth'
@@ -29,18 +32,21 @@ definePageMeta({
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const { user, fetchUser } = useAuth()
+const { user, fetchUser, listRoles } = useAuth()
 const accounting = useAccounting()
 
 const loading = ref(true)
 const traffic = ref<TrafficSummary | null>(null)
+const roles = ref<AuthRoleItem[]>([])
+const rolesPending = ref(false)
+const rolesError = ref('')
 
 onMounted(async () => {
   loading.value = true
 
   try {
     await fetchUser()
-    await loadTraffic()
+    await Promise.all([loadTraffic(), loadRoles()])
   } catch {
     await navigateTo(localePath('/login'))
   } finally {
@@ -53,6 +59,20 @@ async function loadTraffic() {
     traffic.value = await accounting.getTraffic()
   } catch {
     traffic.value = null
+  }
+}
+
+async function loadRoles() {
+  rolesPending.value = true
+  rolesError.value = ''
+  try {
+    const data = await listRoles()
+    roles.value = data.roles || []
+  } catch (error) {
+    roles.value = []
+    rolesError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    rolesPending.value = false
   }
 }
 

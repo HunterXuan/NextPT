@@ -61,6 +61,36 @@ export interface AuthPermissionListOut {
   permissions: string[]
 }
 
+export interface AuthRoleRuleCondition {
+  accountAgeDaysGte?: number
+  downloadedGiBGte?: number
+  downloadedGiBGt?: number
+  downloadedGiBLte?: number
+  ratioGt?: number
+  ratioGte?: number
+  ratioLt?: number
+  [key: string]: unknown
+}
+
+export interface AuthRoleRules {
+  promotion?: AuthRoleRuleCondition[]
+  demotion?: AuthRoleRuleCondition[]
+  [key: string]: unknown
+}
+
+export interface AuthRoleItem {
+  id: number
+  level: number
+  name: string
+  nameI18N: Record<string, string>
+  rules: AuthRoleRules
+  isStaff: boolean
+}
+
+export interface AuthRoleListOut {
+  roles: AuthRoleItem[]
+}
+
 export const Permission = {
   AdminIamUserManage: 'admin:iam/user:*',
   AdminIamRoleManage: 'admin:iam/role:*',
@@ -68,7 +98,6 @@ export const Permission = {
   AdminModReportManage: 'admin:mod/report:*',
   AdminModCheaterManage: 'admin:mod/cheater:*',
   AdminModUserManage: 'admin:mod/user:*',
-  AdminSiteDashboard: 'admin:site/dashboard:*',
   AdminSiteConfig: 'admin:site/config:*',
   AdminSiteAudit: 'admin:site/audit:*',
   AdminSysCronManage: 'admin:sys/cron:*',
@@ -105,7 +134,6 @@ export const AdminPermissions = [
   Permission.AdminModReportManage,
   Permission.AdminModCheaterManage,
   Permission.AdminModUserManage,
-  Permission.AdminSiteDashboard,
   Permission.AdminSiteConfig,
   Permission.AdminSiteAudit,
   Permission.AdminSysCronManage,
@@ -200,6 +228,10 @@ export function useAuth() {
     return permissions.value
   }
 
+  async function listRoles() {
+    return await fetchApi<AuthRoleListOut>('/api/iam/roles')
+  }
+
   function hasPermission(permission: string) {
     return matchesPermissionList(permissions.value, permission)
   }
@@ -255,6 +287,7 @@ export function useAuth() {
     register,
     fetchUser,
     fetchPermissions,
+    listRoles,
     hasPermission,
     hasAnyPermission,
     updateProfile,

@@ -1681,6 +1681,34 @@
       "ratio": "Ratio",
       "bonus": "Bonus"
     },
+    "roleStandards": {
+      "title": "Rank Standards",
+      "subtitle": "View site ranks, promotion conditions, and demotion rules.",
+      "currentShort": "Current",
+      "empty": "No rank data yet",
+      "rankTitle": "User ranks",
+      "staffTitle": "Staff identities",
+      "staffHint": "Assigned by site staff and excluded from automatic rank changes.",
+      "position": "{current} / {total}",
+      "promotion": "Promotion into this rank",
+      "demotion": "Demotion trigger",
+      "notAuto": "Not automatically changed",
+      "noRules": "None",
+      "previous": "Previous",
+      "next": "Next",
+      "viewRole": "View {role}",
+      "and": "and",
+      "or": "or",
+      "conditions": {
+        "accountAgeDaysGte": "Account age ≥ {count} days",
+        "downloadedGiBGte": "Downloaded ≥ {size}",
+        "downloadedGiBGt": "Downloaded > {size}",
+        "downloadedGiBLte": "Downloaded ≤ {size}",
+        "ratioGt": "Ratio > {ratio}",
+        "ratioGte": "Ratio ≥ {ratio}",
+        "ratioLt": "Ratio < {ratio}"
+      }
+    },
     "duration": {
       "seconds": "{count}s",
       "minutes": "{count}m",

@@ -414,7 +414,7 @@ async function loadAll() {
   errorMessage.value = ''
   try {
     const data = await adminApi.listIamRoles()
-    roles.value = (data.roles || []).sort((a, b) => b.level - a.level || a.id - b.id)
+    roles.value = data.roles || []
     const roleId = roles.value[0]?.id || 1
     const permissionData = await adminApi.listIamPermissions(roleId)
     permissions.value = (permissionData.permissions || []).slice().sort()

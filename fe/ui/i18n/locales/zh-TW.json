@@ -1681,6 +1681,34 @@
       "ratio": "分享率",
       "bonus": "魔力值"
     },
+    "roleStandards": {
+      "title": "等級標準",
+      "subtitle": "查看站點等級、升級條件和降級規則。",
+      "currentShort": "目前",
+      "empty": "暫無等級資料",
+      "rankTitle": "使用者等級",
+      "staffTitle": "站務身份",
+      "staffHint": "由站點管理分配，不參與自動升降級。",
+      "position": "第 {current} / {total} 個等級",
+      "promotion": "升級到該等級",
+      "demotion": "觸發降級",
+      "notAuto": "不參與自動升降級",
+      "noRules": "無",
+      "previous": "上一個",
+      "next": "下一個",
+      "viewRole": "查看 {role}",
+      "and": "且",
+      "or": "或",
+      "conditions": {
+        "accountAgeDaysGte": "註冊滿 {count} 天",
+        "downloadedGiBGte": "下載 ≥ {size}",
+        "downloadedGiBGt": "下載 > {size}",
+        "downloadedGiBLte": "下載 ≤ {size}",
+        "ratioGt": "分享率 > {ratio}",
+        "ratioGte": "分享率 ≥ {ratio}",
+        "ratioLt": "分享率 < {ratio}"
+      }
+    },
     "duration": {
       "seconds": "{count} 秒",
       "minutes": "{count} 分鐘",
