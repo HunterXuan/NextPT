@@ -8,6 +8,7 @@
             <p class="text-sm text-slate-500 dark:text-slate-400">{{ item.label }}</p>
           </div>
           <p class="truncate text-2xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ item.value }}</p>
+          <p v-if="item.secondary" class="truncate text-xs text-slate-500 dark:text-slate-400">{{ item.secondary }}</p>
         </div>
         <span class="flex size-10 shrink-0 items-center justify-center rounded-md" :class="item.iconClass">
           <UIcon :name="item.icon" class="size-5" />
@@ -32,12 +33,15 @@ const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 
 const trafficUploaded = computed(() => props.traffic?.uploaded ?? props.user?.stat.uploaded ?? 0)
 const trafficDownloaded = computed(() => props.traffic?.downloaded ?? props.user?.stat.downloaded ?? 0)
+const trafficRawUploaded = computed(() => props.traffic?.rawUploaded ?? props.user?.stat.rawUploaded ?? trafficUploaded.value)
+const trafficRawDownloaded = computed(() => props.traffic?.rawDownloaded ?? props.user?.stat.rawDownloaded ?? trafficDownloaded.value)
 const ratio = computed(() => props.traffic?.shareRatio ?? props.user?.stat.shareRatio ?? 0)
 
 const statCards = computed(() => [
   {
     label: t('user.stats.uploaded'),
     value: formatBytes(trafficUploaded.value),
+    secondary: t('user.stats.rawValue', { value: formatBytes(trafficRawUploaded.value) }),
     icon: 'i-lucide-upload',
     iconClass: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
     dotClass: 'bg-emerald-500'
@@ -45,6 +49,7 @@ const statCards = computed(() => [
   {
     label: t('user.stats.downloaded'),
     value: formatBytes(trafficDownloaded.value),
+    secondary: t('user.stats.rawValue', { value: formatBytes(trafficRawDownloaded.value) }),
     icon: 'i-lucide-download',
     iconClass: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300',
     dotClass: 'bg-sky-500'
@@ -52,6 +57,7 @@ const statCards = computed(() => [
   {
     label: t('user.stats.ratio'),
     value: Number.isFinite(ratio.value) ? ratio.value.toFixed(2) : '-',
+    secondary: '',
     icon: 'i-lucide-scale',
     iconClass: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
     dotClass: 'bg-amber-500'
@@ -59,6 +65,7 @@ const statCards = computed(() => [
   {
     label: t('user.stats.bonus'),
     value: numberFormatter.value.format(Number(props.user?.stat.bonus || 0)),
+    secondary: '',
     icon: 'i-lucide-coins',
     iconClass: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300',
     dotClass: 'bg-violet-500'

@@ -1,6 +1,8 @@
 export interface TrafficSummary {
   uploaded: number
   downloaded: number
+  rawUploaded: number
+  rawDownloaded: number
   shareRatio: number
   seedTime: number
   leechTime: number
@@ -12,6 +14,8 @@ export interface TrafficHistoryItem {
   date: string
   uploaded: number
   downloaded: number
+  rawUploaded: number
+  rawDownloaded: number
   seedTime: number
   leechTime: number
   bonus: string

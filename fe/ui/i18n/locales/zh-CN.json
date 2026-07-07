@@ -1678,6 +1678,7 @@
     "stats": {
       "uploaded": "总上传",
       "downloaded": "总下载",
+      "rawValue": "真实 {value}",
       "ratio": "分享率",
       "bonus": "魔力值"
     },
@@ -1721,6 +1722,7 @@
       "empty": "暂无统计数据",
       "uploaded": "上传",
       "downloaded": "下载",
+      "rawValue": "真实 {value}",
       "seedTime": "做种时长",
       "leechTime": "下载时长",
       "activeTime": "活跃时长",
@@ -1734,6 +1736,10 @@
       "periods": {
         "daily": "按天",
         "monthly": "按月"
+      },
+      "basis": {
+        "credited": "入账",
+        "raw": "真实"
       },
       "modes": {
         "traffic": "流量",

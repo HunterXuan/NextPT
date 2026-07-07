@@ -31,6 +31,8 @@ export interface AuthUserProfile {
 export interface AuthUserStat {
   uploaded: number
   downloaded: number
+  rawUploaded: number
+  rawDownloaded: number
   bonus: number
   shareRatio: number
 }

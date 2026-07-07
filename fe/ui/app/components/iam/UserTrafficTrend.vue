@@ -32,34 +32,51 @@
         <div
           v-for="item in trafficHistorySummaryCards"
           :key="item.label"
-          class="min-w-0 bg-slate-50/80 p-3 dark:bg-slate-950/70"
+          class="flex min-w-0 items-start justify-between gap-3 bg-slate-50/80 px-3 py-3 dark:bg-slate-950/70"
         >
-          <div class="flex items-center gap-2">
-            <span class="flex size-7 shrink-0 items-center justify-center rounded-md" :class="item.iconClass">
-              <UIcon :name="item.icon" class="size-4" />
-            </span>
+          <div class="min-w-0">
             <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</p>
+            <p class="mt-1 truncate text-base font-semibold tabular-nums text-slate-950 dark:text-white">{{ item.value }}</p>
+            <p v-if="item.secondary" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.secondary }}</p>
           </div>
-          <p class="mt-2 truncate text-base font-semibold tabular-nums text-slate-950 dark:text-white">{{ item.value }}</p>
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-md" :class="item.iconClass">
+            <UIcon :name="item.icon" class="size-4" />
+          </span>
         </div>
       </div>
 
       <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ trafficHistoryChartTitle }}</p>
-        <div class="flex w-fit rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
-          <button
-            v-for="mode in trafficHistoryModes"
-            :key="mode.value"
-            type="button"
-            class="inline-flex h-8 items-center gap-1.5 rounded px-3 text-sm font-medium transition"
-            :class="trafficChartMode === mode.value
-              ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
-              : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
-            @click="trafficChartMode = mode.value"
-          >
-            <UIcon :name="mode.icon" class="size-4" />
-            {{ mode.label }}
-          </button>
+        <div class="flex flex-wrap items-center gap-2">
+          <div v-if="trafficChartMode === 'traffic'" class="flex w-fit rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
+            <button
+              v-for="basis in trafficChartTrafficBasisOptions"
+              :key="basis.value"
+              type="button"
+              class="inline-flex h-8 items-center rounded px-3 text-sm font-medium transition"
+              :class="trafficChartTrafficBasis === basis.value
+                ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
+                : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
+              @click="trafficChartTrafficBasis = basis.value"
+            >
+              {{ basis.label }}
+            </button>
+          </div>
+          <div class="flex w-fit rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
+            <button
+              v-for="mode in trafficHistoryModes"
+              :key="mode.value"
+              type="button"
+              class="inline-flex h-8 items-center gap-1.5 rounded px-3 text-sm font-medium transition"
+              :class="trafficChartMode === mode.value
+                ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
+                : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
+              @click="trafficChartMode = mode.value"
+            >
+              <UIcon :name="mode.icon" class="size-4" />
+              {{ mode.label }}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -105,7 +122,8 @@ import { ApiError } from '~/composables/useApi'
 import { formatBytes } from '~/utils/format'
 
 type TrafficChartMode = 'traffic' | 'time' | 'bonus'
-type TrafficChartSeriesKey = keyof Pick<TrafficHistoryItem, 'uploaded' | 'downloaded' | 'seedTime' | 'leechTime' | 'bonus'>
+type TrafficChartTrafficBasis = 'credited' | 'raw'
+type TrafficChartSeriesKey = keyof Pick<TrafficHistoryItem, 'uploaded' | 'downloaded' | 'rawUploaded' | 'rawDownloaded' | 'seedTime' | 'leechTime' | 'bonus'>
 
 interface TrafficChartDatasetDefinition {
   key: TrafficChartSeriesKey
@@ -141,6 +159,7 @@ const accounting = useAccounting()
 const trafficHistory = ref<TrafficHistoryItem[]>([])
 const trafficHistoryPeriod = ref<TrafficHistoryPeriod>('daily')
 const trafficChartMode = ref<TrafficChartMode>('traffic')
+const trafficChartTrafficBasis = ref<TrafficChartTrafficBasis>('credited')
 const trafficHistoryPending = ref(true)
 const trafficHistoryError = ref('')
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
@@ -182,6 +201,17 @@ const trafficHistoryModes = computed<Array<{ value: TrafficChartMode, label: str
   }
 ])
 
+const trafficChartTrafficBasisOptions = computed<Array<{ value: TrafficChartTrafficBasis, label: string }>>(() => [
+  {
+    value: 'credited',
+    label: t('user.trafficHistory.basis.credited')
+  },
+  {
+    value: 'raw',
+    label: t('user.trafficHistory.basis.raw')
+  }
+])
+
 const trafficChartDatasetDefinitions = computed<TrafficChartDatasetDefinition[]>(() => {
   if (trafficChartMode.value === 'time') {
     return [
@@ -193,6 +223,13 @@ const trafficChartDatasetDefinitions = computed<TrafficChartDatasetDefinition[]>
   if (trafficChartMode.value === 'bonus') {
     return [
       { key: 'bonus', label: t('user.trafficHistory.bonus'), color: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.14)' }
+    ]
+  }
+
+  if (trafficChartTrafficBasis.value === 'raw') {
+    return [
+      { key: 'rawUploaded', label: t('user.trafficHistory.uploaded'), color: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.12)' },
+      { key: 'rawDownloaded', label: t('user.trafficHistory.downloaded'), color: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.12)' }
     ]
   }
 
@@ -214,6 +251,8 @@ const trafficHistoryTotals = computed(() => {
     (total, item) => {
       total.uploaded += Number(item.uploaded || 0)
       total.downloaded += Number(item.downloaded || 0)
+      total.rawUploaded += Number(item.rawUploaded || 0)
+      total.rawDownloaded += Number(item.rawDownloaded || 0)
       total.activeTime += Number(item.seedTime || 0) + Number(item.leechTime || 0)
       total.bonus += Number(item.bonus || 0)
       return total
@@ -221,6 +260,8 @@ const trafficHistoryTotals = computed(() => {
     {
       uploaded: 0,
       downloaded: 0,
+      rawUploaded: 0,
+      rawDownloaded: 0,
       activeTime: 0,
       bonus: 0
     }
@@ -231,24 +272,28 @@ const trafficHistorySummaryCards = computed(() => [
   {
     label: t('user.trafficHistory.uploaded'),
     value: formatBytes(trafficHistoryTotals.value.uploaded),
+    secondary: t('user.trafficHistory.rawValue', { value: formatBytes(trafficHistoryTotals.value.rawUploaded) }),
     icon: 'i-lucide-upload',
     iconClass: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
   },
   {
     label: t('user.trafficHistory.downloaded'),
     value: formatBytes(trafficHistoryTotals.value.downloaded),
+    secondary: t('user.trafficHistory.rawValue', { value: formatBytes(trafficHistoryTotals.value.rawDownloaded) }),
     icon: 'i-lucide-download',
     iconClass: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300'
   },
   {
     label: t('user.trafficHistory.activeTime'),
     value: formatDuration(trafficHistoryTotals.value.activeTime),
+    secondary: '',
     icon: 'i-lucide-timer',
     iconClass: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300'
   },
   {
     label: t('user.trafficHistory.bonus'),
     value: formatBonus(trafficHistoryTotals.value.bonus),
+    secondary: '',
     icon: 'i-lucide-coins',
     iconClass: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
   }
@@ -369,6 +414,7 @@ const trafficChartOptions = computed<ChartOptions<'line'>>(() => ({
 
 const trafficChartKey = computed(() => [
   trafficChartMode.value,
+  trafficChartTrafficBasis.value,
   trafficHistoryPeriod.value,
   isDark.value ? 'dark' : 'light',
   locale.value

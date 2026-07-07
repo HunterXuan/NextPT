@@ -1678,6 +1678,7 @@
     "stats": {
       "uploaded": "Uploaded",
       "downloaded": "Downloaded",
+      "rawValue": "Real {value}",
       "ratio": "Ratio",
       "bonus": "Bonus"
     },
@@ -1721,6 +1722,7 @@
       "empty": "No statistics yet",
       "uploaded": "Uploaded",
       "downloaded": "Downloaded",
+      "rawValue": "Real {value}",
       "seedTime": "Seed time",
       "leechTime": "Leech time",
       "activeTime": "Active time",
@@ -1734,6 +1736,10 @@
       "periods": {
         "daily": "Daily",
         "monthly": "Monthly"
+      },
+      "basis": {
+        "credited": "Credited",
+        "raw": "Real"
       },
       "modes": {
         "traffic": "Traffic",
