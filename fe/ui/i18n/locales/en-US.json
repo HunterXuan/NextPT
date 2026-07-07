@@ -315,8 +315,7 @@
           "3": "2x Free",
           "4": "50%",
           "5": "2x 50%",
-          "6": "30%",
-          "7": "Promo"
+          "6": "30%"
         }
       },
       "table": {
@@ -358,9 +357,32 @@
           "bookmarked": "Bookmarked",
           "edit": "Edit torrent",
           "report": "Report",
+          "managementTitle": "Management",
           "adminDelete": "Delete torrent",
-          "confirmAdminDelete": "Delete torrent \"{name}\"?",
+          "confirmAdminDelete": "Delete this torrent?",
+          "deleteWarning": "This cannot be undone.",
           "adminDeleted": "Torrent deleted"
+        },
+        "admin": {
+          "inactive": "Inactive",
+          "pin": "Pin",
+          "unpin": "Unpin",
+          "pinHint": "Higher weight appears first.",
+          "pinWeight": "Pin weight",
+          "pinSaved": "Pin saved",
+          "unpinned": "Torrent unpinned",
+          "feature": "Feature",
+          "unfeature": "Unfeature",
+          "featureHint": "Featured status is shown in lists and detail pages.",
+          "featured": "Torrent featured",
+          "unfeatured": "Torrent unfeatured",
+          "promotion": "Promotion",
+          "promotionHint": "Choose a promotion type and optional expiration time.",
+          "promotionExpireAt": "Expires at",
+          "setPromotion": "Set promotion",
+          "clearPromotion": "Clear promotion",
+          "promotionSaved": "Promotion saved",
+          "promotionCleared": "Promotion cleared"
         },
         "stats": {
           "seeders": "Seeders",

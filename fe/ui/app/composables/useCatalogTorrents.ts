@@ -82,6 +82,7 @@ export interface TorrentListItem {
   spExpireAt: string
   isFeatured: boolean
   isPinned: boolean
+  pinWeight: number
   seeders: number
   leechers: number
   snatched: number

@@ -315,8 +315,7 @@
           "3": "2x 免费",
           "4": "50%",
           "5": "2x 50%",
-          "6": "30%",
-          "7": "促销"
+          "6": "30%"
         }
       },
       "table": {
@@ -358,9 +357,32 @@
           "bookmarked": "已收藏",
           "edit": "编辑种子",
           "report": "举报",
+          "managementTitle": "管理操作",
           "adminDelete": "删除种子",
-          "confirmAdminDelete": "确认删除种子「{name}」？",
+          "confirmAdminDelete": "确认删除？",
+          "deleteWarning": "删除后将不可恢复。",
           "adminDeleted": "种子已删除"
+        },
+        "admin": {
+          "inactive": "未启用",
+          "pin": "置顶",
+          "unpin": "取消置顶",
+          "pinHint": "权重越高越靠前。",
+          "pinWeight": "置顶权重",
+          "pinSaved": "置顶已保存",
+          "unpinned": "已取消置顶",
+          "feature": "推荐",
+          "unfeature": "取消推荐",
+          "featureHint": "推荐状态会在列表和详情页展示。",
+          "featured": "已推荐种子",
+          "unfeatured": "已取消推荐",
+          "promotion": "优惠",
+          "promotionHint": "可选择优惠类型，并设置可选到期时间。",
+          "promotionExpireAt": "到期时间",
+          "setPromotion": "设置优惠",
+          "clearPromotion": "取消优惠",
+          "promotionSaved": "优惠已保存",
+          "promotionCleared": "已取消优惠"
         },
         "stats": {
           "seeders": "做种",

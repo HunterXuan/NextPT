@@ -536,7 +536,7 @@
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.title') }}</h2>
             <div class="mt-3 grid grid-cols-2 gap-2">
               <UButton
-                v-if="canEditTorrent"
+                v-if="canOwnerEditTorrent"
                 color="neutral"
                 variant="outline"
                 size="sm"
@@ -552,23 +552,10 @@
                 size="sm"
                 icon="i-lucide-flag"
                 block
-                :class="canEditTorrent ? '' : 'col-span-2'"
+                :class="canOwnerEditTorrent ? '' : 'col-span-2'"
                 @click="showTorrentReport = !showTorrentReport"
               >
                 {{ $t('catalog.torrents.detail.actions.report') }}
-              </UButton>
-              <UButton
-                v-if="isStaff"
-                class="col-span-2"
-                color="error"
-                variant="soft"
-                size="sm"
-                icon="i-lucide-trash-2"
-                block
-                :loading="adminActionPending === 'delete'"
-                @click="handleAdminDeleteTorrent"
-              >
-                {{ $t('catalog.torrents.detail.actions.adminDelete') }}
               </UButton>
             </div>
 
@@ -581,6 +568,195 @@
                 </UButton>
               </div>
             </form>
+          </section>
+
+          <section v-if="isStaff" class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.managementTitle') }}</h2>
+
+            <div class="mt-3 grid grid-cols-2 gap-2">
+              <UButton
+                color="neutral"
+                variant="outline"
+                size="sm"
+                icon="i-lucide-pen-line"
+                block
+                :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
+              >
+                {{ $t('catalog.torrents.detail.actions.edit') }}
+              </UButton>
+
+              <UPopover
+                :open="deleteConfirmOpen"
+                :content="{ side: 'top', align: 'end', sideOffset: 8 }"
+                :ui="{ content: 'w-64 p-3' }"
+                @update:open="setDeleteConfirmOpen"
+              >
+                <UButton
+                  color="error"
+                  variant="soft"
+                  size="sm"
+                  icon="i-lucide-trash-2"
+                  block
+                  :loading="adminActionPending === 'delete'"
+                  :disabled="adminActionPending === 'delete'"
+                >
+                  {{ $t('catalog.torrents.detail.actions.adminDelete') }}
+                </UButton>
+
+                <template #content="{ close }">
+                  <div class="space-y-3">
+                    <div>
+                      <p class="text-sm font-medium text-slate-950 dark:text-white">
+                        {{ $t('catalog.torrents.detail.actions.confirmAdminDelete') }}
+                      </p>
+                      <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                        {{ $t('catalog.torrents.detail.actions.deleteWarning') }}
+                      </p>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                      <UButton color="neutral" variant="ghost" size="xs" type="button" @click="closeDeleteConfirm(close)">
+                        {{ $t('common.cancel') }}
+                      </UButton>
+                      <UButton color="error" size="xs" type="button" :loading="adminActionPending === 'delete'" :disabled="adminActionPending === 'delete'" @click="confirmAdminDeleteTorrent(close)">
+                        {{ $t('common.confirm') }}
+                      </UButton>
+                    </div>
+                  </div>
+                </template>
+              </UPopover>
+            </div>
+
+            <div class="mt-3 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
+              <div class="space-y-3 border-b border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex min-w-0 items-center gap-2">
+                    <UIcon name="i-lucide-pin" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
+                    <span class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.pin') }}</span>
+                    <UBadge :color="torrent.isPinned ? 'primary' : 'neutral'" variant="soft" size="sm">
+                      {{ torrent.isPinned ? $t('catalog.torrents.status.pinned') : $t('catalog.torrents.detail.admin.inactive') }}
+                    </UBadge>
+                  </div>
+                  <UButton
+                    v-if="torrent.isPinned"
+                    color="neutral"
+                    variant="ghost"
+                    size="xs"
+                    icon="i-lucide-pin-off"
+                    :loading="adminActionPending === 'unpin'"
+                    :disabled="adminActionPending === 'unpin'"
+                    @click="handleAdminUnpin"
+                  >
+                    {{ $t('catalog.torrents.detail.admin.unpin') }}
+                  </UButton>
+                </div>
+                <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                  <div class="grid grid-cols-3 gap-1 rounded-md bg-white p-1 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-700" :aria-label="$t('catalog.torrents.detail.admin.pinWeight')">
+                    <button
+                      v-for="weight in adminPinWeightOptions"
+                      :key="weight"
+                      type="button"
+                      class="h-8 rounded text-xs font-semibold transition"
+                      :class="adminPinWeight === weight
+                        ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-950'
+                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white'"
+                      :disabled="adminActionPending === 'pin'"
+                      @click="adminPinWeight = weight"
+                    >
+                      {{ weight }}
+                    </button>
+                  </div>
+                  <UButton
+                    color="neutral"
+                    variant="outline"
+                    size="sm"
+                    :icon="torrent.isPinned ? 'i-lucide-save' : 'i-lucide-pin'"
+                    :loading="adminActionPending === 'pin'"
+                    :disabled="adminActionPending === 'pin'"
+                    @click="handleAdminPin"
+                  >
+                    {{ torrent.isPinned ? $t('common.save') : $t('catalog.torrents.detail.admin.pin') }}
+                  </UButton>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+                <div class="flex min-w-0 items-center gap-2">
+                  <UIcon name="i-lucide-star" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
+                  <span class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.feature') }}</span>
+                  <UBadge :color="torrent.isFeatured ? 'warning' : 'neutral'" variant="soft" size="sm">
+                    {{ torrent.isFeatured ? $t('catalog.torrents.status.featured') : $t('catalog.torrents.detail.admin.inactive') }}
+                  </UBadge>
+                </div>
+                <UButton
+                  color="neutral"
+                  :variant="torrent.isFeatured ? 'soft' : 'outline'"
+                  size="sm"
+                  :icon="torrent.isFeatured ? 'i-lucide-star-off' : 'i-lucide-star'"
+                  :loading="adminActionPending === 'feature'"
+                  :disabled="adminActionPending === 'feature'"
+                  @click="handleAdminFeatureToggle"
+                >
+                  {{ torrent.isFeatured ? $t('catalog.torrents.detail.admin.unfeature') : $t('catalog.torrents.detail.admin.feature') }}
+                </UButton>
+              </div>
+
+              <div class="space-y-3 bg-slate-50/70 p-3 dark:bg-slate-950/50">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex min-w-0 items-center gap-2">
+                    <UIcon name="i-lucide-badge-percent" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
+                    <span class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.promotion') }}</span>
+                    <UBadge :color="isPromotionActive(torrent) ? 'success' : 'neutral'" variant="soft" size="sm">
+                      {{ isPromotionActive(torrent) ? torrentPromotionLabel(torrent.spState) : $t('catalog.torrents.detail.admin.inactive') }}
+                    </UBadge>
+                  </div>
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="xs"
+                    icon="i-lucide-circle-off"
+                    :loading="adminActionPending === 'clearPromotion'"
+                    :disabled="adminActionPending === 'clearPromotion' || !torrent.spState"
+                    @click="handleAdminClearPromotion"
+                  >
+                    {{ $t('catalog.torrents.detail.admin.clearPromotion') }}
+                  </UButton>
+                </div>
+                <div class="grid gap-2 sm:grid-cols-2">
+                  <select
+                    v-model.number="adminPromotionState"
+                    class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                    :aria-label="$t('catalog.torrents.detail.admin.promotion')"
+                    :disabled="adminActionPending === 'promotion'"
+                  >
+                    <option v-for="option in adminPromotionOptions" :key="option.value" :value="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <UInput
+                    v-model="adminPromotionExpireAt"
+                    type="datetime-local"
+                    size="sm"
+                    :ui="{ base: 'h-10' }"
+                    :aria-label="$t('catalog.torrents.detail.admin.promotionExpireAt')"
+                    :placeholder="$t('catalog.torrents.detail.admin.promotionExpireAt')"
+                    :disabled="adminActionPending === 'promotion'"
+                  />
+                </div>
+                <div class="flex justify-end">
+                  <UButton
+                    color="neutral"
+                    variant="outline"
+                    size="sm"
+                    icon="i-lucide-save"
+                    :loading="adminActionPending === 'promotion'"
+                    :disabled="adminActionPending === 'promotion'"
+                    @click="handleAdminPromotion"
+                  >
+                    {{ $t('catalog.torrents.detail.admin.setPromotion') }}
+                  </UButton>
+                </div>
+              </div>
+            </div>
           </section>
 
           <RewardPanel
@@ -686,6 +862,12 @@ const subtitlesPanelOpen = ref(false)
 const subtitlesLoaded = ref(false)
 const reportPending = ref(false)
 const adminActionPending = ref('')
+const deleteConfirmOpen = ref(false)
+const defaultAdminPinWeight = 5
+const adminPinWeightOptions = [defaultAdminPinWeight, 10, 15]
+const adminPinWeight = ref(defaultAdminPinWeight)
+const adminPromotionState = ref(1)
+const adminPromotionExpireAt = ref('')
 const showTorrentReport = ref(false)
 const torrentReportReason = ref('')
 const commentReportReason = ref('')
@@ -739,7 +921,11 @@ const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expan
 const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
 const renderedCommentPreview = computed(() => renderRichText(commentForm.content))
 const canUploadSubtitle = computed(() => Boolean(selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
-const canEditTorrent = computed(() => Boolean(torrent.value && (isStaff.value || user.value?.user.id === torrent.value.owner?.id)))
+const canOwnerEditTorrent = computed(() => Boolean(torrent.value && !isStaff.value && user.value?.user.id === torrent.value.owner?.id))
+const adminPromotionOptions = computed(() => [1, 2, 3, 4, 5, 6].map((value) => ({
+  value,
+  label: t(`catalog.torrents.status.promotion.${value}`)
+})))
 const visiblePeers = computed(() => {
   if (peerView.value === 'seeders') return peers.value.filter((item) => item.isSeeder)
   if (peerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)
@@ -891,7 +1077,7 @@ function torrentStatusBadges(torrent: TorrentDetail) {
 
 function torrentPromotionLabel(spState?: number | null) {
   const key = Number(spState || 0)
-  return key >= 1 && key <= 7 ? t(`catalog.torrents.status.promotion.${key}`) : ''
+  return key >= 1 && key <= 6 ? t(`catalog.torrents.status.promotion.${key}`) : ''
 }
 
 function isPromotionActive(torrent: TorrentDetail) {
@@ -912,13 +1098,173 @@ function parseDateTime(value?: string | null) {
   return Number.isNaN(normalized.getTime()) ? null : normalized
 }
 
-async function handleAdminDeleteTorrent() {
-  if (!torrent.value || !window.confirm(t('catalog.torrents.detail.actions.confirmAdminDelete', { name: torrent.value.name }))) return
+function syncAdminForms() {
+  if (!torrent.value) {
+    adminPinWeight.value = defaultAdminPinWeight
+    adminPromotionState.value = 1
+    adminPromotionExpireAt.value = ''
+    return
+  }
+  adminPinWeight.value = torrent.value.isPinned ? normalizeAdminPinWeight(torrent.value.pinWeight) : defaultAdminPinWeight
+  adminPromotionState.value = Number(torrent.value.spState || 1)
+  if (adminPromotionState.value < 1 || adminPromotionState.value > 6) {
+    adminPromotionState.value = 1
+  }
+  adminPromotionExpireAt.value = formatDateTimeLocalInput(torrent.value.spExpireAt)
+}
+
+function normalizeAdminPinWeight(value?: number | null) {
+  const weight = Number(value || 0)
+  if (!Number.isFinite(weight) || weight <= 0) return defaultAdminPinWeight
+  return adminPinWeightOptions.reduce((closest, option) => {
+    return Math.abs(option - weight) < Math.abs(closest - weight) ? option : closest
+  }, adminPinWeightOptions[0])
+}
+
+function formatDateTimeLocalInput(value?: string | null) {
+  const date = parseDateTime(value)
+  if (!date) return ''
+  const pad = (input: number) => String(input).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function formatPromotionExpireAtInput(value: string) {
+  if (!value) return null
+  return `${value.replace('T', ' ')}:00`
+}
+
+async function handleAdminPin() {
+  if (!torrent.value || adminActionPending.value === 'pin') return
+
+  adminActionPending.value = 'pin'
+  try {
+    const pinWeight = normalizeAdminPinWeight(adminPinWeight.value)
+    if (pinWeight <= 0) return
+    await adminApi.pinCatalogTorrent(torrent.value.id, { pinWeight })
+    torrent.value.isPinned = true
+    torrent.value.pinWeight = pinWeight
+    adminPinWeight.value = pinWeight
+    toast.add({ title: t('catalog.torrents.detail.admin.pinSaved'), color: 'success', icon: 'i-lucide-check-circle' })
+  } catch (error) {
+    toast.add({
+      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+  } finally {
+    adminActionPending.value = ''
+  }
+}
+
+async function handleAdminUnpin() {
+  if (!torrent.value || adminActionPending.value === 'unpin') return
+
+  adminActionPending.value = 'unpin'
+  try {
+    await adminApi.unpinCatalogTorrent(torrent.value.id)
+    torrent.value.isPinned = false
+    torrent.value.pinWeight = 0
+    adminPinWeight.value = defaultAdminPinWeight
+    toast.add({ title: t('catalog.torrents.detail.admin.unpinned'), color: 'success', icon: 'i-lucide-check-circle' })
+  } catch (error) {
+    toast.add({
+      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+  } finally {
+    adminActionPending.value = ''
+  }
+}
+
+async function handleAdminFeatureToggle() {
+  if (!torrent.value || adminActionPending.value === 'feature') return
+
+  adminActionPending.value = 'feature'
+  try {
+    if (torrent.value.isFeatured) {
+      await adminApi.unfeatureCatalogTorrent(torrent.value.id)
+      torrent.value.isFeatured = false
+      toast.add({ title: t('catalog.torrents.detail.admin.unfeatured'), color: 'success', icon: 'i-lucide-check-circle' })
+    } else {
+      await adminApi.featureCatalogTorrent(torrent.value.id)
+      torrent.value.isFeatured = true
+      toast.add({ title: t('catalog.torrents.detail.admin.featured'), color: 'success', icon: 'i-lucide-check-circle' })
+    }
+  } catch (error) {
+    toast.add({
+      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+  } finally {
+    adminActionPending.value = ''
+  }
+}
+
+async function handleAdminPromotion() {
+  if (!torrent.value || adminActionPending.value === 'promotion') return
+
+  adminActionPending.value = 'promotion'
+  try {
+    const spState = Math.max(1, Math.min(6, Number(adminPromotionState.value || 1)))
+    const spExpireAt = formatPromotionExpireAtInput(adminPromotionExpireAt.value)
+    await adminApi.setCatalogTorrentPromotion(torrent.value.id, { spState, spExpireAt })
+    torrent.value.spState = spState
+    torrent.value.spExpireAt = spExpireAt || ''
+    adminPromotionState.value = spState
+    toast.add({ title: t('catalog.torrents.detail.admin.promotionSaved'), color: 'success', icon: 'i-lucide-check-circle' })
+  } catch (error) {
+    toast.add({
+      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+  } finally {
+    adminActionPending.value = ''
+  }
+}
+
+async function handleAdminClearPromotion() {
+  if (!torrent.value || adminActionPending.value === 'clearPromotion') return
+
+  adminActionPending.value = 'clearPromotion'
+  try {
+    await adminApi.clearCatalogTorrentPromotion(torrent.value.id)
+    torrent.value.spState = 0
+    torrent.value.spExpireAt = ''
+    adminPromotionState.value = 1
+    adminPromotionExpireAt.value = ''
+    toast.add({ title: t('catalog.torrents.detail.admin.promotionCleared'), color: 'success', icon: 'i-lucide-check-circle' })
+  } catch (error) {
+    toast.add({
+      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+  } finally {
+    adminActionPending.value = ''
+  }
+}
+
+function setDeleteConfirmOpen(open: boolean) {
+  if (adminActionPending.value === 'delete') return
+  deleteConfirmOpen.value = open
+}
+
+function closeDeleteConfirm(close?: () => void) {
+  deleteConfirmOpen.value = false
+  close?.()
+}
+
+async function confirmAdminDeleteTorrent(close?: () => void) {
+  if (!torrent.value || adminActionPending.value === 'delete') return
 
   adminActionPending.value = 'delete'
   try {
     await adminApi.deleteCatalogTorrent(torrent.value.id)
     toast.add({ title: t('catalog.torrents.detail.actions.adminDeleted'), color: 'success', icon: 'i-lucide-check-circle' })
+    closeDeleteConfirm(close)
     await navigateTo(localePath('/catalog/torrents'))
   } catch (error) {
     toast.add({
@@ -969,6 +1315,7 @@ async function loadPage() {
     ])
 
     torrent.value = detail
+    syncAdminForms()
     files.value = []
     filesLoaded.value = false
     filesError.value = ''

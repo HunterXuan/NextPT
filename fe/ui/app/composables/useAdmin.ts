@@ -24,6 +24,15 @@ export interface AdminCatalogCategoryInput {
   uploadConfig?: UploadConfig | null
 }
 
+export interface AdminCatalogTorrentPinInput {
+  pinWeight: number
+}
+
+export interface AdminCatalogTorrentPromotionInput {
+  spState: number
+  spExpireAt?: string | null
+}
+
 export interface AdminForumCategory {
   id: number
   nameI18N: I18nName
@@ -309,18 +318,18 @@ export interface AdminSysCronLogListOut {
 
 export interface AdminModReportItem {
   id: number
-  reporter_id: number
+  reporterId: number
   reporter: AdminUserSummary
-  target_type: string
-  target_id: number
+  targetType: string
+  targetId: number
   target: AdminModReportTarget
   reason: string
   status: number
-  dealt_by: number
-  dealt_user: AdminUserSummary
-  dealt_comment: string
-  dealt_at?: string | null
-  created_at?: string | null
+  dealtBy: number
+  dealtUser: AdminUserSummary
+  dealtComment: string
+  dealtAt?: string | null
+  createdAt?: string | null
 }
 
 export interface AdminUserSummary {
@@ -333,8 +342,8 @@ export interface AdminModReportTarget {
   type: string
   id: number
   title: string
-  parent_type: string
-  parent_id: number
+  parentType: string
+  parentId: number
   status: 'normal' | 'deleted' | 'unavailable' | string
   author: AdminUserSummary
 }
@@ -360,23 +369,23 @@ export interface AdminModResolveInput {
 
 export interface AdminModCheaterItem {
   id: number
-  user_id: number
+  userId: number
   user: AdminUserSummary
-  torrent_id: number
+  torrentId: number
   torrent: AdminCatalogTorrentSummary
   uploaded: number
   downloaded: number
-  announce_time: number
+  announceTime: number
   seeders: number
   leechers: number
-  hit_count: number
-  dealt_by: number
-  dealt_user: AdminUserSummary
-  is_dealt: boolean
+  hitCount: number
+  dealtBy: number
+  dealtUser: AdminUserSummary
+  isDealt: boolean
   comment: string
-  dealt_comment: string
-  dealt_at?: string | null
-  created_at?: string | null
+  dealtComment: string
+  dealtAt?: string | null
+  createdAt?: string | null
 }
 
 export interface AdminCatalogTorrentSummary {
@@ -401,14 +410,14 @@ export interface AdminModCheaterListParams {
 
 export interface AdminModUserItem {
   id: number
-  user_id: number
-  mod_type: number
+  userId: number
+  modType: number
   reason: string
-  expire_at?: string | null
-  mod_by: number
-  mod_comment: string
-  is_active: boolean
-  created_at?: string | null
+  expireAt?: string | null
+  modBy: number
+  modComment: string
+  isActive: boolean
+  createdAt?: string | null
 }
 
 export interface AdminModUserListOut {
@@ -687,6 +696,44 @@ export function useAdmin() {
     })
   }
 
+  async function pinCatalogTorrent(id: number, input: AdminCatalogTorrentPinInput) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:pin`, {
+      method: 'POST',
+      body: input
+    })
+  }
+
+  async function unpinCatalogTorrent(id: number) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:unpin`, {
+      method: 'POST'
+    })
+  }
+
+  async function featureCatalogTorrent(id: number) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:feature`, {
+      method: 'POST'
+    })
+  }
+
+  async function unfeatureCatalogTorrent(id: number) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:unfeature`, {
+      method: 'POST'
+    })
+  }
+
+  async function setCatalogTorrentPromotion(id: number, input: AdminCatalogTorrentPromotionInput) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:promotion`, {
+      method: 'POST',
+      body: input
+    })
+  }
+
+  async function clearCatalogTorrentPromotion(id: number) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:clearPromotion`, {
+      method: 'POST'
+    })
+  }
+
   async function lockForumTopic(id: number) {
     await fetchApi(`/api/admin/forum/topics/${id}:lock`, { method: 'POST' })
   }
@@ -758,6 +805,12 @@ export function useAdmin() {
     applyUserMod,
     removeUserMod,
     deleteCatalogTorrent,
+    pinCatalogTorrent,
+    unpinCatalogTorrent,
+    featureCatalogTorrent,
+    unfeatureCatalogTorrent,
+    setCatalogTorrentPromotion,
+    clearCatalogTorrentPromotion,
     lockForumTopic,
     unlockForumTopic,
     pinForumTopic,

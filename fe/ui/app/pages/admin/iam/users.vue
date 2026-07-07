@@ -361,18 +361,18 @@
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
                         <div class="flex flex-wrap items-center gap-2">
-                          <UBadge color="neutral" variant="soft">{{ modTypeLabel(item.mod_type) }}</UBadge>
-                          <UBadge :color="item.is_active ? 'error' : 'neutral'" variant="soft">
-                            {{ item.is_active ? $t('admin.iam.users.mod.status.active') : $t('admin.iam.users.mod.status.inactive') }}
+                          <UBadge color="neutral" variant="soft">{{ modTypeLabel(item.modType) }}</UBadge>
+                          <UBadge :color="item.isActive ? 'error' : 'neutral'" variant="soft">
+                            {{ item.isActive ? $t('admin.iam.users.mod.status.active') : $t('admin.iam.users.mod.status.inactive') }}
                           </UBadge>
                         </div>
                         <p class="mt-2 whitespace-pre-wrap break-words text-sm text-slate-700 dark:text-slate-200">{{ item.reason || '-' }}</p>
                         <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                          {{ formatDateTime(item.created_at, locale) }} · {{ $t('admin.iam.users.mod.expireAt') }} {{ modExpireLabel(item) }}
+                          {{ formatDateTime(item.createdAt, locale) }} · {{ $t('admin.iam.users.mod.expireAt') }} {{ modExpireLabel(item) }}
                         </p>
                       </div>
                       <UPopover
-                        v-if="item.is_active"
+                        v-if="item.isActive"
                         :content="{ side: 'top', align: 'end', sideOffset: 8 }"
                         :ui="{ content: 'w-72 p-3' }"
                       >
@@ -393,7 +393,7 @@
                               {{ $t('admin.iam.users.mod.confirmRemoveTitle') }}
                             </p>
                             <p class="text-xs text-slate-500 dark:text-slate-400">
-                              {{ $t('admin.iam.users.mod.confirmRemoveDescription', { type: modTypeLabel(item.mod_type) }) }}
+                              {{ $t('admin.iam.users.mod.confirmRemoveDescription', { type: modTypeLabel(item.modType) }) }}
                             </p>
                             <div class="flex justify-end gap-2">
                               <UButton color="neutral" variant="ghost" size="xs" type="button" @click="close()">
@@ -640,11 +640,11 @@ const isProfileDirty = computed(() => {
   return Boolean(user && Object.keys(buildUserUpdateInput(user)).length > 0)
 })
 const hasStatDiff = computed(() => Object.keys(buildStatDiffInput()).length > 0)
-const activeUserMods = computed(() => userMods.value.filter((item) => item.is_active))
+const activeUserMods = computed(() => userMods.value.filter((item) => item.isActive))
 const sortedUserMods = computed(() => {
   return userMods.value.slice().sort((a, b) => {
-    if (a.is_active !== b.is_active) return a.is_active ? -1 : 1
-    return Date.parse(b.created_at || '') - Date.parse(a.created_at || '')
+    if (a.isActive !== b.isActive) return a.isActive ? -1 : 1
+    return Date.parse(b.createdAt || '') - Date.parse(a.createdAt || '')
   })
 })
 const canApplyUserMod = computed(() => {
@@ -937,7 +937,7 @@ async function applyUserMod() {
 
 async function removeUserMod(item: AdminModUserItem, close?: () => void) {
   const user = selectedUser.value
-  if (!user || !item.is_active) return
+  if (!user || !item.isActive) return
 
   modRemovingId.value = item.id
   modsError.value = ''
@@ -1084,6 +1084,6 @@ function modTypeLabel(type: number) {
 }
 
 function modExpireLabel(item: AdminModUserItem) {
-  return item.expire_at ? formatDateTime(item.expire_at, locale.value) : t('admin.iam.users.mod.permanent')
+  return item.expireAt ? formatDateTime(item.expireAt, locale.value) : t('admin.iam.users.mod.permanent')
 }
 </script>

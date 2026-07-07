@@ -315,8 +315,7 @@
           "3": "2x 免費",
           "4": "50%",
           "5": "2x 50%",
-          "6": "30%",
-          "7": "促銷"
+          "6": "30%"
         }
       },
       "table": {
@@ -358,9 +357,32 @@
           "bookmarked": "已收藏",
           "edit": "編輯種子",
           "report": "檢舉",
+          "managementTitle": "管理操作",
           "adminDelete": "刪除種子",
-          "confirmAdminDelete": "確認刪除種子「{name}」？",
+          "confirmAdminDelete": "確認刪除？",
+          "deleteWarning": "刪除後將無法復原。",
           "adminDeleted": "種子已刪除"
+        },
+        "admin": {
+          "inactive": "未啟用",
+          "pin": "置頂",
+          "unpin": "取消置頂",
+          "pinHint": "權重越高越靠前。",
+          "pinWeight": "置頂權重",
+          "pinSaved": "置頂已儲存",
+          "unpinned": "已取消置頂",
+          "feature": "推薦",
+          "unfeature": "取消推薦",
+          "featureHint": "推薦狀態會在列表和詳情頁顯示。",
+          "featured": "已推薦種子",
+          "unfeatured": "已取消推薦",
+          "promotion": "優惠",
+          "promotionHint": "可選擇優惠類型，並設定可選到期時間。",
+          "promotionExpireAt": "到期時間",
+          "setPromotion": "設定優惠",
+          "clearPromotion": "取消優惠",
+          "promotionSaved": "優惠已儲存",
+          "promotionCleared": "已取消優惠"
         },
         "stats": {
           "seeders": "做種",

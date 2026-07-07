@@ -53,7 +53,7 @@
                     <div class="flex min-w-0 items-center gap-3">
                       <IamUserAvatar :user="cheaterUser(item)" size="sm" />
                       <div class="min-w-0">
-                        <p class="truncate font-semibold text-slate-950 dark:text-white">{{ userDisplayName(cheaterUser(item), item.user_id) }}</p>
+                        <p class="truncate font-semibold text-slate-950 dark:text-white">{{ userDisplayName(cheaterUser(item), item.userId) }}</p>
                         <div class="mt-1 flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                           <UIcon name="i-lucide-database" class="size-3.5 shrink-0" />
                           <span class="truncate">{{ torrentDisplayName(item) }}</span>
@@ -74,17 +74,17 @@
                     </div>
                   </td>
                   <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
-                    <p class="font-medium text-slate-800 dark:text-slate-100">{{ $t('admin.mod.cheaters.announceTime', { value: numberFormatter.format(item.announce_time) }) }}</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.swarm', { seeders: item.seeders, leechers: item.leechers, hits: item.hit_count }) }}</p>
+                    <p class="font-medium text-slate-800 dark:text-slate-100">{{ $t('admin.mod.cheaters.announceTime', { value: numberFormatter.format(item.announceTime) }) }}</p>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.swarm', { seeders: item.seeders, leechers: item.leechers, hits: item.hitCount }) }}</p>
                   </td>
                   <td class="px-4 py-3 align-middle">
-                    <UBadge :color="item.is_dealt ? 'success' : 'warning'" variant="soft" class="whitespace-nowrap">
-                      {{ item.is_dealt ? $t('admin.mod.status.resolved') : $t('admin.mod.status.pending') }}
+                    <UBadge :color="item.isDealt ? 'success' : 'warning'" variant="soft" class="whitespace-nowrap">
+                      {{ item.isDealt ? $t('admin.mod.status.resolved') : $t('admin.mod.status.pending') }}
                     </UBadge>
                   </td>
                   <td class="px-4 py-3 text-right align-middle text-sm text-slate-600 dark:text-slate-300">
-                    <UTooltip :text="formatDateTime(item.created_at, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
-                      <span>{{ relativeTime(item.created_at) }}</span>
+                    <UTooltip :text="formatDateTime(item.createdAt, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
+                      <span>{{ relativeTime(item.createdAt) }}</span>
                     </UTooltip>
                   </td>
                 </tr>
@@ -118,8 +118,8 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.current') }}</p>
                 <h2 class="mt-1 text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.mod.cheaters.logId', { id: selectedCheater.id }) }}</h2>
               </div>
-              <UBadge :color="selectedCheater.is_dealt ? 'success' : 'warning'" variant="soft" class="whitespace-nowrap">
-                {{ selectedCheater.is_dealt ? $t('admin.mod.status.resolved') : $t('admin.mod.status.pending') }}
+              <UBadge :color="selectedCheater.isDealt ? 'success' : 'warning'" variant="soft" class="whitespace-nowrap">
+                {{ selectedCheater.isDealt ? $t('admin.mod.status.resolved') : $t('admin.mod.status.pending') }}
               </UBadge>
             </div>
 
@@ -130,8 +130,8 @@
                     <div class="flex min-w-0 items-center gap-3">
                       <IamUserAvatar :user="cheaterUser(selectedCheater)" size="md" />
                       <div class="min-w-0">
-                        <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ userDisplayName(cheaterUser(selectedCheater), selectedCheater.user_id) }}</p>
-                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.userId', { id: selectedCheater.user_id }) }}</p>
+                        <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ userDisplayName(cheaterUser(selectedCheater), selectedCheater.userId) }}</p>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.userId', { id: selectedCheater.userId }) }}</p>
                       </div>
                     </div>
                   </div>
@@ -140,10 +140,10 @@
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
                         <p class="line-clamp-2 text-sm font-semibold leading-5 text-slate-950 dark:text-white">{{ torrentDisplayName(selectedCheater) }}</p>
-                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.torrentId', { id: selectedCheater.torrent_id }) }}</p>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.torrentId', { id: selectedCheater.torrentId }) }}</p>
                       </div>
                       <UTooltip v-if="selectedCheater.torrent?.exist" :text="$t('admin.mod.cheaters.openTorrent')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
-                        <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-external-link" :to="localePath(`/catalog/torrents/${selectedCheater.torrent_id}`)" :aria-label="$t('admin.mod.cheaters.openTorrent')" />
+                        <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-external-link" :to="localePath(`/catalog/torrents/${selectedCheater.torrentId}`)" :aria-label="$t('admin.mod.cheaters.openTorrent')" />
                       </UTooltip>
                     </div>
                   </div>
@@ -160,11 +160,11 @@
                   </div>
                   <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.fields.announceTime') }}</dt>
-                    <dd class="mt-1 font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(selectedCheater.announce_time) }}s</dd>
+                    <dd class="mt-1 font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(selectedCheater.announceTime) }}s</dd>
                   </div>
                   <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.fields.hitCount') }}</dt>
-                    <dd class="mt-1 font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(selectedCheater.hit_count) }}</dd>
+                    <dd class="mt-1 font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(selectedCheater.hitCount) }}</dd>
                   </div>
                   <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.fields.seeders') }}</dt>
@@ -178,7 +178,7 @@
 
                 <section class="space-y-2">
                   <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.mod.table.createdAt') }}</p>
-                  <p class="text-sm font-medium text-slate-950 dark:text-white">{{ formatDateTime(selectedCheater.created_at, locale) }}</p>
+                  <p class="text-sm font-medium text-slate-950 dark:text-white">{{ formatDateTime(selectedCheater.createdAt, locale) }}</p>
                 </section>
 
                 <section v-if="selectedCheater.comment" class="space-y-2">
@@ -187,7 +187,7 @@
                 </section>
               </div>
 
-              <form v-if="!selectedCheater.is_dealt" class="space-y-4 p-4" @submit.prevent="resolveCheater">
+              <form v-if="!selectedCheater.isDealt" class="space-y-4 p-4" @submit.prevent="resolveCheater">
                 <label class="block">
                   <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.mod.form.comment') }}</span>
                   <textarea v-model="comment" rows="5" class="mt-2 w-full resize-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :placeholder="$t('admin.mod.cheaters.commentPlaceholder')" :disabled="resolving" />
@@ -206,18 +206,18 @@
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.handledBy') }}</dt>
                     <dd class="mt-1 flex min-w-0 items-center gap-2 font-medium text-slate-950 dark:text-white">
-                      <IamUserAvatar v-if="selectedCheater.dealt_by" :user="cheaterDealtUser(selectedCheater)" size="xs" />
-                      <span class="truncate">{{ selectedCheater.dealt_by ? userDisplayName(cheaterDealtUser(selectedCheater), selectedCheater.dealt_by) : '-' }}</span>
+                      <IamUserAvatar v-if="selectedCheater.dealtBy" :user="cheaterDealtUser(selectedCheater)" size="xs" />
+                      <span class="truncate">{{ selectedCheater.dealtBy ? userDisplayName(cheaterDealtUser(selectedCheater), selectedCheater.dealtBy) : '-' }}</span>
                     </dd>
                   </div>
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.handledAt') }}</dt>
-                    <dd class="mt-1 font-medium text-slate-950 dark:text-white">{{ selectedCheater.dealt_at ? formatDateTime(selectedCheater.dealt_at, locale) : '-' }}</dd>
+                    <dd class="mt-1 font-medium text-slate-950 dark:text-white">{{ selectedCheater.dealtAt ? formatDateTime(selectedCheater.dealtAt, locale) : '-' }}</dd>
                   </div>
                 </dl>
-                <div v-if="selectedCheater.dealt_comment" class="space-y-2">
+                <div v-if="selectedCheater.dealtComment" class="space-y-2">
                   <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.resolvedComment') }}</p>
-                  <p class="border-l-2 border-slate-200 pl-3 text-sm leading-6 text-slate-700 dark:border-slate-700 dark:text-slate-200">{{ selectedCheater.dealt_comment }}</p>
+                  <p class="border-l-2 border-slate-200 pl-3 text-sm leading-6 text-slate-700 dark:border-slate-700 dark:text-slate-200">{{ selectedCheater.dealtComment }}</p>
                 </div>
               </div>
             </div>
@@ -299,7 +299,7 @@ function changePage(page: number) {
 
 function selectCheater(item: AdminModCheaterItem) {
   selectedCheater.value = item
-  comment.value = item.is_dealt ? item.dealt_comment || '' : ''
+  comment.value = item.isDealt ? item.dealtComment || '' : ''
   resolveError.value = ''
 }
 
@@ -310,7 +310,7 @@ function resetSelection() {
 }
 
 async function resolveCheater() {
-  if (!selectedCheater.value || selectedCheater.value.is_dealt) return
+  if (!selectedCheater.value || selectedCheater.value.isDealt) return
   const currentCheater = selectedCheater.value
   const nextComment = comment.value.trim()
   resolving.value = true
@@ -328,9 +328,9 @@ async function resolveCheater() {
     }
     selectedCheater.value = {
       ...currentCheater,
-      is_dealt: true,
-      dealt_comment: nextComment,
-      dealt_at: new Date().toISOString()
+      isDealt: true,
+      dealtComment: nextComment,
+      dealtAt: new Date().toISOString()
     }
     await loadCheaters()
   } catch (error) {
@@ -341,11 +341,11 @@ async function resolveCheater() {
 }
 
 function cheaterUser(item: AdminModCheaterItem) {
-  return item.user || { id: item.user_id, username: '', avatar: '' }
+  return item.user || { id: item.userId, username: '', avatar: '' }
 }
 
 function cheaterDealtUser(item: AdminModCheaterItem) {
-  return item.dealt_user || { id: item.dealt_by, username: '', avatar: '' }
+  return item.dealtUser || { id: item.dealtBy, username: '', avatar: '' }
 }
 
 function userDisplayName(user: { id?: number, username?: string } | null | undefined, fallbackId?: number) {
@@ -355,7 +355,7 @@ function userDisplayName(user: { id?: number, username?: string } | null | undef
 }
 
 function torrentDisplayName(item: AdminModCheaterItem) {
-  return item.torrent?.name || t('admin.mod.cheaters.torrentId', { id: item.torrent_id })
+  return item.torrent?.name || t('admin.mod.cheaters.torrentId', { id: item.torrentId })
 }
 
 function relativeTime(value?: string | null) {

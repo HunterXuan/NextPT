@@ -489,7 +489,7 @@ function torrentStatusBadges(torrent: TorrentListItem) {
 
 function torrentPromotionLabel(spState?: number | null) {
   const key = Number(spState || 0)
-  return key >= 1 && key <= 7 ? t(`catalog.torrents.status.promotion.${key}`) : ''
+  return key >= 1 && key <= 6 ? t(`catalog.torrents.status.promotion.${key}`) : ''
 }
 
 function isPromotionActive(torrent: TorrentListItem) {

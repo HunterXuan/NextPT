@@ -77,15 +77,15 @@
                     <div class="mt-2 flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                       <span>{{ $t('admin.mod.reports.reporterLabel') }}</span>
                       <IamUserAvatar :user="reportReporter(report)" size="xs" />
-                      <span class="truncate">{{ userDisplayName(reportReporter(report), report.reporter_id) }}</span>
+                      <span class="truncate">{{ userDisplayName(reportReporter(report), report.reporterId) }}</span>
                     </div>
                   </td>
                   <td class="px-4 py-3 align-middle">
                     <UBadge :color="reportStatusColor(report.status)" variant="soft">{{ reportStatusLabel(report.status) }}</UBadge>
                   </td>
                   <td class="px-4 py-3 text-right align-middle text-sm text-slate-600 dark:text-slate-300">
-                    <UTooltip :text="formatDateTime(report.created_at, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
-                      <span>{{ relativeTime(report.created_at) }}</span>
+                    <UTooltip :text="formatDateTime(report.createdAt, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
+                      <span>{{ relativeTime(report.createdAt) }}</span>
                     </UTooltip>
                   </td>
                 </tr>
@@ -162,12 +162,12 @@
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.reporterLabel') }}</dt>
                     <dd class="mt-1 flex min-w-0 items-center gap-2 font-medium text-slate-950 dark:text-white">
                       <IamUserAvatar :user="reportReporter(selectedReport)" size="xs" />
-                      <span class="truncate">{{ userDisplayName(reportReporter(selectedReport), selectedReport.reporter_id) }}</span>
+                      <span class="truncate">{{ userDisplayName(reportReporter(selectedReport), selectedReport.reporterId) }}</span>
                     </dd>
                   </div>
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.table.createdAt') }}</dt>
-                    <dd class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatDateTime(selectedReport.created_at, locale) }}</dd>
+                    <dd class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatDateTime(selectedReport.createdAt, locale) }}</dd>
                   </div>
                 </dl>
               </div>
@@ -222,18 +222,18 @@
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.handledBy') }}</dt>
                     <dd class="mt-1 flex min-w-0 items-center gap-2 font-medium text-slate-950 dark:text-white">
-                      <IamUserAvatar v-if="selectedReport.dealt_by" :user="reportDealtUser(selectedReport)" size="xs" />
-                      <span class="truncate">{{ selectedReport.dealt_by ? userDisplayName(reportDealtUser(selectedReport), selectedReport.dealt_by) : '-' }}</span>
+                      <IamUserAvatar v-if="selectedReport.dealtBy" :user="reportDealtUser(selectedReport)" size="xs" />
+                      <span class="truncate">{{ selectedReport.dealtBy ? userDisplayName(reportDealtUser(selectedReport), selectedReport.dealtBy) : '-' }}</span>
                     </dd>
                   </div>
                   <div class="col-span-2">
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.handledAt') }}</dt>
-                    <dd class="mt-1 font-medium text-slate-950 dark:text-white">{{ selectedReport.dealt_at ? formatDateTime(selectedReport.dealt_at, locale) : '-' }}</dd>
+                    <dd class="mt-1 font-medium text-slate-950 dark:text-white">{{ selectedReport.dealtAt ? formatDateTime(selectedReport.dealtAt, locale) : '-' }}</dd>
                   </div>
                 </dl>
-                <div v-if="selectedReport.dealt_comment" class="space-y-2">
+                <div v-if="selectedReport.dealtComment" class="space-y-2">
                   <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.form.comment') }}</p>
-                  <p class="border-l-2 border-slate-200 pl-3 text-sm leading-6 text-slate-700 dark:border-slate-700 dark:text-slate-200">{{ selectedReport.dealt_comment }}</p>
+                  <p class="border-l-2 border-slate-200 pl-3 text-sm leading-6 text-slate-700 dark:border-slate-700 dark:text-slate-200">{{ selectedReport.dealtComment }}</p>
                 </div>
               </div>
             </div>
@@ -374,8 +374,8 @@ async function resolveReport() {
     selectedReport.value = {
       ...currentReport,
       status: nextStatus,
-      dealt_comment: nextComment,
-      dealt_at: new Date().toISOString()
+      dealtComment: nextComment,
+      dealtAt: new Date().toISOString()
     }
     await loadReports()
   } catch (error) {
@@ -414,22 +414,22 @@ function targetTypeIcon(value: string) {
 
 function reportTarget(report: AdminModReportItem) {
   return report.target || {
-    type: report.target_type,
-    id: report.target_id,
+    type: report.targetType,
+    id: report.targetId,
     title: '',
-    parent_type: '',
-    parent_id: 0,
+    parentType: '',
+    parentId: 0,
     status: 'normal',
     author: { id: 0, username: '', avatar: '' }
   }
 }
 
 function reportTargetType(report: AdminModReportItem) {
-  return reportTarget(report).type || report.target_type
+  return reportTarget(report).type || report.targetType
 }
 
 function reportTargetId(report: AdminModReportItem) {
-  return reportTarget(report).id || report.target_id
+  return reportTarget(report).id || report.targetId
 }
 
 function reportTargetTitle(report: AdminModReportItem) {
@@ -455,11 +455,11 @@ function isReportTargetUnavailable(report: AdminModReportItem) {
 }
 
 function reportReporter(report: AdminModReportItem) {
-  return report.reporter || { id: report.reporter_id, username: '', avatar: '' }
+  return report.reporter || { id: report.reporterId, username: '', avatar: '' }
 }
 
 function reportDealtUser(report: AdminModReportItem) {
-  return report.dealt_user || { id: report.dealt_by, username: '', avatar: '' }
+  return report.dealtUser || { id: report.dealtBy, username: '', avatar: '' }
 }
 
 function userDisplayName(user: { id?: number, username?: string } | null | undefined, fallbackId?: number) {
