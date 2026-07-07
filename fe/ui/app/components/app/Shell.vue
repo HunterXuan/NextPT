@@ -92,6 +92,19 @@ import { normalizeLocaleCode } from '~/utils/locale'
 
 type ShellMode = 'app' | 'admin'
 
+interface ShellNavItem {
+  label: string
+  to: string
+  icon: string
+  active: boolean
+}
+
+interface ShellNavSection {
+  key: string
+  label: string
+  items: ShellNavItem[]
+}
+
 const props = withDefaults(defineProps<{
   mode?: ShellMode
 }>(), {
@@ -101,7 +114,7 @@ const props = withDefaults(defineProps<{
 const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
-const { user, isStaff, logout } = useAuth()
+const { user, isStaff, hasPermission, logout } = useAuth()
 
 const mobileSidebarOpen = ref(false)
 const sidebarCollapsed = ref(false)
@@ -205,7 +218,7 @@ const appNavSections = computed(() => {
   return sections
 })
 
-const adminNavSections = computed(() => [
+const adminNavSections = computed<ShellNavSection[]>(() => compactNavSections([
   {
     key: 'overview',
     label: '',
@@ -216,51 +229,51 @@ const adminNavSections = computed(() => [
   {
     key: 'catalog',
     label: t('admin.nav.catalog'),
-    items: [
-      { label: t('admin.catalog.categories.title'), to: '/admin/catalog/categories', icon: 'i-lucide-tags', active: isActive('/admin/catalog/categories') }
-    ]
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminCatalogCategoryManage, { label: t('admin.catalog.categories.title'), to: '/admin/catalog/categories', icon: 'i-lucide-tags', active: isActive('/admin/catalog/categories') })
+    ])
   },
   {
     key: 'forum',
     label: t('admin.nav.forum'),
-    items: [
-      { label: t('admin.forum.categories.title'), to: '/admin/forum/categories', icon: 'i-lucide-folder-tree', active: isActive('/admin/forum/categories') },
-      { label: t('admin.forum.nodes.title'), to: '/admin/forum/nodes', icon: 'i-lucide-panels-top-left', active: isActive('/admin/forum/nodes') }
-    ]
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminForumCategoryManage, { label: t('admin.forum.categories.title'), to: '/admin/forum/categories', icon: 'i-lucide-folder-tree', active: isActive('/admin/forum/categories') }),
+      permissionNavItem(Permission.AdminForumNodeManage, { label: t('admin.forum.nodes.title'), to: '/admin/forum/nodes', icon: 'i-lucide-panels-top-left', active: isActive('/admin/forum/nodes') })
+    ])
   },
   {
     key: 'iam',
     label: t('admin.nav.iam'),
-    items: [
-      { label: t('admin.iam.users.title'), to: '/admin/iam/users', icon: 'i-lucide-users', active: isActive('/admin/iam/users') },
-      { label: t('admin.iam.roles.title'), to: '/admin/iam/roles', icon: 'i-lucide-shield-check', active: isActive('/admin/iam/roles') },
-      { label: t('admin.iam.invites.title'), to: '/admin/iam/invites', icon: 'i-lucide-ticket-plus', active: isActive('/admin/iam/invites') }
-    ]
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminIamUserManage, { label: t('admin.iam.users.title'), to: '/admin/iam/users', icon: 'i-lucide-users', active: isActive('/admin/iam/users') }),
+      permissionNavItem(Permission.AdminIamRoleManage, { label: t('admin.iam.roles.title'), to: '/admin/iam/roles', icon: 'i-lucide-shield-check', active: isActive('/admin/iam/roles') }),
+      permissionNavItem(Permission.AdminIamInviteManage, { label: t('admin.iam.invites.title'), to: '/admin/iam/invites', icon: 'i-lucide-ticket-plus', active: isActive('/admin/iam/invites') })
+    ])
   },
   {
     key: 'moderation',
     label: t('admin.nav.moderation'),
-    items: [
-      { label: t('admin.mod.reports.title'), to: '/admin/mod/reports', icon: 'i-lucide-flag', active: isActive('/admin/mod/reports') },
-      { label: t('admin.mod.cheaters.title'), to: '/admin/mod/cheaters', icon: 'i-lucide-radar', active: isActive('/admin/mod/cheaters') }
-    ]
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminModReportManage, { label: t('admin.mod.reports.title'), to: '/admin/mod/reports', icon: 'i-lucide-flag', active: isActive('/admin/mod/reports') }),
+      permissionNavItem(Permission.AdminModCheaterManage, { label: t('admin.mod.cheaters.title'), to: '/admin/mod/cheaters', icon: 'i-lucide-radar', active: isActive('/admin/mod/cheaters') })
+    ])
   },
   {
     key: 'site',
     label: t('admin.nav.site'),
-    items: [
-      { label: t('admin.site.configs.title'), to: '/admin/site/configs', icon: 'i-lucide-settings-2', active: isActive('/admin/site/configs') },
-      { label: t('admin.site.audits.title'), to: '/admin/site/audits', icon: 'i-lucide-scroll-text', active: isActive('/admin/site/audits') }
-    ]
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminSiteConfig, { label: t('admin.site.configs.title'), to: '/admin/site/configs', icon: 'i-lucide-settings-2', active: isActive('/admin/site/configs') }),
+      permissionNavItem(Permission.AdminSiteAudit, { label: t('admin.site.audits.title'), to: '/admin/site/audits', icon: 'i-lucide-scroll-text', active: isActive('/admin/site/audits') })
+    ])
   },
   {
     key: 'system',
     label: t('admin.nav.system'),
-    items: [
-      { label: t('admin.sys.crons.title'), to: '/admin/sys/crons', icon: 'i-lucide-clock-3', active: isActive('/admin/sys/crons') }
-    ]
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminSysCronManage, { label: t('admin.sys.crons.title'), to: '/admin/sys/crons', icon: 'i-lucide-clock-3', active: isActive('/admin/sys/crons') })
+    ])
   }
-])
+]))
 
 const navSections = computed(() => props.mode === 'admin' ? adminNavSections.value : appNavSections.value)
 const shellUser = computed(() => user.value
@@ -356,6 +369,18 @@ function toggleSidebar() {
 function navigateFromUserMenu(path: string) {
   mobileSidebarOpen.value = false
   void navigateTo(localePath(path))
+}
+
+function permissionNavItem(permission: string, item: ShellNavItem) {
+  return hasPermission(permission) ? item : null
+}
+
+function compactNavItems(items: Array<ShellNavItem | null>) {
+  return items.filter((item): item is ShellNavItem => Boolean(item))
+}
+
+function compactNavSections(sections: ShellNavSection[]) {
+  return sections.filter((section) => section.items.length > 0)
 }
 
 async function handleLogout() {

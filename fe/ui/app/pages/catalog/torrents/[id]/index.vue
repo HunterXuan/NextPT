@@ -36,21 +36,17 @@
                   </div>
 
                   <div class="flex shrink-0 flex-wrap items-center gap-2 lg:justify-end">
-                    <UTooltip
-                      :text="$t('catalog.torrents.detail.actions.download')"
-                      :content="{ side: 'top', sideOffset: 8 }"
-                      :delay-duration="120"
-                    >
-                      <UButton
-                        class="shrink-0"
-                        color="primary"
-                        icon="i-lucide-download"
-                        :loading="downloadPending"
-                        :disabled="downloadPending"
-                        :aria-label="$t('catalog.torrents.detail.actions.download')"
-                        @click="handleDownload"
-                      />
-                    </UTooltip>
+                    <AppPermissionButton
+                      :permission="Permission.CatalogTorrentDownload"
+                      class="shrink-0"
+                      color="primary"
+                      icon="i-lucide-download"
+                      :tooltip="$t('catalog.torrents.detail.actions.download')"
+                      :loading="downloadPending"
+                      :disabled="downloadPending"
+                      :aria-label="$t('catalog.torrents.detail.actions.download')"
+                      @click="handleDownload"
+                    />
                     <UTooltip
                       :text="$t('catalog.torrents.detail.actions.like')"
                       :content="{ side: 'top', sideOffset: 8 }"
@@ -318,12 +314,12 @@
                 <label class="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600">
                   <UIcon name="i-lucide-file-up" class="size-4 shrink-0 text-slate-400" />
                   <span class="min-w-0 truncate">{{ selectedSubtitleFile?.name || $t('catalog.torrents.detail.subtitles.choose') }}</span>
-                  <input :key="subtitleFileInputKey" class="sr-only" type="file" :disabled="subtitleUploadPending" @change="handleSubtitleFileChange">
+                  <input :key="subtitleFileInputKey" class="sr-only" type="file" :disabled="!canCreateSubtitle || subtitleUploadPending" @change="handleSubtitleFileChange">
                 </label>
                 <select
                   v-model="subtitleForm.language"
                   class="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
-                  :disabled="subtitleUploadPending"
+                  :disabled="!canCreateSubtitle || subtitleUploadPending"
                 >
                   <option v-for="option in subtitleLanguageOptions" :key="option.value" :value="option.value">
                     {{ option.label }}
@@ -335,12 +331,20 @@
                     v-model="subtitleForm.anonymous"
                     type="checkbox"
                     class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
-                    :disabled="subtitleUploadPending"
+                    :disabled="!canCreateSubtitle || subtitleUploadPending"
                   >
                 </label>
-                <UButton type="submit" color="primary" icon="i-lucide-upload" :loading="subtitleUploadPending" :disabled="!canUploadSubtitle">
+                <AppPermissionButton
+                  :permission="Permission.CatalogSubtitleCreate"
+                  type="submit"
+                  color="primary"
+                  icon="i-lucide-upload"
+                  :tooltip="$t('catalog.torrents.detail.subtitles.upload')"
+                  :loading="subtitleUploadPending"
+                  :disabled="!selectedSubtitleFile || !subtitleForm.language || subtitleUploadPending"
+                >
                   {{ $t('catalog.torrents.detail.subtitles.upload') }}
-                </UButton>
+                </AppPermissionButton>
               </form>
 
               <div v-if="subtitlesError" class="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
@@ -366,9 +370,19 @@
                     </p>
                   </div>
                   <div class="flex items-center gap-2">
-                    <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-download" :loading="subtitleDownloadPendingId === subtitle.id" @click="handleSubtitleDownload(subtitle)">
+                    <AppPermissionButton
+                      :permission="Permission.CatalogSubtitleDownload"
+                      color="neutral"
+                      variant="outline"
+                      size="xs"
+                      icon="i-lucide-download"
+                      :tooltip="$t('catalog.torrents.detail.subtitles.download')"
+                      :loading="subtitleDownloadPendingId === subtitle.id"
+                      :disabled="subtitleDownloadPendingId > 0"
+                      @click="handleSubtitleDownload(subtitle)"
+                    >
                       {{ $t('catalog.torrents.detail.subtitles.download') }}
-                    </UButton>
+                    </AppPermissionButton>
                     <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-flag" @click="startSubtitleReport(subtitle.id)">
                       {{ $t('catalog.torrents.detail.actions.report') }}
                     </UButton>
@@ -428,8 +442,8 @@
                 v-model="commentForm.content"
                 class="w-full"
                 :rows="4"
-                :placeholder="$t('catalog.torrents.detail.comments.placeholder')"
-                :disabled="commentSubmitPending"
+                :placeholder="canCreateCatalogComment ? $t('catalog.torrents.detail.comments.placeholder') : $t('common.noPermission')"
+                :disabled="!canCreateCatalogComment || commentSubmitPending"
               />
               <div v-else class="min-h-28 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
                 <div v-if="renderedCommentPreview" class="rich-text rich-text-compact" v-html="renderedCommentPreview" />
@@ -452,9 +466,17 @@
                     {{ $t('catalog.torrents.detail.comments.preview') }}
                   </button>
                 </div>
-                <UButton type="submit" color="primary" icon="i-lucide-send" :loading="commentSubmitPending" :disabled="commentForm.content.trim().length < 3">
+                <AppPermissionButton
+                  :permission="Permission.CatalogCommentCreate"
+                  type="submit"
+                  color="primary"
+                  icon="i-lucide-send"
+                  :tooltip="$t('catalog.torrents.detail.comments.submit')"
+                  :loading="commentSubmitPending"
+                  :disabled="commentForm.content.trim().length < 3"
+                >
                   {{ $t('catalog.torrents.detail.comments.submit') }}
-                </UButton>
+                </AppPermissionButton>
               </div>
             </form>
 
@@ -570,7 +592,7 @@
             </form>
           </section>
 
-          <section v-if="isStaff" class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <section v-if="canManageCatalogTorrent" class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.managementTitle') }}</h2>
 
             <div class="mt-3 grid grid-cols-2 gap-2">
@@ -822,7 +844,7 @@ const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
 const adminApi = useAdmin()
 const workspaceTabs = useWorkspaceTabs('app')
-const { user, isStaff } = useAuth()
+const { user, hasPermission } = useAuth()
 
 const torrent = ref<TorrentDetail | null>(null)
 const files = ref<TorrentFileItem[]>([])
@@ -920,8 +942,13 @@ const allFileTreeExpanded = computed(() => hasFileTreeDirectories.value && fileT
 const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expandedFileNodeIds.value))
 const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
 const renderedCommentPreview = computed(() => renderRichText(commentForm.content))
-const canUploadSubtitle = computed(() => Boolean(selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
-const canOwnerEditTorrent = computed(() => Boolean(torrent.value && !isStaff.value && user.value?.user.id === torrent.value.owner?.id))
+const canDownloadTorrent = computed(() => hasPermission(Permission.CatalogTorrentDownload))
+const canCreateSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleCreate))
+const canDownloadSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleDownload))
+const canCreateCatalogComment = computed(() => hasPermission(Permission.CatalogCommentCreate))
+const canManageCatalogTorrent = computed(() => hasPermission(Permission.AdminCatalogTorrentManage))
+const canUploadSubtitle = computed(() => Boolean(canCreateSubtitle.value && selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
+const canOwnerEditTorrent = computed(() => Boolean(torrent.value && !canManageCatalogTorrent.value && user.value?.user.id === torrent.value.owner?.id))
 const adminPromotionOptions = computed(() => [1, 2, 3, 4, 5, 6].map((value) => ({
   value,
   label: t(`catalog.torrents.status.promotion.${value}`)
@@ -1425,7 +1452,7 @@ function peerStatCardClass(view: PeerView) {
 }
 
 async function handleDownload() {
-  if (!torrent.value || downloadPending.value) return
+  if (!canDownloadTorrent.value || !torrent.value || downloadPending.value) return
 
   downloadPending.value = true
   try {
@@ -1567,6 +1594,7 @@ function scrollToCommentHash(behavior: ScrollBehavior = 'smooth') {
 }
 
 function insertCommentQuote(quote: string) {
+  if (!canCreateCatalogComment.value) return
   commentForm.content = commentForm.content.trim()
     ? `${commentForm.content.trim()}\n\n${quote}`
     : quote
@@ -1578,7 +1606,7 @@ function insertCommentQuote(quote: string) {
 
 async function handleCommentSubmit() {
   const content = commentForm.content.trim()
-  if (!torrent.value || content.length < 3 || commentSubmitPending.value) return
+  if (!canCreateCatalogComment.value || !torrent.value || content.length < 3 || commentSubmitPending.value) return
 
   commentSubmitPending.value = true
   try {
@@ -1735,7 +1763,7 @@ function peerUserName(peer: TorrentPeerItem) {
 }
 
 async function handleSubtitleUpload() {
-  if (!torrent.value || !selectedSubtitleFile.value || !subtitleForm.language || subtitleUploadPending.value) return
+  if (!canUploadSubtitle.value || !torrent.value || !selectedSubtitleFile.value || !subtitleForm.language || subtitleUploadPending.value) return
 
   subtitleUploadPending.value = true
   try {
@@ -1760,7 +1788,7 @@ async function handleSubtitleUpload() {
 }
 
 async function handleSubtitleDownload(subtitle: SubtitleItem) {
-  if (subtitleDownloadPendingId.value > 0) return
+  if (!canDownloadSubtitle.value || subtitleDownloadPendingId.value > 0) return
 
   subtitleDownloadPendingId.value = subtitle.id
   try {

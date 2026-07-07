@@ -27,7 +27,19 @@
           {{ lockedText }}
         </span>
         <slot name="actions">
-          <UButton type="submit" color="primary" :icon="submitIcon" :loading="pending" :disabled="submitDisabled">
+          <UTooltip
+            v-if="submitDisabledText"
+            :text="submitDisabledText"
+            :content="{ side: 'top', sideOffset: 8 }"
+            :delay-duration="120"
+          >
+            <span class="inline-flex">
+              <UButton type="submit" color="primary" :icon="submitIcon" :loading="pending" :disabled="submitDisabled">
+                {{ submitLabel }}
+              </UButton>
+            </span>
+          </UTooltip>
+          <UButton v-else type="submit" color="primary" :icon="submitIcon" :loading="pending" :disabled="submitDisabled">
             {{ submitLabel }}
           </UButton>
         </slot>
@@ -57,6 +69,7 @@ const props = withDefaults(defineProps<{
   previewLabel: string
   previewEmpty: string
   lockedText?: string
+  submitDisabledText?: string
 }>(), {
   rows: 4,
   placeholder: '',
@@ -66,7 +79,8 @@ const props = withDefaults(defineProps<{
   asForm: true,
   showActions: true,
   submitIcon: 'i-lucide-send',
-  lockedText: ''
+  lockedText: '',
+  submitDisabledText: ''
 })
 
 const emit = defineEmits<{

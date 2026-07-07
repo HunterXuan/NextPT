@@ -25,16 +25,18 @@
           </form>
 
           <div class="flex shrink-0 items-center">
-            <UButton
+            <AppPermissionButton
+              :permission="Permission.CatalogTorrentCreate"
               color="primary"
               variant="soft"
               icon="i-lucide-upload"
               :to="localePath('/catalog/torrents/upload')"
               class="h-10 w-10 justify-center p-0 sm:w-auto sm:px-3"
               :aria-label="$t('catalog.torrents.upload.action')"
+              :tooltip="$t('catalog.torrents.upload.action')"
             >
               <span class="hidden sm:inline">{{ $t('catalog.torrents.upload.action') }}</span>
-            </UButton>
+            </AppPermissionButton>
           </div>
         </div>
 
@@ -160,14 +162,15 @@
                     {{ torrent.subTitle }}
                   </p>
                 </div>
-                <UButton
+                <AppPermissionButton
+                  :permission="Permission.CatalogTorrentDownload"
                   class="lg:hidden"
                   color="neutral"
                   variant="ghost"
                   size="xs"
                   icon="i-lucide-download"
                   :aria-label="$t('catalog.torrents.detail.actions.download')"
-                  :title="$t('catalog.torrents.detail.actions.download')"
+                  :tooltip="$t('catalog.torrents.detail.actions.download')"
                   :loading="downloadPendingId === torrent.id"
                   :disabled="downloadPendingId > 0"
                   @click="handleDownloadTorrent(torrent)"
@@ -204,14 +207,15 @@
               </p>
             </div>
             <div class="hidden justify-center lg:flex">
-              <UButton
+              <AppPermissionButton
+                :permission="Permission.CatalogTorrentDownload"
                 class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                 color="neutral"
                 variant="ghost"
                 size="xs"
                 icon="i-lucide-download"
                 :aria-label="$t('catalog.torrents.detail.actions.download')"
-                :title="$t('catalog.torrents.detail.actions.download')"
+                :tooltip="$t('catalog.torrents.detail.actions.download')"
                 :loading="downloadPendingId === torrent.id"
                 :disabled="downloadPendingId > 0"
                 @click="handleDownloadTorrent(torrent)"
@@ -268,6 +272,7 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
+const { hasPermission } = useAuth()
 
 const categories = ref<CatalogCategory[]>([])
 const torrents = ref<TorrentListItem[]>([])
@@ -285,6 +290,7 @@ const selectedSize = ref(String(readPageSizeQuery()))
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const relativeTimeFormatter = computed(() => new Intl.RelativeTimeFormat(locale.value, { numeric: 'auto' }))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / Number(selectedSize.value || 50))))
+const canDownloadTorrent = computed(() => hasPermission(Permission.CatalogTorrentDownload))
 
 const categoryNameMap = computed(() => {
   const map = new Map<number, string>()
@@ -407,7 +413,7 @@ function syncQuery() {
 }
 
 async function handleDownloadTorrent(torrent: TorrentListItem) {
-  if (downloadPendingId.value > 0) return
+  if (!canDownloadTorrent.value || downloadPendingId.value > 0) return
 
   downloadPendingId.value = torrent.id
   try {
@@ -538,12 +544,7 @@ function downloadBlob(blob: Blob, filename: string) {
   link.download = filename
   document.body.appendChild(link)
   link.click()
-  link.remove()
+  document.body.removeChild(link)
   URL.revokeObjectURL(href)
 }
-
-useSeoMeta({
-  title: t('catalog.torrents.metaTitle'),
-  robots: 'noindex, nofollow'
-})
 </script>

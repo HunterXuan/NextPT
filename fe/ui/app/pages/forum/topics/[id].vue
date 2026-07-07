@@ -116,14 +116,15 @@
               v-model:mode="replyEditorMode"
               class="border-b border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40"
               :placeholder="$t('forum.detail.replyForm.placeholder')"
-              :disabled="replyCreatePending || topic.isLocked"
+              :disabled="replyCreatePending || topic.isLocked || !canCreateForumReply"
               :pending="replyCreatePending"
               :submit-disabled="!canCreateReply"
+              :submit-disabled-text="canCreateForumReply ? '' : $t('common.noPermission')"
               :submit-label="$t('forum.detail.replyForm.submit')"
               :write-label="$t('common.editor.edit')"
               :preview-label="$t('common.editor.preview')"
               :preview-empty="$t('common.editor.previewEmpty')"
-              :locked-text="topic.isLocked ? $t('forum.detail.replyForm.locked') : ''"
+              :locked-text="!canCreateForumReply ? $t('common.noPermission') : topic.isLocked ? $t('forum.detail.replyForm.locked') : ''"
               @submit="handleCreateReply"
             />
 
@@ -150,7 +151,7 @@
         <ForumTopicSidebar
           v-model:move-node-id="moveNodeId"
           :topic="topic"
-          :is-staff="isStaff"
+          :can-manage-topic="canManageForumTopic"
           :admin-nodes="adminNodes"
           :admin-categories="adminCategories"
           :admin-nodes-pending="adminNodesPending"
@@ -193,7 +194,7 @@ const toast = useToast()
 const forum = useForum()
 const adminApi = useAdmin()
 const workspaceTabs = useWorkspaceTabs('app')
-const { isStaff, user } = useAuth()
+const { hasPermission, user } = useAuth()
 
 const topicId = computed(() => Number(route.params.id || 0))
 const topic = ref<ForumTopicDetail | null>(null)
@@ -303,8 +304,10 @@ const topicEditSubmitDisabledReason = computed(() => {
   if (!isTopicEditDirty.value) return t('forum.detail.edit.errors.noChanges')
   return ''
 })
+const canManageForumTopic = computed(() => hasPermission(Permission.AdminForumTopicManage))
+const canCreateForumReply = computed(() => hasPermission(Permission.ForumReplyCreate))
 const canCreateReply = computed(() => {
-  return Boolean(topic.value && !topic.value.isLocked && replyContent.value.trim().length >= 2 && !replyCreatePending.value)
+  return Boolean(canCreateForumReply.value && topic.value && !topic.value.isLocked && replyContent.value.trim().length >= 2 && !replyCreatePending.value)
 })
 
 useHead(() => ({
@@ -317,7 +320,7 @@ onMounted(() => {
     currentTimeMs.value = Date.now()
   }, 1000)
   loadPage()
-  if (isStaff.value) loadAdminNodes()
+  if (canManageForumTopic.value) loadAdminNodes()
 })
 
 onBeforeUnmount(() => {
@@ -335,6 +338,12 @@ onBeforeRouteLeave(() => {
 
 watch(() => route.hash, () => {
   void nextTick(scrollToReplyHash)
+})
+
+watch(canManageForumTopic, (canManage) => {
+  if (canManage && adminNodes.value.length === 0 && !adminNodesPending.value) {
+    loadAdminNodes()
+  }
 })
 
 function readFirstQueryValue(key: string) {
@@ -655,6 +664,7 @@ async function handleReportReply(replyId: number) {
 }
 
 function insertReplyQuote(quote: string) {
+  if (!canCreateForumReply.value) return
   replyContent.value = replyContent.value.trim() ? `${replyContent.value.trim()}\n\n${quote}` : quote
   replyEditorMode.value = 'write'
   void nextTick(() => {
@@ -671,6 +681,7 @@ function showErrorToast(error: unknown) {
 }
 
 async function loadAdminNodes() {
+  if (!canManageForumTopic.value) return
   adminNodesPending.value = true
   try {
     const [nodesData, categoriesData] = await Promise.all([
@@ -688,7 +699,7 @@ async function loadAdminNodes() {
 }
 
 async function handleAdminTopicAction(action: 'lock' | 'unlock' | 'pin' | 'unpin') {
-  if (!topic.value) return
+  if (!canManageForumTopic.value || !topic.value) return
   adminActionPending.value = action === 'lock' || action === 'unlock' ? 'lock' : 'pin'
   adminError.value = ''
   try {
@@ -706,7 +717,7 @@ async function handleAdminTopicAction(action: 'lock' | 'unlock' | 'pin' | 'unpin
 }
 
 async function handleMoveTopic() {
-  if (!topic.value || !moveNodeId.value || moveNodeId.value === topic.value.nodeId) return
+  if (!canManageForumTopic.value || !topic.value || !moveNodeId.value || moveNodeId.value === topic.value.nodeId) return
   adminActionPending.value = 'move'
   adminError.value = ''
   try {
@@ -721,7 +732,7 @@ async function handleMoveTopic() {
 }
 
 async function handleAdminDeleteTopic() {
-  if (!topic.value) return
+  if (!canManageForumTopic.value || !topic.value) return
   adminActionPending.value = 'delete'
   adminError.value = ''
   try {

@@ -80,22 +80,18 @@
             </p>
 
             <div class="hidden justify-center gap-1 lg:flex">
-              <UTooltip
-                :text="$t('catalog.subtitles.actions.download')"
-                :content="{ side: 'top', sideOffset: 8 }"
-                :delay-duration="120"
-              >
-                <UButton
-                  color="neutral"
-                  variant="ghost"
-                  size="xs"
-                  icon="i-lucide-download"
-                  :loading="downloadPendingId === subtitle.id"
-                  :disabled="downloadPendingId > 0"
-                  :aria-label="$t('catalog.subtitles.actions.download')"
-                  @click="handleDownload(subtitle)"
-                />
-              </UTooltip>
+              <AppPermissionButton
+                :permission="Permission.CatalogSubtitleDownload"
+                color="neutral"
+                variant="ghost"
+                size="xs"
+                icon="i-lucide-download"
+                :tooltip="$t('catalog.subtitles.actions.download')"
+                :loading="downloadPendingId === subtitle.id"
+                :disabled="downloadPendingId > 0"
+                :aria-label="$t('catalog.subtitles.actions.download')"
+                @click="handleDownload(subtitle)"
+              />
               <UTooltip
                 :text="$t('catalog.subtitles.actions.report')"
                 :content="{ side: 'top', sideOffset: 8 }"
@@ -116,9 +112,19 @@
               <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-arrow-up-right" :to="localePath(`/catalog/torrents/${subtitle.torrentId}`)">
                 #{{ subtitle.torrentId }}
               </UButton>
-              <UButton color="neutral" variant="outline" size="xs" icon="i-lucide-download" :loading="downloadPendingId === subtitle.id" :disabled="downloadPendingId > 0" @click="handleDownload(subtitle)">
+              <AppPermissionButton
+                :permission="Permission.CatalogSubtitleDownload"
+                color="neutral"
+                variant="outline"
+                size="xs"
+                icon="i-lucide-download"
+                :tooltip="$t('catalog.subtitles.actions.download')"
+                :loading="downloadPendingId === subtitle.id"
+                :disabled="downloadPendingId > 0"
+                @click="handleDownload(subtitle)"
+              >
                 {{ $t('catalog.subtitles.actions.download') }}
-              </UButton>
+              </AppPermissionButton>
               <UButton color="neutral" :variant="activeReportId === subtitle.id ? 'soft' : 'ghost'" size="xs" icon="i-lucide-flag" @click="startReport(subtitle.id)">
                 {{ $t('catalog.subtitles.actions.report') }}
               </UButton>
@@ -167,6 +173,7 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
+const { hasPermission } = useAuth()
 
 const subtitles = ref<SubtitleItem[]>([])
 const total = ref(0)
@@ -190,6 +197,7 @@ const subtitleLanguageLabels: Record<string, string> = {
 
 const size = computed(() => Number(selectedSize.value))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / size.value)))
+const canDownloadSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleDownload))
 
 useHead(() => ({
   title: t('catalog.subtitles.metaTitle')
@@ -279,7 +287,7 @@ function rawUploaderName(subtitle: SubtitleItem) {
 }
 
 async function handleDownload(subtitle: SubtitleItem) {
-  if (downloadPendingId.value > 0) return
+  if (!canDownloadSubtitle.value || downloadPendingId.value > 0) return
 
   downloadPendingId.value = subtitle.id
   try {

@@ -66,6 +66,8 @@
             :empty-description="$t('forum.topicList.empty.description')"
             :empty-action-label="$t('forum.actions.createTopic')"
             :empty-action-to="createTopicPath"
+            :empty-action-disabled="!canCreateTopic"
+            :empty-action-disabled-text="$t('common.noPermission')"
           />
 
           <AppPager
@@ -83,9 +85,16 @@
 
         <aside class="app-sticky-offset space-y-3 xl:sticky">
           <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <UButton color="primary" icon="i-lucide-square-pen" block :to="createTopicPath">
+            <AppPermissionButton
+              :permission="Permission.ForumTopicCreate"
+              color="primary"
+              icon="i-lucide-square-pen"
+              block
+              :to="createTopicPath"
+              :tooltip="$t('forum.actions.createTopic')"
+            >
               {{ $t('forum.actions.createTopic') }}
-            </UButton>
+            </AppPermissionButton>
           </section>
 
           <section v-if="selectedNode" class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
@@ -170,6 +179,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 const router = useRouter()
 const forum = useForum()
+const { hasPermission } = useAuth()
 
 const categories = ref<ForumNodeCategory[]>([])
 const topics = ref<ForumTopicListItem[]>([])
@@ -218,6 +228,7 @@ const createTopicPath = computed(() => {
   if (!selectedNode.value?.id) return localePath('/forum/topics/create')
   return localePath(`/forum/topics/create?nodeId=${selectedNode.value.id}`)
 })
+const canCreateTopic = computed(() => hasPermission(Permission.ForumTopicCreate))
 
 useHead(() => ({
   title: t('forum.metaTitle')
@@ -411,4 +422,5 @@ function categoryDisplayName(category: ForumNodeCategory) {
 function nodeDisplayName(node: ForumNode) {
   return localizeI18nName(node.nameI18n, locale.value, t('forum.fallback.node'))
 }
+
 </script>

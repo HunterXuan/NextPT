@@ -12,6 +12,7 @@
     "retry": "重試",
     "save": "儲存",
     "requestFailed": "請求失敗，請稍後再試",
+    "noPermission": "目前帳號沒有權限執行此操作",
     "collapseSidebar": "收起側邊欄",
     "expandSidebar": "展開側邊欄",
     "switchLanguage": "切換語言",

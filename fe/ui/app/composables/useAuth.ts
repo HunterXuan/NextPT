@@ -61,6 +61,64 @@ export interface AuthPermissionListOut {
   permissions: string[]
 }
 
+export const Permission = {
+  AdminIamUserManage: 'admin:iam/user:*',
+  AdminIamRoleManage: 'admin:iam/role:*',
+  AdminIamInviteManage: 'admin:iam/invite:*',
+  AdminModReportManage: 'admin:mod/report:*',
+  AdminModCheaterManage: 'admin:mod/cheater:*',
+  AdminModUserManage: 'admin:mod/user:*',
+  AdminSiteDashboard: 'admin:site/dashboard:*',
+  AdminSiteConfig: 'admin:site/config:*',
+  AdminSiteAudit: 'admin:site/audit:*',
+  AdminSysCronManage: 'admin:sys/cron:*',
+  AdminForumCategoryManage: 'admin:forum/category:*',
+  AdminForumNodeManage: 'admin:forum/node:*',
+  AdminForumTopicManage: 'admin:forum/topic:*',
+  AdminForumReplyManage: 'admin:forum/reply:*',
+  AdminCatalogCategoryManage: 'admin:catalog/category:*',
+  AdminCatalogTorrentManage: 'admin:catalog/torrent:*',
+  AdminCatalogSubtitleManage: 'admin:catalog/subtitle:*',
+  AdminCatalogCommentManage: 'admin:catalog/comment:*',
+  IamInviteRead: 'read:iam/invite:*',
+  IamInviteCreate: 'create:iam/invite:*',
+  ForumTopicRead: 'read:forum/topic:*',
+  ForumTopicCreate: 'create:forum/topic:*',
+  ForumTopicUpdate: 'update:forum/topic:*',
+  ForumReplyRead: 'read:forum/reply:*',
+  ForumReplyCreate: 'create:forum/reply:*',
+  ForumReplyUpdate: 'update:forum/reply:*',
+  CatalogTorrentRead: 'read:catalog/torrent:*',
+  CatalogTorrentCreate: 'create:catalog/torrent:*',
+  CatalogTorrentDownload: 'download:catalog/torrent:*',
+  CatalogSubtitleRead: 'read:catalog/subtitle:*',
+  CatalogSubtitleCreate: 'create:catalog/subtitle:*',
+  CatalogSubtitleDownload: 'download:catalog/subtitle:*',
+  CatalogCommentRead: 'read:catalog/comment:*',
+  CatalogCommentCreate: 'create:catalog/comment:*'
+} as const
+
+export const AdminPermissions = [
+  Permission.AdminIamUserManage,
+  Permission.AdminIamRoleManage,
+  Permission.AdminIamInviteManage,
+  Permission.AdminModReportManage,
+  Permission.AdminModCheaterManage,
+  Permission.AdminModUserManage,
+  Permission.AdminSiteDashboard,
+  Permission.AdminSiteConfig,
+  Permission.AdminSiteAudit,
+  Permission.AdminSysCronManage,
+  Permission.AdminForumCategoryManage,
+  Permission.AdminForumNodeManage,
+  Permission.AdminForumTopicManage,
+  Permission.AdminForumReplyManage,
+  Permission.AdminCatalogCategoryManage,
+  Permission.AdminCatalogTorrentManage,
+  Permission.AdminCatalogSubtitleManage,
+  Permission.AdminCatalogCommentManage
+]
+
 export function useAuth() {
   const token = useCookie<string | null>('nextpt_token', {
     sameSite: 'lax',
@@ -108,6 +166,8 @@ export function useAuth() {
   async function fetchUser() {
     if (!token.value) {
       user.value = null
+      permissions.value = []
+      permissionsLoaded.value = false
       return null
     }
 
@@ -115,6 +175,12 @@ export function useAuth() {
     user.value = data
     permissions.value = []
     permissionsLoaded.value = false
+    try {
+      await fetchPermissions(true)
+    } catch {
+      permissions.value = []
+      permissionsLoaded.value = true
+    }
     return data
   }
 
@@ -136,6 +202,10 @@ export function useAuth() {
 
   function hasPermission(permission: string) {
     return matchesPermissionList(permissions.value, permission)
+  }
+
+  function hasAnyPermission(requiredPermissions: string[]) {
+    return requiredPermissions.some((permission) => hasPermission(permission))
   }
 
   async function updateProfile(input: ProfileInput) {
@@ -178,6 +248,7 @@ export function useAuth() {
     token,
     user,
     permissions,
+    permissionsLoaded,
     isLoggedIn,
     isStaff,
     login,
@@ -185,6 +256,7 @@ export function useAuth() {
     fetchUser,
     fetchPermissions,
     hasPermission,
+    hasAnyPermission,
     updateProfile,
     changePassword,
     resetPasskey,

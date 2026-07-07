@@ -12,6 +12,7 @@
     "retry": "Retry",
     "save": "Save",
     "requestFailed": "Request failed. Please try again later.",
+    "noPermission": "Your account does not have permission for this action.",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
     "switchLanguage": "Switch language",

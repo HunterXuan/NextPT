@@ -13,7 +13,7 @@
       <div class="mb-4 flex flex-col gap-1">
         <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.invites.sendTitle') }}</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">
-          {{ availableInvitesPending ? $t('user.invites.loadingAvailable') : availableInvites.length > 0 ? $t('user.invites.sendDescription') : $t('user.invites.noAvailable') }}
+          {{ inviteSendDescription }}
         </p>
       </div>
 
@@ -25,7 +25,7 @@
             type="email"
             size="lg"
             icon="i-lucide-mail"
-            :disabled="inviteSendPending || availableInvitesPending || availableInvites.length === 0"
+            :disabled="!canCreateInvite || inviteSendPending || availableInvitesPending || availableInvites.length === 0"
           />
         </UFormField>
         <UFormField :label="$t('user.invites.code')" required>
@@ -37,16 +37,26 @@
               :items="inviteOptions"
               value-key="value"
               :placeholder="$t('user.invites.selectCode')"
-              :disabled="inviteSendPending || availableInvitesPending || availableInvites.length === 0"
+              :disabled="!canCreateInvite || inviteSendPending || availableInvitesPending || availableInvites.length === 0"
             />
             <p v-if="selectedInviteValidityLabel" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
               {{ selectedInviteValidityLabel }}
             </p>
           </div>
         </UFormField>
-        <UButton class="md:mt-6" type="submit" color="primary" size="lg" icon="i-lucide-send" :loading="inviteSendPending" :disabled="!canSendInvite">
+        <AppPermissionButton
+          :permission="Permission.IamInviteCreate"
+          class="md:mt-6"
+          type="submit"
+          color="primary"
+          size="lg"
+          icon="i-lucide-send"
+          :tooltip="$t('user.invites.send')"
+          :loading="inviteSendPending"
+          :disabled="!canSendInvite"
+        >
           {{ $t('user.invites.send') }}
-        </UButton>
+        </AppPermissionButton>
       </form>
     </section>
 
@@ -143,7 +153,7 @@ import { formatDateTime } from '~/utils/format'
 
 const { t, locale } = useI18n()
 const toast = useToast()
-const { fetchUser } = useAuth()
+const { fetchUser, hasPermission } = useAuth()
 const inviteService = useInvites()
 
 const invites = ref<InviteItem[]>([])
@@ -152,13 +162,19 @@ const inviteTotal = ref(0)
 const invitePage = ref(1)
 const inviteSize = 10
 const invitesPending = ref(true)
-const availableInvitesPending = ref(true)
+const availableInvitesPending = ref(false)
 const invitesError = ref('')
 const inviteSendPending = ref(false)
 const inviteEmail = ref('')
 const selectedInviteId = ref<number | null>(null)
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
+const canCreateInvite = computed(() => hasPermission(Permission.IamInviteCreate))
+const inviteSendDescription = computed(() => {
+  if (!canCreateInvite.value) return t('common.noPermission')
+  if (availableInvitesPending.value) return t('user.invites.loadingAvailable')
+  return availableInvites.value.length > 0 ? t('user.invites.sendDescription') : t('user.invites.noAvailable')
+})
 const inviteOptions = computed(() => availableInvites.value.map((invite) => ({
   label: formatInviteHash(invite.hash),
   value: invite.id
@@ -171,12 +187,18 @@ const selectedInviteValidityLabel = computed(() => {
 })
 const inviteTotalPages = computed(() => Math.max(1, Math.ceil(inviteTotal.value / inviteSize)))
 const canSendInvite = computed(() => {
-  return Boolean(selectedInviteId.value && inviteEmail.value.trim() && !inviteSendPending.value && !availableInvitesPending.value && availableInvites.value.length > 0)
+  return Boolean(canCreateInvite.value && selectedInviteId.value && inviteEmail.value.trim() && !inviteSendPending.value && !availableInvitesPending.value && availableInvites.value.length > 0)
 })
 
 onMounted(() => {
   void loadInvites()
-  void loadAvailableInvites()
+  if (canCreateInvite.value) void loadAvailableInvites()
+})
+
+watch(canCreateInvite, (canCreate) => {
+  if (canCreate && availableInvites.value.length === 0 && !availableInvitesPending.value) {
+    loadAvailableInvites()
+  }
 })
 
 async function loadInvites() {
@@ -214,6 +236,7 @@ async function loadInvites() {
 }
 
 async function loadAvailableInvites() {
+  if (!canCreateInvite.value) return
   availableInvitesPending.value = true
 
   try {

@@ -45,7 +45,7 @@
             <IamUserPasskeyCard />
           </div>
 
-          <div v-if="visitedSections.includes('invites')" v-show="activeSection === 'invites'">
+          <div v-if="canReadInvites && visitedSections.includes('invites')" v-show="activeSection === 'invites'">
             <IamUserInvitesPanel />
           </div>
         </main>
@@ -64,8 +64,10 @@ definePageMeta({
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+const { hasPermission } = useAuth()
 
-const settingSections = computed(() => [
+const canReadInvites = computed(() => hasPermission(Permission.IamInviteRead))
+const settingSections = computed(() => compactSettingSections([
   {
     value: 'profile' as const,
     label: t('user.settings.sections.profile.label'),
@@ -78,13 +80,13 @@ const settingSections = computed(() => [
     description: t('user.settings.sections.security.description'),
     icon: 'i-lucide-shield-check'
   },
-  {
+  canReadInvites.value ? {
     value: 'invites' as const,
     label: t('user.settings.sections.invites.label'),
     description: t('user.settings.sections.invites.description'),
     icon: 'i-lucide-ticket'
-  }
-])
+  } : null
+]))
 
 const activeSection = ref<SettingSection>(normalizeSection(route.query.section))
 const visitedSections = ref<SettingSection[]>([activeSection.value])
@@ -97,7 +99,9 @@ watch(
 )
 
 function normalizeSection(section: unknown): SettingSection {
-  return section === 'security' || section === 'invites' ? section : 'profile'
+  if (section === 'security') return 'security'
+  if (section === 'invites' && canReadInvites.value) return 'invites'
+  return 'profile'
 }
 
 function setActiveSection(section: SettingSection) {
@@ -117,6 +121,21 @@ function setActiveSectionValue(section: SettingSection) {
   if (!visitedSections.value.includes(section)) {
     visitedSections.value.push(section)
   }
+}
+
+watch(canReadInvites, (canRead) => {
+  if (!canRead && activeSection.value === 'invites') {
+    setActiveSection('profile')
+  }
+})
+
+function compactSettingSections(sections: Array<{
+  value: SettingSection
+  label: string
+  description: string
+  icon: string
+} | null>) {
+  return sections.filter((section): section is NonNullable<typeof section> => Boolean(section))
 }
 
 useSeoMeta({

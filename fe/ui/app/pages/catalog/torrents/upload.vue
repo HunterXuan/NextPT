@@ -160,9 +160,18 @@
                 <UButton color="neutral" variant="outline" block :to="localePath('/catalog/torrents')">
                   {{ $t('common.cancel') }}
                 </UButton>
-                <UButton type="submit" color="primary" icon="i-lucide-upload" block :loading="pending" :disabled="pending">
+                <AppPermissionButton
+                  :permission="Permission.CatalogTorrentCreate"
+                  type="submit"
+                  color="primary"
+                  icon="i-lucide-upload"
+                  block
+                  :tooltip="$t('catalog.torrents.upload.submit')"
+                  :loading="pending"
+                  :disabled="!canSubmit"
+                >
                   {{ $t('catalog.torrents.upload.submit') }}
-                </UButton>
+                </AppPermissionButton>
               </div>
             </div>
           </section>
@@ -186,6 +195,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
+const { hasPermission } = useAuth()
 
 const categories = ref<CatalogCategory[]>([])
 const tagGroups = ref<CatalogTagGroup[]>([])
@@ -243,7 +253,9 @@ const effectiveTitle = computed(() => {
 
 const finalTitle = computed(() => effectiveTitle.value === '-' ? '' : effectiveTitle.value)
 const titleError = computed(() => finalTitle.value ? '' : t('catalog.torrents.upload.errors.titleRequired'))
+const canCreateTorrent = computed(() => hasPermission(Permission.CatalogTorrentCreate))
 const submitError = computed(() => {
+  if (!canCreateTorrent.value) return t('common.noPermission')
   if (!selectedFile.value) return t('catalog.torrents.upload.errors.fileRequired')
   if (!selectedCategory.value) return t('catalog.torrents.upload.errors.categoryRequired')
   if (tagGroupsPending.value) return t('catalog.torrents.upload.errors.optionsLoading')

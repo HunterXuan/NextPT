@@ -22,9 +22,18 @@
       <UIcon :name="emptyIcon" class="size-9 text-slate-400" />
       <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ emptyTitle }}</p>
       <p class="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ emptyDescription }}</p>
-      <UButton v-if="emptyActionTo && emptyActionLabel" class="mt-5" color="primary" :icon="emptyActionIcon" :to="emptyActionTo">
+      <AppPermissionButton
+        v-if="emptyActionTo && emptyActionLabel"
+        class="mt-5"
+        color="primary"
+        :icon="emptyActionIcon"
+        :to="emptyActionTo"
+        :allowed="!emptyActionDisabled"
+        :disabled-tooltip="emptyActionDisabledText"
+        :tooltip="emptyActionLabel"
+      >
         {{ emptyActionLabel }}
-      </UButton>
+      </AppPermissionButton>
     </div>
 
     <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -110,6 +119,8 @@ withDefaults(defineProps<{
   emptyActionIcon?: string
   emptyActionLabel?: string
   emptyActionTo?: string
+  emptyActionDisabled?: boolean
+  emptyActionDisabledText?: string
   showViews?: boolean
 }>(), {
   pending: false,
@@ -118,6 +129,8 @@ withDefaults(defineProps<{
   emptyActionIcon: 'i-lucide-square-pen',
   emptyActionLabel: '',
   emptyActionTo: '',
+  emptyActionDisabled: false,
+  emptyActionDisabledText: '',
   showViews: true
 })
 

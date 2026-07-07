@@ -82,13 +82,14 @@
                   </p>
                 </div>
                 <div class="flex shrink-0 items-center gap-1 lg:hidden">
-                  <UButton
+                  <AppPermissionButton
+                    :permission="Permission.CatalogTorrentDownload"
                     color="neutral"
                     variant="ghost"
                     size="xs"
                     icon="i-lucide-download"
                     :aria-label="$t('catalog.torrents.detail.actions.download')"
-                    :title="$t('catalog.torrents.detail.actions.download')"
+                    :tooltip="$t('catalog.torrents.detail.actions.download')"
                     :loading="downloadPendingId === torrent.id"
                     :disabled="downloadPendingId > 0 || removingBookmarkId > 0"
                     @click="handleDownloadTorrent(torrent)"
@@ -138,14 +139,15 @@
               </p>
             </div>
             <div class="hidden justify-center gap-1 lg:flex">
-              <UButton
+              <AppPermissionButton
+                :permission="Permission.CatalogTorrentDownload"
                 class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                 color="neutral"
                 variant="ghost"
                 size="xs"
                 icon="i-lucide-download"
                 :aria-label="$t('catalog.torrents.detail.actions.download')"
-                :title="$t('catalog.torrents.detail.actions.download')"
+                :tooltip="$t('catalog.torrents.detail.actions.download')"
                 :loading="downloadPendingId === torrent.id"
                 :disabled="downloadPendingId > 0 || removingBookmarkId > 0"
                 @click="handleDownloadTorrent(torrent)"
@@ -215,6 +217,7 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
+const { hasPermission } = useAuth()
 
 const categories = ref<CatalogCategory[]>([])
 const torrents = ref<TorrentListItem[]>([])
@@ -231,6 +234,7 @@ const selectedSize = ref(String(readPageSizeQuery()))
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const relativeTimeFormatter = computed(() => new Intl.RelativeTimeFormat(locale.value, { numeric: 'auto' }))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / Number(selectedSize.value || 50))))
+const canDownloadTorrent = computed(() => hasPermission(Permission.CatalogTorrentDownload))
 
 const categoryNameMap = computed(() => {
   const map = new Map<number, string>()
@@ -316,7 +320,7 @@ function syncQuery() {
 }
 
 async function handleDownloadTorrent(torrent: TorrentListItem) {
-  if (downloadPendingId.value > 0 || removingBookmarkId.value > 0) return
+  if (!canDownloadTorrent.value || downloadPendingId.value > 0 || removingBookmarkId.value > 0) return
 
   downloadPendingId.value = torrent.id
   try {

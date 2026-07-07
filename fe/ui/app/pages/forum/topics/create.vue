@@ -84,9 +84,18 @@
 
         <aside class="app-sticky-offset space-y-3 xl:sticky">
           <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <UButton type="submit" color="primary" icon="i-lucide-square-pen" block :loading="pending" :disabled="!canSubmit">
+            <AppPermissionButton
+              :permission="Permission.ForumTopicCreate"
+              type="submit"
+              color="primary"
+              icon="i-lucide-square-pen"
+              block
+              :tooltip="$t('forum.create.submit')"
+              :loading="pending"
+              :disabled="!canSubmit"
+            >
               {{ $t('forum.create.submit') }}
-            </UButton>
+            </AppPermissionButton>
           </section>
 
           <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
@@ -155,6 +164,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 const toast = useToast()
 const forum = useForum()
+const { hasPermission } = useAuth()
 
 const categories = ref<ForumNodeCategory[]>([])
 const nodesPending = ref(true)
@@ -185,8 +195,9 @@ const selectedCategory = computed(() => {
 const selectedCategoryNodes = computed(() => selectedCategory.value?.nodes || [])
 const selectedNode = computed(() => selectedNodeItem.value?.node || null)
 const renderedContentPreview = computed(() => renderUserMarkdown(form.content).trim())
+const canCreateTopic = computed(() => hasPermission(Permission.ForumTopicCreate))
 const canSubmit = computed(() => {
-  return Number(form.nodeId) > 0 && form.subject.trim().length >= 2 && form.content.trim().length >= 2 && !pending.value
+  return canCreateTopic.value && Number(form.nodeId) > 0 && form.subject.trim().length >= 2 && form.content.trim().length >= 2 && !pending.value
 })
 
 useHead(() => ({
@@ -246,7 +257,16 @@ function handleCategoryChange() {
 }
 
 async function handleSubmit() {
-  if (!canSubmit.value) return
+  if (!canSubmit.value) {
+    if (!canCreateTopic.value) {
+      toast.add({
+        title: t('common.noPermission'),
+        color: 'error',
+        icon: 'i-lucide-circle-alert'
+      })
+    }
+    return
+  }
 
   pending.value = true
   try {

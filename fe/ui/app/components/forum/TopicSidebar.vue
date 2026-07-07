@@ -33,7 +33,7 @@
       :submit-reward="submitReward"
     />
 
-    <UCard v-if="isStaff" class="rounded-lg">
+    <UCard v-if="canManageTopic" class="rounded-lg">
       <template #header>
         <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('forum.detail.admin.title') }}</h2>
       </template>
@@ -123,7 +123,7 @@ type RewardSubmitter = (amount: number) => Promise<void>
 
 const props = withDefaults(defineProps<{
   topic: ForumTopicDetail
-  isStaff?: boolean
+  canManageTopic?: boolean
   moveNodeId: number
   adminNodes: AdminForumNode[]
   adminCategories: AdminForumCategory[]
@@ -133,7 +133,7 @@ const props = withDefaults(defineProps<{
   loadRewards: RewardLoader
   submitReward: RewardSubmitter
 }>(), {
-  isStaff: false,
+  canManageTopic: false,
   adminNodesPending: false,
   adminActionPending: '',
   adminError: ''
