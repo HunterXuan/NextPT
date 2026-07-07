@@ -323,7 +323,16 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 		if err != nil {
 			return err
 		}
-		if err := service.AccountingTrafficDomain().RecordTraffic(ctx, event.UserId, diffUp, diffDn, event.IsSeeder, timeDiff, event.Now); err != nil {
+		if err := service.AccountingTrafficDomain().RecordTraffic(ctx, accountingin.RecordTrafficInp{
+			UserId:            event.UserId,
+			UploadedDiff:      diffUp,
+			DownloadedDiff:    diffDn,
+			RawUploadedDiff:   diffUp,
+			RawDownloadedDiff: diffDn,
+			IsSeeder:          event.IsSeeder,
+			TimeDiff:          timeDiff,
+			EventTime:         event.Now,
+		}); err != nil {
 			return err
 		}
 		if event.Event == consts.TrackerAnnounceEventCompleted && finishedTransition {

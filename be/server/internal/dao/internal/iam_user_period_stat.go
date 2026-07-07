@@ -21,30 +21,34 @@ type IamUserPeriodStatDao struct {
 
 // IamUserPeriodStatColumns defines and stores column names for the table iam_user_period_stat.
 type IamUserPeriodStatColumns struct {
-	Id         string //
-	UserId     string //
-	PeriodType string // 1=每日 2=每月
-	PeriodKey  string // YYYY-MM-DD 或 YYYY-MM
-	Uploaded   string // 周期新增上传量 (bytes)
-	Downloaded string // 周期新增下载量 (bytes)
-	SeedTime   string // 周期新增做种时间 (秒)
-	LeechTime  string // 周期新增下载时间 (秒)
-	Bonus      string // 周期获得魔力值
-	CreatedAt  string //
+	Id            string //
+	UserId        string //
+	PeriodType    string // 1=每日 2=每月
+	PeriodKey     string // YYYY-MM-DD 或 YYYY-MM
+	Uploaded      string // 周期新增入账上传量 (bytes)
+	Downloaded    string // 周期新增入账下载量 (bytes)
+	RawUploaded   string // 周期新增真实上传量 (bytes)
+	RawDownloaded string // 周期新增真实下载量 (bytes)
+	SeedTime      string // 周期新增做种时间 (秒)
+	LeechTime     string // 周期新增下载时间 (秒)
+	Bonus         string // 周期获得魔力值
+	CreatedAt     string //
 }
 
 // iamUserPeriodStatColumns holds the columns for the table iam_user_period_stat.
 var iamUserPeriodStatColumns = IamUserPeriodStatColumns{
-	Id:         "id",
-	UserId:     "user_id",
-	PeriodType: "period_type",
-	PeriodKey:  "period_key",
-	Uploaded:   "uploaded",
-	Downloaded: "downloaded",
-	SeedTime:   "seed_time",
-	LeechTime:  "leech_time",
-	Bonus:      "bonus",
-	CreatedAt:  "created_at",
+	Id:            "id",
+	UserId:        "user_id",
+	PeriodType:    "period_type",
+	PeriodKey:     "period_key",
+	Uploaded:      "uploaded",
+	Downloaded:    "downloaded",
+	RawUploaded:   "raw_uploaded",
+	RawDownloaded: "raw_downloaded",
+	SeedTime:      "seed_time",
+	LeechTime:     "leech_time",
+	Bonus:         "bonus",
+	CreatedAt:     "created_at",
 }
 
 // NewIamUserPeriodStatDao creates and returns a new DAO object for table data access.

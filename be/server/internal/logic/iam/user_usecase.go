@@ -412,10 +412,12 @@ func (s *sIamUserUsecase) Me(ctx context.Context, actor *model.Actor) (*iamout.U
 			Signature: profile.Signature,
 		},
 		Stat: iamout.UserMeStatOut{
-			Uploaded:   stat.Uploaded,
-			Downloaded: stat.Downloaded,
-			Bonus:      stat.Bonus,
-			ShareRatio: s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
+			Uploaded:      stat.Uploaded,
+			Downloaded:    stat.Downloaded,
+			RawUploaded:   stat.RawUploaded,
+			RawDownloaded: stat.RawDownloaded,
+			Bonus:         stat.Bonus,
+			ShareRatio:    s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
 		},
 	}, nil
 }

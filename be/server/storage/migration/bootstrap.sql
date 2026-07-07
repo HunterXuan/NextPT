@@ -160,9 +160,9 @@ ON DUPLICATE KEY UPDATE
     `updated_at` = NOW();
 
 INSERT INTO `iam_user_stat`
-    (`id`, `user_id`, `uploaded`, `downloaded`, `seed_time`, `leech_time`, `bonus`, `bonus_charity`, `created_at`, `updated_at`)
+    (`id`, `user_id`, `uploaded`, `downloaded`, `raw_uploaded`, `raw_downloaded`, `seed_time`, `leech_time`, `bonus`, `bonus_charity`, `created_at`, `updated_at`)
 VALUES
-    (1, 1, 0, 0, 0, 0, 0.0, 0.0, NOW(), NOW())
+    (1, 1, 0, 0, 0, 0, 0, 0, 0.0, 0.0, NOW(), NOW())
 ON DUPLICATE KEY UPDATE
     `user_id` = VALUES(`user_id`);
 

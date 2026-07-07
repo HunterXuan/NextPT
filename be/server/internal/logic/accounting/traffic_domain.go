@@ -7,6 +7,7 @@ import (
 	"server/internal/consts"
 	"server/internal/dao"
 	"server/internal/model/entity"
+	"server/internal/model/in/accountingin"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/database/gdb"
@@ -19,12 +20,14 @@ import (
 type sAccountingTrafficDomain struct{}
 
 type trafficStatChange struct {
-	userId        uint64
-	diffUp        int64
-	diffDn        int64
-	seedTimeDiff  int
-	leechTimeDiff int
-	eventTime     *gtime.Time
+	userId            uint64
+	uploadedDiff      int64
+	downloadedDiff    int64
+	rawUploadedDiff   int64
+	rawDownloadedDiff int64
+	seedTimeDiff      int
+	leechTimeDiff     int
+	eventTime         *gtime.Time
 }
 
 func init() {
@@ -41,57 +44,61 @@ func (s *sAccountingTrafficDomain) GetUserStat(ctx context.Context, userId uint6
 	return stat, err
 }
 
-func (s *sAccountingTrafficDomain) RecordTraffic(ctx context.Context, userId uint64, diffUp, diffDn int64, isSeeder bool, timeDiff int, eventTime *gtime.Time) error {
-	if diffUp <= 0 && diffDn <= 0 && timeDiff <= 0 {
+func (s *sAccountingTrafficDomain) RecordTraffic(ctx context.Context, in accountingin.RecordTrafficInp) error {
+	if in.UploadedDiff <= 0 && in.DownloadedDiff <= 0 && in.RawUploadedDiff <= 0 && in.RawDownloadedDiff <= 0 && in.TimeDiff <= 0 {
 		return nil
 	}
 
 	statColumns := dao.IamUserStat.Columns()
 	statModel := dao.IamUserStat.Ctx(ctx)
 	statUpdate := g.Map{
-		statColumns.Uploaded:   s.incrementByValue(statModel, statColumns.Uploaded, diffUp),
-		statColumns.Downloaded: s.incrementByValue(statModel, statColumns.Downloaded, diffDn),
+		statColumns.Uploaded:      s.incrementByValue(statModel, statColumns.Uploaded, in.UploadedDiff),
+		statColumns.Downloaded:    s.incrementByValue(statModel, statColumns.Downloaded, in.DownloadedDiff),
+		statColumns.RawUploaded:   s.incrementByValue(statModel, statColumns.RawUploaded, in.RawUploadedDiff),
+		statColumns.RawDownloaded: s.incrementByValue(statModel, statColumns.RawDownloaded, in.RawDownloadedDiff),
 	}
-	if isSeeder {
-		statUpdate[statColumns.SeedTime] = s.incrementByValue(statModel, statColumns.SeedTime, int64(timeDiff))
+	if in.IsSeeder {
+		statUpdate[statColumns.SeedTime] = s.incrementByValue(statModel, statColumns.SeedTime, int64(in.TimeDiff))
 	} else {
-		statUpdate[statColumns.LeechTime] = s.incrementByValue(statModel, statColumns.LeechTime, int64(timeDiff))
+		statUpdate[statColumns.LeechTime] = s.incrementByValue(statModel, statColumns.LeechTime, int64(in.TimeDiff))
 	}
-	res, err := statModel.Where(statColumns.UserId, userId).Update(statUpdate)
+	res, err := statModel.Where(statColumns.UserId, in.UserId).Update(statUpdate)
 	if err != nil {
 		return err
 	}
 	affected, err := res.RowsAffected()
 	if err == nil && affected == 0 {
-		return gerror.Newf("user stat record missing for user_id: %d", userId)
+		return gerror.Newf("user stat record missing for user_id: %d", in.UserId)
 	}
 
 	// 2. Update daily and monthly period stat.
-	if eventTime == nil {
-		eventTime = gtime.Now()
+	if in.EventTime == nil {
+		in.EventTime = gtime.Now()
 	}
 
 	var seedTimeDiff, leechTimeDiff int
-	if isSeeder {
-		seedTimeDiff = timeDiff
+	if in.IsSeeder {
+		seedTimeDiff = in.TimeDiff
 	} else {
-		leechTimeDiff = timeDiff
+		leechTimeDiff = in.TimeDiff
 	}
 
 	change := trafficStatChange{
-		userId:        userId,
-		diffUp:        diffUp,
-		diffDn:        diffDn,
-		seedTimeDiff:  seedTimeDiff,
-		leechTimeDiff: leechTimeDiff,
-		eventTime:     eventTime,
+		userId:            in.UserId,
+		uploadedDiff:      in.UploadedDiff,
+		downloadedDiff:    in.DownloadedDiff,
+		rawUploadedDiff:   in.RawUploadedDiff,
+		rawDownloadedDiff: in.RawDownloadedDiff,
+		seedTimeDiff:      seedTimeDiff,
+		leechTimeDiff:     leechTimeDiff,
+		eventTime:         in.EventTime,
 	}
 
-	if err = s.upsertPeriodStat(ctx, consts.AccountingStatPeriodDaily, eventTime.Format("Y-m-d"), change); err != nil {
+	if err = s.upsertPeriodStat(ctx, consts.AccountingStatPeriodDaily, in.EventTime.Format("Y-m-d"), change); err != nil {
 		return err
 	}
 
-	return s.upsertPeriodStat(ctx, consts.AccountingStatPeriodMonthly, eventTime.Format("Y-m"), change)
+	return s.upsertPeriodStat(ctx, consts.AccountingStatPeriodMonthly, in.EventTime.Format("Y-m"), change)
 }
 
 func (s *sAccountingTrafficDomain) upsertPeriodStat(ctx context.Context, periodType int, periodKey string, change trafficStatChange) error {
@@ -99,21 +106,25 @@ func (s *sAccountingTrafficDomain) upsertPeriodStat(ctx context.Context, periodT
 	m := dao.IamUserPeriodStat.Ctx(ctx)
 	_, err := m.
 		Data(g.Map{
-			columns.UserId:     change.userId,
-			columns.PeriodType: periodType,
-			columns.PeriodKey:  periodKey,
-			columns.Uploaded:   change.diffUp,
-			columns.Downloaded: change.diffDn,
-			columns.SeedTime:   change.seedTimeDiff,
-			columns.LeechTime:  change.leechTimeDiff,
-			columns.Bonus:      0,
-			columns.CreatedAt:  change.eventTime,
+			columns.UserId:        change.userId,
+			columns.PeriodType:    periodType,
+			columns.PeriodKey:     periodKey,
+			columns.Uploaded:      change.uploadedDiff,
+			columns.Downloaded:    change.downloadedDiff,
+			columns.RawUploaded:   change.rawUploadedDiff,
+			columns.RawDownloaded: change.rawDownloadedDiff,
+			columns.SeedTime:      change.seedTimeDiff,
+			columns.LeechTime:     change.leechTimeDiff,
+			columns.Bonus:         0,
+			columns.CreatedAt:     change.eventTime,
 		}).
 		OnDuplicate(g.Map{
-			columns.Uploaded:   s.incrementByInsertedValue(m, columns.Uploaded),
-			columns.Downloaded: s.incrementByInsertedValue(m, columns.Downloaded),
-			columns.SeedTime:   s.incrementByInsertedValue(m, columns.SeedTime),
-			columns.LeechTime:  s.incrementByInsertedValue(m, columns.LeechTime),
+			columns.Uploaded:      s.incrementByInsertedValue(m, columns.Uploaded),
+			columns.Downloaded:    s.incrementByInsertedValue(m, columns.Downloaded),
+			columns.RawUploaded:   s.incrementByInsertedValue(m, columns.RawUploaded),
+			columns.RawDownloaded: s.incrementByInsertedValue(m, columns.RawDownloaded),
+			columns.SeedTime:      s.incrementByInsertedValue(m, columns.SeedTime),
+			columns.LeechTime:     s.incrementByInsertedValue(m, columns.LeechTime),
 		}).
 		Save()
 	return err

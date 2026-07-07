@@ -33,10 +33,12 @@ type UserMeProfileOut struct {
 }
 
 type UserMeStatOut struct {
-	Uploaded   uint64  `json:"uploaded"`
-	Downloaded uint64  `json:"downloaded"`
-	Bonus      float64 `json:"bonus"`
-	ShareRatio float64 `json:"shareRatio"`
+	Uploaded      uint64  `json:"uploaded"`
+	Downloaded    uint64  `json:"downloaded"`
+	RawUploaded   uint64  `json:"rawUploaded"`
+	RawDownloaded uint64  `json:"rawDownloaded"`
+	Bonus         float64 `json:"bonus"`
+	ShareRatio    float64 `json:"shareRatio"`
 }
 
 type UserPermissionListOut struct {

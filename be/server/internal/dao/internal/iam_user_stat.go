@@ -21,30 +21,34 @@ type IamUserStatDao struct {
 
 // IamUserStatColumns defines and stores column names for the table iam_user_stat.
 type IamUserStatColumns struct {
-	Id           string //
-	UserId       string //
-	Uploaded     string // 总上传量 (bytes)
-	Downloaded   string // 总下载量 (bytes)
-	SeedTime     string // 总做种时间 (秒)
-	LeechTime    string // 总下载时间 (秒)
-	Bonus        string // 魔力值
-	BonusCharity string // 捐赠魔力值
-	CreatedAt    string //
-	UpdatedAt    string //
+	Id            string //
+	UserId        string //
+	Uploaded      string // 总入账上传量 (bytes)
+	Downloaded    string // 总入账下载量 (bytes)
+	RawUploaded   string // 真实总上传量 (bytes)
+	RawDownloaded string // 真实总下载量 (bytes)
+	SeedTime      string // 总做种时间 (秒)
+	LeechTime     string // 总下载时间 (秒)
+	Bonus         string // 魔力值
+	BonusCharity  string // 捐赠魔力值
+	CreatedAt     string //
+	UpdatedAt     string //
 }
 
 // iamUserStatColumns holds the columns for the table iam_user_stat.
 var iamUserStatColumns = IamUserStatColumns{
-	Id:           "id",
-	UserId:       "user_id",
-	Uploaded:     "uploaded",
-	Downloaded:   "downloaded",
-	SeedTime:     "seed_time",
-	LeechTime:    "leech_time",
-	Bonus:        "bonus",
-	BonusCharity: "bonus_charity",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
+	Id:            "id",
+	UserId:        "user_id",
+	Uploaded:      "uploaded",
+	Downloaded:    "downloaded",
+	RawUploaded:   "raw_uploaded",
+	RawDownloaded: "raw_downloaded",
+	SeedTime:      "seed_time",
+	LeechTime:     "leech_time",
+	Bonus:         "bonus",
+	BonusCharity:  "bonus_charity",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
 }
 
 // NewIamUserStatDao creates and returns a new DAO object for table data access.

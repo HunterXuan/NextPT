@@ -31,7 +31,7 @@ type (
 	}
 	IAccountingTrafficDomain interface {
 		GetUserStat(ctx context.Context, userId uint64) (*entity.IamUserStat, error)
-		RecordTraffic(ctx context.Context, userId uint64, diffUp int64, diffDn int64, isSeeder bool, timeDiff int, eventTime *gtime.Time) error
+		RecordTraffic(ctx context.Context, in accountingin.RecordTrafficInp) error
 		QueryPeriodStats(ctx context.Context, userId uint64, periodType int, startDate *gtime.Time, endDate *gtime.Time) ([]entity.IamUserPeriodStat, error)
 	}
 	IAccountingTrafficUsecase interface {

@@ -43,11 +43,13 @@ func (s *sAccountingTrafficUsecase) GetMyTraffic(ctx context.Context, actor *mod
 		}
 
 		return &accountingout.TrafficGetMeOut{
-			Uploaded:   stat.Uploaded,
-			Downloaded: stat.Downloaded,
-			ShareRatio: ratio,
-			SeedTime:   stat.SeedTime,
-			LeechTime:  stat.LeechTime,
+			Uploaded:      stat.Uploaded,
+			Downloaded:    stat.Downloaded,
+			RawUploaded:   stat.RawUploaded,
+			RawDownloaded: stat.RawDownloaded,
+			ShareRatio:    ratio,
+			SeedTime:      stat.SeedTime,
+			LeechTime:     stat.LeechTime,
 		}, nil
 	}
 
@@ -72,12 +74,14 @@ func (s *sAccountingTrafficUsecase) ListMyTrafficHistory(ctx context.Context, ac
 	outList := make([]accountingout.TrafficHistoryItem, 0, len(list))
 	for _, item := range list {
 		outList = append(outList, accountingout.TrafficHistoryItem{
-			Date:       item.PeriodKey,
-			Uploaded:   item.Uploaded,
-			Downloaded: item.Downloaded,
-			SeedTime:   item.SeedTime,
-			LeechTime:  item.LeechTime,
-			Bonus:      gconv.String(item.Bonus),
+			Date:          item.PeriodKey,
+			Uploaded:      item.Uploaded,
+			Downloaded:    item.Downloaded,
+			RawUploaded:   item.RawUploaded,
+			RawDownloaded: item.RawDownloaded,
+			SeedTime:      item.SeedTime,
+			LeechTime:     item.LeechTime,
+			Bonus:         gconv.String(item.Bonus),
 		})
 	}
 
