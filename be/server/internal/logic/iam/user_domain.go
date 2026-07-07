@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"strings"
 
+	"server/internal/consts"
 	"server/internal/dao"
+	"server/internal/model"
 	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sIamUserDomain struct{}
@@ -302,4 +305,77 @@ func (s *sIamUserDomain) GetUserProfilesByUserIds(ctx context.Context, userIds [
 	var profiles []entity.IamUserProfile
 	err := dao.IamUserProfile.Ctx(ctx).WhereIn(dao.IamUserProfile.Columns().UserId, userIds).Scan(&profiles)
 	return profiles, err
+}
+
+func (s *sIamUserDomain) QueryRankCandidates(ctx context.Context, page int, size int) ([]model.IamRankCandidate, error) {
+	if page <= 0 {
+		page = 1
+	}
+	if size <= 0 {
+		size = 500
+	}
+
+	userColumns := dao.IamUser.Columns()
+	statColumns := dao.IamUserStat.Columns()
+	var users []entity.IamUser
+	err := dao.IamUser.Ctx(ctx).
+		Fields(userColumns.Id, userColumns.Role, userColumns.CreatedAt).
+		Where(userColumns.Status, consts.IamUserStatusConfirmed).
+		Page(page, size).
+		OrderAsc(userColumns.Id).
+		Scan(&users)
+	if err != nil || len(users) == 0 {
+		return nil, err
+	}
+
+	userIds := make([]uint64, 0, len(users))
+	for _, user := range users {
+		if user.Id > 0 {
+			userIds = append(userIds, user.Id)
+		}
+	}
+
+	var stats []entity.IamUserStat
+	if len(userIds) > 0 {
+		err = dao.IamUserStat.Ctx(ctx).
+			Fields(statColumns.UserId, statColumns.Uploaded, statColumns.Downloaded).
+			WhereIn(statColumns.UserId, userIds).
+			Scan(&stats)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	statMap := make(map[uint64]entity.IamUserStat, len(stats))
+	for _, stat := range stats {
+		statMap[stat.UserId] = stat
+	}
+
+	candidates := make([]model.IamRankCandidate, 0, len(users))
+	for _, user := range users {
+		stat := statMap[user.Id]
+		candidates = append(candidates, model.IamRankCandidate{
+			UserId:     user.Id,
+			RoleId:     user.Role,
+			Uploaded:   stat.Uploaded,
+			Downloaded: stat.Downloaded,
+			CreatedAt:  user.CreatedAt,
+		})
+	}
+	return candidates, nil
+}
+
+func (s *sIamUserDomain) UpdateUserRole(ctx context.Context, userId uint64, roleId uint) error {
+	if userId == 0 || roleId == 0 {
+		return nil
+	}
+	columns := dao.IamUser.Columns()
+	_, err := dao.IamUser.Ctx(ctx).
+		Where(columns.Id, userId).
+		Data(g.Map{
+			columns.Role:      roleId,
+			columns.UpdatedAt: gtime.Now(),
+		}).
+		Update()
+	return err
 }

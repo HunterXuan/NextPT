@@ -10,7 +10,7 @@ CREATE TABLE `iam_role` (
     `id`              INT UNSIGNED    NOT NULL AUTO_INCREMENT,
     `level`           SMALLINT        NOT NULL DEFAULT 0 COMMENT '等级权重(用于权限比对，值越大权限越高，如普通用户10，管理员100)',
     `name_i18n`       JSON            NOT NULL COMMENT '角色名称多语言映射字典',
-    `rules`           JSON            NULL     COMMENT '角色规则(JSON: 包含 upgrade 升级条件, keep 保级条件等)',
+    `rules`           JSON            NULL     COMMENT '角色规则(JSON: promotion 表示升级到该角色的条件, demotion 表示当前角色触发降级的条件)',
     `permissions`     JSON            NULL     COMMENT '角色关联的权限标识符列表',
     `is_staff`        BIT(1)      NOT NULL DEFAULT 0 COMMENT '是否为管理组成员',
     `created_at`      DATETIME        NULL,

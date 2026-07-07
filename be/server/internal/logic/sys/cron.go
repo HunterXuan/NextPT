@@ -61,6 +61,11 @@ func (s *sSysCron) Start(ctx context.Context) {
 		return nil
 	}), "iam_invite_expiry_cleanup")
 
+	gcron.AddSingleton(ctx, "@daily", s.runWrapper("iam_rank_sync", 3600, func(ctx context.Context) error {
+		_, err := service.IamRoleUsecase().SyncRanks(ctx)
+		return err
+	}), "iam_rank_sync")
+
 	gcron.AddSingleton(ctx, "@hourly", s.runWrapper("tracker_bonus_points", 1800, func(ctx context.Context) error {
 		return service.EconomyBonusUsecase().DistributeBonusPoints(ctx)
 	}), "tracker_bonus_points")

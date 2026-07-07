@@ -60,6 +60,7 @@ type (
 	}
 	IIamRoleUsecase interface {
 		List(ctx context.Context, actor *model.Actor) (*iamout.RoleListOut, error)
+		SyncRanks(ctx context.Context) (*model.IamRankSyncResult, error)
 	}
 	IIamSessionDomain interface {
 		GetGFToken() gtoken.Token
@@ -95,6 +96,8 @@ type (
 		GetUsersByIds(ctx context.Context, ids []uint64) ([]entity.IamUser, error)
 		GetUserIdsByRoles(ctx context.Context, roleIds []uint) ([]uint64, error)
 		GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error)
+		QueryRankCandidates(ctx context.Context, page int, size int) ([]model.IamRankCandidate, error)
+		UpdateUserRole(ctx context.Context, userId uint64, roleId uint) error
 	}
 	IIamUserUsecase interface {
 		InvalidateUserCache(ctx context.Context, userId uint64)

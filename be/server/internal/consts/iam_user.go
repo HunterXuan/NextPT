@@ -11,3 +11,7 @@ const (
 	IamUserPrivacyNormal        // 1: 普通
 	IamUserPrivacyStrict        // 2: 严格
 )
+
+const (
+	IamUserRankAutoBanReason = "rank_demotion_below_minimum"
+)
