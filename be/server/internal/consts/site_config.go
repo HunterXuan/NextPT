@@ -76,7 +76,7 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigTrackerBonusB0:             100.0,
 	SiteConfigTrackerBonusL:              300.0,
 	SiteConfigTrackerBonusBase:           0.4,
-	SiteConfigIamDefaultRegisterRole:     1,
+	SiteConfigIamDefaultRegisterRole:     2,
 	SiteConfigIamRegisterEnabled:         true,
 	SiteConfigCatalogTorrentSource:       "NextPT",
 }

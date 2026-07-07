@@ -52,10 +52,14 @@ type (
 	IIamRoleDomain interface {
 		GetRoleById(ctx context.Context, roleId uint) (*entity.IamRole, error)
 		GetRolesByIds(ctx context.Context, roleIds []uint) ([]entity.IamRole, error)
+		ListRoles(ctx context.Context) ([]entity.IamRole, error)
 		AdminListRoles(ctx context.Context) ([]entity.IamRole, error)
 		AdminCreateRole(ctx context.Context, level int, nameI18N []byte, rules []byte, permissions []byte, isStaff bool) (uint, error)
 		AdminUpdateRole(ctx context.Context, id uint, level *int, nameI18N []byte, rules []byte, permissions []byte, isStaff *bool) error
 		AdminDeleteRole(ctx context.Context, id uint) (int, error)
+	}
+	IIamRoleUsecase interface {
+		List(ctx context.Context, actor *model.Actor) (*iamout.RoleListOut, error)
 	}
 	IIamSessionDomain interface {
 		GetGFToken() gtoken.Token
@@ -112,6 +116,7 @@ var (
 	localIamInviteUsecase    IIamInviteUsecase
 	localIamPermissionDomain IIamPermissionDomain
 	localIamRoleDomain       IIamRoleDomain
+	localIamRoleUsecase      IIamRoleUsecase
 	localIamSessionDomain    IIamSessionDomain
 	localIamSessionUsecase   IIamSessionUsecase
 	localIamUserDomain       IIamUserDomain
@@ -160,6 +165,17 @@ func IamRoleDomain() IIamRoleDomain {
 
 func RegisterIamRoleDomain(i IIamRoleDomain) {
 	localIamRoleDomain = i
+}
+
+func IamRoleUsecase() IIamRoleUsecase {
+	if localIamRoleUsecase == nil {
+		panic("implement not found for interface IIamRoleUsecase, forgot register?")
+	}
+	return localIamRoleUsecase
+}
+
+func RegisterIamRoleUsecase(i IIamRoleUsecase) {
+	localIamRoleUsecase = i
 }
 
 func IamSessionDomain() IIamSessionDomain {

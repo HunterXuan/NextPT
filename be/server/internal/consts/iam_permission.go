@@ -24,9 +24,8 @@ const (
 	IamPermissionAdminModUserManage    = "admin:mod/user:*"
 
 	// Site Management
-	IamPermissionAdminSiteDashboard = "admin:site/dashboard:*"
-	IamPermissionAdminSiteConfig    = "admin:site/config:*"
-	IamPermissionAdminSiteAudit     = "admin:site/audit:*"
+	IamPermissionAdminSiteConfig = "admin:site/config:*"
+	IamPermissionAdminSiteAudit  = "admin:site/audit:*"
 
 	// Sys Management
 	IamPermissionAdminSysCronManage = "admin:sys/cron:*"
@@ -78,7 +77,6 @@ var (
 		IamPermissionAdminModCheaterManage,
 		IamPermissionAdminModUserManage,
 
-		IamPermissionAdminSiteDashboard,
 		IamPermissionAdminSiteConfig,
 		IamPermissionAdminSiteAudit,
 

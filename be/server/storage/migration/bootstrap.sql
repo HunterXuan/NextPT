@@ -13,44 +13,111 @@ SET NAMES utf8mb4;
 -- IAM roles and default admin user
 -- ------------------------------------------------------------
 
+SET @iam_permissions_limited = JSON_ARRAY(
+    'read:forum/topic:*',
+    'read:forum/reply:*',
+    'read:catalog/torrent:*',
+    'download:catalog/torrent:*',
+    'read:catalog/subtitle:*',
+    'download:catalog/subtitle:*',
+    'read:catalog/comment:*'
+);
+
+SET @iam_permissions_member = JSON_ARRAY_APPEND(
+    @iam_permissions_limited,
+    '$',
+    'read:iam/invite:*',
+    '$',
+    'create:iam/invite:*',
+    '$',
+    'create:forum/topic:*',
+    '$',
+    'create:forum/reply:*',
+    '$',
+    'create:catalog/comment:*'
+);
+
+SET @iam_permissions_power_user = JSON_ARRAY_APPEND(
+    @iam_permissions_member,
+    '$',
+    'create:catalog/torrent:*',
+    '$',
+    'create:catalog/subtitle:*'
+);
+
+SET @iam_permissions_forum_staff = JSON_ARRAY_APPEND(
+    @iam_permissions_power_user,
+    '$',
+    'admin:mod/report:*',
+    '$',
+    'admin:forum/topic:*',
+    '$',
+    'admin:forum/reply:*'
+);
+
+SET @iam_permissions_catalog_staff = JSON_ARRAY_APPEND(
+    @iam_permissions_forum_staff,
+    '$',
+    'admin:catalog/torrent:*',
+    '$',
+    'admin:catalog/subtitle:*',
+    '$',
+    'admin:catalog/comment:*'
+);
+
+SET @iam_permissions_admin = JSON_ARRAY_APPEND(
+    @iam_permissions_catalog_staff,
+    '$',
+    'admin:iam/user:*',
+    '$',
+    'admin:iam/role:*',
+    '$',
+    'admin:iam/invite:*',
+    '$',
+    'admin:mod/cheater:*',
+    '$',
+    'admin:mod/user:*',
+    '$',
+    'admin:site/config:*',
+    '$',
+    'admin:site/audit:*',
+    '$',
+    'admin:forum/category:*',
+    '$',
+    'admin:forum/node:*',
+    '$',
+    'admin:catalog/category:*'
+);
+
+SET @iam_permissions_sysop = JSON_ARRAY_APPEND(
+    @iam_permissions_admin,
+    '$',
+    'admin:sys/cron:*'
+);
+
+SET @iam_permissions_all = JSON_ARRAY('*');
+
 INSERT INTO `iam_role`
     (`id`, `level`, `name_i18n`, `rules`, `permissions`, `is_staff`, `created_at`, `updated_at`)
 VALUES
-    (
-        1,
-        10,
-        '{"zh-CN":"用户","zh-TW":"用戶","en-US":"User"}',
-        '{}',
-        '[
-            "read:iam/invite:*",
-            "create:iam/invite:*",
-            "read:forum/topic:*",
-            "create:forum/topic:*",
-            "read:forum/reply:*",
-            "create:forum/reply:*",
-            "read:catalog/torrent:*",
-            "create:catalog/torrent:*",
-            "download:catalog/torrent:*",
-            "read:catalog/subtitle:*",
-            "create:catalog/subtitle:*",
-            "download:catalog/subtitle:*",
-            "read:catalog/comment:*",
-            "create:catalog/comment:*"
-        ]',
-        b'0',
-        NOW(),
-        NOW()
-    ),
-    (
-        2,
-        100,
-        '{"zh-CN":"管理员","zh-TW":"管理員","en-US":"Administrator"}',
-        '{}',
-        '["*"]',
-        b'1',
-        NOW(),
-        NOW()
-    )
+    (1, 0, '{"zh-CN":"留校察看","zh-TW":"留校察看","en-US":"Peasant"}', JSON_OBJECT('demotion',JSON_ARRAY(JSON_OBJECT('downloadedGiBGt',30,'ratioLt',0.4),JSON_OBJECT('downloadedGiBGt',100,'ratioLt',0.5),JSON_OBJECT('downloadedGiBGt',200,'ratioLt',0.6),JSON_OBJECT('downloadedGiBGt',400,'ratioLt',0.7),JSON_OBJECT('downloadedGiBGt',800,'ratioLt',0.8))), @iam_permissions_limited, b'0', NOW(), NOW()),
+    (2, 10, '{"zh-CN":"本科新生","zh-TW":"本科新生","en-US":"User"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('downloadedGiBLte',30),JSON_OBJECT('downloadedGiBGt',30,'downloadedGiBLte',100,'ratioGte',0.4),JSON_OBJECT('downloadedGiBGt',100,'downloadedGiBLte',200,'ratioGte',0.5),JSON_OBJECT('downloadedGiBGt',200,'downloadedGiBLte',400,'ratioGte',0.6),JSON_OBJECT('downloadedGiBGt',400,'downloadedGiBLte',800,'ratioGte',0.7),JSON_OBJECT('downloadedGiBGt',800,'ratioGte',0.8)),'demotion',JSON_ARRAY(JSON_OBJECT('downloadedGiBGt',30,'ratioLt',0.4),JSON_OBJECT('downloadedGiBGt',100,'ratioLt',0.5),JSON_OBJECT('downloadedGiBGt',200,'ratioLt',0.6),JSON_OBJECT('downloadedGiBGt',400,'ratioLt',0.7),JSON_OBJECT('downloadedGiBGt',800,'ratioLt',0.8))), @iam_permissions_member, b'0', NOW(), NOW()),
+    (3, 20, '{"zh-CN":"小小学士","zh-TW":"小小學士","en-US":"PowerUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',14,'downloadedGiBGte',30,'ratioGt',1.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',1.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (4, 30, '{"zh-CN":"优秀硕士","zh-TW":"優秀碩士","en-US":"EliteUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',35,'downloadedGiBGte',50,'ratioGt',2.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',2.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (5, 40, '{"zh-CN":"初为博士","zh-TW":"初為博士","en-US":"CrazyUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',70,'downloadedGiBGte',100,'ratioGt',3.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',3.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (6, 50, '{"zh-CN":"海归博后","zh-TW":"海歸博後","en-US":"InsaneUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',105,'downloadedGiBGte',300,'ratioGt',4.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',4.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (7, 60, '{"zh-CN":"大学讲师","zh-TW":"大學講師","en-US":"VeteranUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',140,'downloadedGiBGte',500,'ratioGt',5.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',5.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (8, 70, '{"zh-CN":"晋升副教","zh-TW":"晉升副教","en-US":"ExtremeUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',210,'downloadedGiBGte',700,'ratioGt',6.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',6.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (9, 80, '{"zh-CN":"终身教授","zh-TW":"終身教授","en-US":"UltimateUser"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',280,'downloadedGiBGte',900,'ratioGt',7.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',7.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (10, 90, '{"zh-CN":"荣誉院士","zh-TW":"榮譽院士","en-US":"NexusMaster"}', JSON_OBJECT('promotion',JSON_ARRAY(JSON_OBJECT('accountAgeDaysGte',350,'downloadedGiBGte',1024,'ratioGt',8.5)),'demotion',JSON_ARRAY(JSON_OBJECT('ratioLt',8.4))), @iam_permissions_power_user, b'0', NOW(), NOW()),
+    (11, 100, '{"zh-CN":"养老族","zh-TW":"養老族","en-US":"Retiree"}', '{}', @iam_permissions_power_user, b'1', NOW(), NOW()),
+    (12, 110, '{"zh-CN":"保种分流员","zh-TW":"保種分流員","en-US":"Seeder"}', '{}', @iam_permissions_power_user, b'1', NOW(), NOW()),
+    (13, 120, '{"zh-CN":"发布员","zh-TW":"發布員","en-US":"Uploader"}', '{}', @iam_permissions_power_user, b'1', NOW(), NOW()),
+    (14, 130, '{"zh-CN":"论坛版主","zh-TW":"論壇版主","en-US":"ForumModerator"}', '{}', @iam_permissions_forum_staff, b'1', NOW(), NOW()),
+    (15, 140, '{"zh-CN":"种子管理员","zh-TW":"種子管理員","en-US":"CatalogModerator"}', '{}', @iam_permissions_catalog_staff, b'1', NOW(), NOW()),
+    (16, 150, '{"zh-CN":"高级管理员","zh-TW":"高級管理員","en-US":"Administrator"}', '{}', @iam_permissions_admin, b'1', NOW(), NOW()),
+    (17, 160, '{"zh-CN":"维护开发员","zh-TW":"維護開發員","en-US":"Sysop"}', '{}', @iam_permissions_sysop, b'1', NOW(), NOW()),
+    (18, 170, '{"zh-CN":"主管","zh-TW":"主管","en-US":"StaffLeader"}', '{}', @iam_permissions_all, b'1', NOW(), NOW())
 ON DUPLICATE KEY UPDATE
     `level` = VALUES(`level`),
     `name_i18n` = VALUES(`name_i18n`),
@@ -69,7 +136,7 @@ VALUES
         '$2a$10$tOc.CwWrLPz6ro2qGv5VmOEfwhD9YaxfXFBAzL3oloXfoUjlGcs6a',
         '0123456789abcdef0123456789abcdef',
         1,
-        2,
+        18,
         NOW(),
         NOW()
     )
@@ -125,7 +192,7 @@ VALUES
     ('tracker', 'bonus_B0', '{"val":100.0}', NOW(), NOW()),
     ('tracker', 'bonus_L', '{"val":300.0}', NOW(), NOW()),
     ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
-    ('iam', 'default_register_role', '{"val":1}', NOW(), NOW()),
+    ('iam', 'default_register_role', '{"val":2}', NOW(), NOW()),
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
     ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW())
 ON DUPLICATE KEY UPDATE

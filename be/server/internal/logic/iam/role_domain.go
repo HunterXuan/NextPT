@@ -37,9 +37,21 @@ func (s *sIamRoleDomain) GetRolesByIds(ctx context.Context, roleIds []uint) ([]e
 	return roles, err
 }
 
+func (s *sIamRoleDomain) ListRoles(ctx context.Context) ([]entity.IamRole, error) {
+	var roles []entity.IamRole
+	err := dao.IamRole.Ctx(ctx).
+		OrderAsc(dao.IamRole.Columns().Level).
+		OrderAsc(dao.IamRole.Columns().Id).
+		Scan(&roles)
+	return roles, err
+}
+
 func (s *sIamRoleDomain) AdminListRoles(ctx context.Context) ([]entity.IamRole, error) {
 	var roles []entity.IamRole
-	err := dao.IamRole.Ctx(ctx).OrderAsc(dao.IamRole.Columns().Level).Scan(&roles)
+	err := dao.IamRole.Ctx(ctx).
+		OrderAsc(dao.IamRole.Columns().Level).
+		OrderAsc(dao.IamRole.Columns().Id).
+		Scan(&roles)
 	return roles, err
 }
 
