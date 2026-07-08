@@ -142,7 +142,15 @@
               </div>
             </dl>
 
-            <label v-if="selectedKind === 'boolean'" class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
+            <AdminSitePromotionConfigEditor
+              v-if="selectedUsesPromotionEditor"
+              ref="promotionEditorRef"
+              v-model="promotionFormValue"
+              :config-path="selectedConfigPath"
+              :disabled="saving"
+            />
+
+            <label v-else-if="selectedKind === 'boolean'" class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
               <span>
                 <span class="block text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.form.booleanValue') }}</span>
                 <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ previewBooleanValue(form.booleanValue) }}</span>
@@ -231,6 +239,15 @@ import type { AdminIamRole, AdminSiteConfig } from '~/composables/useAdmin'
 import { formatDateTime } from '~/utils/format'
 
 type ConfigValueKind = 'string' | 'int' | 'float' | 'boolean' | 'json'
+interface PromotionValidationResult {
+  valid: boolean
+  value?: unknown
+  message?: string
+}
+
+interface PromotionConfigEditorExpose {
+  validate: () => PromotionValidationResult
+}
 
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
@@ -257,6 +274,8 @@ const originalFormSnapshot = ref('')
 const roles = ref<AdminIamRole[]>([])
 const rolesPending = ref(false)
 const rolesError = ref('')
+const promotionFormValue = ref<unknown>(null)
+const promotionEditorRef = ref<PromotionConfigEditorExpose | null>(null)
 
 const form = reactive({
   textValue: '',
@@ -271,6 +290,7 @@ const selectedKindLabel = computed(() => t(`admin.site.configs.types.${selectedK
 const selectedConfigLabel = computed(() => selectedConfig.value ? displayConfigLabel(selectedConfig.value) : '')
 const selectedConfigPath = computed(() => selectedConfig.value ? `${selectedConfig.value.group}.${selectedConfig.value.key}` : '')
 const selectedDescription = computed(() => selectedConfig.value ? displayConfigDescription(selectedConfig.value) : '')
+const selectedUsesPromotionEditor = computed(() => selectedConfigPath.value === 'catalog.global_promotion' || selectedConfigPath.value === 'catalog.new_torrent_promotion')
 const selectedUpdatedAtLabel = computed(() => {
   if (!selectedConfig.value) return '-'
   return formatDateTime(selectedConfig.value.updatedAt || selectedConfig.value.createdAt, locale.value)
@@ -345,7 +365,11 @@ async function loadRoles() {
 
 function resetFormFromSelected(updateSnapshot = false) {
   const value = selectedRawValue.value
-  if (selectedKind.value === 'boolean') {
+  if (selectedUsesPromotionEditor.value) {
+    promotionFormValue.value = cloneConfigValue(value)
+    form.textValue = ''
+    form.booleanValue = false
+  } else if (selectedKind.value === 'boolean') {
     form.booleanValue = Boolean(value)
     form.textValue = ''
   } else {
@@ -408,6 +432,12 @@ function getTextFormValue() {
 }
 
 function formSnapshot() {
+  if (selectedUsesPromotionEditor.value) {
+    return JSON.stringify({
+      kind: 'promotion',
+      value: promotionFormValue.value
+    })
+  }
   return JSON.stringify({
     kind: selectedKind.value,
     textValue: selectedKind.value === 'boolean' ? '' : form.textValue,
@@ -417,6 +447,9 @@ function formSnapshot() {
 
 function buildSubmitValue() {
   if (!selectedConfig.value) return ''
+  if (selectedUsesPromotionEditor.value) {
+    return getPromotionSubmitValue()
+  }
   if (selectedKind.value === 'boolean') return form.booleanValue
   if (selectedKind.value === 'int') return Number.parseInt(getTextFormValue(), 10)
   if (selectedKind.value === 'float') return Number(getTextFormValue())
@@ -425,6 +458,15 @@ function buildSubmitValue() {
 }
 
 function validateFormValue() {
+  if (selectedUsesPromotionEditor.value) {
+    try {
+      getPromotionSubmitValue()
+      return true
+    } catch (error: unknown) {
+      formError.value = error instanceof Error ? error.message : t('admin.site.configs.form.jsonInvalid')
+      return false
+    }
+  }
   if (selectedKind.value === 'int') {
     const value = getTextFormValue()
     if (!value || !Number.isInteger(Number(value))) {
@@ -447,6 +489,19 @@ function validateFormValue() {
     formError.value = t('admin.site.configs.form.jsonInvalid')
     return false
   }
+}
+
+function getPromotionSubmitValue() {
+  const result = promotionEditorRef.value?.validate()
+  if (!result?.valid) {
+    throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
+  }
+  return result.value
+}
+
+function cloneConfigValue(value: unknown) {
+  if (value === null || value === undefined || typeof value !== 'object') return value
+  return JSON.parse(JSON.stringify(value))
 }
 
 async function saveConfig() {
