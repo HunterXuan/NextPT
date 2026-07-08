@@ -1323,7 +1323,9 @@
             "register_enabled": "Open registration"
           },
           "catalog": {
-            "torrent_source": "Torrent source identifier"
+            "torrent_source": "Torrent source identifier",
+            "global_promotion": "Global promotion",
+            "new_torrent_promotion": "New torrent auto promotion"
           }
         },
         "descriptions": {
@@ -1342,7 +1344,9 @@
             "register_enabled": "Whether open registration is enabled. When disabled, users usually need an invite."
           },
           "catalog": {
-            "torrent_source": "Site identifier written into the private torrent source field."
+            "torrent_source": "Site identifier written into the private torrent source field.",
+            "global_promotion": "Highest-priority site-wide torrent promotion, including promotion state and optional expiration time.",
+            "new_torrent_promotion": "Automatic promotion rules for newly uploaded torrents, with size-based matching and weighted random options."
           }
         }
       },

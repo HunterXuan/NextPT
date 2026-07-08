@@ -1323,7 +1323,9 @@
             "register_enabled": "开放注册"
           },
           "catalog": {
-            "torrent_source": "种子 Source 标识"
+            "torrent_source": "种子 Source 标识",
+            "global_promotion": "全站优惠",
+            "new_torrent_promotion": "新种自动优惠"
           }
         },
         "descriptions": {
@@ -1342,7 +1344,9 @@
             "register_enabled": "是否开放全站注册；关闭后通常只能通过邀请注册。"
           },
           "catalog": {
-            "torrent_source": "写入私有种子 source 字段的站点标识。"
+            "torrent_source": "写入私有种子 source 字段的站点标识。",
+            "global_promotion": "全站范围内优先级最高的种子优惠配置，可设置优惠类型和结束时间。",
+            "new_torrent_promotion": "新发布种子的自动优惠规则，支持按体积匹配并按权重随机抽取。"
           }
         }
       },

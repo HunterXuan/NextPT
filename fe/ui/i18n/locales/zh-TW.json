@@ -1323,7 +1323,9 @@
             "register_enabled": "開放註冊"
           },
           "catalog": {
-            "torrent_source": "種子 Source 標識"
+            "torrent_source": "種子 Source 標識",
+            "global_promotion": "全站優惠",
+            "new_torrent_promotion": "新種自動優惠"
           }
         },
         "descriptions": {
@@ -1342,7 +1344,9 @@
             "register_enabled": "是否開放全站註冊；關閉後通常只能透過邀請註冊。"
           },
           "catalog": {
-            "torrent_source": "寫入私有種子 source 欄位的站點標識。"
+            "torrent_source": "寫入私有種子 source 欄位的站點標識。",
+            "global_promotion": "全站範圍內優先級最高的種子優惠配置，可設定優惠類型和結束時間。",
+            "new_torrent_promotion": "新發布種子的自動優惠規則，支援按體積匹配並按權重隨機抽取。"
           }
         }
       },
