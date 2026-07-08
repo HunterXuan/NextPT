@@ -96,3 +96,49 @@ func TestPickCatalogNewTorrentPromotionUsesLargestSizeRule(t *testing.T) {
 		t.Fatalf("duration = %d seconds, want %d", got.SpExpireAt.Unix()-now.Unix(), 48*60*60)
 	}
 }
+
+func TestPickCatalogNewTorrentPromotionAllowsNoExpire(t *testing.T) {
+	now := gtime.NewFromStr("2026-07-08 12:00:00")
+	got := PickCatalogNewTorrentPromotion(CatalogTorrentNewPromotionConfig{
+		Enabled: true,
+		Rules: []CatalogTorrentPromotionRule{
+			{
+				MinGiB:        0,
+				DurationHours: 0,
+				Options: []CatalogTorrentPromotionOption{
+					{State: consts.ResourceTorrentPromotionStateFree, Weight: 100},
+				},
+			},
+		},
+	}, catalogBytesPerGiB, now)
+
+	if got.SpState != consts.ResourceTorrentSpFree {
+		t.Fatalf("new torrent sp = %d, want %d", got.SpState, consts.ResourceTorrentSpFree)
+	}
+	if got.SpExpireAt != nil {
+		t.Fatalf("expire at = %v, want nil", got.SpExpireAt)
+	}
+}
+
+func TestPickCatalogNewTorrentPromotionRejectsNegativeDuration(t *testing.T) {
+	now := gtime.NewFromStr("2026-07-08 12:00:00")
+	got := PickCatalogNewTorrentPromotion(CatalogTorrentNewPromotionConfig{
+		Enabled: true,
+		Rules: []CatalogTorrentPromotionRule{
+			{
+				MinGiB:        0,
+				DurationHours: -1,
+				Options: []CatalogTorrentPromotionOption{
+					{State: consts.ResourceTorrentPromotionStateFree, Weight: 100},
+				},
+			},
+		},
+	}, catalogBytesPerGiB, now)
+
+	if got.SpState != consts.ResourceTorrentSpNormal {
+		t.Fatalf("new torrent sp = %d, want %d", got.SpState, consts.ResourceTorrentSpNormal)
+	}
+	if got.SpExpireAt != nil {
+		t.Fatalf("expire at = %v, want nil", got.SpExpireAt)
+	}
+}

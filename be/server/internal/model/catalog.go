@@ -138,15 +138,15 @@ func PickCatalogNewTorrentPromotion(config CatalogTorrentNewPromotionConfig, siz
 	if spState == consts.ResourceTorrentSpNormal {
 		return CatalogTorrentPromotion{SpState: consts.ResourceTorrentSpNormal}
 	}
+	if rule.DurationHours < 0 {
+		return CatalogTorrentPromotion{SpState: consts.ResourceTorrentSpNormal}
+	}
 
-	durationHours := rule.DurationHours
-	if durationHours <= 0 {
-		durationHours = 72
+	promotion := CatalogTorrentPromotion{SpState: spState}
+	if rule.DurationHours > 0 {
+		promotion.SpExpireAt = now.Add(time.Duration(rule.DurationHours) * time.Hour)
 	}
-	return CatalogTorrentPromotion{
-		SpState:    spState,
-		SpExpireAt: now.Add(time.Duration(durationHours) * time.Hour),
-	}
+	return promotion
 }
 
 func (p CatalogTorrentPromotion) activeAt(now *gtime.Time) bool {
