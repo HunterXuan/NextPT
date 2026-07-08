@@ -72,6 +72,9 @@ type (
 	ICatalogTorrentDomain interface {
 		GetTorrentById(ctx context.Context, id uint64) (*entity.CatalogTorrent, error)
 		GetTorrentByInfoHash(ctx context.Context, infoHash string) (*entity.CatalogTorrent, error)
+		ResolveEffectiveTorrentPromotion(ctx context.Context, torrent *entity.CatalogTorrent, now *gtime.Time) model.CatalogTorrentPromotion
+		PickNewTorrentPromotion(ctx context.Context, size uint64, now *gtime.Time) model.CatalogTorrentPromotion
+		CalculatePromotedTorrentTraffic(ctx context.Context, torrent *entity.CatalogTorrent, rawUploaded int64, rawDownloaded int64, now *gtime.Time) (int64, int64)
 		CheckCategoryExists(ctx context.Context, categoryId uint) error
 		CountTorrentsByCategory(ctx context.Context, categoryId uint) (int, error)
 		CheckInfoHashExists(ctx context.Context, infoHashBytes []byte) error

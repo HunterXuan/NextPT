@@ -1,5 +1,18 @@
 package model
 
+import (
+	"math/rand"
+	"sort"
+	"strings"
+	"time"
+
+	"server/internal/consts"
+
+	"github.com/gogf/gf/v2/os/gtime"
+)
+
+const catalogBytesPerGiB = 1024 * 1024 * 1024
+
 type CatalogTorrentUpdate struct {
 	Name          string
 	SubTitle      string
@@ -14,6 +27,191 @@ type CatalogTorrentSummary struct {
 	Name  string `json:"name"`
 	Size  uint64 `json:"size"`
 	Exist bool   `json:"exist"`
+}
+
+type CatalogTorrentPromotion struct {
+	SpState    int
+	SpExpireAt *gtime.Time
+}
+
+type CatalogTorrentPromotionFactor struct {
+	Upload   float64
+	Download float64
+}
+
+type CatalogTorrentGlobalPromotionConfig struct {
+	Enabled  bool   `json:"enabled"`
+	State    string `json:"state"`
+	ExpireAt string `json:"expireAt"`
+}
+
+type CatalogTorrentNewPromotionConfig struct {
+	Enabled bool                          `json:"enabled"`
+	Rules   []CatalogTorrentPromotionRule `json:"rules"`
+}
+
+type CatalogTorrentPromotionRule struct {
+	MinGiB        float64                         `json:"minGiB"`
+	DurationHours int                             `json:"durationHours"`
+	Options       []CatalogTorrentPromotionOption `json:"options"`
+}
+
+type CatalogTorrentPromotionOption struct {
+	State  string `json:"state"`
+	Weight int    `json:"weight"`
+}
+
+func CatalogTorrentPromotionStateToSp(state string) int {
+	state = strings.TrimSpace(state)
+	if state == "" {
+		return consts.ResourceTorrentSpNormal
+	}
+	if sp, ok := consts.ResourceTorrentPromotionStateToSp[state]; ok {
+		return sp
+	}
+	return consts.ResourceTorrentSpNormal
+}
+
+func CatalogTorrentPromotionFactorBySp(spState int) CatalogTorrentPromotionFactor {
+	switch spState {
+	case consts.ResourceTorrentSpFree:
+		return CatalogTorrentPromotionFactor{Upload: 1, Download: 0}
+	case consts.ResourceTorrentSp2x:
+		return CatalogTorrentPromotionFactor{Upload: 2, Download: 1}
+	case consts.ResourceTorrentSp2xFree:
+		return CatalogTorrentPromotionFactor{Upload: 2, Download: 0}
+	case consts.ResourceTorrentSp50Off:
+		return CatalogTorrentPromotionFactor{Upload: 1, Download: 0.5}
+	case consts.ResourceTorrentSp2x50Off:
+		return CatalogTorrentPromotionFactor{Upload: 2, Download: 0.5}
+	case consts.ResourceTorrentSp30Off:
+		return CatalogTorrentPromotionFactor{Upload: 1, Download: 0.3}
+	default:
+		return CatalogTorrentPromotionFactor{Upload: 1, Download: 1}
+	}
+}
+
+func (p CatalogTorrentPromotion) ApplyTraffic(rawUploaded, rawDownloaded int64) (int64, int64) {
+	factor := CatalogTorrentPromotionFactorBySp(p.SpState)
+	return int64(float64(rawUploaded) * factor.Upload), int64(float64(rawDownloaded) * factor.Download)
+}
+
+func ResolveCatalogTorrentPromotion(torrentSpState int, torrentSpExpireAt *gtime.Time, globalConfig CatalogTorrentGlobalPromotionConfig, now *gtime.Time) CatalogTorrentPromotion {
+	if now == nil {
+		now = gtime.Now()
+	}
+	global := CatalogTorrentPromotion{
+		SpState:    CatalogTorrentPromotionStateToSp(globalConfig.State),
+		SpExpireAt: globalConfig.expireTime(),
+	}
+	if globalConfig.Enabled && global.activeAt(now) {
+		return global
+	}
+
+	torrent := CatalogTorrentPromotion{
+		SpState:    torrentSpState,
+		SpExpireAt: torrentSpExpireAt,
+	}
+	if torrent.activeAt(now) {
+		return torrent
+	}
+
+	return CatalogTorrentPromotion{
+		SpState: consts.ResourceTorrentSpNormal,
+	}
+}
+
+func PickCatalogNewTorrentPromotion(config CatalogTorrentNewPromotionConfig, size uint64, now *gtime.Time) CatalogTorrentPromotion {
+	if now == nil {
+		now = gtime.Now()
+	}
+	if !config.Enabled {
+		return CatalogTorrentPromotion{SpState: consts.ResourceTorrentSpNormal}
+	}
+
+	rule, ok := config.matchRule(size)
+	if !ok {
+		return CatalogTorrentPromotion{SpState: consts.ResourceTorrentSpNormal}
+	}
+
+	spState := pickCatalogTorrentPromotionState(rule.Options)
+	if spState == consts.ResourceTorrentSpNormal {
+		return CatalogTorrentPromotion{SpState: consts.ResourceTorrentSpNormal}
+	}
+
+	durationHours := rule.DurationHours
+	if durationHours <= 0 {
+		durationHours = 72
+	}
+	return CatalogTorrentPromotion{
+		SpState:    spState,
+		SpExpireAt: now.Add(time.Duration(durationHours) * time.Hour),
+	}
+}
+
+func (p CatalogTorrentPromotion) activeAt(now *gtime.Time) bool {
+	if p.SpState == consts.ResourceTorrentSpNormal {
+		return false
+	}
+	if now == nil {
+		now = gtime.Now()
+	}
+	return p.SpExpireAt == nil || p.SpExpireAt.After(now)
+}
+
+func (c CatalogTorrentGlobalPromotionConfig) expireTime() *gtime.Time {
+	expireAt := strings.TrimSpace(c.ExpireAt)
+	if expireAt == "" {
+		return nil
+	}
+	t, err := gtime.StrToTime(expireAt)
+	if err != nil {
+		return nil
+	}
+	return t
+}
+
+func (c CatalogTorrentNewPromotionConfig) matchRule(size uint64) (CatalogTorrentPromotionRule, bool) {
+	if len(c.Rules) == 0 {
+		return CatalogTorrentPromotionRule{}, false
+	}
+
+	sizeGiB := float64(size) / catalogBytesPerGiB
+	rules := append([]CatalogTorrentPromotionRule(nil), c.Rules...)
+	sort.SliceStable(rules, func(i, j int) bool {
+		return rules[i].MinGiB > rules[j].MinGiB
+	})
+	for _, rule := range rules {
+		if sizeGiB >= rule.MinGiB && len(rule.Options) > 0 {
+			return rule, true
+		}
+	}
+	return CatalogTorrentPromotionRule{}, false
+}
+
+func pickCatalogTorrentPromotionState(options []CatalogTorrentPromotionOption) int {
+	total := 0
+	for _, option := range options {
+		if option.Weight <= 0 {
+			continue
+		}
+		total += option.Weight
+	}
+	if total <= 0 {
+		return consts.ResourceTorrentSpNormal
+	}
+
+	point := rand.Intn(total)
+	for _, option := range options {
+		if option.Weight <= 0 {
+			continue
+		}
+		if point < option.Weight {
+			return CatalogTorrentPromotionStateToSp(option.State)
+		}
+		point -= option.Weight
+	}
+	return consts.ResourceTorrentSpNormal
 }
 
 type CatalogUploadConfig struct {

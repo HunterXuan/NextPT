@@ -381,6 +381,11 @@ func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *mod
 		Anonymous:   in.Anonymous,
 		Visible:     true,
 	}
+	promotion := service.CatalogTorrentDomain().PickNewTorrentPromotion(ctx, totalSize, gtime.Now())
+	if promotion.SpState != consts.ResourceTorrentSpNormal {
+		torrentInsert.SpState = promotion.SpState
+		torrentInsert.SpExpireAt = promotion.SpExpireAt
+	}
 	if releaseData != nil && len(releaseData.Fields) > 0 {
 		torrentInsert.ReleaseFields = gjson.New(releaseData.Fields)
 	}
@@ -541,6 +546,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 		if owner.Id == 0 && !s.shouldHideTorrentOwner(actor, e) && e.OwnerId > 0 {
 			owner.Id = e.OwnerId
 		}
+		promotion := service.CatalogTorrentDomain().ResolveEffectiveTorrentPromotion(ctx, &e, nil)
 		list = append(list, catalogout.TorrentListItem{
 			Id:         e.Id,
 			Name:       e.Name,
@@ -548,8 +554,8 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			CategoryId: e.CategoryId,
 			Size:       e.Size,
 			FileCount:  e.FileCount,
-			SpState:    e.SpState,
-			SpExpireAt: s.formatTime(e.SpExpireAt),
+			SpState:    promotion.SpState,
+			SpExpireAt: s.formatTime(promotion.SpExpireAt),
 			IsFeatured: e.IsFeatured,
 			IsPinned:   e.IsPinned,
 			PinWeight:  e.PinWeight,

@@ -194,7 +194,46 @@ VALUES
     ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
     ('iam', 'default_register_role', '{"val":2}', NOW(), NOW()),
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
-    ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW())
+    ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW()),
+    ('catalog', 'global_promotion', JSON_OBJECT('val', JSON_OBJECT(
+        'enabled', false,
+        'state', 'free',
+        'expireAt', ''
+    )), NOW(), NOW()),
+    ('catalog', 'new_torrent_promotion', JSON_OBJECT('val', JSON_OBJECT(
+        'enabled', true,
+        'rules', JSON_ARRAY(
+            JSON_OBJECT(
+                'minGiB', 0,
+                'durationHours', 72,
+                'options', JSON_ARRAY(
+                    JSON_OBJECT('state', 'normal', 'weight', 70),
+                    JSON_OBJECT('state', 'free', 'weight', 10),
+                    JSON_OBJECT('state', '2x', 'weight', 10),
+                    JSON_OBJECT('state', '50_percent', 'weight', 10)
+                )
+            ),
+            JSON_OBJECT(
+                'minGiB', 10,
+                'durationHours', 96,
+                'options', JSON_ARRAY(
+                    JSON_OBJECT('state', 'normal', 'weight', 50),
+                    JSON_OBJECT('state', 'free', 'weight', 20),
+                    JSON_OBJECT('state', '2x', 'weight', 20),
+                    JSON_OBJECT('state', '2x_free', 'weight', 10)
+                )
+            ),
+            JSON_OBJECT(
+                'minGiB', 50,
+                'durationHours', 168,
+                'options', JSON_ARRAY(
+                    JSON_OBJECT('state', 'free', 'weight', 40),
+                    JSON_OBJECT('state', '2x_free', 'weight', 30),
+                    JSON_OBJECT('state', '2x_50_percent', 'weight', 30)
+                )
+            )
+        )
+    )), NOW(), NOW())
 ON DUPLICATE KEY UPDATE
     `value` = VALUES(`value`),
     `updated_at` = NOW();

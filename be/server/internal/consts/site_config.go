@@ -61,6 +61,12 @@ const (
 const (
 	// SiteConfigCatalogTorrentSource 私有种子专属标识（注入到 Bencode 的 source 字段）
 	SiteConfigCatalogTorrentSource = "catalog.torrent_source"
+
+	// SiteConfigCatalogGlobalPromotion 全站种子优惠配置
+	SiteConfigCatalogGlobalPromotion = "catalog.global_promotion"
+
+	// SiteConfigCatalogNewTorrentPromotion 新发布种子自动优惠配置
+	SiteConfigCatalogNewTorrentPromotion = "catalog.new_torrent_promotion"
 )
 
 // ==============================================================================
@@ -79,4 +85,43 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigIamDefaultRegisterRole:     2,
 	SiteConfigIamRegisterEnabled:         true,
 	SiteConfigCatalogTorrentSource:       "NextPT",
+	SiteConfigCatalogGlobalPromotion: map[string]any{
+		"enabled":  false,
+		"state":    ResourceTorrentPromotionStateFree,
+		"expireAt": "",
+	},
+	SiteConfigCatalogNewTorrentPromotion: map[string]any{
+		"enabled": true,
+		"rules": []map[string]any{
+			{
+				"minGiB":        0,
+				"durationHours": 72,
+				"options": []map[string]any{
+					{"state": ResourceTorrentPromotionStateNormal, "weight": 70},
+					{"state": ResourceTorrentPromotionStateFree, "weight": 10},
+					{"state": ResourceTorrentPromotionState2x, "weight": 10},
+					{"state": ResourceTorrentPromotionState50Percent, "weight": 10},
+				},
+			},
+			{
+				"minGiB":        10,
+				"durationHours": 96,
+				"options": []map[string]any{
+					{"state": ResourceTorrentPromotionStateNormal, "weight": 50},
+					{"state": ResourceTorrentPromotionStateFree, "weight": 20},
+					{"state": ResourceTorrentPromotionState2x, "weight": 20},
+					{"state": ResourceTorrentPromotionState2xFree, "weight": 10},
+				},
+			},
+			{
+				"minGiB":        50,
+				"durationHours": 168,
+				"options": []map[string]any{
+					{"state": ResourceTorrentPromotionStateFree, "weight": 40},
+					{"state": ResourceTorrentPromotionState2xFree, "weight": 30},
+					{"state": ResourceTorrentPromotionState2x50Percent, "weight": 30},
+				},
+			},
+		},
+	},
 }

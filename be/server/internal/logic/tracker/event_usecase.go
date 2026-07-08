@@ -306,6 +306,12 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 		if err != nil || affected == 0 {
 			return nil // already processed
 		}
+		torrent, err := service.CatalogTorrentDomain().GetTorrentById(ctx, event.TorrentId)
+		if err != nil {
+			return err
+		}
+		creditedUp, creditedDn := service.CatalogTorrentDomain().CalculatePromotedTorrentTraffic(ctx, torrent, diffUp, diffDn, event.Now)
+
 		finishedTransition, err := service.AccountingSnatchDomain().RecordSnatch(ctx, accountingin.RecordSnatchInp{
 			TorrentId:      event.TorrentId,
 			UserId:         event.UserId,
@@ -325,8 +331,8 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 		}
 		if err := service.AccountingTrafficDomain().RecordTraffic(ctx, accountingin.RecordTrafficInp{
 			UserId:            event.UserId,
-			UploadedDiff:      diffUp,
-			DownloadedDiff:    diffDn,
+			UploadedDiff:      creditedUp,
+			DownloadedDiff:    creditedDn,
 			RawUploadedDiff:   diffUp,
 			RawDownloadedDiff: diffDn,
 			IsSeeder:          event.IsSeeder,

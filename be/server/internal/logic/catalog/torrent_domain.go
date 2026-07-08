@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"server/internal/consts"
 	"server/internal/dao"
@@ -11,11 +12,14 @@ import (
 	"server/internal/model/entity"
 	"server/internal/service"
 
+	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 type sCatalogTorrentDomain struct{}
@@ -47,6 +51,44 @@ func (s *sCatalogTorrentDomain) GetTorrentByInfoHash(ctx context.Context, infoHa
 		return nil, err
 	}
 	return torrent, nil
+}
+
+func (s *sCatalogTorrentDomain) ResolveEffectiveTorrentPromotion(ctx context.Context, torrent *entity.CatalogTorrent, now *gtime.Time) model.CatalogTorrentPromotion {
+	if torrent == nil {
+		return model.CatalogTorrentPromotion{SpState: consts.ResourceTorrentSpNormal}
+	}
+	return model.ResolveCatalogTorrentPromotion(torrent.SpState, torrent.SpExpireAt, s.getGlobalPromotionConfig(ctx), now)
+}
+
+func (s *sCatalogTorrentDomain) PickNewTorrentPromotion(ctx context.Context, size uint64, now *gtime.Time) model.CatalogTorrentPromotion {
+	return model.PickCatalogNewTorrentPromotion(s.getNewTorrentPromotionConfig(ctx), size, now)
+}
+
+func (s *sCatalogTorrentDomain) CalculatePromotedTorrentTraffic(ctx context.Context, torrent *entity.CatalogTorrent, rawUploaded, rawDownloaded int64, now *gtime.Time) (int64, int64) {
+	return s.ResolveEffectiveTorrentPromotion(ctx, torrent, now).ApplyTraffic(rawUploaded, rawDownloaded)
+}
+
+func (s *sCatalogTorrentDomain) getGlobalPromotionConfig(ctx context.Context) model.CatalogTorrentGlobalPromotionConfig {
+	var cfg model.CatalogTorrentGlobalPromotionConfig
+	_ = gconv.Struct(s.getCatalogConfigCache(ctx, consts.SiteConfigCatalogGlobalPromotion).Val(), &cfg)
+	return cfg
+}
+
+func (s *sCatalogTorrentDomain) getNewTorrentPromotionConfig(ctx context.Context) model.CatalogTorrentNewPromotionConfig {
+	var cfg model.CatalogTorrentNewPromotionConfig
+	_ = gconv.Struct(s.getCatalogConfigCache(ctx, consts.SiteConfigCatalogNewTorrentPromotion).Val(), &cfg)
+	return cfg
+}
+
+func (s *sCatalogTorrentDomain) getCatalogConfigCache(ctx context.Context, key string) *gvar.Var {
+	cacheKey := service.SysCache().KeySiteConfigFullPath(ctx, key)
+	val, err := gcache.GetOrSetFunc(ctx, cacheKey, func(ctx context.Context) (any, error) {
+		return service.SiteConfigDomain().GetByPath(ctx, key).Val(), nil
+	}, 5*time.Minute)
+	if err != nil || val.IsNil() {
+		return service.SiteConfigDomain().GetByPath(ctx, key)
+	}
+	return gvar.New(val.Val())
 }
 
 func (s *sCatalogTorrentDomain) CheckCategoryExists(ctx context.Context, categoryId uint) error {
