@@ -37,6 +37,9 @@ type (
 		Check(ctx context.Context, in iamin.InviteCheckInp) (*iamout.InviteCheckOut, error)
 		CleanupExpired(ctx context.Context) (int64, error)
 	}
+	IIamLoginLogDomain interface {
+		Create(ctx context.Context, data do.IamLoginLog) error
+	}
 	IIamPermissionDomain interface {
 		CheckPermissionWithList(ctx context.Context, rolePerms []string, userAcls []string, permKey string) (bool, error)
 		GrantUserPermission(ctx context.Context, userId uint64, permKey string, isDeny bool) error
@@ -87,6 +90,7 @@ type (
 		UpdateUserProfile(ctx context.Context, userId uint64, avatar string, info string, signature string) error
 		UpdatePasswordHash(ctx context.Context, userId uint64, passwordHash string) error
 		UpdatePasskey(ctx context.Context, userId uint64, passkey string) error
+		UpdateLoginTrace(ctx context.Context, userId uint64, loginAt *gtime.Time, ip string) error
 		// GetUserByPasskey 通过 Passkey 获取用户（无缓存，纯领域逻辑）
 		GetUserByPasskey(ctx context.Context, passkey string) (*entity.IamUser, error)
 		AdminListUsers(ctx context.Context, search string, order string, page int, size int) ([]*entity.IamUser, int, error)
@@ -117,6 +121,7 @@ type (
 var (
 	localIamInviteDomain     IIamInviteDomain
 	localIamInviteUsecase    IIamInviteUsecase
+	localIamLoginLogDomain   IIamLoginLogDomain
 	localIamPermissionDomain IIamPermissionDomain
 	localIamRoleDomain       IIamRoleDomain
 	localIamRoleUsecase      IIamRoleUsecase
@@ -146,6 +151,17 @@ func IamInviteUsecase() IIamInviteUsecase {
 
 func RegisterIamInviteUsecase(i IIamInviteUsecase) {
 	localIamInviteUsecase = i
+}
+
+func IamLoginLogDomain() IIamLoginLogDomain {
+	if localIamLoginLogDomain == nil {
+		panic("implement not found for interface IIamLoginLogDomain, forgot register?")
+	}
+	return localIamLoginLogDomain
+}
+
+func RegisterIamLoginLogDomain(i IIamLoginLogDomain) {
+	localIamLoginLogDomain = i
 }
 
 func IamPermissionDomain() IIamPermissionDomain {

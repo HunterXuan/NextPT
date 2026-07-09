@@ -127,6 +127,18 @@ func (s *sIamUserDomain) UpdatePasskey(ctx context.Context, userId uint64, passk
 	return err
 }
 
+func (s *sIamUserDomain) UpdateLoginTrace(ctx context.Context, userId uint64, loginAt *gtime.Time, ip string) error {
+	columns := dao.IamUser.Columns()
+	_, err := dao.IamUser.Ctx(ctx).
+		Where(columns.Id, userId).
+		Data(g.Map{
+			columns.LastLogin: loginAt,
+			columns.LastIp:    ip,
+		}).
+		Update()
+	return err
+}
+
 // GetUserByPasskey 通过 Passkey 获取用户（无缓存，纯领域逻辑）
 func (s *sIamUserDomain) GetUserByPasskey(ctx context.Context, passkey string) (*entity.IamUser, error) {
 	var user *entity.IamUser
