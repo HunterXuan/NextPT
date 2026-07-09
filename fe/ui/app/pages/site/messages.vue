@@ -94,8 +94,9 @@
                 <UButton color="neutral" variant="outline" size="sm" icon="i-lucide-arrow-up-right" :to="localePath(messageTargetPath(selectedMessage) || '/')" :aria-label="$t('site.messages.openTarget')" />
               </UTooltip>
             </div>
-            <div class="mt-5 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">
-              {{ selectedMessage.content }}
+            <div class="mt-5">
+              <div v-if="selectedMessageContent" class="rich-text" v-html="selectedMessageContent" />
+              <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('site.messages.noContent') }}</p>
             </div>
           </article>
 
@@ -126,6 +127,7 @@
 import { ApiError } from '~/composables/useApi'
 import type { SiteMessage } from '~/composables/useSite'
 import { formatDateTime, formatRelativeDateTime } from '~/utils/format'
+import { renderUserMarkdown } from '~/utils/richText'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -146,6 +148,7 @@ const errorMessage = ref('')
 const selectedMessageId = ref(0)
 
 const selectedMessage = computed(() => messages.value.find((item) => item.id === selectedMessageId.value) || null)
+const selectedMessageContent = computed(() => renderUserMarkdown(selectedMessage.value?.content || '').trim())
 const filterOptions = computed(() => [
   { value: 'all' as const, label: t('site.messages.filters.all') },
   { value: 'unread' as const, label: t('site.messages.filters.unread') }

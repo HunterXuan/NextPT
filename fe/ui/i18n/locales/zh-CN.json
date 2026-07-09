@@ -1466,6 +1466,9 @@
           "status": "状态",
           "publishedAt": "发布时间",
           "content": "内容"
+        },
+        "filters": {
+          "all": "全部"
         }
       },
       "messages": {
@@ -1473,12 +1476,17 @@
         "send": "发送消息",
         "sendHint": "向指定用户发送站内消息，可附带资源关联。",
         "receiverPlaceholder": "输入用户 ID，多个 ID 可用逗号、空格或换行分隔",
+        "receiverCount": "{count} 个用户",
+        "contentPlaceholder": "支持 Markdown，也兼容常见 BBCode 文本迁移",
         "submit": "发送",
         "list": "消息列表",
         "empty": "暂无消息",
+        "noContent": "无正文内容",
         "required": "请填写接收用户、标题和内容",
+        "targetRequired": "请选择有效的关联 ID",
         "sent": "已发送 {count} 条消息",
         "toUser": "发给 #{id} {name}",
+        "viewDetail": "查看完整内容",
         "fields": {
           "receiverIds": "接收用户",
           "title": "标题",
@@ -1497,10 +1505,22 @@
         },
         "filters": {
           "receiverId": "用户 ID",
+          "readState": "阅读状态",
           "all": "全部",
           "unread": "未读",
           "read": "已读",
-          "apply": "筛选"
+          "apply": "筛选",
+          "search": "搜索"
+        },
+        "table": {
+          "message": "消息",
+          "receiver": "接收人",
+          "state": "状态",
+          "time": "时间",
+          "action": "操作"
+        },
+        "detailModal": {
+          "title": "消息详情"
         }
       },
       "audits": {
