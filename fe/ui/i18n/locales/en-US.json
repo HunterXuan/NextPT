@@ -4,6 +4,7 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "copy": "Copy",
+    "delete": "Delete",
     "clear": "Clear",
     "close": "Close",
     "next": "Next",
@@ -62,6 +63,7 @@
     "catalog": "Catalog",
     "community": "Forum",
     "forum": "Forum",
+    "site": "Site",
     "uploadTorrent": "Upload torrent",
     "subtitles": "Subtitles",
     "bookmarks": "Bookmarks",
@@ -72,6 +74,26 @@
   },
   "footer": {
     "tagline": "Tracker and collaboration system for a private resource community."
+  },
+  "site": {
+    "announcements": {
+      "title": "Announcements",
+      "empty": "No announcements",
+      "markRead": "Mark as read"
+    },
+    "messages": {
+      "title": "Messages",
+      "empty": "No messages",
+      "markRead": "Mark as read",
+      "markAllRead": "Mark all read",
+      "openTarget": "Open related item",
+      "selectHint": "Select a message to read it",
+      "noContent": "No message body",
+      "filters": {
+        "all": "All",
+        "unread": "Unread"
+      }
+    }
   },
   "home": {
     "metaTitle": "Home",
@@ -174,7 +196,24 @@
     "member": {
       "eyebrow": "Site workspace",
       "title": "Welcome back, {name}",
-      "description": "This is your signed-in home for jumping into resources, forums, and your user center.",
+      "description": "Catch up on announcements, recent torrents, forum activity, and your sharing data.",
+      "viewAll": "View all",
+      "empty": "Nothing here yet",
+      "quickActions": "Quick actions",
+      "torrents": {
+        "title": "Torrent activity",
+        "subtitle": "Resources with stronger recent activity."
+      },
+      "forum": {
+        "title": "Forum activity",
+        "subtitle": "Topics with more recent discussion."
+      },
+      "stats": {
+        "uploaded": "Uploaded",
+        "downloaded": "Downloaded",
+        "ratio": "Ratio",
+        "bonus": "Bonus"
+      },
       "actions": {
         "catalog": {
           "title": "Browse torrents",
@@ -1403,6 +1442,64 @@
           }
         }
       },
+      "announcements": {
+        "title": "Announcements",
+        "list": "Announcement list",
+        "create": "New announcement",
+        "edit": "Edit announcement",
+        "empty": "No announcements",
+        "formHint": "Announcements support Markdown. Published items are visible on the announcement page.",
+        "required": "Enter both title and content",
+        "saved": "Announcement saved",
+        "deleted": "Announcement deleted",
+        "status": {
+          "all": "All statuses",
+          "draft": "Draft",
+          "published": "Published",
+          "archived": "Archived"
+        },
+        "fields": {
+          "title": "Title",
+          "status": "Status",
+          "publishedAt": "Published at",
+          "content": "Content"
+        }
+      },
+      "messages": {
+        "title": "Messages",
+        "send": "Send message",
+        "sendHint": "Send site messages to specific users, optionally linked to a resource.",
+        "receiverPlaceholder": "Enter user IDs separated by commas, spaces, or new lines",
+        "submit": "Send",
+        "list": "Message list",
+        "empty": "No messages",
+        "required": "Enter receivers, title, and content",
+        "sent": "Sent {count} messages",
+        "toUser": "To #{id} {name}",
+        "fields": {
+          "receiverIds": "Receivers",
+          "title": "Title",
+          "content": "Content",
+          "targetType": "Related type",
+          "targetId": "Related ID"
+        },
+        "targetTypes": {
+          "none": "No related item",
+          "catalogTorrent": "Torrent",
+          "forumTopic": "Forum topic"
+        },
+        "readState": {
+          "read": "Read",
+          "unread": "Unread"
+        },
+        "filters": {
+          "receiverId": "User ID",
+          "all": "All",
+          "unread": "Unread",
+          "read": "Read",
+          "apply": "Apply"
+        }
+      },
       "audits": {
         "title": "Audit Logs",
         "entryDescription": "Review important admin actions",
@@ -1482,7 +1579,9 @@
           "iam_session": "User session",
           "mod_report": "Report",
           "mod_cheater_log": "Cheater log",
-          "mod_user_log": "Account restriction"
+          "mod_user_log": "Account restriction",
+          "site_announcement": "Announcement",
+          "site_message": "Message"
         },
         "detailKeys": {
           "amount": "Amount",

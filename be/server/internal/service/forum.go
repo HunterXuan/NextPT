@@ -76,11 +76,13 @@ type (
 		AdminMoveTopic(ctx context.Context, id uint64, newNodeId uint) error
 		DeleteTopic(ctx context.Context, topic *entity.ForumTopic, replyIds []uint64) error
 		QueryTopicsByNode(ctx context.Context, nodeId uint, page int, size int) ([]entity.ForumTopic, int, error)
+		QueryHotTopics(ctx context.Context, size int) ([]entity.ForumTopic, error)
 		CheckTopicLiked(ctx context.Context, topicId uint64, userId uint64) (bool, error)
 		CheckTopicBookmarked(ctx context.Context, topicId uint64, userId uint64) (bool, error)
 	}
 	IForumTopicUsecase interface {
 		List(ctx context.Context, actor *model.Actor, in forumin.TopicListInp) (*forumout.TopicListOut, error)
+		ListHot(ctx context.Context, actor *model.Actor, size int) (*forumout.TopicHotListOut, error)
 		Detail(ctx context.Context, actor *model.Actor, in forumin.TopicDetailInp) (*forumout.TopicDetailOut, error)
 		Create(ctx context.Context, actor *model.Actor, in forumin.TopicCreateInp) (uint64, error)
 		Update(ctx context.Context, actor *model.Actor, in forumin.TopicUpdateInp) error

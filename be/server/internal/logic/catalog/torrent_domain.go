@@ -480,6 +480,36 @@ func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, a
 	return entities, total, err
 }
 
+func (s *sCatalogTorrentDomain) QueryHotVisibleTorrents(ctx context.Context, size int) ([]entity.CatalogTorrent, error) {
+	if size <= 0 {
+		size = 5
+	}
+	if size > 50 {
+		size = 50
+	}
+
+	columns := dao.CatalogTorrent.Columns()
+	order := fmt.Sprintf(
+		"(%s * 3 + %s * 2 + %s + %s * 2) DESC, %s DESC",
+		columns.Seeders,
+		columns.Leechers,
+		columns.TimesCompleted,
+		columns.LikeCount,
+		columns.CreatedAt,
+	)
+
+	var entities []entity.CatalogTorrent
+	err := dao.CatalogTorrent.Ctx(ctx).
+		Where(g.Map{
+			columns.Visible: true,
+			columns.Banned:  false,
+		}).
+		Order(order).
+		Limit(size).
+		Scan(&entities)
+	return entities, err
+}
+
 func (s *sCatalogTorrentDomain) normalizeTorrentCategoryIds(categoryIds []uint) []uint {
 	if len(categoryIds) == 0 {
 		return nil

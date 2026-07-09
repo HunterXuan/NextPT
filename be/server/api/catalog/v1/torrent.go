@@ -25,6 +25,15 @@ type TorrentListRes struct {
 	catalogout.TorrentListOut
 }
 
+type TorrentGetHotReq struct {
+	g.Meta `path:"/torrents:getHot" method:"get" tags:"Catalog" summary:"获取热门种子" perm:"read:catalog/torrent:*"`
+	catalogin.TorrentGetHotInp
+}
+
+type TorrentGetHotRes struct {
+	catalogout.TorrentHotListOut
+}
+
 type TorrentGetReq struct {
 	g.Meta `path:"/torrents/{id}" method:"get" tags:"Catalog" summary:"获取种子详情"`
 	catalogin.TorrentGetInp

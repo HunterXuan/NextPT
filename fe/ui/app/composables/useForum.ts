@@ -65,6 +65,15 @@ export interface ForumTopicListOut {
   node: ForumNode
 }
 
+export interface ForumTopicHotItem extends ForumTopicListItem {
+  node: ForumNode
+}
+
+export interface ForumTopicHotListOut {
+  list: ForumTopicHotItem[]
+  total: number
+}
+
 export interface ForumTopicBookmarkListOut {
   list: ForumTopicListItem[]
   total: number
@@ -131,6 +140,12 @@ export function useForum() {
         page: params.page || 1,
         size: params.size || 20
       }
+    })
+  }
+
+  async function listHotTopics(size = 5) {
+    return await fetchApi<ForumTopicHotListOut>('/api/forum/topics:getHot', {
+      query: { size }
     })
   }
 
@@ -239,6 +254,7 @@ export function useForum() {
   return {
     listNodes,
     listTopics,
+    listHotTopics,
     getTopic,
     createTopic,
     updateTopic,

@@ -24,8 +24,12 @@ type SiteMessageColumns struct {
 	Id         string //
 	SenderId   string // 0=系统通知, 或管理员ID
 	ReceiverId string //
+	Title      string //
 	Content    string //
+	TargetType string //
+	TargetId   string //
 	IsRead     string //
+	ReadAt     string //
 	CreatedAt  string //
 }
 
@@ -34,8 +38,12 @@ var siteMessageColumns = SiteMessageColumns{
 	Id:         "id",
 	SenderId:   "sender_id",
 	ReceiverId: "receiver_id",
+	Title:      "title",
 	Content:    "content",
+	TargetType: "target_type",
+	TargetId:   "target_id",
 	IsRead:     "is_read",
+	ReadAt:     "read_at",
 	CreatedAt:  "created_at",
 }
 

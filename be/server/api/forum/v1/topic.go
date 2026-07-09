@@ -16,6 +16,15 @@ type TopicListRes struct {
 	forumout.TopicListOut
 }
 
+type TopicGetHotReq struct {
+	g.Meta `path:"/topics:getHot" method:"get" tags:"Forum" summary:"获取热门主题" perm:"read:forum/topic:*"`
+	forumin.TopicGetHotInp
+}
+
+type TopicGetHotRes struct {
+	forumout.TopicHotListOut
+}
+
 type TopicDetailReq struct {
 	g.Meta `path:"/topics/{id}" method:"get" tags:"Forum" summary:"获取主题详情" perm:"read:forum/topic:*"`
 	forumin.TopicDetailInp

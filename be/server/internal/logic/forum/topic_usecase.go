@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"server/internal/consts"
 	"server/internal/model"
@@ -17,6 +18,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
@@ -61,6 +63,106 @@ func (s *sForumTopicUsecase) List(ctx context.Context, actor *model.Actor, in fo
 			ReplyCount: node.ReplyCount,
 		},
 	}, nil
+}
+
+func (s *sForumTopicUsecase) ListHot(ctx context.Context, actor *model.Actor, size int) (*forumout.TopicHotListOut, error) {
+	if size <= 0 {
+		size = 5
+	}
+	if size > 10 {
+		size = 10
+	}
+
+	items, err := s.getHotTopicItemsCache(ctx, actor)
+	if err != nil {
+		return nil, err
+	}
+	if len(items) > size {
+		items = items[:size]
+	}
+
+	return &forumout.TopicHotListOut{
+		List:  items,
+		Total: len(items),
+	}, nil
+}
+
+func (s *sForumTopicUsecase) getHotTopicItemsCache(ctx context.Context, actor *model.Actor) ([]forumout.TopicHotItem, error) {
+	roleLevel := s.hotTopicRoleLevel(actor)
+	cacheKey := fmt.Sprintf("%s:role:%d", service.SysCache().KeyForumHotTopics(ctx), roleLevel)
+	v, err := gcache.GetOrSetFunc(ctx, cacheKey, func(ctx context.Context) (any, error) {
+		return s.buildHotTopicItems(ctx, roleLevel)
+	}, 5*time.Minute)
+	if err != nil || v.IsNil() {
+		return s.buildHotTopicItems(ctx, roleLevel)
+	}
+
+	if items, ok := v.Val().([]forumout.TopicHotItem); ok {
+		return items, nil
+	}
+	var items []forumout.TopicHotItem
+	if err := v.Scan(&items); err != nil {
+		return s.buildHotTopicItems(ctx, roleLevel)
+	}
+	return items, nil
+}
+
+func (s *sForumTopicUsecase) buildHotTopicItems(ctx context.Context, roleLevel int) ([]forumout.TopicHotItem, error) {
+	topics, err := service.ForumTopicDomain().QueryHotTopics(ctx, 100)
+	if err != nil {
+		return nil, err
+	}
+
+	nodes, err := service.ForumNodeDomain().GetNodes(ctx)
+	if err != nil {
+		return nil, err
+	}
+	nodeMap := make(map[uint]entity.ForumNode, len(nodes))
+	for _, node := range nodes {
+		nodeMap[node.Id] = node
+	}
+
+	selectedTopics := make([]entity.ForumTopic, 0, 10)
+	selectedNodes := make([]entity.ForumNode, 0, 10)
+	for _, topic := range topics {
+		node, ok := nodeMap[topic.NodeId]
+		if !ok || roleLevel < node.MinRoleRead {
+			continue
+		}
+		selectedTopics = append(selectedTopics, topic)
+		selectedNodes = append(selectedNodes, node)
+		if len(selectedTopics) >= 10 {
+			break
+		}
+	}
+
+	items := s.formatTopicListItems(ctx, selectedTopics)
+	list := make([]forumout.TopicHotItem, 0, len(items))
+	for i, item := range items {
+		list = append(list, forumout.TopicHotItem{
+			TopicListItem: item,
+			Node:          s.formatNodeItem(selectedNodes[i]),
+		})
+	}
+	return list, nil
+}
+
+func (s *sForumTopicUsecase) hotTopicRoleLevel(actor *model.Actor) int {
+	if actor == nil {
+		return 0
+	}
+	return actor.RoleLevel
+}
+
+func (s *sForumTopicUsecase) formatNodeItem(node entity.ForumNode) forumout.NodeItem {
+	return forumout.NodeItem{
+		Id:         node.Id,
+		Slug:       node.Slug,
+		NameI18N:   node.NameI18N,
+		DescI18N:   node.DescI18N,
+		TopicCount: node.TopicCount,
+		ReplyCount: node.ReplyCount,
+	}
 }
 
 func (s *sForumTopicUsecase) Detail(ctx context.Context, actor *model.Actor, in forumin.TopicDetailInp) (*forumout.TopicDetailOut, error) {

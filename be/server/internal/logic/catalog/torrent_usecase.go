@@ -56,6 +56,59 @@ func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, i
 	}, nil
 }
 
+func (s *sCatalogTorrentUsecase) ListHot(ctx context.Context, actor *model.Actor, size int) (*catalogout.TorrentHotListOut, error) {
+	if size <= 0 {
+		size = 5
+	}
+	if size > 10 {
+		size = 10
+	}
+
+	items, err := s.getHotTorrentItemsCache(ctx)
+	if err != nil {
+		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
+	}
+	if len(items) > size {
+		items = items[:size]
+	}
+
+	return &catalogout.TorrentHotListOut{
+		List:  items,
+		Total: len(items),
+	}, nil
+}
+
+func (s *sCatalogTorrentUsecase) getHotTorrentItemsCache(ctx context.Context) ([]catalogout.TorrentHotItem, error) {
+	cacheKey := service.SysCache().KeyCatalogHotTorrents(ctx)
+	v, err := gcache.GetOrSetFunc(ctx, cacheKey, func(ctx context.Context) (any, error) {
+		return s.buildHotTorrentItems(ctx)
+	}, 5*time.Minute)
+	if err != nil || v.IsNil() {
+		return s.buildHotTorrentItems(ctx)
+	}
+
+	if items, ok := v.Val().([]catalogout.TorrentHotItem); ok {
+		return items, nil
+	}
+	var items []catalogout.TorrentHotItem
+	if err := v.Scan(&items); err != nil {
+		return s.buildHotTorrentItems(ctx)
+	}
+	return items, nil
+}
+
+func (s *sCatalogTorrentUsecase) buildHotTorrentItems(ctx context.Context) ([]catalogout.TorrentHotItem, error) {
+	torrents, err := service.CatalogTorrentDomain().QueryHotVisibleTorrents(ctx, 10)
+	if err != nil {
+		return nil, err
+	}
+	categories, err := service.CatalogCategoryDomain().ListCategories(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return s.formatHotTorrentListItems(ctx, torrents, s.hotCategoryMap(categories)), nil
+}
+
 // Download 获取用户专属的种子文件内容
 func (s *sCatalogTorrentUsecase) Download(ctx context.Context, actor *model.Actor, in catalogin.TorrentDownloadInp) (*catalogout.TorrentDownloadOut, error) {
 	if actor == nil {
@@ -539,7 +592,6 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 	}
 
 	ownerMap := s.loadUserSummaryMap(ctx, ownerIds)
-
 	var list []catalogout.TorrentListItem
 	for _, e := range entities {
 		owner := ownerMap[e.OwnerId]
@@ -569,6 +621,51 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 		})
 	}
 	return list
+}
+
+func (s *sCatalogTorrentUsecase) formatHotTorrentListItems(ctx context.Context, entities []entity.CatalogTorrent, categoryMap map[uint]catalogout.CategoryItem) []catalogout.TorrentHotItem {
+	list := make([]catalogout.TorrentHotItem, 0, len(entities))
+	for _, e := range entities {
+		promotion := service.CatalogTorrentDomain().ResolveEffectiveTorrentPromotion(ctx, &e, nil)
+		category := categoryMap[e.CategoryId]
+		categoryPtr := &category
+		if category.Id == 0 {
+			categoryPtr = nil
+		}
+		list = append(list, catalogout.TorrentHotItem{
+			Id:         e.Id,
+			Name:       e.Name,
+			SubTitle:   e.SubTitle,
+			CategoryId: e.CategoryId,
+			Category:   categoryPtr,
+			Size:       e.Size,
+			FileCount:  e.FileCount,
+			SpState:    promotion.SpState,
+			SpExpireAt: s.formatTime(promotion.SpExpireAt),
+			IsFeatured: e.IsFeatured,
+			IsPinned:   e.IsPinned,
+			PinWeight:  e.PinWeight,
+			Seeders:    e.Seeders,
+			Leechers:   e.Leechers,
+			Snatched:   e.TimesCompleted,
+			LikeCount:  e.LikeCount,
+			CreatedAt:  e.CreatedAt.String(),
+		})
+	}
+	return list
+}
+
+func (s *sCatalogTorrentUsecase) hotCategoryMap(categories []entity.CatalogCategory) map[uint]catalogout.CategoryItem {
+	categoryMap := make(map[uint]catalogout.CategoryItem, len(categories))
+	for _, category := range categories {
+		item := catalogout.CategoryItem{
+			Id:   category.Id,
+			Slug: category.Slug,
+		}
+		_ = category.NameI18N.Scan(&item.Name)
+		categoryMap[category.Id] = item
+	}
+	return categoryMap
 }
 
 func (s *sCatalogTorrentUsecase) formatTime(value *gtime.Time) string {

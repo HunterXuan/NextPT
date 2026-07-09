@@ -24,8 +24,10 @@ const (
 	IamPermissionAdminModUserManage    = "admin:mod/user:*"
 
 	// Site Management
-	IamPermissionAdminSiteConfig = "admin:site/config:*"
-	IamPermissionAdminSiteAudit  = "admin:site/audit:*"
+	IamPermissionAdminSiteConfig       = "admin:site/config:*"
+	IamPermissionAdminSiteAudit        = "admin:site/audit:*"
+	IamPermissionAdminSiteAnnouncement = "admin:site/announcement:*"
+	IamPermissionAdminSiteMessage      = "admin:site/message:*"
 
 	// Sys Management
 	IamPermissionAdminSysCronManage = "admin:sys/cron:*"
@@ -45,6 +47,10 @@ const (
 	// IAM
 	IamPermissionIamInviteRead   = "read:iam/invite:*"
 	IamPermissionIamInviteCreate = "create:iam/invite:*"
+
+	// Site
+	IamPermissionSiteAnnouncementRead = "read:site/announcement:*"
+	IamPermissionSiteMessageRead      = "read:site/message:*"
 
 	// Forum
 	IamPermissionForumTopicRead   = "read:forum/topic:*"
@@ -79,6 +85,8 @@ var (
 
 		IamPermissionAdminSiteConfig,
 		IamPermissionAdminSiteAudit,
+		IamPermissionAdminSiteAnnouncement,
+		IamPermissionAdminSiteMessage,
 
 		IamPermissionAdminSysCronManage,
 
@@ -94,6 +102,9 @@ var (
 
 		IamPermissionIamInviteRead,
 		IamPermissionIamInviteCreate,
+
+		IamPermissionSiteAnnouncementRead,
+		IamPermissionSiteMessageRead,
 
 		IamPermissionForumTopicRead,
 		IamPermissionForumTopicCreate,

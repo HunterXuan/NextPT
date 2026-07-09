@@ -4,6 +4,7 @@
     "cancel": "取消",
     "confirm": "確認",
     "copy": "複製",
+    "delete": "刪除",
     "clear": "清空",
     "close": "關閉",
     "next": "下一頁",
@@ -62,6 +63,7 @@
     "catalog": "資源庫",
     "community": "論壇",
     "forum": "論壇",
+    "site": "站點",
     "uploadTorrent": "發布種子",
     "subtitles": "字幕",
     "bookmarks": "收藏",
@@ -72,6 +74,26 @@
   },
   "footer": {
     "tagline": "面向私有資源社群的 tracker 與協作系統。"
+  },
+  "site": {
+    "announcements": {
+      "title": "站點公告",
+      "empty": "暫無公告",
+      "markRead": "標為已讀"
+    },
+    "messages": {
+      "title": "站內消息",
+      "empty": "暫無消息",
+      "markRead": "標為已讀",
+      "markAllRead": "全部已讀",
+      "openTarget": "打開相關內容",
+      "selectHint": "選擇一條消息查看完整內容",
+      "noContent": "無正文內容",
+      "filters": {
+        "all": "全部",
+        "unread": "未讀"
+      }
+    }
   },
   "home": {
     "metaTitle": "首頁",
@@ -174,7 +196,24 @@
     "member": {
       "eyebrow": "站點工作台",
       "title": "歡迎回來，{name}",
-      "description": "這裡是登入後的首頁，快速進入資源、論壇和個人中心。",
+      "description": "從這裡快速看到站點公告、近期資源、論壇動態和自己的分享資料。",
+      "viewAll": "查看全部",
+      "empty": "暫時沒有內容",
+      "quickActions": "快捷入口",
+      "torrents": {
+        "title": "種子動態",
+        "subtitle": "近期熱度較高的資源。"
+      },
+      "forum": {
+        "title": "論壇動態",
+        "subtitle": "最近討論較多的主題。"
+      },
+      "stats": {
+        "uploaded": "上傳",
+        "downloaded": "下載",
+        "ratio": "分享率",
+        "bonus": "魔力值"
+      },
       "actions": {
         "catalog": {
           "title": "瀏覽種子",
@@ -1403,6 +1442,64 @@
           }
         }
       },
+      "announcements": {
+        "title": "公告管理",
+        "list": "公告列表",
+        "create": "新建公告",
+        "edit": "編輯公告",
+        "empty": "暫無公告",
+        "formHint": "公告內容支援 Markdown，發布後使用者可在站點公告中查看。",
+        "required": "請填寫標題和內容",
+        "saved": "公告已儲存",
+        "deleted": "公告已刪除",
+        "status": {
+          "all": "全部狀態",
+          "draft": "草稿",
+          "published": "已發布",
+          "archived": "已歸檔"
+        },
+        "fields": {
+          "title": "標題",
+          "status": "狀態",
+          "publishedAt": "發布時間",
+          "content": "內容"
+        }
+      },
+      "messages": {
+        "title": "消息管理",
+        "send": "發送消息",
+        "sendHint": "向指定使用者發送站內消息，可附帶資源關聯。",
+        "receiverPlaceholder": "輸入使用者 ID，多個 ID 可用逗號、空格或換行分隔",
+        "submit": "發送",
+        "list": "消息列表",
+        "empty": "暫無消息",
+        "required": "請填寫接收使用者、標題和內容",
+        "sent": "已發送 {count} 條消息",
+        "toUser": "發給 #{id} {name}",
+        "fields": {
+          "receiverIds": "接收使用者",
+          "title": "標題",
+          "content": "內容",
+          "targetType": "關聯類型",
+          "targetId": "關聯 ID"
+        },
+        "targetTypes": {
+          "none": "無關聯",
+          "catalogTorrent": "種子",
+          "forumTopic": "論壇主題"
+        },
+        "readState": {
+          "read": "已讀",
+          "unread": "未讀"
+        },
+        "filters": {
+          "receiverId": "使用者 ID",
+          "all": "全部",
+          "unread": "未讀",
+          "read": "已讀",
+          "apply": "篩選"
+        }
+      },
       "audits": {
         "title": "稽核日誌",
         "entryDescription": "查看後台關鍵操作記錄",
@@ -1482,7 +1579,9 @@
           "iam_session": "使用者會話",
           "mod_report": "檢舉",
           "mod_cheater_log": "作弊記錄",
-          "mod_user_log": "帳號限制"
+          "mod_user_log": "帳號限制",
+          "site_announcement": "站點公告",
+          "site_message": "站內消息"
         },
         "detailKeys": {
           "amount": "數量",

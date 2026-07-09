@@ -4,6 +4,7 @@
     "cancel": "取消",
     "confirm": "确认",
     "copy": "复制",
+    "delete": "删除",
     "clear": "清空",
     "close": "关闭",
     "next": "下一页",
@@ -62,6 +63,7 @@
     "catalog": "资源库",
     "community": "论坛",
     "forum": "论坛",
+    "site": "站点",
     "uploadTorrent": "发布种子",
     "subtitles": "字幕",
     "bookmarks": "收藏",
@@ -72,6 +74,26 @@
   },
   "footer": {
     "tagline": "面向私有资源社区的 tracker 与协作系统。"
+  },
+  "site": {
+    "announcements": {
+      "title": "站点公告",
+      "empty": "暂无公告",
+      "markRead": "标为已读"
+    },
+    "messages": {
+      "title": "站内消息",
+      "empty": "暂无消息",
+      "markRead": "标为已读",
+      "markAllRead": "全部已读",
+      "openTarget": "打开相关内容",
+      "selectHint": "选择一条消息查看完整内容",
+      "noContent": "无正文内容",
+      "filters": {
+        "all": "全部",
+        "unread": "未读"
+      }
+    }
   },
   "home": {
     "metaTitle": "首页",
@@ -174,7 +196,24 @@
     "member": {
       "eyebrow": "站点工作台",
       "title": "欢迎回来，{name}",
-      "description": "这里是登录后的首页，快速进入资源、论坛和个人中心。",
+      "description": "从这里快速看到站点公告、近期资源、论坛动态和自己的分享数据。",
+      "viewAll": "查看全部",
+      "empty": "暂时没有内容",
+      "quickActions": "快捷入口",
+      "torrents": {
+        "title": "种子动态",
+        "subtitle": "近期热度较高的资源。"
+      },
+      "forum": {
+        "title": "论坛动态",
+        "subtitle": "最近讨论较多的主题。"
+      },
+      "stats": {
+        "uploaded": "上传",
+        "downloaded": "下载",
+        "ratio": "分享率",
+        "bonus": "魔力值"
+      },
       "actions": {
         "catalog": {
           "title": "浏览种子",
@@ -1403,6 +1442,64 @@
           }
         }
       },
+      "announcements": {
+        "title": "公告管理",
+        "list": "公告列表",
+        "create": "新建公告",
+        "edit": "编辑公告",
+        "empty": "暂无公告",
+        "formHint": "公告内容支持 Markdown，发布后用户可在站点公告中查看。",
+        "required": "请填写标题和内容",
+        "saved": "公告已保存",
+        "deleted": "公告已删除",
+        "status": {
+          "all": "全部状态",
+          "draft": "草稿",
+          "published": "已发布",
+          "archived": "已归档"
+        },
+        "fields": {
+          "title": "标题",
+          "status": "状态",
+          "publishedAt": "发布时间",
+          "content": "内容"
+        }
+      },
+      "messages": {
+        "title": "消息管理",
+        "send": "发送消息",
+        "sendHint": "向指定用户发送站内消息，可附带资源关联。",
+        "receiverPlaceholder": "输入用户 ID，多个 ID 可用逗号、空格或换行分隔",
+        "submit": "发送",
+        "list": "消息列表",
+        "empty": "暂无消息",
+        "required": "请填写接收用户、标题和内容",
+        "sent": "已发送 {count} 条消息",
+        "toUser": "发给 #{id} {name}",
+        "fields": {
+          "receiverIds": "接收用户",
+          "title": "标题",
+          "content": "内容",
+          "targetType": "关联类型",
+          "targetId": "关联 ID"
+        },
+        "targetTypes": {
+          "none": "无关联",
+          "catalogTorrent": "种子",
+          "forumTopic": "论坛主题"
+        },
+        "readState": {
+          "read": "已读",
+          "unread": "未读"
+        },
+        "filters": {
+          "receiverId": "用户 ID",
+          "all": "全部",
+          "unread": "未读",
+          "read": "已读",
+          "apply": "筛选"
+        }
+      },
       "audits": {
         "title": "审计日志",
         "entryDescription": "查看后台关键操作记录",
@@ -1482,7 +1579,9 @@
           "iam_session": "用户会话",
           "mod_report": "举报",
           "mod_cheater_log": "作弊记录",
-          "mod_user_log": "账号限制"
+          "mod_user_log": "账号限制",
+          "site_announcement": "站点公告",
+          "site_message": "站内消息"
         },
         "detailKeys": {
           "amount": "数量",

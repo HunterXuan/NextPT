@@ -15,7 +15,11 @@ type SiteMessage struct {
 	Id         any         //
 	SenderId   any         // 0=系统通知, 或管理员ID
 	ReceiverId any         //
+	Title      any         //
 	Content    any         //
+	TargetType any         //
+	TargetId   any         //
 	IsRead     any         //
+	ReadAt     *gtime.Time //
 	CreatedAt  *gtime.Time //
 }

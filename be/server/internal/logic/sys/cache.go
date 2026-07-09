@@ -190,6 +190,14 @@ func (s *sSysCache) KeyCatalogTorrentInfoHash(ctx context.Context, hexInfoHash s
 	return s.prefixCatalogTorrentHash + hexInfoHash
 }
 
+func (s *sSysCache) KeyCatalogHotTorrents(ctx context.Context) string {
+	return s.prefix + "catalog:torrent:hot"
+}
+
+func (s *sSysCache) KeyForumHotTopics(ctx context.Context) string {
+	return s.prefix + "forum:topic:hot"
+}
+
 func (s *sSysCache) KeyTrackerLockPeer(ctx context.Context, torrentId, userId uint64, peerId string) string {
 	return fmt.Sprintf("%speer:%d:%d:%s", s.prefixTrackerLock, torrentId, userId, peerId)
 }

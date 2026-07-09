@@ -37,6 +37,7 @@ var (
 				router.Catalog(ctx, group)
 				router.Economy(ctx, group)
 				router.Forum(ctx, group)
+				router.Site(ctx, group)
 				router.Tracker(ctx, group)
 				router.Iam(ctx, group)
 			})

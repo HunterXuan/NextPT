@@ -47,6 +47,16 @@ type TopicListOut struct {
 	Node  NodeItem        `json:"node"`
 }
 
+type TopicHotItem struct {
+	TopicListItem
+	Node NodeItem `json:"node"`
+}
+
+type TopicHotListOut struct {
+	List  []TopicHotItem `json:"list"`
+	Total int            `json:"total"`
+}
+
 type TopicBookmarkListOut struct {
 	List  []TopicListItem `json:"list"`
 	Total int             `json:"total"`

@@ -98,6 +98,7 @@ type (
 		IncrementTorrentStats(ctx context.Context, torrentId uint64, field string, amount float64) error
 		GetTorrentsByHashes(ctx context.Context, hashes []string) ([]entity.CatalogTorrent, error)
 		QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page int, size int) ([]entity.CatalogTorrent, int, error)
+		QueryHotVisibleTorrents(ctx context.Context, size int) ([]entity.CatalogTorrent, error)
 		CheckTorrentBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		CheckTorrentLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		IncrementTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
@@ -110,6 +111,7 @@ type (
 	ICatalogTorrentUsecase interface {
 		// List 获取种子分页列表
 		List(ctx context.Context, actor *model.Actor, in catalogin.TorrentListInp) (*catalogout.TorrentListOut, error)
+		ListHot(ctx context.Context, actor *model.Actor, size int) (*catalogout.TorrentHotListOut, error)
 		// Download 获取用户专属的种子文件内容
 		Download(ctx context.Context, actor *model.Actor, in catalogin.TorrentDownloadInp) (*catalogout.TorrentDownloadOut, error)
 		// Upload 解析用户上传的种子文件，处理为私有种子，并保存到数据库和 S3

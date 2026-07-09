@@ -349,6 +349,32 @@ func (s *sForumTopicDomain) QueryTopicsByNode(ctx context.Context, nodeId uint, 
 	return topics, total, err
 }
 
+func (s *sForumTopicDomain) QueryHotTopics(ctx context.Context, size int) ([]entity.ForumTopic, error) {
+	if size <= 0 {
+		size = 20
+	}
+	if size > 100 {
+		size = 100
+	}
+
+	columns := dao.ForumTopic.Columns()
+	order := fmt.Sprintf(
+		"(%s * 3 + %s + %s * 2) DESC, IFNULL(%s, %s) DESC",
+		columns.ReplyCount,
+		columns.Views,
+		columns.LikeCount,
+		columns.LastReplyAt,
+		columns.CreatedAt,
+	)
+
+	var topics []entity.ForumTopic
+	err := dao.ForumTopic.Ctx(ctx).
+		Order(order).
+		Limit(size).
+		Scan(&topics)
+	return topics, err
+}
+
 func (s *sForumTopicDomain) CheckTopicLiked(ctx context.Context, topicId, userId uint64) (bool, error) {
 	count, err := dao.ForumTopicLike.Ctx(ctx).Where(dao.ForumTopicLike.Columns().TopicId, topicId).Where(dao.ForumTopicLike.Columns().UserId, userId).Count()
 	return count > 0, err

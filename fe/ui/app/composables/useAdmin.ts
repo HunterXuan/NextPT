@@ -282,6 +282,76 @@ export interface AdminSiteAuditListOut {
   size: number
 }
 
+export interface AdminSiteAnnouncement {
+  id: number
+  title: string
+  content: string
+  status: number
+  isRead?: boolean
+  createdBy: number
+  updatedBy: number
+  publishedAt?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface AdminSiteAnnouncementListParams {
+  page?: number
+  size?: number
+  status?: number
+}
+
+export interface AdminSiteAnnouncementListOut {
+  list: AdminSiteAnnouncement[]
+  total: number
+  page: number
+  size: number
+}
+
+export interface AdminSiteAnnouncementInput {
+  title: string
+  content: string
+  status: number
+  publishedAt?: string | null
+}
+
+export interface AdminSiteMessage {
+  id: number
+  senderId: number
+  sender: AdminUserSummary
+  receiverId: number
+  receiver: AdminUserSummary
+  title: string
+  content: string
+  targetType: string
+  targetId: number
+  isRead: boolean
+  readAt?: string | null
+  createdAt?: string | null
+}
+
+export interface AdminSiteMessageListParams {
+  page?: number
+  size?: number
+  receiverId?: number
+  isRead?: boolean
+}
+
+export interface AdminSiteMessageListOut {
+  list: AdminSiteMessage[]
+  total: number
+  page: number
+  size: number
+}
+
+export interface AdminSiteMessageCreateInput {
+  receiverIds: number[]
+  title: string
+  content: string
+  targetType?: string
+  targetId?: number
+}
+
 export interface AdminSysCronItem {
   name: string
   status: number
@@ -637,6 +707,45 @@ export function useAdmin() {
     })
   }
 
+  async function listSiteAnnouncements(params: AdminSiteAnnouncementListParams = {}) {
+    return await fetchApi<AdminSiteAnnouncementListOut>('/api/admin/site/announcements', {
+      query: params
+    })
+  }
+
+  async function createSiteAnnouncement(input: AdminSiteAnnouncementInput) {
+    return await fetchApi<{ id: number }>('/api/admin/site/announcements', {
+      method: 'POST',
+      body: input
+    })
+  }
+
+  async function updateSiteAnnouncement(id: number, input: AdminSiteAnnouncementInput) {
+    await fetchApi(`/api/admin/site/announcements/${id}`, {
+      method: 'PATCH',
+      body: input
+    })
+  }
+
+  async function deleteSiteAnnouncement(id: number) {
+    await fetchApi(`/api/admin/site/announcements/${id}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async function listSiteMessages(params: AdminSiteMessageListParams = {}) {
+    return await fetchApi<AdminSiteMessageListOut>('/api/admin/site/messages', {
+      query: params
+    })
+  }
+
+  async function createSiteMessage(input: AdminSiteMessageCreateInput) {
+    return await fetchApi<{ count: number }>('/api/admin/site/messages', {
+      method: 'POST',
+      body: input
+    })
+  }
+
   async function listSysCrons() {
     return await fetchApi<AdminSysCronListOut>('/api/admin/sys/crons')
   }
@@ -795,6 +904,12 @@ export function useAdmin() {
     listSiteConfigs,
     updateSiteConfig,
     listSiteAudits,
+    listSiteAnnouncements,
+    createSiteAnnouncement,
+    updateSiteAnnouncement,
+    deleteSiteAnnouncement,
+    listSiteMessages,
+    createSiteMessage,
     listSysCrons,
     listSysCronLogs,
     listModReports,

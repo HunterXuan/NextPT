@@ -36,6 +36,31 @@ type TorrentListOut struct {
 	Total int               `json:"total" description:"总记录数"`
 }
 
+type TorrentHotItem struct {
+	Id         uint64        `json:"id" description:"种子ID"`
+	Name       string        `json:"name" description:"标题"`
+	SubTitle   string        `json:"subTitle" description:"副标题"`
+	CategoryId uint          `json:"categoryId" description:"分类ID"`
+	Category   *CategoryItem `json:"category,omitempty" description:"分类信息"`
+	Size       uint64        `json:"size" description:"总大小(字节)"`
+	FileCount  uint          `json:"fileCount" description:"文件数量"`
+	SpState    int           `json:"spState" description:"促销状态"`
+	SpExpireAt string        `json:"spExpireAt" description:"促销到期时间"`
+	IsFeatured bool          `json:"isFeatured" description:"是否推荐"`
+	IsPinned   bool          `json:"isPinned" description:"是否置顶"`
+	PinWeight  int           `json:"pinWeight" description:"置顶权重"`
+	Seeders    uint          `json:"seeders" description:"做种数"`
+	Leechers   uint          `json:"leechers" description:"下载数"`
+	Snatched   uint          `json:"snatched" description:"完成数"`
+	LikeCount  uint          `json:"likeCount" description:"感谢数"`
+	CreatedAt  string        `json:"createdAt" description:"发布时间"`
+}
+
+type TorrentHotListOut struct {
+	List  []TorrentHotItem `json:"list" description:"热门种子列表"`
+	Total int              `json:"total" description:"总记录数"`
+}
+
 type TorrentDetailOut struct {
 	TorrentListItem
 	Description   string         `json:"description" description:"详细描述"`

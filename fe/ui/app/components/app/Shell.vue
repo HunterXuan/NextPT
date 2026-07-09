@@ -64,6 +64,25 @@
           </div>
 
           <div class="flex shrink-0 items-center gap-1.5">
+            <UTooltip :text="$t('site.messages.title')" :content="{ side: 'bottom', sideOffset: 8 }" :delay-duration="600">
+              <UButton
+                v-if="props.mode === 'app' && hasPermission(Permission.SiteMessageRead)"
+                class="relative"
+                color="neutral"
+                variant="ghost"
+                icon="i-lucide-bell"
+                :aria-label="$t('site.messages.title')"
+                :to="localePath('/site/messages')"
+              >
+                <span
+                  v-if="unreadMessageCount > 0"
+                  class="absolute -right-0.5 -top-0.5 flex min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-4 text-white"
+                >
+                  {{ unreadMessageCount > 99 ? '99+' : unreadMessageCount }}
+                </span>
+              </UButton>
+            </UTooltip>
+
             <UDropdownMenu :items="languageItems" :content="{ align: 'end' }">
               <UButton
                 color="neutral"
@@ -115,20 +134,38 @@ const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const { user, isStaff, hasPermission, logout } = useAuth()
+const siteApi = useSite()
 
 const mobileSidebarOpen = ref(false)
 const sidebarCollapsed = ref(false)
 const loggingOut = ref(false)
 const pageRefreshKey = ref(0)
+const unreadMessageCount = ref(0)
 const sidebarStorageKey = 'nextpt_sidebar_collapsed'
 
 onMounted(() => {
   sidebarCollapsed.value = localStorage.getItem(sidebarStorageKey) === '1'
+  void loadUnreadMessageCount()
+  if (import.meta.client) {
+    window.addEventListener('nextpt:messages-read', handleMessagesRead)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (import.meta.client) {
+    window.removeEventListener('nextpt:messages-read', handleMessagesRead)
+  }
 })
 
 watch(sidebarCollapsed, (value) => {
   if (!import.meta.client) return
   localStorage.setItem(sidebarStorageKey, value ? '1' : '0')
+})
+
+watch(() => route.fullPath, () => {
+  if (props.mode === 'app') {
+    void loadUnreadMessageCount()
+  }
 })
 
 function isActive(path: string) {
@@ -263,6 +300,8 @@ const adminNavSections = computed<ShellNavSection[]>(() => compactNavSections([
     label: t('admin.nav.site'),
     items: compactNavItems([
       permissionNavItem(Permission.AdminSiteConfig, { label: t('admin.site.configs.title'), to: '/admin/site/configs', icon: 'i-lucide-settings-2', active: isActive('/admin/site/configs') }),
+      permissionNavItem(Permission.AdminSiteAnnouncement, { label: t('admin.site.announcements.title'), to: '/admin/site/announcements', icon: 'i-lucide-megaphone', active: isActive('/admin/site/announcements') }),
+      permissionNavItem(Permission.AdminSiteMessage, { label: t('admin.site.messages.title'), to: '/admin/site/messages', icon: 'i-lucide-bell', active: isActive('/admin/site/messages') }),
       permissionNavItem(Permission.AdminSiteAudit, { label: t('admin.site.audits.title'), to: '/admin/site/audits', icon: 'i-lucide-scroll-text', active: isActive('/admin/site/audits') })
     ])
   },
@@ -303,6 +342,7 @@ const routeSpecificLabel = computed(() => {
   if (forumTopicMatch?.[1]) return t('forum.detail.titleFallback', { id: forumTopicMatch[1] })
   if (path === '/forum/topics/create') return t('forum.create.title')
   if (path === '/forum/bookmarks') return t('forum.bookmarks.title')
+  if (path === '/site/messages') return t('site.messages.title')
   if (path === '/iam/users/me/activity') return t('user.nav.activity')
   if (path === '/iam/users/me/bonus') return t('user.nav.bonus')
   if (path === '/iam/users/me/settings') return t('user.nav.settings')
@@ -392,5 +432,21 @@ async function handleLogout() {
   } finally {
     loggingOut.value = false
   }
+}
+
+async function loadUnreadMessageCount() {
+  if (props.mode !== 'app' || !hasPermission(Permission.SiteMessageRead)) {
+    unreadMessageCount.value = 0
+    return
+  }
+  try {
+    unreadMessageCount.value = await siteApi.unreadMessageCount()
+  } catch {
+    unreadMessageCount.value = 0
+  }
+}
+
+function handleMessagesRead() {
+  void loadUnreadMessageCount()
 }
 </script>

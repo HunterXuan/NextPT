@@ -14,6 +14,8 @@ SET NAMES utf8mb4;
 -- ------------------------------------------------------------
 
 SET @iam_permissions_limited = JSON_ARRAY(
+    'read:site/announcement:*',
+    'read:site/message:*',
     'read:forum/topic:*',
     'read:forum/reply:*',
     'read:catalog/torrent:*',
@@ -81,6 +83,10 @@ SET @iam_permissions_admin = JSON_ARRAY_APPEND(
     'admin:site/config:*',
     '$',
     'admin:site/audit:*',
+    '$',
+    'admin:site/announcement:*',
+    '$',
+    'admin:site/message:*',
     '$',
     'admin:forum/category:*',
     '$',

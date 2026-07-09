@@ -557,16 +557,47 @@ CREATE TABLE `forum_reply` (
 -- 模块: 通知与工单系统
 -- ============================================================
 
+CREATE TABLE `site_announcement` (
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title`           VARCHAR(200)    NOT NULL DEFAULT '',
+    `content`         TEXT            NOT NULL,
+    `status`          TINYINT         NOT NULL DEFAULT 0 COMMENT '0=draft 1=published 2=archived',
+    `created_by`      BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    `updated_by`      BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    `published_at`    DATETIME        NULL,
+    `created_at`      DATETIME        NULL,
+    `updated_at`      DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_status_published` (`status`, `published_at`),
+    KEY `idx_status_created` (`status`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='站点公告';
+
+CREATE TABLE `site_announcement_read` (
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `announcement_id` BIGINT UNSIGNED NOT NULL,
+    `user_id`         BIGINT UNSIGNED NOT NULL,
+    `read_at`         DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_announcement_user` (`announcement_id`, `user_id`),
+    KEY `idx_user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='站点公告已读记录';
+
 -- 系统通知 (仅允许系统或管理员发送给普通用户)
 CREATE TABLE `site_message` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `sender_id`       BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '0=系统通知, 或管理员ID',
     `receiver_id`     BIGINT UNSIGNED NOT NULL,
+    `title`           VARCHAR(200)    NOT NULL DEFAULT '',
     `content`         TEXT            NOT NULL,
-    `is_read`         BIT(1)      NOT NULL DEFAULT 0,
+    `target_type`     VARCHAR(30)     NOT NULL DEFAULT '',
+    `target_id`       BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    `is_read`         BIT(1)          NOT NULL DEFAULT 0,
+    `read_at`         DATETIME        NULL,
     `created_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_receiver_read` (`receiver_id`, `is_read`),
+    KEY `idx_receiver_read` (`receiver_id`, `is_read`, `created_at`),
+    KEY `idx_receiver_created` (`receiver_id`, `created_at`),
+    KEY `idx_target` (`target_type`, `target_id`),
     KEY `idx_sender` (`sender_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统通知表';
 

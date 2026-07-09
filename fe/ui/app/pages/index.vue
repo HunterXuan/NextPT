@@ -115,7 +115,7 @@
     <template v-else>
       <section class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
         <div class="w-full px-3 sm:px-4 lg:px-5">
-          <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div class="mb-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('home.member.eyebrow') }}</p>
               <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">
@@ -134,65 +134,249 @@
             </div>
           </div>
 
-          <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <NuxtLink
-              v-for="action in memberActions"
-              :key="action.to"
-              :to="localePath(action.to)"
-              class="group rounded-lg border border-slate-200 bg-white p-5 transition hover:border-sky-300 hover:bg-sky-50/70 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-sky-800 dark:hover:bg-sky-950/30"
-            >
-              <div class="flex items-center justify-between gap-4">
-                <span class="flex size-10 items-center justify-center rounded-md" :class="action.iconClass">
-                  <UIcon :name="action.icon" class="size-5" />
+          <div class="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div v-for="item in memberStatCards" :key="item.key" class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</p>
+                  <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ item.value }}</p>
+                </div>
+                <span class="flex size-9 items-center justify-center rounded-md" :class="item.iconClass">
+                  <UIcon :name="item.icon" class="size-5" />
                 </span>
-                <UIcon name="i-lucide-arrow-right" class="size-5 text-slate-400 transition group-hover:text-sky-600 dark:group-hover:text-sky-300" />
               </div>
-              <h2 class="mt-4 text-base font-semibold text-slate-950 dark:text-white">{{ action.title }}</h2>
-              <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ action.description }}</p>
-            </NuxtLink>
+            </div>
           </div>
 
-          <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-            <section class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('home.member.next.title') }}</h2>
-              <div class="mt-4 grid gap-3 md:grid-cols-3">
-                <div v-for="item in memberNext" :key="item.title" class="rounded-md border border-slate-200 p-4 dark:border-slate-800">
-                  <UIcon :name="item.icon" class="size-5 text-sky-500" />
-                  <h3 class="mt-3 text-sm font-semibold text-slate-950 dark:text-white">{{ item.title }}</h3>
-                  <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ item.description }}</p>
+          <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
+            <main class="min-w-0 space-y-4">
+              <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+                <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+                  <div class="flex min-w-0 items-center gap-3">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-300">
+                      <UIcon name="i-lucide-megaphone" class="size-5" />
+                    </span>
+                    <div class="min-w-0">
+                      <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('site.announcements.title') }}</h2>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </section>
 
-            <aside class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('home.member.account.title') }}</h2>
-              <dl class="mt-4 space-y-3 text-sm">
-                <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.role') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">{{ user?.role.name || '-' }}</dd>
+                <div v-if="announcementsPending" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <div v-for="item in 3" :key="item" class="px-4 py-3">
+                    <div class="h-4 w-2/5 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                    <div class="mt-2 h-3 w-4/5 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                  </div>
                 </div>
-                <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.id') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">#{{ user?.user.id || '-' }}</dd>
+                <div v-else-if="announcementError" class="px-4 py-4 text-sm text-red-600 dark:text-red-300">
+                  {{ announcementError }}
                 </div>
-              </dl>
-              <UButton class="mt-5" color="neutral" variant="outline" icon="i-lucide-user-round" block :to="localePath('/iam/users/me')">
-                {{ $t('home.member.account.action') }}
-              </UButton>
+                <div v-else-if="announcements.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                  {{ $t('site.announcements.empty') }}
+                </div>
+                <div v-else class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <article
+                    v-for="item in announcements"
+                    :key="item.id"
+                    class="flex items-start gap-2 px-4 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-950/60"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                      class="group flex min-w-0 flex-1 cursor-pointer gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 dark:focus-visible:ring-sky-700"
+                      @click="openAnnouncement(item)"
+                      @keydown.enter.prevent="openAnnouncement(item)"
+                      @keydown.space.prevent="openAnnouncement(item)"
+                    >
+                      <span class="mt-2 size-2 shrink-0 rounded-full transition" :class="item.isRead ? 'bg-slate-300 dark:bg-slate-700' : 'bg-sky-500'" />
+                      <div class="min-w-0 flex-1">
+                        <div class="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                          <h3 class="truncate text-sm font-semibold text-slate-950 transition group-hover:text-sky-700 dark:text-white dark:group-hover:text-sky-300">{{ item.title }}</h3>
+                          <p class="shrink-0 text-xs text-slate-500 dark:text-slate-400">{{ formatRelativeDateTime(item.publishedAt || item.createdAt, locale) }}</p>
+                        </div>
+                        <div
+                          v-if="renderAnnouncementContent(item.content)"
+                          class="rich-text rich-text-compact mt-2 max-h-20 overflow-hidden text-sm leading-6 text-slate-600 dark:text-slate-300"
+                          v-html="renderAnnouncementContent(item.content)"
+                        />
+                      </div>
+                    </div>
+                    <UTooltip v-if="!item.isRead" :text="$t('site.announcements.markRead')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">
+                      <UButton class="shrink-0" color="neutral" variant="ghost" size="xs" icon="i-lucide-check" :loading="readingAnnouncementId === item.id" :aria-label="$t('site.announcements.markRead')" @click.stop="markAnnouncementRead(item)" />
+                    </UTooltip>
+                  </article>
+                </div>
+              </section>
+
+              <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+                <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+                  <div>
+                    <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.torrents.title') }}</h2>
+                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('home.member.torrents.subtitle') }}</p>
+                  </div>
+                </div>
+                <div v-if="torrentsPending" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <div v-for="item in 5" :key="item" class="px-4 py-3">
+                    <div class="h-4 w-3/4 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                    <div class="mt-2 h-3 w-1/2 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                  </div>
+                </div>
+                <div v-else-if="torrentsError" class="px-4 py-4 text-sm text-red-600 dark:text-red-300">{{ torrentsError }}</div>
+                <div v-else-if="torrents.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('home.member.empty') }}</div>
+                <div v-else>
+                  <NuxtLink v-for="torrent in torrents" :key="torrent.id" :to="localePath(`/catalog/torrents/${torrent.id}`)" class="grid gap-2 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_72px_48px_48px] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
+                    <div class="min-w-0">
+                      <div class="flex min-w-0 items-center gap-2">
+                        <span class="inline-flex h-5 max-w-24 shrink-0 items-center rounded border border-slate-200 bg-slate-50 px-1.5 text-[10px] font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">{{ torrentCategoryName(torrent) }}</span>
+                        <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ torrent.name || `#${torrent.id}` }}</p>
+                      </div>
+                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ formatRelativeDateTime(torrent.createdAt, locale) }} / {{ formatBytes(torrent.size) }}</p>
+                    </div>
+                    <p class="text-xs text-slate-500 sm:text-right dark:text-slate-400">{{ numberFormatter.format(torrent.snatched) }}</p>
+                    <p class="text-xs font-semibold text-emerald-600 sm:text-right dark:text-emerald-400">{{ numberFormatter.format(torrent.seeders) }}</p>
+                    <p class="text-xs font-semibold text-sky-600 sm:text-right dark:text-sky-400">{{ numberFormatter.format(torrent.leechers) }}</p>
+                  </NuxtLink>
+                </div>
+              </section>
+
+              <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+                <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+                  <div>
+                    <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.forum.title') }}</h2>
+                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('home.member.forum.subtitle') }}</p>
+                  </div>
+                </div>
+                <div v-if="topicsPending" class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <div v-for="item in 5" :key="item" class="px-4 py-3">
+                    <div class="h-4 w-3/4 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                    <div class="mt-2 h-3 w-1/2 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                  </div>
+                </div>
+                <div v-else-if="topicsError" class="px-4 py-4 text-sm text-red-600 dark:text-red-300">{{ topicsError }}</div>
+                <div v-else-if="dashboardTopics.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('home.member.empty') }}</div>
+                <div v-else>
+                  <NuxtLink v-for="topic in dashboardTopics" :key="topic.id" :to="localePath(`/forum/topics/${topic.id}`)" class="grid gap-2 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_64px_64px] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ topic.subject || `#${topic.id}` }}</p>
+                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ topicNodeName(topic) }} / {{ topic.author?.username || '-' }} / {{ formatRelativeDateTime(topic.createdAt, locale) }}</p>
+                    </div>
+                    <p class="text-xs text-slate-500 sm:text-right dark:text-slate-400">{{ numberFormatter.format(topic.views) }}</p>
+                    <p class="text-xs font-semibold text-slate-700 sm:text-right dark:text-slate-200">{{ numberFormatter.format(topic.replyCount) }}</p>
+                  </NuxtLink>
+                </div>
+              </section>
+            </main>
+
+            <aside class="space-y-4">
+              <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.account.title') }}</h2>
+                <dl class="mt-4 space-y-3 text-sm">
+                  <div class="flex items-center justify-between gap-3">
+                    <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.role') }}</dt>
+                    <dd class="font-medium text-slate-950 dark:text-white">{{ user?.role.name || '-' }}</dd>
+                  </div>
+                  <div class="flex items-center justify-between gap-3">
+                    <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.id') }}</dt>
+                    <dd class="font-medium text-slate-950 dark:text-white">#{{ user?.user.id || '-' }}</dd>
+                  </div>
+                </dl>
+                <UButton class="mt-4" color="neutral" variant="outline" icon="i-lucide-user-round" block :to="localePath('/iam/users/me')">
+                  {{ $t('home.member.account.action') }}
+                </UButton>
+              </section>
+
+              <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.quickActions') }}</h2>
+                <div class="mt-3 grid gap-2">
+                  <NuxtLink v-for="action in memberActions" :key="action.to" :to="localePath(action.to)" class="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm transition hover:border-sky-300 hover:bg-sky-50/70 dark:border-slate-800 dark:hover:border-sky-800 dark:hover:bg-sky-950/30">
+                    <span class="flex size-8 items-center justify-center rounded-md" :class="action.iconClass">
+                      <UIcon :name="action.icon" class="size-4" />
+                    </span>
+                    <span class="min-w-0 flex-1 truncate font-medium text-slate-700 dark:text-slate-200">{{ action.title }}</span>
+                    <UIcon name="i-lucide-arrow-right" class="size-4 text-slate-400" />
+                  </NuxtLink>
+                </div>
+              </section>
             </aside>
           </div>
         </div>
       </section>
     </template>
+
+    <UModal
+      :open="announcementModalOpen"
+      :title="selectedAnnouncement?.title || $t('site.announcements.title')"
+      :description="selectedAnnouncementDescription"
+      :ui="{
+        content: 'sm:max-w-3xl overflow-hidden',
+        header: 'min-h-0 px-5 py-4 sm:px-5',
+        body: 'p-0 sm:p-0',
+        title: 'text-base font-semibold text-slate-950 dark:text-white',
+        description: 'mt-1 text-sm text-slate-500 dark:text-slate-400',
+        close: 'top-4 end-4'
+      }"
+      @update:open="setAnnouncementModalOpen"
+    >
+      <template #body>
+        <div class="max-h-[70vh] overflow-auto px-5 py-4">
+          <div
+            v-if="selectedAnnouncementContent"
+            class="rich-text"
+            v-html="selectedAnnouncementContent"
+          />
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useCatalogTorrents, type TorrentHotItem } from '~/composables/useCatalogTorrents'
+import { ApiError } from '~/composables/useApi'
+import type { SiteAnnouncement } from '~/composables/useSite'
+import { useForum, type ForumTopicHotItem } from '~/composables/useForum'
+import { formatBytes, formatDateTime, formatRelativeDateTime, localizeI18nName } from '~/utils/format'
+import { renderUserMarkdown } from '~/utils/richText'
+
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { isLoggedIn, user } = useAuth()
+const siteApi = useSite()
+const catalogApi = useCatalogTorrents()
+const forumApi = useForum()
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
+const announcements = ref<SiteAnnouncement[]>([])
+const announcementsPending = ref(false)
+const announcementError = ref('')
+const readingAnnouncementId = ref(0)
+const announcementModalOpen = ref(false)
+const selectedAnnouncement = ref<SiteAnnouncement | null>(null)
+const torrents = ref<TorrentHotItem[]>([])
+const torrentsPending = ref(false)
+const torrentsError = ref('')
+const dashboardTopics = ref<ForumTopicHotItem[]>([])
+const topicsPending = ref(false)
+const topicsError = ref('')
+
+onMounted(() => {
+  if (isLoggedIn.value) {
+    void loadMemberDashboard()
+  }
+})
+
+watch(isLoggedIn, (value) => {
+  if (value) {
+    void loadMemberDashboard()
+    return
+  }
+  announcements.value = []
+  torrents.value = []
+  dashboardTopics.value = []
+  announcementError.value = ''
+  torrentsError.value = ''
+  topicsError.value = ''
+})
 
 const guestStats = computed(() => [
   { label: t('home.guest.stats.privacy'), value: t('home.guest.stats.privacyValue') },
@@ -308,23 +492,139 @@ const memberActions = computed(() => [
   }
 ])
 
-const memberNext = computed(() => [
-  {
-    title: t('home.member.next.items.search.title'),
-    description: t('home.member.next.items.search.description'),
-    icon: 'i-lucide-search'
-  },
-  {
-    title: t('home.member.next.items.passkey.title'),
-    description: t('home.member.next.items.passkey.description'),
-    icon: 'i-lucide-key-round'
-  },
-  {
-    title: t('home.member.next.items.community.title'),
-    description: t('home.member.next.items.community.description'),
-    icon: 'i-lucide-message-square-heart'
+const memberStatCards = computed(() => {
+  const stats = user.value?.stat
+
+  return [
+    {
+      key: 'uploaded',
+      label: t('home.member.stats.uploaded'),
+      value: formatBytes(stats?.uploaded),
+      icon: 'i-lucide-upload',
+      iconClass: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+    },
+    {
+      key: 'downloaded',
+      label: t('home.member.stats.downloaded'),
+      value: formatBytes(stats?.downloaded),
+      icon: 'i-lucide-download',
+      iconClass: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300'
+    },
+    {
+      key: 'ratio',
+      label: t('home.member.stats.ratio'),
+      value: formatRatio(stats?.shareRatio),
+      icon: 'i-lucide-scale',
+      iconClass: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
+    },
+    {
+      key: 'bonus',
+      label: t('home.member.stats.bonus'),
+      value: numberFormatter.value.format(Number(stats?.bonus || 0)),
+      icon: 'i-lucide-coins',
+      iconClass: 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'
+    }
+  ]
+})
+
+const selectedAnnouncementContent = computed(() => renderAnnouncementContent(selectedAnnouncement.value?.content || ''))
+const selectedAnnouncementDescription = computed(() => {
+  const item = selectedAnnouncement.value
+  if (!item) return ''
+  return formatDateTime(item.publishedAt || item.createdAt, locale.value)
+})
+
+async function loadMemberDashboard() {
+  await Promise.allSettled([
+    loadAnnouncements(),
+    loadTorrentDashboard(),
+    loadForumDashboard()
+  ])
+}
+
+async function loadAnnouncements() {
+  announcementsPending.value = true
+  announcementError.value = ''
+  try {
+    const data = await siteApi.listAnnouncements({ page: 1, size: 5 })
+    announcements.value = data.list || []
+  } catch (error) {
+    announcements.value = []
+    announcementError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    announcementsPending.value = false
   }
-])
+}
+
+async function markAnnouncementRead(item: SiteAnnouncement) {
+  if (item.isRead) return
+
+  readingAnnouncementId.value = item.id
+  try {
+    await siteApi.markAnnouncementRead(item.id)
+    item.isRead = true
+  } finally {
+    readingAnnouncementId.value = 0
+  }
+}
+
+function openAnnouncement(item: SiteAnnouncement) {
+  selectedAnnouncement.value = item
+  announcementModalOpen.value = true
+  if (!item.isRead) {
+    void markAnnouncementRead(item)
+  }
+}
+
+function setAnnouncementModalOpen(value: boolean) {
+  announcementModalOpen.value = value
+}
+
+async function loadTorrentDashboard() {
+  torrentsPending.value = true
+  torrentsError.value = ''
+  try {
+    const torrentData = await catalogApi.listHotTorrents(5)
+    torrents.value = torrentData.list || []
+  } catch (error) {
+    torrents.value = []
+    torrentsError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    torrentsPending.value = false
+  }
+}
+
+async function loadForumDashboard() {
+  topicsPending.value = true
+  topicsError.value = ''
+  try {
+    const data = await forumApi.listHotTopics(5)
+    dashboardTopics.value = data.list || []
+  } catch (error) {
+    dashboardTopics.value = []
+    topicsError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    topicsPending.value = false
+  }
+}
+
+function renderAnnouncementContent(content: string) {
+  return renderUserMarkdown(content || '').trim()
+}
+
+function torrentCategoryName(torrent: TorrentHotItem) {
+  const category = torrent.category
+  return category ? localizeI18nName(category.name, locale.value, category.slug || `#${category.id}`) : `#${torrent.categoryId}`
+}
+
+function topicNodeName(topic: ForumTopicHotItem) {
+  return localizeI18nName(topic.node?.nameI18n, locale.value, topic.node?.slug || `#${topic.node?.id || ''}`)
+}
+
+function formatRatio(value?: number | null) {
+  const ratio = Number(value || 0)
+  return Number.isFinite(ratio) ? ratio.toFixed(2) : '-'
+}
 
 useSeoMeta({
   title: t('home.metaTitle'),

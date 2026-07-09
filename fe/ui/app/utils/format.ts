@@ -41,6 +41,32 @@ export function formatDateOnly(value?: string | null, locale?: string) {
   }
 }
 
+export function formatRelativeDateTime(value?: string | null, locale?: string) {
+  const date = parseDateTime(value)
+  if (!date) return '-'
+
+  const formatter = new Intl.RelativeTimeFormat(locale || undefined, { numeric: 'auto' })
+  const diffSeconds = Math.round((date.getTime() - Date.now()) / 1000)
+  const absSeconds = Math.abs(diffSeconds)
+
+  if (absSeconds < 45) return formatter.format(0, 'second')
+  if (absSeconds < 45 * 60) return formatter.format(Math.round(diffSeconds / 60), 'minute')
+  if (absSeconds < 22 * 60 * 60) return formatter.format(Math.round(diffSeconds / 60 / 60), 'hour')
+  if (absSeconds < 30 * 24 * 60 * 60) return formatter.format(Math.round(diffSeconds / 60 / 60 / 24), 'day')
+  if (absSeconds < 12 * 30 * 24 * 60 * 60) return formatter.format(Math.round(diffSeconds / 60 / 60 / 24 / 30), 'month')
+  return formatter.format(Math.round(diffSeconds / 60 / 60 / 24 / 365), 'year')
+}
+
+export function parseDateTime(value?: string | null) {
+  if (!value) return null
+
+  const date = new Date(value)
+  if (!Number.isNaN(date.getTime())) return date
+
+  const normalizedDate = new Date(value.replace(' ', 'T'))
+  return Number.isNaN(normalizedDate.getTime()) ? null : normalizedDate
+}
+
 export function localizeI18nName(name: I18nName | null | undefined, locale: string, fallback = '-') {
   if (!name) return fallback
 

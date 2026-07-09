@@ -32,6 +32,8 @@ type (
 		KeyTrackerSeedingUsers(ctx context.Context) string
 		KeyIamPasskeyActor(ctx context.Context, passkey string) string
 		KeyCatalogTorrentInfoHash(ctx context.Context, hexInfoHash string) string
+		KeyCatalogHotTorrents(ctx context.Context) string
+		KeyForumHotTopics(ctx context.Context) string
 		KeyTrackerLockPeer(ctx context.Context, torrentId uint64, userId uint64, peerId string) string
 		KeyTrackerAnnounceQueue(ctx context.Context) string
 		KeyTrackerAnnounceDedup(ctx context.Context, digest string) string

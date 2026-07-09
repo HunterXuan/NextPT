@@ -19,6 +19,10 @@ type TorrentListInp struct {
 	CategoryIds []uint `json:"categoryIds" description:"分类ID列表(可选)"`
 }
 
+type TorrentGetHotInp struct {
+	Size int `json:"size" d:"5" v:"min:1|max:10" description:"返回数量"`
+}
+
 type TorrentDownloadInp struct {
 	Id uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
 }

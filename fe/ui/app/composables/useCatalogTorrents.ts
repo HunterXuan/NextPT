@@ -92,6 +92,10 @@ export interface TorrentListItem {
   createdAt: string
 }
 
+export type TorrentHotItem = Omit<TorrentListItem, 'owner' | 'anonymous'> & {
+  category?: CatalogCategory | null
+}
+
 export interface TorrentDetail extends TorrentListItem {
   description: string
   releaseFields?: Record<string, unknown> | null
@@ -179,6 +183,11 @@ export interface TorrentListOut {
   total: number
 }
 
+export interface TorrentHotListOut {
+  list: TorrentHotItem[]
+  total: number
+}
+
 export interface TorrentBookmarkListOut {
   list: TorrentListItem[]
   total: number
@@ -246,6 +255,12 @@ export function useCatalogTorrents() {
     if (params.categoryIds?.length) query['categoryIds[]'] = params.categoryIds
 
     return await fetchApi<TorrentListOut>('/api/catalog/torrents', { query })
+  }
+
+  async function listHotTorrents(size = 5) {
+    return await fetchApi<TorrentHotListOut>('/api/catalog/torrents:getHot', {
+      query: { size }
+    })
   }
 
   async function listBookmarks(page = 1, size = 20) {
@@ -411,6 +426,7 @@ export function useCatalogTorrents() {
   return {
     listCategories,
     listTorrents,
+    listHotTorrents,
     listBookmarks,
     getTorrent,
     listFiles,

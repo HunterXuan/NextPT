@@ -27,6 +27,7 @@ type ICatalogV1 interface {
 	SubtitleReport(ctx context.Context, req *v1.SubtitleReportReq) (res *v1.SubtitleReportRes, err error)
 	TorrentUpload(ctx context.Context, req *v1.TorrentUploadReq) (res *v1.TorrentUploadRes, err error)
 	TorrentList(ctx context.Context, req *v1.TorrentListReq) (res *v1.TorrentListRes, err error)
+	TorrentGetHot(ctx context.Context, req *v1.TorrentGetHotReq) (res *v1.TorrentGetHotRes, err error)
 	TorrentGet(ctx context.Context, req *v1.TorrentGetReq) (res *v1.TorrentGetRes, err error)
 	TorrentDownload(ctx context.Context, req *v1.TorrentDownloadReq) (res *v1.TorrentDownloadRes, err error)
 	TorrentReward(ctx context.Context, req *v1.TorrentRewardReq) (res *v1.TorrentRewardRes, err error)

@@ -10,6 +10,10 @@ type TopicListInp struct {
 	Size int    `json:"size" d:"20"`
 }
 
+type TopicGetHotInp struct {
+	Size int `json:"size" d:"5" v:"min:1|max:10"`
+}
+
 type TopicCreateInp struct {
 	NodeId  uint   `json:"nodeId" v:"required"`
 	Subject string `json:"subject" v:"required|length:2,200"`
