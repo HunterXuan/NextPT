@@ -114,52 +114,15 @@
 
     <template v-else>
       <section class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-        <div class="w-full px-3 sm:px-4 lg:px-5">
-          <div class="mb-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ $t('home.member.eyebrow') }}</p>
-              <h1 class="mt-1 text-2xl font-semibold text-slate-950 dark:text-white">
-                {{ $t('home.member.title', { name: user?.user.username || $t('nav.user') }) }}
-              </h1>
-              <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $t('home.member.description') }}</p>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2">
-              <UButton color="primary" icon="i-lucide-library" :to="localePath('/catalog/torrents')">
-                {{ $t('nav.catalog') }}
-              </UButton>
-              <UButton color="neutral" variant="outline" icon="i-lucide-square-pen" :to="localePath('/forum/topics/create')">
-                {{ $t('forum.actions.createTopic') }}
-              </UButton>
-            </div>
-          </div>
-
-          <div class="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <div v-for="item in memberStatCards" :key="item.key" class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</p>
-                  <p class="mt-1 text-lg font-semibold text-slate-950 dark:text-white">{{ item.value }}</p>
-                </div>
-                <span class="flex size-9 items-center justify-center rounded-md" :class="item.iconClass">
-                  <UIcon :name="item.icon" class="size-5" />
-                </span>
-              </div>
-            </div>
-          </div>
-
+        <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-5">
           <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
             <main class="min-w-0 space-y-4">
               <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
                 <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-300">
-                      <UIcon name="i-lucide-megaphone" class="size-5" />
-                    </span>
-                    <div class="min-w-0">
-                      <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('site.announcements.title') }}</h2>
-                    </div>
-                  </div>
+                  <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('site.announcements.title') }}</h2>
+                  <span v-if="unreadAnnouncementCount > 0" class="rounded-full bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+                    {{ numberFormatter.format(unreadAnnouncementCount) }}
+                  </span>
                 </div>
 
                 <div v-if="announcementsPending" class="divide-y divide-slate-100 dark:divide-slate-800">
@@ -212,8 +175,10 @@
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
                   <div>
                     <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.torrents.title') }}</h2>
-                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('home.member.torrents.subtitle') }}</p>
                   </div>
+                  <UButton color="neutral" variant="ghost" size="xs" :to="localePath('/catalog/torrents')">
+                    {{ $t('home.member.viewAll') }}
+                  </UButton>
                 </div>
                 <div v-if="torrentsPending" class="divide-y divide-slate-100 dark:divide-slate-800">
                   <div v-for="item in 5" :key="item" class="px-4 py-3">
@@ -224,7 +189,7 @@
                 <div v-else-if="torrentsError" class="px-4 py-4 text-sm text-red-600 dark:text-red-300">{{ torrentsError }}</div>
                 <div v-else-if="torrents.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('home.member.empty') }}</div>
                 <div v-else>
-                  <NuxtLink v-for="torrent in torrents" :key="torrent.id" :to="localePath(`/catalog/torrents/${torrent.id}`)" class="grid gap-2 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_72px_48px_48px] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
+                  <NuxtLink v-for="torrent in torrents" :key="torrent.id" :to="localePath(`/catalog/torrents/${torrent.id}`)" class="grid gap-3 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
                     <div class="min-w-0">
                       <div class="flex min-w-0 items-center gap-2">
                         <span class="inline-flex h-5 max-w-24 shrink-0 items-center rounded border border-slate-200 bg-slate-50 px-1.5 text-[10px] font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">{{ torrentCategoryName(torrent) }}</span>
@@ -232,9 +197,14 @@
                       </div>
                       <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ formatRelativeDateTime(torrent.createdAt, locale) }} / {{ formatBytes(torrent.size) }}</p>
                     </div>
-                    <p class="text-xs text-slate-500 sm:text-right dark:text-slate-400">{{ numberFormatter.format(torrent.snatched) }}</p>
-                    <p class="text-xs font-semibold text-emerald-600 sm:text-right dark:text-emerald-400">{{ numberFormatter.format(torrent.seeders) }}</p>
-                    <p class="text-xs font-semibold text-sky-600 sm:text-right dark:text-sky-400">{{ numberFormatter.format(torrent.leechers) }}</p>
+                    <div class="flex items-center gap-3 text-xs sm:justify-end">
+                      <UTooltip v-for="metric in torrentMetrics(torrent)" :key="metric.key" :text="metric.label" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">
+                        <span class="inline-flex items-center gap-1 font-medium" :class="metric.class">
+                          <UIcon :name="metric.icon" class="size-3.5" />
+                          <span class="tabular-nums">{{ numberFormatter.format(metric.value) }}</span>
+                        </span>
+                      </UTooltip>
+                    </div>
                   </NuxtLink>
                 </div>
               </section>
@@ -243,8 +213,10 @@
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
                   <div>
                     <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.forum.title') }}</h2>
-                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('home.member.forum.subtitle') }}</p>
                   </div>
+                  <UButton color="neutral" variant="ghost" size="xs" :to="localePath('/forum')">
+                    {{ $t('home.member.viewAll') }}
+                  </UButton>
                 </div>
                 <div v-if="topicsPending" class="divide-y divide-slate-100 dark:divide-slate-800">
                   <div v-for="item in 5" :key="item" class="px-4 py-3">
@@ -255,46 +227,63 @@
                 <div v-else-if="topicsError" class="px-4 py-4 text-sm text-red-600 dark:text-red-300">{{ topicsError }}</div>
                 <div v-else-if="dashboardTopics.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('home.member.empty') }}</div>
                 <div v-else>
-                  <NuxtLink v-for="topic in dashboardTopics" :key="topic.id" :to="localePath(`/forum/topics/${topic.id}`)" class="grid gap-2 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_64px_64px] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
+                  <NuxtLink v-for="topic in dashboardTopics" :key="topic.id" :to="localePath(`/forum/topics/${topic.id}`)" class="grid gap-3 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
                     <div class="min-w-0">
                       <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ topic.subject || `#${topic.id}` }}</p>
-                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ topicNodeName(topic) }} / {{ topic.author?.username || '-' }} / {{ formatRelativeDateTime(topic.createdAt, locale) }}</p>
+                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ topicNodeName(topic) }} / {{ topic.author?.username || '-' }} / {{ formatRelativeDateTime(topicLastActivityAt(topic), locale) }}</p>
                     </div>
-                    <p class="text-xs text-slate-500 sm:text-right dark:text-slate-400">{{ numberFormatter.format(topic.views) }}</p>
-                    <p class="text-xs font-semibold text-slate-700 sm:text-right dark:text-slate-200">{{ numberFormatter.format(topic.replyCount) }}</p>
+                    <div class="flex items-center gap-3 text-xs sm:justify-end">
+                      <UTooltip :text="$t('home.member.metrics.views')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">
+                        <span class="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400">
+                          <UIcon name="i-lucide-eye" class="size-3.5" />
+                          <span class="tabular-nums">{{ numberFormatter.format(topic.views) }}</span>
+                        </span>
+                      </UTooltip>
+                      <UTooltip :text="$t('home.member.metrics.replies')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">
+                        <span class="inline-flex items-center gap-1 font-medium text-slate-700 dark:text-slate-200">
+                          <UIcon name="i-lucide-message-square" class="size-3.5" />
+                          <span class="tabular-nums">{{ numberFormatter.format(topic.replyCount) }}</span>
+                        </span>
+                      </UTooltip>
+                    </div>
                   </NuxtLink>
                 </div>
               </section>
             </main>
 
-            <aside class="space-y-4">
+            <aside>
               <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.account.title') }}</h2>
-                <dl class="mt-4 space-y-3 text-sm">
-                  <div class="flex items-center justify-between gap-3">
-                    <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.role') }}</dt>
-                    <dd class="font-medium text-slate-950 dark:text-white">{{ user?.role.name || '-' }}</dd>
+                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.mySite') }}</h2>
+                <div class="mt-4 flex items-center gap-3">
+                  <IamUserAvatar :id="user?.user.id" :username="user?.user.username" :avatar="user?.profile.avatar" size="lg" />
+                  <div class="min-w-0">
+                    <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ user?.user.username || '-' }}</p>
+                    <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ user?.role.name || '-' }} / #{{ user?.user.id || '-' }}</p>
                   </div>
-                  <div class="flex items-center justify-between gap-3">
-                    <dt class="text-slate-500 dark:text-slate-400">{{ $t('user.fields.id') }}</dt>
-                    <dd class="font-medium text-slate-950 dark:text-white">#{{ user?.user.id || '-' }}</dd>
-                  </div>
-                </dl>
-                <UButton class="mt-4" color="neutral" variant="outline" icon="i-lucide-user-round" block :to="localePath('/iam/users/me')">
-                  {{ $t('home.member.account.action') }}
-                </UButton>
-              </section>
+                </div>
 
-              <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('home.member.quickActions') }}</h2>
-                <div class="mt-3 grid gap-2">
-                  <NuxtLink v-for="action in memberActions" :key="action.to" :to="localePath(action.to)" class="flex items-center gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm transition hover:border-sky-300 hover:bg-sky-50/70 dark:border-slate-800 dark:hover:border-sky-800 dark:hover:bg-sky-950/30">
-                    <span class="flex size-8 items-center justify-center rounded-md" :class="action.iconClass">
-                      <UIcon :name="action.icon" class="size-4" />
-                    </span>
-                    <span class="min-w-0 flex-1 truncate font-medium text-slate-700 dark:text-slate-200">{{ action.title }}</span>
-                    <UIcon name="i-lucide-arrow-right" class="size-4 text-slate-400" />
-                  </NuxtLink>
+                <div class="mt-4 grid grid-cols-2 gap-2">
+                  <div v-for="item in memberStatCards" :key="item.key" class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
+                    <div class="flex items-center justify-between gap-2">
+                      <p class="text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</p>
+                      <UIcon :name="item.icon" class="size-3.5 text-slate-400" />
+                    </div>
+                    <p class="mt-1 truncate text-sm font-semibold tabular-nums text-slate-950 dark:text-white">{{ item.value }}</p>
+                  </div>
+                </div>
+
+                <div class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+                  <h3 class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('home.member.quickActions') }}</h3>
+                  <div class="mt-3 grid grid-cols-2 gap-2">
+                    <NuxtLink v-for="action in memberActions" :key="action.to" :to="localePath(action.to)" class="rounded-md border border-slate-200 px-3 py-2 text-sm transition hover:border-sky-300 hover:bg-sky-50/70 dark:border-slate-800 dark:hover:border-sky-800 dark:hover:bg-sky-950/30">
+                      <div class="flex items-center gap-2">
+                        <span class="flex size-7 shrink-0 items-center justify-center rounded-md" :class="action.iconClass">
+                          <UIcon :name="action.icon" class="size-4" />
+                        </span>
+                        <span class="min-w-0 flex-1 truncate font-medium text-slate-700 dark:text-slate-200">{{ action.title }}</span>
+                      </div>
+                    </NuxtLink>
+                  </div>
                 </div>
               </section>
             </aside>
@@ -533,6 +522,7 @@ const selectedAnnouncementDescription = computed(() => {
   if (!item) return ''
   return formatDateTime(item.publishedAt || item.createdAt, locale.value)
 })
+const unreadAnnouncementCount = computed(() => announcements.value.filter(item => !item.isRead).length)
 
 async function loadMemberDashboard() {
   await Promise.allSettled([
@@ -619,6 +609,36 @@ function torrentCategoryName(torrent: TorrentHotItem) {
 
 function topicNodeName(topic: ForumTopicHotItem) {
   return localizeI18nName(topic.node?.nameI18n, locale.value, topic.node?.slug || `#${topic.node?.id || ''}`)
+}
+
+function torrentMetrics(torrent: TorrentHotItem) {
+  return [
+    {
+      key: 'snatched',
+      label: t('home.member.metrics.snatched'),
+      value: Number(torrent.snatched || 0),
+      icon: 'i-lucide-check',
+      class: 'text-slate-500 dark:text-slate-400'
+    },
+    {
+      key: 'seeders',
+      label: t('home.member.metrics.seeders'),
+      value: Number(torrent.seeders || 0),
+      icon: 'i-lucide-upload',
+      class: 'text-emerald-600 dark:text-emerald-400'
+    },
+    {
+      key: 'leechers',
+      label: t('home.member.metrics.leechers'),
+      value: Number(torrent.leechers || 0),
+      icon: 'i-lucide-download',
+      class: 'text-sky-600 dark:text-sky-400'
+    }
+  ]
+}
+
+function topicLastActivityAt(topic: ForumTopicHotItem) {
+  return Number(topic.replyCount || 0) > 0 && topic.lastReplyAt ? topic.lastReplyAt : topic.createdAt
 }
 
 function formatRatio(value?: number | null) {

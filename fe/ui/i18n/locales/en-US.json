@@ -194,25 +194,28 @@
       }
     },
     "member": {
-      "eyebrow": "Site workspace",
-      "title": "Welcome back, {name}",
-      "description": "Catch up on announcements, recent torrents, forum activity, and your sharing data.",
       "viewAll": "View all",
       "empty": "Nothing here yet",
+      "mySite": "Profile overview",
       "quickActions": "Quick actions",
       "torrents": {
-        "title": "Torrent activity",
-        "subtitle": "Resources with stronger recent activity."
+        "title": "Torrent activity"
       },
       "forum": {
-        "title": "Forum activity",
-        "subtitle": "Topics with more recent discussion."
+        "title": "Forum activity"
       },
       "stats": {
         "uploaded": "Uploaded",
         "downloaded": "Downloaded",
         "ratio": "Ratio",
         "bonus": "Bonus"
+      },
+      "metrics": {
+        "snatched": "Completed",
+        "seeders": "Seeders",
+        "leechers": "Leechers",
+        "views": "Views",
+        "replies": "Replies"
       },
       "actions": {
         "catalog": {

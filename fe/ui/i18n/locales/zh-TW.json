@@ -194,25 +194,28 @@
       }
     },
     "member": {
-      "eyebrow": "站點工作台",
-      "title": "歡迎回來，{name}",
-      "description": "從這裡快速看到站點公告、近期資源、論壇動態和自己的分享資料。",
       "viewAll": "查看全部",
       "empty": "暫時沒有內容",
+      "mySite": "個人概覽",
       "quickActions": "快捷入口",
       "torrents": {
-        "title": "種子動態",
-        "subtitle": "近期熱度較高的資源。"
+        "title": "種子動態"
       },
       "forum": {
-        "title": "論壇動態",
-        "subtitle": "最近討論較多的主題。"
+        "title": "論壇動態"
       },
       "stats": {
         "uploaded": "上傳",
         "downloaded": "下載",
         "ratio": "分享率",
         "bonus": "魔力值"
+      },
+      "metrics": {
+        "snatched": "完成",
+        "seeders": "做種",
+        "leechers": "下載",
+        "views": "瀏覽",
+        "replies": "回覆"
       },
       "actions": {
         "catalog": {
