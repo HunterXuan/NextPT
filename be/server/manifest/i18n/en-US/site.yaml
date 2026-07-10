@@ -1,18 +1,43 @@
-site.message.catalog_comment.title: New comment on your torrent
-site.message.forum_topic_reply.title: New reply to your topic
-site.message.forum_reply_reply.title: New reply to your post
-site.message.reward.title: You received a reward
-site.message.reward.content: You received a reward of %v bonus
-site.message.report.accepted.title: Your report has been reviewed
+site.message.catalog_comment.title: New comment on torrent "%s"
+site.message.forum_topic_reply.title: New reply to topic "%s"
+site.message.forum_reply_reply.title: New response to your reply in "%s"
+site.message.reward.catalog_torrent.title: Your torrent received a reward
+site.message.reward.catalog_comment.title: Your comment received a reward
+site.message.reward.forum_topic.title: Your topic received a reward
+site.message.reward.forum_reply.title: Your reply received a reward
+site.message.reward.content: Received %v bonus
+site.message.report.accepted.title: Report accepted
 site.message.report.accepted.content: Your report was accepted
-site.message.report.rejected.title: Your report has been reviewed
+site.message.report.rejected.title: Report not accepted
 site.message.report.rejected.content: Your report was not accepted
+site.message.report.comment.content: "Handling note:\n\n%s"
 site.message.restriction.applied.title: Account restriction notice
+site.message.restriction.applied.warned.title: You received an account warning
+site.message.restriction.applied.banned.title: Account banned
+site.message.restriction.applied.leech_warned.title: You received a low-ratio warning
+site.message.restriction.applied.upload_banned.title: Upload access restricted
+site.message.restriction.applied.download_banned.title: Download access restricted
+site.message.restriction.applied.forum_banned.title: Forum access restricted
+site.message.restriction.applied.permanent.content: "Duration: Permanent\n\nReason: %s"
+site.message.restriction.applied.temporary.content: "Valid until: %s\n\nReason: %s"
 site.message.restriction.removed.title: Account restriction removed
-site.message.restriction.removed.content: An administrator removed your account restriction
-site.message.restriction.expired.content: Your account restriction expired and was removed automatically
-site.message.rank.promoted.title: Account rank promoted
-site.message.rank.demoted.title: Account rank demoted
-site.message.rank.changed.content: "Current rank: %s"
-site.message.rank.auto_banned.title: Account restricted automatically
-site.message.rank.auto_banned.content: Your account was restricted because it no longer meets the minimum rank requirements
+site.message.restriction.removed.warned.title: Account warning withdrawn
+site.message.restriction.removed.banned.title: Account ban removed
+site.message.restriction.removed.leech_warned.title: Low-ratio warning withdrawn
+site.message.restriction.removed.upload_banned.title: Upload restriction removed
+site.message.restriction.removed.download_banned.title: Download restriction removed
+site.message.restriction.removed.forum_banned.title: Forum restriction removed
+site.message.restriction.removed.content: An administrator removed this restriction
+site.message.restriction.expired.title: Account restriction expired
+site.message.restriction.expired.warned.title: Account warning expired
+site.message.restriction.expired.banned.title: Account ban expired
+site.message.restriction.expired.leech_warned.title: Low-ratio warning expired
+site.message.restriction.expired.upload_banned.title: Upload restriction expired
+site.message.restriction.expired.download_banned.title: Download restriction expired
+site.message.restriction.expired.forum_banned.title: Forum restriction expired
+site.message.restriction.expired.content: This restriction expired and was removed automatically
+site.message.rank.promoted.title: Your rank was promoted
+site.message.rank.demoted.title: Your rank was demoted
+site.message.rank.changed.content: "%s → %s"
+site.message.rank.auto_banned.title: Account banned automatically
+site.message.rank.auto_banned.content: Your account was banned because it no longer meets the minimum rank requirements

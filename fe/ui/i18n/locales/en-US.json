@@ -89,6 +89,7 @@
       "openTarget": "Open related item",
       "selectHint": "Select a message to read it",
       "noContent": "No message body",
+      "systemSender": "System",
       "filters": {
         "all": "All",
         "unread": "Unread"

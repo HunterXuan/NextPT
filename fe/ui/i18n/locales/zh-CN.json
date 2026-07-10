@@ -89,6 +89,7 @@
       "openTarget": "打开相关内容",
       "selectHint": "选择一条消息查看完整内容",
       "noContent": "无正文内容",
+      "systemSender": "系统",
       "filters": {
         "all": "全部",
         "unread": "未读"

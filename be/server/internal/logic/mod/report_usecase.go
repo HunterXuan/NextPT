@@ -140,7 +140,6 @@ func (s *sModReportUsecase) Resolve(ctx context.Context, actor *model.Actor, in 
 	target := s.loadReportTargetSummaryMap(ctx, []entity.ModReport{*report})[report.Id]
 	targetType, targetId := target.SiteMessageTarget()
 	notifyInp := sitein.MessageNotifyInp{
-		SenderId:   actor.Id,
 		ReceiverId: report.ReporterId,
 		TitleKey:   titleKey,
 		Content:    content,
@@ -149,6 +148,10 @@ func (s *sModReportUsecase) Resolve(ctx context.Context, actor *model.Actor, in 
 	}
 	if content == "" {
 		notifyInp.ContentKey = contentKey
+	} else {
+		notifyInp.Content = ""
+		notifyInp.ContentKey = "site.message.report.comment.content"
+		notifyInp.ContentArgs = []any{content}
 	}
 	service.SiteMessageUsecase().Notify(ctx, notifyInp)
 	return nil

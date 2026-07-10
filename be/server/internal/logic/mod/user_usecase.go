@@ -2,6 +2,7 @@ package mod
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"server/internal/consts"
@@ -78,15 +79,19 @@ func (s *sModUserUsecase) Apply(ctx context.Context, actor *model.Actor, in modi
 
 	service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
 	notifyInp := sitein.MessageNotifyInp{
-		SenderId:   actor.Id,
-		ReceiverId: in.UserId,
-		TitleKey:   "site.message.restriction.applied.title",
-		Content:    in.Reason,
+		ReceiverId:  in.UserId,
+		TitleKey:    s.restrictionTitleKey("applied", in.ModType),
+		ContentKey:  "site.message.restriction.applied.permanent.content",
+		ContentArgs: []any{in.Reason},
+	}
+	if expireAt != nil {
+		notifyInp.ContentKey = "site.message.restriction.applied.temporary.content"
+		notifyInp.ContentArgs = []any{expireAt.Format("Y-m-d H:i"), in.Reason}
 	}
 	if in.Reason == consts.IamUserRankAutoBanReason {
 		notifyInp.TitleKey = "site.message.rank.auto_banned.title"
-		notifyInp.Content = ""
 		notifyInp.ContentKey = "site.message.rank.auto_banned.content"
+		notifyInp.ContentArgs = nil
 	}
 	service.SiteMessageUsecase().Notify(ctx, notifyInp)
 	return nil
@@ -104,6 +109,28 @@ func (s *sModUserUsecase) isValidModType(modType int) bool {
 	default:
 		return false
 	}
+}
+
+func (s *sModUserUsecase) restrictionTitleKey(action string, modType int) string {
+	typeKey := ""
+	switch modType {
+	case consts.ModUserTypeWarned:
+		typeKey = "warned"
+	case consts.ModUserTypeBanned:
+		typeKey = "banned"
+	case consts.ModUserTypeLeechWarned:
+		typeKey = "leech_warned"
+	case consts.ModUserTypeUploadBanned:
+		typeKey = "upload_banned"
+	case consts.ModUserTypeDownloadBanned:
+		typeKey = "download_banned"
+	case consts.ModUserTypeForumBanned:
+		typeKey = "forum_banned"
+	}
+	if typeKey == "" {
+		return fmt.Sprintf("site.message.restriction.%s.title", action)
+	}
+	return fmt.Sprintf("site.message.restriction.%s.%s.title", action, typeKey)
 }
 
 func (s *sModUserUsecase) getModDenyPermissions(modType int) []string {
@@ -173,9 +200,8 @@ func (s *sModUserUsecase) Remove(ctx context.Context, actor *model.Actor, in mod
 	}
 	service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:   actor.Id,
 		ReceiverId: in.UserId,
-		TitleKey:   "site.message.restriction.removed.title",
+		TitleKey:   s.restrictionTitleKey("removed", mod.ModType),
 		ContentKey: "site.message.restriction.removed.content",
 	})
 	return nil
@@ -224,9 +250,14 @@ func (s *sModUserUsecase) CleanupExpired(ctx context.Context) (int, error) {
 
 	for userId := range userIds {
 		service.IamUserUsecase().InvalidateUserCache(ctx, userId)
+	}
+	for _, record := range records {
+		if record.Id == 0 || record.UserId == 0 {
+			continue
+		}
 		service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-			ReceiverId: userId,
-			TitleKey:   "site.message.restriction.removed.title",
+			ReceiverId: record.UserId,
+			TitleKey:   s.restrictionTitleKey("expired", record.ModType),
 			ContentKey: "site.message.restriction.expired.content",
 		})
 	}

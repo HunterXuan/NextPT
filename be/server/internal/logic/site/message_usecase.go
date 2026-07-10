@@ -49,21 +49,24 @@ func (s *sSiteMessageUsecase) MarkAllRead(ctx context.Context, actor *model.Acto
 }
 
 func (s *sSiteMessageUsecase) Notify(ctx context.Context, in sitein.MessageNotifyInp) {
-	if in.ReceiverId == 0 || in.ReceiverId == in.SenderId {
+	if in.ReceiverId == 0 || in.ReceiverId == in.ActorId {
 		return
 	}
 
 	lang := g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String()
 	i18nCtx := gi18n.WithLanguage(ctx, lang)
+	title := gi18n.T(i18nCtx, in.TitleKey)
+	if len(in.TitleArgs) > 0 {
+		title = fmt.Sprintf(title, in.TitleArgs...)
+	}
 	content := in.Content
 	if in.ContentKey != "" {
 		content = fmt.Sprintf(gi18n.T(i18nCtx, in.ContentKey), in.ContentArgs...)
 	}
 
 	_, err := service.SiteMessageDomain().Create(ctx, sitein.MessageCreateInp{
-		SenderId:   in.SenderId,
 		ReceiverId: in.ReceiverId,
-		Title:      gi18n.T(i18nCtx, in.TitleKey),
+		Title:      title,
 		Content:    content,
 		TargetType: in.TargetType,
 		TargetId:   in.TargetId,
@@ -94,7 +97,6 @@ func (s *sSiteMessageUsecase) AdminCreate(ctx context.Context, actor *model.Acto
 	items := make([]sitein.MessageCreateInp, 0, len(receiverIds))
 	for _, receiverId := range receiverIds {
 		items = append(items, sitein.MessageCreateInp{
-			SenderId:   s.actorId(actor),
 			ReceiverId: receiverId,
 			Title:      in.Title,
 			Content:    in.Content,

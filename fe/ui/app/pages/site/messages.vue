@@ -66,9 +66,9 @@
                 </span>
                 <span class="min-w-0 flex-1">
                   <span class="flex min-w-0 items-center justify-between gap-3">
-                    <span class="min-w-0">
-                      <span class="truncate text-sm text-slate-950 dark:text-white" :class="item.isRead ? 'font-medium' : 'font-semibold'">{{ item.title }}</span>
-                    </span>
+                    <UTooltip class="min-w-0" :text="item.title" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
+                      <span class="block truncate text-sm text-slate-950 dark:text-white" :class="item.isRead ? 'font-medium' : 'font-semibold'">{{ item.title }}</span>
+                    </UTooltip>
                     <span class="shrink-0 text-xs text-slate-500 dark:text-slate-400">{{ formatRelativeDateTime(item.createdAt, locale) }}</span>
                   </span>
                   <span class="mt-1 block truncate text-sm leading-5 text-slate-500 dark:text-slate-400">{{ messageExcerpt(item) }}</span>
@@ -85,8 +85,8 @@
                     <UIcon name="i-lucide-mail-open" class="size-4" />
                   </span>
                   <div class="min-w-0">
-                    <h2 class="truncate text-base font-semibold text-slate-950 dark:text-white">{{ selectedMessage.title }}</h2>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(selectedMessage.createdAt, locale) }}</p>
+                    <h2 class="break-words text-base font-semibold text-slate-950 dark:text-white">{{ selectedMessage.title }}</h2>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ messageSender(selectedMessage) }} / {{ formatDateTime(selectedMessage.createdAt, locale) }}</p>
                   </div>
                 </div>
               </div>
@@ -215,6 +215,11 @@ function changeSize(nextSize: number) {
 
 function messageExcerpt(item: SiteMessage) {
   return String(item.content || '').replace(/\s+/g, ' ').trim() || t('site.messages.noContent')
+}
+
+function messageSender(item: SiteMessage) {
+  if (!item.senderId) return t('site.messages.systemSender')
+  return item.sender?.username || `#${item.senderId}`
 }
 
 function messageTargetPath(item: SiteMessage) {

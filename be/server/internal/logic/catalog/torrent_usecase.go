@@ -509,9 +509,9 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 		return nil, err
 	}
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:    userId,
+		ActorId:     userId,
 		ReceiverId:  torrent.OwnerId,
-		TitleKey:    "site.message.reward.title",
+		TitleKey:    "site.message.reward.catalog_torrent.title",
 		ContentKey:  "site.message.reward.content",
 		ContentArgs: []any{in.Amount},
 		TargetType:  consts.SiteMessageTargetTypeCatalogTorrent,

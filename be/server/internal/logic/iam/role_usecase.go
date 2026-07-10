@@ -120,10 +120,13 @@ func (s *sIamRoleUsecase) SyncRanks(ctx context.Context) (*model.IamRankSyncResu
 				result.Demoted++
 			}
 			service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-				ReceiverId:  candidate.UserId,
-				TitleKey:    titleKey,
-				ContentKey:  "site.message.rank.changed.content",
-				ContentArgs: []any{s.localizeName(defaultLangCtx, rankTarget.Target.Role)},
+				ReceiverId: candidate.UserId,
+				TitleKey:   titleKey,
+				ContentKey: "site.message.rank.changed.content",
+				ContentArgs: []any{
+					s.localizeName(defaultLangCtx, currentNode.Role),
+					s.localizeName(defaultLangCtx, rankTarget.Target.Role),
+				},
 			})
 		}
 

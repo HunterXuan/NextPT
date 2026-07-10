@@ -366,9 +366,9 @@ func (s *sForumTopicUsecase) RewardTopic(ctx context.Context, actor *model.Actor
 	}
 
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:    actor.Id,
+		ActorId:     actor.Id,
 		ReceiverId:  topic.UserId,
-		TitleKey:    "site.message.reward.title",
+		TitleKey:    "site.message.reward.forum_topic.title",
 		ContentKey:  "site.message.reward.content",
 		ContentArgs: []any{in.Amount},
 		TargetType:  consts.SiteMessageTargetTypeForumTopic,

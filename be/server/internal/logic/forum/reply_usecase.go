@@ -200,9 +200,10 @@ func (s *sForumReplyUsecase) Create(ctx context.Context, actor *model.Actor, in 
 	}
 
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:   actor.Id,
+		ActorId:    actor.Id,
 		ReceiverId: topic.UserId,
 		TitleKey:   "site.message.forum_topic_reply.title",
+		TitleArgs:  []any{topic.Subject},
 		Content:    in.Content,
 		TargetType: consts.SiteMessageTargetTypeForumTopic,
 		TargetId:   topic.Id,
@@ -211,9 +212,10 @@ func (s *sForumReplyUsecase) Create(ctx context.Context, actor *model.Actor, in 
 		repliedTo, replyErr := service.ForumReplyDomain().GetReplyById(ctx, in.ReplyTo)
 		if replyErr == nil && repliedTo.TopicId == topic.Id && repliedTo.UserId != topic.UserId {
 			service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-				SenderId:   actor.Id,
+				ActorId:    actor.Id,
 				ReceiverId: repliedTo.UserId,
 				TitleKey:   "site.message.forum_reply_reply.title",
+				TitleArgs:  []any{topic.Subject},
 				Content:    in.Content,
 				TargetType: consts.SiteMessageTargetTypeForumTopic,
 				TargetId:   topic.Id,
@@ -297,9 +299,9 @@ func (s *sForumReplyUsecase) RewardReply(ctx context.Context, actor *model.Actor
 	}
 
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:    actor.Id,
+		ActorId:     actor.Id,
 		ReceiverId:  reply.UserId,
-		TitleKey:    "site.message.reward.title",
+		TitleKey:    "site.message.reward.forum_reply.title",
 		ContentKey:  "site.message.reward.content",
 		ContentArgs: []any{in.Amount},
 		TargetType:  consts.SiteMessageTargetTypeForumTopic,

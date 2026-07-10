@@ -44,9 +44,10 @@ func (s *sCatalogCommentUsecase) Create(ctx context.Context, actor *model.Actor,
 		return nil, err
 	}
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:   actor.Id,
+		ActorId:    actor.Id,
 		ReceiverId: torrent.OwnerId,
 		TitleKey:   "site.message.catalog_comment.title",
+		TitleArgs:  []any{torrent.Name},
 		Content:    in.Content,
 		TargetType: consts.SiteMessageTargetTypeCatalogTorrent,
 		TargetId:   in.Id,
@@ -233,9 +234,9 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 	}
 
 	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
-		SenderId:    actor.Id,
+		ActorId:     actor.Id,
 		ReceiverId:  comment.UserId,
-		TitleKey:    "site.message.reward.title",
+		TitleKey:    "site.message.reward.catalog_comment.title",
 		ContentKey:  "site.message.reward.content",
 		ContentArgs: []any{in.Amount},
 		TargetType:  consts.SiteMessageTargetTypeCatalogTorrent,

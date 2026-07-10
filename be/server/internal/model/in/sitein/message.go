@@ -37,9 +37,10 @@ type MessageCreateInp struct {
 }
 
 type MessageNotifyInp struct {
-	SenderId    uint64
+	ActorId     uint64
 	ReceiverId  uint64
 	TitleKey    string
+	TitleArgs   []any
 	Content     string
 	ContentKey  string
 	ContentArgs []any
