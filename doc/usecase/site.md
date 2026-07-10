@@ -79,7 +79,10 @@ Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全�
   * `AdminList(ctx, page, size)`：后台查看通知发送记录。
 * **SiteMessageUsecase**
   * 面向用户提供通知中心和未读数。
-  * 后续其它域只需要调用 `SiteMessageUsecase.Notify(...)` 或 domain 创建消息，不直接拼前端展示文案。
+  * 其它域通过 `SiteMessageUsecase.Notify(...)` 创建通知，不直接操作消息表。
+  * 自动通知使用后端 `i18n.default` 生成标题和正文，写入失败不影响原业务事务。
+  * 已接入种子评论、论坛回复、赞赏、举报处理、账号限制、限制到期和自动升降级。
+  * 所有自动通知及后台手工发送消息的 `sender_id` 均为 `0`，具体操作者通过业务记录或审计日志追踪。
 
 #### API
 
@@ -101,7 +104,7 @@ Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全�
 
 #### MVP 字段
 
-- `sender_id`：0 表示系统通知，管理员发送时记录管理员 ID。
+- `sender_id`：系统通知固定为 0。
 - `receiver_id`：接收用户 ID。
 - `title`：简短标题。
 - `content`：通知正文。

@@ -24,19 +24,21 @@
             </UButton>
           </form>
 
-          <div class="flex shrink-0 items-center">
+          <div class="flex shrink-0 items-center gap-2">
+            <CatalogTorrentRssPopover
+              :keyword="appliedKeyword"
+              :category-ids="selectedCategoryIds"
+            />
             <AppPermissionButton
               :permission="Permission.CatalogTorrentCreate"
               color="primary"
               variant="soft"
               icon="i-lucide-upload"
               :to="localePath('/catalog/torrents/upload')"
-              class="h-10 w-10 justify-center p-0 sm:w-auto sm:px-3"
+              class="h-10 w-10 shrink-0 justify-center p-0"
               :aria-label="$t('catalog.torrents.upload.action')"
               :tooltip="$t('catalog.torrents.upload.action')"
-            >
-              <span class="hidden sm:inline">{{ $t('catalog.torrents.upload.action') }}</span>
-            </AppPermissionButton>
+            />
           </div>
         </div>
 
@@ -284,6 +286,7 @@ const pageSizes = [20, 50, 100]
 
 const page = ref(readPositiveIntQuery('page', 1))
 const keyword = ref(readStringQuery('keyword'))
+const appliedKeyword = ref(keyword.value)
 const selectedCategoryIds = ref(readCategoryIdsQuery())
 const selectedSize = ref(String(readPageSizeQuery()))
 
@@ -346,6 +349,7 @@ async function loadCategories() {
 async function loadTorrents() {
   pending.value = true
   errorMessage.value = ''
+  appliedKeyword.value = keyword.value.trim()
   syncQuery()
 
   try {

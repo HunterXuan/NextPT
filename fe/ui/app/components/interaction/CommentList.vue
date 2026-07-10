@@ -77,7 +77,7 @@
                   size="xs"
                   icon="i-lucide-quote"
                   :aria-label="quoteText"
-                  @click="$emit('quote', quoteTextFor(item, index))"
+                  @click="$emit('quote', quoteTextFor(item, index), item)"
                 />
               </UTooltip>
             </div>
@@ -162,7 +162,7 @@ const emit = defineEmits<{
   pageChange: [page: number]
   toggleLike: [item: InteractionCommentItem]
   rewardSuccess: [item: InteractionCommentItem]
-  quote: [quote: string]
+  quote: [quote: string, item: InteractionCommentItem]
   report: [itemId: number]
   'update:activeReportId': [itemId: number]
   'update:reportReason': [reason: string]

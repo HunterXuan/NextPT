@@ -339,6 +339,16 @@
         "submit": "Search",
         "advanced": "Advanced"
       },
+      "rss": {
+        "title": "BT client RSS",
+        "promotionOnly": "Promotions only",
+        "size": "Items",
+        "sizeOption": "{count} items",
+        "url": "Feed URL",
+        "copied": "RSS URL copied",
+        "passkeyRequired": "No passkey is available for this account",
+        "passkeyWarning": "This feed URL contains your passkey. Do not share it publicly."
+      },
       "summary": {
         "total": "Torrents",
         "categories": "Categories"

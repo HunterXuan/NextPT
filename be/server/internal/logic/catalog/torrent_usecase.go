@@ -57,6 +57,100 @@ func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, i
 	}, nil
 }
 
+func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor, in catalogin.TorrentRssInp) (*catalogout.TorrentRssOut, error) {
+	if actor == nil {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
+	}
+
+	size := in.Size
+	if size <= 0 {
+		size = 50
+	}
+	if size > 100 {
+		size = 100
+	}
+
+	querySize := size
+	if in.PromotionOnly {
+		querySize = 500
+	}
+	entities, err := service.CatalogTorrentDomain().QueryRssTorrents(ctx, actor, in.Keyword, in.CategoryIds, querySize)
+	if err != nil {
+		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
+	}
+
+	if in.PromotionOnly {
+		filtered := make([]entity.CatalogTorrent, 0, size)
+		for i := range entities {
+			promotion := service.CatalogTorrentDomain().ResolveEffectiveTorrentPromotion(ctx, &entities[i], nil)
+			if promotion.SpState == consts.ResourceTorrentSpNormal {
+				continue
+			}
+			filtered = append(filtered, entities[i])
+			if len(filtered) == size {
+				break
+			}
+		}
+		entities = filtered
+	}
+
+	categories, err := service.CatalogCategoryDomain().ListCategories(ctx)
+	if err != nil {
+		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
+	}
+	categoryNames := s.rssCategoryNames(ctx, categories)
+	items := make([]catalogout.TorrentRssItem, 0, len(entities))
+	for _, torrent := range entities {
+		category := categoryNames[torrent.CategoryId]
+		if category == "" {
+			category = gi18n.T(ctx, "catalog.torrent.rss.unknown_category")
+		}
+		items = append(items, catalogout.TorrentRssItem{
+			Id:        torrent.Id,
+			Name:      torrent.Name,
+			SubTitle:  torrent.SubTitle,
+			Category:  category,
+			Size:      torrent.Size,
+			Seeders:   torrent.Seeders,
+			Leechers:  torrent.Leechers,
+			Snatched:  torrent.TimesCompleted,
+			CreatedAt: torrent.CreatedAt,
+		})
+	}
+
+	source := s.getCatalogConfigCache(ctx, consts.SiteConfigCatalogTorrentSource).String()
+	if source == "" {
+		source, _ = consts.SiteConfigDefaults[consts.SiteConfigCatalogTorrentSource].(string)
+	}
+	return &catalogout.TorrentRssOut{
+		Title:       fmt.Sprintf("%s - %s", source, gi18n.T(ctx, "catalog.torrent.rss.title")),
+		Description: gi18n.T(ctx, "catalog.torrent.rss.description"),
+		Language:    gi18n.LanguageFromCtx(ctx),
+		List:        items,
+	}, nil
+}
+
+func (s *sCatalogTorrentUsecase) rssCategoryNames(ctx context.Context, categories []entity.CatalogCategory) map[uint]string {
+	names := make(map[uint]string, len(categories))
+	lang := gi18n.LanguageFromCtx(ctx)
+	defaultLang := g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String()
+	for _, category := range categories {
+		localized := make(map[string]string)
+		if category.NameI18N != nil {
+			_ = category.NameI18N.Scan(&localized)
+		}
+		name := localized[lang]
+		if name == "" {
+			name = localized[defaultLang]
+		}
+		if name == "" {
+			name = category.Slug
+		}
+		names[category.Id] = name
+	}
+	return names
+}
+
 func (s *sCatalogTorrentUsecase) ListHot(ctx context.Context, actor *model.Actor, size int) (*catalogout.TorrentHotListOut, error) {
 	if size <= 0 {
 		size = 5

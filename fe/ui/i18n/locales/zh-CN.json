@@ -339,6 +339,16 @@
         "submit": "搜索",
         "advanced": "高级搜索"
       },
+      "rss": {
+        "title": "BT 客户端 RSS",
+        "promotionOnly": "仅优惠种子",
+        "size": "条数",
+        "sizeOption": "{count} 条",
+        "url": "订阅地址",
+        "copied": "RSS 地址已复制",
+        "passkeyRequired": "当前账号没有可用的 Passkey",
+        "passkeyWarning": "订阅地址包含 Passkey，请勿公开分享。"
+      },
       "summary": {
         "total": "种子",
         "categories": "分类"

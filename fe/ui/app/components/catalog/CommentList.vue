@@ -23,7 +23,7 @@
     @page-change="$emit('pageChange', $event)"
     @toggle-like="emitToggleLike"
     @reward-success="emitRewardSuccess"
-    @quote="$emit('quote', $event)"
+    @quote="emitQuote"
     @report="$emit('report', $event)"
   />
 </template>
@@ -83,5 +83,9 @@ function emitToggleLike(item: InteractionCommentItem) {
 
 function emitRewardSuccess(item: InteractionCommentItem) {
   emit('rewardSuccess', item as CommentItem)
+}
+
+function emitQuote(quote: string) {
+  emit('quote', quote)
 }
 </script>

@@ -339,6 +339,16 @@
         "submit": "搜尋",
         "advanced": "進階搜尋"
       },
+      "rss": {
+        "title": "BT 客戶端 RSS",
+        "promotionOnly": "僅優惠種子",
+        "size": "筆數",
+        "sizeOption": "{count} 筆",
+        "url": "訂閱地址",
+        "copied": "RSS 地址已複製",
+        "passkeyRequired": "目前帳號沒有可用的 Passkey",
+        "passkeyWarning": "訂閱地址包含 Passkey，請勿公開分享。"
+      },
       "summary": {
         "total": "種子",
         "categories": "分類"

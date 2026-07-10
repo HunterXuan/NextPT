@@ -237,6 +237,7 @@ const topicReportReason = ref('')
 const replyReportReason = ref('')
 const replyContent = ref('')
 const replyEditorMode = ref<EditorMode>('write')
+const replyTarget = ref<{ id: number, marker: string } | null>(null)
 let currentTimeTimer: ReturnType<typeof setInterval> | null = null
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
@@ -611,9 +612,12 @@ async function handleCreateReply() {
 
   replyCreatePending.value = true
   try {
-    await forum.createReply(topic.value.id, replyContent.value.trim())
+    const content = replyContent.value.trim()
+    const replyTo = replyTarget.value && content.includes(replyTarget.value.marker) ? replyTarget.value.id : 0
+    await forum.createReply(topic.value.id, content, replyTo)
     toast.add({ title: t('forum.detail.replyForm.success'), color: 'success', icon: 'i-lucide-check-circle' })
     replyContent.value = ''
+    replyTarget.value = null
     replyEditorMode.value = 'write'
     replyPage.value = Math.max(1, Math.ceil((replyTotal.value + 1) / replySize))
     await Promise.all([loadTopic(), loadReplies()])
@@ -663,9 +667,10 @@ async function handleReportReply(replyId: number) {
   }
 }
 
-function insertReplyQuote(quote: string) {
+function insertReplyQuote(quote: string, replyId: number) {
   if (!canCreateForumReply.value) return
   replyContent.value = replyContent.value.trim() ? `${replyContent.value.trim()}\n\n${quote}` : quote
+  replyTarget.value = { id: replyId, marker: quote.trim() }
   replyEditorMode.value = 'write'
   void nextTick(() => {
     document.getElementById('forum-reply-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' })

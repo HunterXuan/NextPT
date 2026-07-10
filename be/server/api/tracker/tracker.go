@@ -13,5 +13,6 @@ import (
 type ITrackerV1 interface {
 	Announce(ctx context.Context, req *v1.AnnounceReq) (res *v1.AnnounceRes, err error)
 	Download(ctx context.Context, req *v1.DownloadReq) (res *v1.DownloadRes, err error)
+	Rss(ctx context.Context, req *v1.RssReq) (res *v1.RssRes, err error)
 	Scrape(ctx context.Context, req *v1.ScrapeReq) (res *v1.ScrapeRes, err error)
 }

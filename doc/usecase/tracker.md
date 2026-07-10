@@ -34,6 +34,11 @@
   * **核心逻辑**: 复用 Catalog 的种子元数据缓存，极速返回种子完成数。
 * **种子文件下载 (Download)**
   * **Method/Path**: `GET /download`
+* **BT 客户端 RSS (Rss)**
+  * **Method/Path**: `GET /rss`
+  * 使用用户 passkey 和 `download:catalog/torrent:*` 权限，只经过 Tracker 客户端鉴权链路。
+  * 支持 `keyword`、`categoryIds`、`promotionOnly` 和 `size`，筛选与种子可见范围复用 Catalog 逻辑。
+  * RSS enclosure 指向 `GET /download`，不经过 Catalog Web 下载接口。
 * **客户端白名单校验 (CheckClientWhitelist)**
   * 全量白名单内存缓存（1 小时过期），预编译正则。匹配规则：PeerID 前缀 + User-Agent 正则。由中间件统一调用。
 

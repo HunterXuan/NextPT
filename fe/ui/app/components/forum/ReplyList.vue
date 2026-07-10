@@ -23,7 +23,7 @@
     @page-change="$emit('pageChange', $event)"
     @toggle-like="emitToggleLike"
     @reward-success="emitRewardSuccess"
-    @quote="$emit('quote', $event)"
+    @quote="emitQuote"
     @report="$emit('report', $event)"
   />
 </template>
@@ -53,7 +53,7 @@ const emit = defineEmits<{
   pageChange: [page: number]
   toggleLike: [reply: ForumReplyItem]
   rewardSuccess: [reply: ForumReplyItem]
-  quote: [quote: string]
+  quote: [quote: string, replyId: number]
   report: [replyId: number]
   'update:activeReportId': [replyId: number]
   'update:reportReason': [reason: string]
@@ -84,6 +84,10 @@ function emitToggleLike(item: InteractionCommentItem) {
 
 function emitRewardSuccess(item: InteractionCommentItem) {
   emit('rewardSuccess', item as ForumReplyItem)
+}
+
+function emitQuote(quote: string, item: InteractionCommentItem) {
+  emit('quote', quote, item.id)
 }
 
 function parsePendingId(action: string) {

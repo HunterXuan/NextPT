@@ -105,6 +105,10 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 		err = r.GetError()
 		res = r.GetHandlerResponse()
 	)
+	if err != nil && s.isTrackerRequest(r) {
+		s.writeBencodeError(r, err.Error())
+		return
+	}
 
 	// 统一 JSON 格式返回
 	if err != nil {

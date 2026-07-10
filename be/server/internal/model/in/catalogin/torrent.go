@@ -19,6 +19,13 @@ type TorrentListInp struct {
 	CategoryIds []uint `json:"categoryIds" description:"分类ID列表(可选)"`
 }
 
+type TorrentRssInp struct {
+	Size          int    `json:"size" d:"50" v:"min:1|max:100" description:"返回数量"`
+	Keyword       string `json:"keyword" v:"max-length:100" description:"标题关键词"`
+	CategoryIds   []uint `json:"categoryIds" description:"分类ID列表(可选)"`
+	PromotionOnly bool   `json:"promotionOnly" description:"仅返回优惠种子"`
+}
+
 type TorrentGetHotInp struct {
 	Size int `json:"size" d:"5" v:"min:1|max:10" description:"返回数量"`
 }

@@ -3,6 +3,8 @@ package catalogout
 import (
 	"server/internal/model"
 	"server/internal/model/out/economyout"
+
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type TorrentUploadOut struct {
@@ -34,6 +36,25 @@ type TorrentListItem struct {
 type TorrentListOut struct {
 	List  []TorrentListItem `json:"list" description:"种子列表"`
 	Total int               `json:"total" description:"总记录数"`
+}
+
+type TorrentRssItem struct {
+	Id        uint64      `json:"id"`
+	Name      string      `json:"name"`
+	SubTitle  string      `json:"subTitle"`
+	Category  string      `json:"category"`
+	Size      uint64      `json:"size"`
+	Seeders   uint        `json:"seeders"`
+	Leechers  uint        `json:"leechers"`
+	Snatched  uint        `json:"snatched"`
+	CreatedAt *gtime.Time `json:"createdAt"`
+}
+
+type TorrentRssOut struct {
+	Title       string           `json:"title"`
+	Description string           `json:"description"`
+	Language    string           `json:"language"`
+	List        []TorrentRssItem `json:"list"`
 }
 
 type TorrentHotItem struct {

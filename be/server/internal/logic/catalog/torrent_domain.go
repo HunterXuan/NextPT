@@ -452,9 +452,33 @@ func (s *sCatalogTorrentDomain) GetTorrentsByHashes(ctx context.Context, hashes 
 }
 
 func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page, size int) ([]entity.CatalogTorrent, int, error) {
-	m := dao.CatalogTorrent.Ctx(ctx)
-	m = s.ApplyTorrentVisibleScope(m, actor)
+	m := s.buildTorrentQuery(ctx, actor, keyword, categoryIds)
+	total, err := m.Count()
+	if err != nil {
+		return nil, 0, err
+	}
+	columns := dao.CatalogTorrent.Columns()
+	var entities []entity.CatalogTorrent
+	err = m.Page(page, size).
+		OrderDesc(columns.IsPinned).
+		OrderDesc(columns.PinWeight).
+		OrderDesc(columns.CreatedAt).
+		Scan(&entities)
+	return entities, total, err
+}
 
+func (s *sCatalogTorrentDomain) QueryRssTorrents(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, size int) ([]entity.CatalogTorrent, error) {
+	columns := dao.CatalogTorrent.Columns()
+	var entities []entity.CatalogTorrent
+	err := s.buildTorrentQuery(ctx, actor, keyword, categoryIds).
+		OrderDesc(columns.CreatedAt).
+		Limit(size).
+		Scan(&entities)
+	return entities, err
+}
+
+func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint) *gdb.Model {
+	m := s.ApplyTorrentVisibleScope(dao.CatalogTorrent.Ctx(ctx), actor)
 	columns := dao.CatalogTorrent.Columns()
 	categoryIds = s.normalizeTorrentCategoryIds(categoryIds)
 	if len(categoryIds) > 0 {
@@ -466,18 +490,7 @@ func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, a
 		like := "%" + keyword + "%"
 		m = m.Where(fmt.Sprintf("(%s LIKE ? OR %s LIKE ?)", columns.Name, columns.SubTitle), like, like)
 	}
-
-	total, err := m.Count()
-	if err != nil {
-		return nil, 0, err
-	}
-	var entities []entity.CatalogTorrent
-	err = m.Page(page, size).
-		OrderDesc(columns.IsPinned).
-		OrderDesc(columns.PinWeight).
-		OrderDesc(columns.CreatedAt).
-		Scan(&entities)
-	return entities, total, err
+	return m
 }
 
 func (s *sCatalogTorrentDomain) QueryHotVisibleTorrents(ctx context.Context, size int) ([]entity.CatalogTorrent, error) {
