@@ -7,6 +7,7 @@ import (
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/iamout"
 	"server/internal/service"
 
@@ -70,6 +71,7 @@ func (s *sIamRoleUsecase) SyncRanks(ctx context.Context) (*model.IamRankSyncResu
 	result := &model.IamRankSyncResult{}
 	now := gtime.Now()
 	systemActor := &model.Actor{}
+	defaultLangCtx := gi18n.WithLanguage(ctx, g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String())
 	for page := 1; ; page++ {
 		candidates, err := service.IamUserDomain().QueryRankCandidates(ctx, page, iamRankSyncBatchSize)
 		if err != nil {
@@ -110,11 +112,19 @@ func (s *sIamRoleUsecase) SyncRanks(ctx context.Context) (*model.IamRankSyncResu
 				return nil, err
 			}
 			service.IamUserUsecase().InvalidateUserCache(ctx, candidate.UserId)
+			titleKey := "site.message.rank.demoted.title"
 			if rankTarget.Target.Role.Level > currentNode.Role.Level {
 				result.Promoted++
+				titleKey = "site.message.rank.promoted.title"
 			} else {
 				result.Demoted++
 			}
+			service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+				ReceiverId:  candidate.UserId,
+				TitleKey:    titleKey,
+				ContentKey:  "site.message.rank.changed.content",
+				ContentArgs: []any{s.localizeName(defaultLangCtx, rankTarget.Target.Role)},
+			})
 		}
 
 		if len(candidates) < iamRankSyncBatchSize {

@@ -9,6 +9,7 @@ import (
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/modout"
 	"server/internal/service"
 
@@ -76,6 +77,18 @@ func (s *sModUserUsecase) Apply(ctx context.Context, actor *model.Actor, in modi
 	}
 
 	service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
+	notifyInp := sitein.MessageNotifyInp{
+		SenderId:   actor.Id,
+		ReceiverId: in.UserId,
+		TitleKey:   "site.message.restriction.applied.title",
+		Content:    in.Reason,
+	}
+	if in.Reason == consts.IamUserRankAutoBanReason {
+		notifyInp.TitleKey = "site.message.rank.auto_banned.title"
+		notifyInp.Content = ""
+		notifyInp.ContentKey = "site.message.rank.auto_banned.content"
+	}
+	service.SiteMessageUsecase().Notify(ctx, notifyInp)
 	return nil
 }
 
@@ -159,6 +172,12 @@ func (s *sModUserUsecase) Remove(ctx context.Context, actor *model.Actor, in mod
 		return err
 	}
 	service.IamUserUsecase().InvalidateUserCache(ctx, in.UserId)
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:   actor.Id,
+		ReceiverId: in.UserId,
+		TitleKey:   "site.message.restriction.removed.title",
+		ContentKey: "site.message.restriction.removed.content",
+	})
 	return nil
 }
 
@@ -205,6 +224,11 @@ func (s *sModUserUsecase) CleanupExpired(ctx context.Context) (int, error) {
 
 	for userId := range userIds {
 		service.IamUserUsecase().InvalidateUserCache(ctx, userId)
+		service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+			ReceiverId: userId,
+			TitleKey:   "site.message.restriction.removed.title",
+			ContentKey: "site.message.restriction.expired.content",
+		})
 	}
 	return len(records), nil
 }

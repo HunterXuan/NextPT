@@ -1,0 +1,18 @@
+site.message.catalog_comment.title: 你的种子收到了新评论
+site.message.forum_topic_reply.title: 你的主题收到了新回复
+site.message.forum_reply_reply.title: 你收到了新回复
+site.message.reward.title: 你收到了赞赏
+site.message.reward.content: 你收到了 %v 魔力值赞赏
+site.message.report.accepted.title: 你的举报已处理
+site.message.report.accepted.content: 你的举报已被采纳
+site.message.report.rejected.title: 你的举报已处理
+site.message.report.rejected.content: 你的举报未被采纳
+site.message.restriction.applied.title: 账号限制通知
+site.message.restriction.removed.title: 账号限制已解除
+site.message.restriction.removed.content: 管理员已解除你的账号限制
+site.message.restriction.expired.content: 账号限制已到期并自动解除
+site.message.rank.promoted.title: 用户等级已提升
+site.message.rank.demoted.title: 用户等级已降低
+site.message.rank.changed.content: 当前等级：%s
+site.message.rank.auto_banned.title: 账号已被自动限制
+site.message.rank.auto_banned.content: 你的账号因不再满足最低等级要求而被自动限制

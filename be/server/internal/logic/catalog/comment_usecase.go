@@ -8,6 +8,7 @@ import (
 	"server/internal/model/entity"
 	"server/internal/model/in/catalogin"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/catalogout"
 	"server/internal/service"
 
@@ -33,7 +34,7 @@ func (s *sCatalogCommentUsecase) Create(ctx context.Context, actor *model.Actor,
 	}
 
 	// Ensure torrent exists and is visible
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	torrent, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -42,6 +43,14 @@ func (s *sCatalogCommentUsecase) Create(ctx context.Context, actor *model.Actor,
 	if err != nil {
 		return nil, err
 	}
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:   actor.Id,
+		ReceiverId: torrent.OwnerId,
+		TitleKey:   "site.message.catalog_comment.title",
+		Content:    in.Content,
+		TargetType: consts.SiteMessageTargetTypeCatalogTorrent,
+		TargetId:   in.Id,
+	})
 
 	return &catalogout.CommentCreateOut{Id: id}, nil
 }
@@ -200,7 +209,7 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 		return gerror.New(gi18n.T(ctx, "catalog.comment.reward_self_denied"))
 	}
 
-	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, comment.UserId, in.Amount, consts.EconomyBonusTargetTypeCatalogComment, comment.Id)
 		if err != nil {
 			return err
@@ -219,6 +228,20 @@ func (s *sCatalogCommentUsecase) Reward(ctx context.Context, actor *model.Actor,
 		err = service.CatalogCommentDomain().IncrementCommentRewardStats(ctx, comment.Id)
 		return err
 	})
+	if err != nil {
+		return err
+	}
+
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:    actor.Id,
+		ReceiverId:  comment.UserId,
+		TitleKey:    "site.message.reward.title",
+		ContentKey:  "site.message.reward.content",
+		ContentArgs: []any{in.Amount},
+		TargetType:  consts.SiteMessageTargetTypeCatalogTorrent,
+		TargetId:    comment.TargetId,
+	})
+	return nil
 }
 
 func (s *sCatalogCommentUsecase) Report(ctx context.Context, actor *model.Actor, in catalogin.CommentReportInp) error {

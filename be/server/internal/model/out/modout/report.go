@@ -1,6 +1,7 @@
 package modout
 
 import (
+	"server/internal/consts"
 	"server/internal/model"
 
 	"github.com/gogf/gf/v2/os/gtime"
@@ -14,6 +15,24 @@ type ReportTargetSummary struct {
 	ParentId   uint64               `json:"parentId"`
 	Status     string               `json:"status"`
 	Author     model.IamUserSummary `json:"author"`
+}
+
+func (m ReportTargetSummary) SiteMessageTarget() (string, uint64) {
+	if m.Status != consts.ModReportTargetStatusNormal {
+		return "", 0
+	}
+
+	targetType, targetId := m.Type, m.Id
+	if m.ParentType != "" {
+		targetType, targetId = m.ParentType, m.ParentId
+	}
+
+	switch targetType {
+	case consts.SiteMessageTargetTypeCatalogTorrent, consts.SiteMessageTargetTypeForumTopic:
+		return targetType, targetId
+	default:
+		return "", 0
+	}
 }
 
 type ReportItem struct {

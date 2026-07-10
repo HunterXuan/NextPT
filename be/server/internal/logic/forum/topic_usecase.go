@@ -11,6 +11,7 @@ import (
 	"server/internal/model/entity"
 	"server/internal/model/in/forumin"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/forumout"
 	"server/internal/service"
 
@@ -348,7 +349,7 @@ func (s *sForumTopicUsecase) RewardTopic(ctx context.Context, actor *model.Actor
 	if topic.UserId == actor.Id {
 		return gerror.New(gi18n.T(ctx, "forum.topic.reward_self_not_allowed"))
 	}
-	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, topic.UserId, in.Amount, consts.EconomyBonusTargetTypeForumTopic, in.Id); err != nil {
 			return err
 		}
@@ -360,6 +361,20 @@ func (s *sForumTopicUsecase) RewardTopic(ctx context.Context, actor *model.Actor
 			Amount:     in.Amount,
 		})
 	})
+	if err != nil {
+		return err
+	}
+
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:    actor.Id,
+		ReceiverId:  topic.UserId,
+		TitleKey:    "site.message.reward.title",
+		ContentKey:  "site.message.reward.content",
+		ContentArgs: []any{in.Amount},
+		TargetType:  consts.SiteMessageTargetTypeForumTopic,
+		TargetId:    topic.Id,
+	})
+	return nil
 }
 
 func (s *sForumTopicUsecase) RewardList(ctx context.Context, actor *model.Actor, in forumin.TopicRewardListInp) (*forumout.TopicRewardListOut, error) {

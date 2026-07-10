@@ -2,6 +2,7 @@ package site
 
 import (
 	"context"
+	"fmt"
 
 	"server/internal/consts"
 	"server/internal/model"
@@ -11,6 +12,9 @@ import (
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/glog"
 )
 
 type sSiteMessageUsecase struct{}
@@ -44,12 +48,29 @@ func (s *sSiteMessageUsecase) MarkAllRead(ctx context.Context, actor *model.Acto
 	return service.SiteMessageDomain().MarkAllRead(ctx, s.actorId(actor))
 }
 
-func (s *sSiteMessageUsecase) Notify(ctx context.Context, in sitein.MessageCreateInp) error {
-	if in.ReceiverId == 0 {
-		return nil
+func (s *sSiteMessageUsecase) Notify(ctx context.Context, in sitein.MessageNotifyInp) {
+	if in.ReceiverId == 0 || in.ReceiverId == in.SenderId {
+		return
 	}
-	_, err := service.SiteMessageDomain().Create(ctx, in)
-	return err
+
+	lang := g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String()
+	i18nCtx := gi18n.WithLanguage(ctx, lang)
+	content := in.Content
+	if in.ContentKey != "" {
+		content = fmt.Sprintf(gi18n.T(i18nCtx, in.ContentKey), in.ContentArgs...)
+	}
+
+	_, err := service.SiteMessageDomain().Create(ctx, sitein.MessageCreateInp{
+		SenderId:   in.SenderId,
+		ReceiverId: in.ReceiverId,
+		Title:      gi18n.T(i18nCtx, in.TitleKey),
+		Content:    content,
+		TargetType: in.TargetType,
+		TargetId:   in.TargetId,
+	})
+	if err != nil {
+		glog.Warningf(ctx, "create site message failed: receiverId=%d targetType=%s targetId=%d error=%v", in.ReceiverId, in.TargetType, in.TargetId, err)
+	}
 }
 
 func (s *sSiteMessageUsecase) AdminList(ctx context.Context, actor *model.Actor, in sitein.AdminMessageListInp) (*siteout.MessageListOut, error) {

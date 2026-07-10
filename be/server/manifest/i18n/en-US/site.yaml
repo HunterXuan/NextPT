@@ -1,0 +1,18 @@
+site.message.catalog_comment.title: New comment on your torrent
+site.message.forum_topic_reply.title: New reply to your topic
+site.message.forum_reply_reply.title: New reply to your post
+site.message.reward.title: You received a reward
+site.message.reward.content: You received a reward of %v bonus
+site.message.report.accepted.title: Your report has been reviewed
+site.message.report.accepted.content: Your report was accepted
+site.message.report.rejected.title: Your report has been reviewed
+site.message.report.rejected.content: Your report was not accepted
+site.message.restriction.applied.title: Account restriction notice
+site.message.restriction.removed.title: Account restriction removed
+site.message.restriction.removed.content: An administrator removed your account restriction
+site.message.restriction.expired.content: Your account restriction expired and was removed automatically
+site.message.rank.promoted.title: Account rank promoted
+site.message.rank.demoted.title: Account rank demoted
+site.message.rank.changed.content: "Current rank: %s"
+site.message.rank.auto_banned.title: Account restricted automatically
+site.message.rank.auto_banned.content: Your account was restricted because it no longer meets the minimum rank requirements

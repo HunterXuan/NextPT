@@ -16,6 +16,7 @@ import (
 	"server/internal/model/entity"
 	"server/internal/model/in/catalogin"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/catalogout"
 	"server/internal/service"
 
@@ -467,14 +468,14 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
 	}
 	userId := actor.Id
+	var torrent *entity.CatalogTorrent
 
 	err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		// 获取种子信息并校验可见性
-		torrent, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+		var err error
+		torrent, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
 		if err != nil {
 			return err
 		}
-
 		if torrent.OwnerId == userId {
 			return gerror.New(gi18n.T(ctx, "catalog.reward.self_denied"))
 		}
@@ -507,6 +508,15 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 	if err != nil {
 		return nil, err
 	}
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:    userId,
+		ReceiverId:  torrent.OwnerId,
+		TitleKey:    "site.message.reward.title",
+		ContentKey:  "site.message.reward.content",
+		ContentArgs: []any{in.Amount},
+		TargetType:  consts.SiteMessageTargetTypeCatalogTorrent,
+		TargetId:    in.Id,
+	})
 
 	return &catalogout.TorrentRewardOut{}, nil
 }

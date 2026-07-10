@@ -63,7 +63,7 @@ type (
 		List(ctx context.Context, actor *model.Actor, in sitein.MessageListInp) (*siteout.MessageListOut, error)
 		MarkRead(ctx context.Context, actor *model.Actor, in sitein.MessageReadInp) error
 		MarkAllRead(ctx context.Context, actor *model.Actor, in sitein.MessageReadAllInp) error
-		Notify(ctx context.Context, in sitein.MessageCreateInp) error
+		Notify(ctx context.Context, in sitein.MessageNotifyInp)
 		AdminList(ctx context.Context, actor *model.Actor, in sitein.AdminMessageListInp) (*siteout.MessageListOut, error)
 		AdminCreate(ctx context.Context, actor *model.Actor, in sitein.AdminMessageCreateInp) (*siteout.MessageCreateOut, error)
 	}

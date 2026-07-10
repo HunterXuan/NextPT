@@ -114,7 +114,7 @@
 
     <template v-else>
       <section class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
-        <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-5">
+        <div class="w-full px-3 sm:px-4 lg:px-5">
           <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
             <main class="min-w-0 space-y-4">
               <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">

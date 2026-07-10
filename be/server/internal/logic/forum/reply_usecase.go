@@ -8,6 +8,7 @@ import (
 	"server/internal/model/entity"
 	"server/internal/model/in/forumin"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/forumout"
 	"server/internal/service"
 
@@ -197,6 +198,28 @@ func (s *sForumReplyUsecase) Create(ctx context.Context, actor *model.Actor, in 
 	if err != nil {
 		return 0, gerror.Wrap(err, gi18n.T(ctx, "forum.reply.create_failed"))
 	}
+
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:   actor.Id,
+		ReceiverId: topic.UserId,
+		TitleKey:   "site.message.forum_topic_reply.title",
+		Content:    in.Content,
+		TargetType: consts.SiteMessageTargetTypeForumTopic,
+		TargetId:   topic.Id,
+	})
+	if in.ReplyTo > 0 {
+		repliedTo, replyErr := service.ForumReplyDomain().GetReplyById(ctx, in.ReplyTo)
+		if replyErr == nil && repliedTo.TopicId == topic.Id && repliedTo.UserId != topic.UserId {
+			service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+				SenderId:   actor.Id,
+				ReceiverId: repliedTo.UserId,
+				TitleKey:   "site.message.forum_reply_reply.title",
+				Content:    in.Content,
+				TargetType: consts.SiteMessageTargetTypeForumTopic,
+				TargetId:   topic.Id,
+			})
+		}
+	}
 	return replyId, nil
 }
 
@@ -254,7 +277,7 @@ func (s *sForumReplyUsecase) RewardReply(ctx context.Context, actor *model.Actor
 	if reply.UserId == actor.Id {
 		return gerror.New(gi18n.T(ctx, "forum.reply.reward_self_not_allowed"))
 	}
-	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		if err := service.EconomyBonusUsecase().TransferBonus(ctx, actor.Id, reply.UserId, in.Amount, consts.EconomyBonusTargetTypeForumReply, in.Id); err != nil {
 			return err
 		}
@@ -269,6 +292,20 @@ func (s *sForumReplyUsecase) RewardReply(ctx context.Context, actor *model.Actor
 		}
 		return service.ForumReplyDomain().IncrementRewardStats(ctx, in.Id)
 	})
+	if err != nil {
+		return err
+	}
+
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		SenderId:    actor.Id,
+		ReceiverId:  reply.UserId,
+		TitleKey:    "site.message.reward.title",
+		ContentKey:  "site.message.reward.content",
+		ContentArgs: []any{in.Amount},
+		TargetType:  consts.SiteMessageTargetTypeForumTopic,
+		TargetId:    reply.TopicId,
+	})
+	return nil
 }
 
 func (s *sForumReplyUsecase) ReportReply(ctx context.Context, actor *model.Actor, in forumin.ReplyReportInp) error {

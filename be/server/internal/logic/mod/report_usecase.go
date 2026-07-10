@@ -10,6 +10,7 @@ import (
 	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/modin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/modout"
 	"server/internal/service"
 
@@ -119,12 +120,38 @@ func (s *sModReportUsecase) Resolve(ctx context.Context, actor *model.Actor, in 
 		return gerror.New(gi18n.T(ctx, "moderation.report.already_resolved"))
 	}
 
-	return service.ModReportDomain().Update(ctx, in.Id, do.ModReport{
+	err = service.ModReportDomain().Update(ctx, in.Id, do.ModReport{
 		Status:       in.Status,
 		DealtBy:      actor.Id,
 		DealtComment: in.Comment,
 		DealtAt:      gtime.Now(),
 	})
+	if err != nil {
+		return err
+	}
+
+	titleKey := "site.message.report.accepted.title"
+	contentKey := "site.message.report.accepted.content"
+	if in.Status == consts.ModReportStatusRejected {
+		titleKey = "site.message.report.rejected.title"
+		contentKey = "site.message.report.rejected.content"
+	}
+	content := strings.TrimSpace(in.Comment)
+	target := s.loadReportTargetSummaryMap(ctx, []entity.ModReport{*report})[report.Id]
+	targetType, targetId := target.SiteMessageTarget()
+	notifyInp := sitein.MessageNotifyInp{
+		SenderId:   actor.Id,
+		ReceiverId: report.ReporterId,
+		TitleKey:   titleKey,
+		Content:    content,
+		TargetType: targetType,
+		TargetId:   targetId,
+	}
+	if content == "" {
+		notifyInp.ContentKey = contentKey
+	}
+	service.SiteMessageUsecase().Notify(ctx, notifyInp)
+	return nil
 }
 
 func (s *sModReportUsecase) loadReportTargetSummaryMap(ctx context.Context, records []entity.ModReport) map[uint64]modout.ReportTargetSummary {
