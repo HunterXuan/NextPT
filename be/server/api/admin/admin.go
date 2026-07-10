@@ -45,6 +45,7 @@ type IAdminV1 interface {
 	IamRoleUpdate(ctx context.Context, req *v1.IamRoleUpdateReq) (res *v1.IamRoleUpdateRes, err error)
 	IamRoleDelete(ctx context.Context, req *v1.IamRoleDeleteReq) (res *v1.IamRoleDeleteRes, err error)
 	IamSessionDelete(ctx context.Context, req *v1.IamSessionDeleteReq) (res *v1.IamSessionDeleteRes, err error)
+	IamLoginLogList(ctx context.Context, req *v1.IamLoginLogListReq) (res *v1.IamLoginLogListRes, err error)
 	IamUserList(ctx context.Context, req *v1.IamUserListReq) (res *v1.IamUserListRes, err error)
 	IamUserUpdate(ctx context.Context, req *v1.IamUserUpdateReq) (res *v1.IamUserUpdateRes, err error)
 	IamUserStatDetail(ctx context.Context, req *v1.IamUserStatDetailReq) (res *v1.IamUserStatDetailRes, err error)

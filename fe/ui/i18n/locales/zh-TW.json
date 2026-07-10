@@ -1112,7 +1112,8 @@
           "profile": "帳號資料",
           "stat": "分享資料",
           "mod": "帳號限制",
-          "permission": "手動權限"
+          "permission": "手動權限",
+          "loginLog": "登入記錄"
         },
         "form": {
           "empty": "選擇使用者",
@@ -1193,6 +1194,19 @@
           "bonusDiff": "魔力增量",
           "submit": "調整統計",
           "saved": "統計已更新"
+        },
+        "loginLogs": {
+          "title": "登入記錄"
+        }
+      },
+      "loginLogs": {
+        "title": "登入記錄",
+        "filters": {
+          "title": "篩選",
+          "userId": "使用者 ID",
+          "userIdPlaceholder": "使用者 ID",
+          "apply": "搜尋",
+          "clear": "重設"
         }
       },
       "roles": {
@@ -2065,6 +2079,27 @@
       "passwordMismatch": "兩次輸入的新密碼不一致",
       "submit": "修改密碼",
       "changed": "密碼已修改，請重新登入"
+    },
+    "loginLogs": {
+      "title": "登入記錄",
+      "subtitle": "查看最近登入結果、IP 和客戶端資訊。",
+      "empty": "暫無登入記錄",
+      "filters": {
+        "all": "全部",
+        "success": "成功",
+        "fail": "失敗"
+      },
+      "results": {
+        "success": "成功",
+        "fail": "失敗"
+      },
+      "failReasons": {
+        "userNotFound": "帳號不存在",
+        "invalidPassword": "密碼錯誤",
+        "accountUnavailable": "帳號不可登入",
+        "roleMissing": "角色缺失",
+        "tokenCreateFailed": "會話建立失敗"
+      }
     }
   }
 }

@@ -17,3 +17,9 @@ type UserPasswordChangeInp struct {
 	OldPassword string `json:"oldPassword" v:"required#{#iam.user.old_password_req}"`
 	NewPassword string `json:"newPassword" v:"required|length:6,30#{#iam.user.new_password_req}|{#iam.user.password_len}"`
 }
+
+type UserLoginLogListInp struct {
+	Result *int `json:"result" in:"query"`
+	Page   int  `json:"page" d:"1"`
+	Size   int  `json:"size" d:"10"`
+}

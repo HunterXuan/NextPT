@@ -1,6 +1,10 @@
 package iamout
 
-import "github.com/gogf/gf/v2/os/gtime"
+import (
+	"server/internal/model"
+
+	"github.com/gogf/gf/v2/os/gtime"
+)
 
 type UserMeOut struct {
 	User    UserMeAccountOut `json:"user"`
@@ -43,4 +47,11 @@ type UserMeStatOut struct {
 
 type UserPermissionListOut struct {
 	Permissions []string `json:"permissions"`
+}
+
+type UserLoginLogListOut struct {
+	List  []model.IamLoginLogItem `json:"list"`
+	Total int                     `json:"total"`
+	Page  int                     `json:"page"`
+	Size  int                     `json:"size"`
 }

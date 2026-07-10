@@ -39,6 +39,7 @@ type (
 	}
 	IIamLoginLogDomain interface {
 		Create(ctx context.Context, data do.IamLoginLog) error
+		List(ctx context.Context, options model.IamLoginLogListOptions) ([]entity.IamLoginLog, int, error)
 	}
 	IIamPermissionDomain interface {
 		CheckPermissionWithList(ctx context.Context, rolePerms []string, userAcls []string, permKey string) (bool, error)
@@ -110,6 +111,7 @@ type (
 		EnsureCanAuthenticate(ctx context.Context, user *entity.IamUser) error
 		CheckPermission(ctx context.Context, actor *model.Actor, permKey string) (bool, error)
 		Permissions(ctx context.Context, actor *model.Actor) (*iamout.UserPermissionListOut, error)
+		LoginLogs(ctx context.Context, actor *model.Actor, in iamin.UserLoginLogListInp) (*iamout.UserLoginLogListOut, error)
 		Create(ctx context.Context, in iamin.UserCreateInp) (uint64, error)
 		Me(ctx context.Context, actor *model.Actor) (*iamout.UserMeOut, error)
 		UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error

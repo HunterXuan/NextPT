@@ -226,6 +226,28 @@ func (s *sAdminIamUserUsecase) StatUpdate(ctx context.Context, actor *model.Acto
 	return nil
 }
 
+func (s *sAdminIamUserUsecase) LoginLogs(ctx context.Context, actor *model.Actor, in adminin.IamLoginLogListInp) (*adminout.IamLoginLogListOut, error) {
+	logs, total, err := service.IamLoginLogDomain().List(ctx, model.IamLoginLogListOptions{
+		UserId: in.UserId,
+		Result: in.Result,
+		Page:   in.Page,
+		Size:   in.Size,
+	})
+	if err != nil {
+		return nil, err
+	}
+	items := make([]model.IamLoginLogItem, 0, len(logs))
+	for _, log := range logs {
+		items = append(items, model.NewIamLoginLogItem(log))
+	}
+	return &adminout.IamLoginLogListOut{
+		List:  items,
+		Total: total,
+		Page:  in.Page,
+		Size:  in.Size,
+	}, nil
+}
+
 func (s *sAdminIamUserUsecase) hasStatDiff(uploadedDiff, downloadedDiff *int64) bool {
 	return (uploadedDiff != nil && *uploadedDiff != 0) || (downloadedDiff != nil && *downloadedDiff != 0)
 }

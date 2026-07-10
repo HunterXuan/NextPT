@@ -24,3 +24,10 @@ type IamUserStatUpdateInp struct {
 	DownloadedDiff *int64   `json:"downloadedDiff" description:"下载量增量(正加负减)"`
 	BonusDiff      *float64 `json:"bonusDiff" description:"魔力值增量(正加负减)"`
 }
+
+type IamLoginLogListInp struct {
+	UserId uint64 `json:"userId" in:"query"`
+	Result *int   `json:"result" in:"query"`
+	Page   int    `json:"page" d:"1"`
+	Size   int    `json:"size" d:"20"`
+}

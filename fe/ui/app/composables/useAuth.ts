@@ -63,6 +63,29 @@ export interface AuthPermissionListOut {
   permissions: string[]
 }
 
+export interface AuthLoginLog {
+  id: number
+  userId: number
+  ip: string
+  userAgent: string
+  result: number
+  failReason: string
+  createdAt?: string | null
+}
+
+export interface AuthLoginLogListParams {
+  result?: number
+  page?: number
+  size?: number
+}
+
+export interface AuthLoginLogListOut {
+  list: AuthLoginLog[]
+  total: number
+  page: number
+  size: number
+}
+
 export interface AuthRoleRuleCondition {
   accountAgeDaysGte?: number
   downloadedGiBGte?: number
@@ -240,6 +263,12 @@ export function useAuth() {
     return await fetchApi<AuthRoleListOut>('/api/iam/roles')
   }
 
+  async function listLoginLogs(params: AuthLoginLogListParams = {}) {
+    return await fetchApi<AuthLoginLogListOut>('/api/iam/users/me/login-logs', {
+      query: params
+    })
+  }
+
   function hasPermission(permission: string) {
     return matchesPermissionList(permissions.value, permission)
   }
@@ -296,6 +325,7 @@ export function useAuth() {
     fetchUser,
     fetchPermissions,
     listRoles,
+    listLoginLogs,
     hasPermission,
     hasAnyPermission,
     updateProfile,

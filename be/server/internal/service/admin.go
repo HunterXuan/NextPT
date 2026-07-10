@@ -74,6 +74,7 @@ type (
 		Update(ctx context.Context, actor *model.Actor, in adminin.IamUserUpdateInp) error
 		StatDetail(ctx context.Context, actor *model.Actor, in adminin.IamUserStatDetailInp) (*adminout.IamUserStatDetailOut, error)
 		StatUpdate(ctx context.Context, actor *model.Actor, in adminin.IamUserStatUpdateInp) error
+		LoginLogs(ctx context.Context, actor *model.Actor, in adminin.IamLoginLogListInp) (*adminout.IamLoginLogListOut, error)
 	}
 	IAdminModCheaterUsecase interface {
 		List(ctx context.Context, actor *model.Actor, in adminin.ModCheaterListInp) (*modout.ListCheaterLogsOut, error)

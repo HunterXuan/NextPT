@@ -32,6 +32,15 @@ type IamUserPermissionListRes struct {
 	iamout.UserPermissionListOut
 }
 
+type IamUserLoginLogListReq struct {
+	g.Meta `path:"/users/me/login-logs" method:"get" tags:"IamUser" summary:"获取当前用户登录记录"`
+	iamin.UserLoginLogListInp
+}
+
+type IamUserLoginLogListRes struct {
+	iamout.UserLoginLogListOut
+}
+
 type IamUserProfileUpdateReq struct {
 	g.Meta `path:"/users/me" method:"patch" tags:"IamUser" summary:"更新当前用户资料"`
 	iamin.UserProfileUpdateInp

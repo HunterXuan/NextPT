@@ -1,17 +1,25 @@
 <template>
-  <UCard class="rounded-lg">
+  <UCard
+    class="h-full rounded-lg"
+    :ui="{
+      root: 'flex flex-col',
+      header: 'px-4 py-3 sm:px-5',
+      body: 'flex flex-1 flex-col p-4 sm:p-5'
+    }"
+  >
     <template #header>
       <div>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.passkey.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.passkey.subtitle') }}</p>
+        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.passkey.title') }}</h2>
+        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('user.passkey.subtitle') }}</p>
       </div>
     </template>
 
-    <div class="rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
+    <div class="flex min-h-10 items-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950">
       <p class="break-all font-mono text-xs text-slate-700 dark:text-slate-300">{{ displayPasskey }}</p>
     </div>
-    <div class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+    <div class="mt-auto grid grid-cols-2 gap-2 pt-3 sm:grid-cols-3">
       <UButton
+        type="button"
         color="neutral"
         variant="outline"
         :icon="showPasskey ? 'i-lucide-eye-off' : 'i-lucide-eye'"
@@ -22,6 +30,7 @@
         {{ showPasskey ? $t('user.passkey.hide') : $t('user.passkey.show') }}
       </UButton>
       <UButton
+        type="button"
         color="neutral"
         variant="outline"
         icon="i-lucide-copy"
@@ -38,7 +47,8 @@
         @update:open="setResetConfirmOpen"
       >
         <UButton
-          color="warning"
+          type="button"
+          color="neutral"
           variant="outline"
           icon="i-lucide-refresh-cw"
           block

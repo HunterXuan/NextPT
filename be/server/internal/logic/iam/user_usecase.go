@@ -206,6 +206,31 @@ func (s *sIamUserUsecase) Permissions(ctx context.Context, actor *model.Actor) (
 	return &iamout.UserPermissionListOut{Permissions: permissions}, nil
 }
 
+func (s *sIamUserUsecase) LoginLogs(ctx context.Context, actor *model.Actor, in iamin.UserLoginLogListInp) (*iamout.UserLoginLogListOut, error) {
+	if actor == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
+	}
+	logs, total, err := service.IamLoginLogDomain().List(ctx, model.IamLoginLogListOptions{
+		UserId: actor.Id,
+		Result: in.Result,
+		Page:   in.Page,
+		Size:   in.Size,
+	})
+	if err != nil {
+		return nil, err
+	}
+	items := make([]model.IamLoginLogItem, 0, len(logs))
+	for _, log := range logs {
+		items = append(items, model.NewIamLoginLogItem(log))
+	}
+	return &iamout.UserLoginLogListOut{
+		List:  items,
+		Total: total,
+		Page:  in.Page,
+		Size:  in.Size,
+	}, nil
+}
+
 func (s *sIamUserUsecase) loadPermissionLists(ctx context.Context, actor *model.Actor) ([]string, []string, error) {
 	if actor == nil {
 		return nil, nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))

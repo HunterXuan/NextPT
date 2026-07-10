@@ -1,13 +1,19 @@
 <template>
-  <UCard class="rounded-lg">
+  <UCard
+    class="h-full rounded-lg"
+    :ui="{
+      header: 'px-4 py-3 sm:px-5',
+      body: 'p-4 sm:p-5'
+    }"
+  >
     <template #header>
       <div>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.security.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.security.subtitle') }}</p>
+        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.security.title') }}</h2>
+        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('user.security.subtitle') }}</p>
       </div>
     </template>
 
-    <form class="grid grid-cols-1 gap-4" @submit.prevent="handlePasswordChange">
+    <form class="grid gap-4" @submit.prevent="handlePasswordChange">
       <UFormField :label="$t('user.security.oldPassword')" required>
         <UInput
           v-model="passwordForm.oldPassword"
@@ -32,53 +38,55 @@
         </UInput>
       </UFormField>
 
-      <UFormField :label="$t('user.security.newPassword')" required>
-        <UInput
-          v-model="passwordForm.newPassword"
-          class="w-full"
-          icon="i-lucide-key-round"
-          :type="showNewPassword ? 'text' : 'password'"
-          autocomplete="new-password"
-          :disabled="passwordPending"
-        >
-          <template #trailing>
-            <UButton
-              type="button"
-              color="neutral"
-              variant="ghost"
-              size="xs"
-              :icon="showNewPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="showNewPassword ? $t('common.hidePassword') : $t('common.showPassword')"
-              :disabled="passwordPending"
-              @click="showNewPassword = !showNewPassword"
-            />
-          </template>
-        </UInput>
-      </UFormField>
+      <div class="grid gap-4 md:grid-cols-2">
+        <UFormField :label="$t('user.security.newPassword')" required>
+          <UInput
+            v-model="passwordForm.newPassword"
+            class="w-full"
+            icon="i-lucide-key-round"
+            :type="showNewPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            :disabled="passwordPending"
+          >
+            <template #trailing>
+              <UButton
+                type="button"
+                color="neutral"
+                variant="ghost"
+                size="xs"
+                :icon="showNewPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                :aria-label="showNewPassword ? $t('common.hidePassword') : $t('common.showPassword')"
+                :disabled="passwordPending"
+                @click="showNewPassword = !showNewPassword"
+              />
+            </template>
+          </UInput>
+        </UFormField>
 
-      <UFormField :label="$t('user.security.confirmPassword')" required>
-        <UInput
-          v-model="passwordForm.confirmPassword"
-          class="w-full"
-          icon="i-lucide-key-round"
-          :type="showConfirmPassword ? 'text' : 'password'"
-          autocomplete="new-password"
-          :disabled="passwordPending"
-        >
-          <template #trailing>
-            <UButton
-              type="button"
-              color="neutral"
-              variant="ghost"
-              size="xs"
-              :icon="showConfirmPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="showConfirmPassword ? $t('common.hidePassword') : $t('common.showPassword')"
-              :disabled="passwordPending"
-              @click="showConfirmPassword = !showConfirmPassword"
-            />
-          </template>
-        </UInput>
-      </UFormField>
+        <UFormField :label="$t('user.security.confirmPassword')" required>
+          <UInput
+            v-model="passwordForm.confirmPassword"
+            class="w-full"
+            icon="i-lucide-key-round"
+            :type="showConfirmPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            :disabled="passwordPending"
+          >
+            <template #trailing>
+              <UButton
+                type="button"
+                color="neutral"
+                variant="ghost"
+                size="xs"
+                :icon="showConfirmPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                :aria-label="showConfirmPassword ? $t('common.hidePassword') : $t('common.showPassword')"
+                :disabled="passwordPending"
+                @click="showConfirmPassword = !showConfirmPassword"
+              />
+            </template>
+          </UInput>
+        </UFormField>
+      </div>
 
       <UAlert
         v-if="passwordMismatch"
@@ -89,7 +97,7 @@
       />
 
       <div class="flex justify-end">
-        <UButton type="submit" color="neutral" variant="outline" :loading="passwordPending" :disabled="!canChangePassword">
+        <UButton type="submit" color="primary" icon="i-lucide-key-round" :loading="passwordPending" :disabled="!canChangePassword">
           {{ $t('user.security.submit') }}
         </UButton>
       </div>

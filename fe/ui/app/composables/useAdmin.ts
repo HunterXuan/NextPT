@@ -177,6 +177,30 @@ export interface AdminIamUserStatUpdateInput {
   bonusDiff?: number
 }
 
+export interface AdminIamLoginLog {
+  id: number
+  userId: number
+  ip: string
+  userAgent: string
+  result: number
+  failReason: string
+  createdAt?: string | null
+}
+
+export interface AdminIamLoginLogListParams {
+  userId?: number
+  result?: number
+  page?: number
+  size?: number
+}
+
+export interface AdminIamLoginLogListOut {
+  list: AdminIamLoginLog[]
+  total: number
+  page: number
+  size: number
+}
+
 export interface AdminIamInviteGrantInput {
   amount: number
   targetMode: 'site' | 'roles'
@@ -641,6 +665,12 @@ export function useAdmin() {
     })
   }
 
+  async function listIamLoginLogs(params: AdminIamLoginLogListParams = {}) {
+    return await fetchApi<AdminIamLoginLogListOut>('/api/admin/iam/login-logs', {
+      query: params
+    })
+  }
+
   async function grantIamInvites(input: AdminIamInviteGrantInput) {
     await fetchApi('/api/admin/iam/invites:grant', {
       method: 'POST',
@@ -893,6 +923,7 @@ export function useAdmin() {
     getIamUserPermissions,
     grantIamUserPermission,
     revokeIamUserPermission,
+    listIamLoginLogs,
     grantIamInvites,
     listIamInvites,
     recycleIamInvite,

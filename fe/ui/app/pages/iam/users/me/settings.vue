@@ -39,10 +39,11 @@
           <div
             v-if="visitedSections.includes('security')"
             v-show="activeSection === 'security'"
-            class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,430px)] xl:items-start"
+            class="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(400px,0.85fr)]"
           >
             <IamUserSecurityForm />
             <IamUserPasskeyCard />
+            <IamLoginLogs class="xl:col-span-2" />
           </div>
 
           <div v-if="canReadInvites && visitedSections.includes('invites')" v-show="activeSection === 'invites'">

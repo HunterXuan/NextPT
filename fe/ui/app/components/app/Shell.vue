@@ -283,6 +283,7 @@ const adminNavSections = computed<ShellNavSection[]>(() => compactNavSections([
     label: t('admin.nav.iam'),
     items: compactNavItems([
       permissionNavItem(Permission.AdminIamUserManage, { label: t('admin.iam.users.title'), to: '/admin/iam/users', icon: 'i-lucide-users', active: isActive('/admin/iam/users') }),
+      permissionNavItem(Permission.AdminIamUserManage, { label: t('admin.iam.loginLogs.title'), to: '/admin/iam/login-logs', icon: 'i-lucide-history', active: isActive('/admin/iam/login-logs') }),
       permissionNavItem(Permission.AdminIamRoleManage, { label: t('admin.iam.roles.title'), to: '/admin/iam/roles', icon: 'i-lucide-shield-check', active: isActive('/admin/iam/roles') }),
       permissionNavItem(Permission.AdminIamInviteManage, { label: t('admin.iam.invites.title'), to: '/admin/iam/invites', icon: 'i-lucide-ticket-plus', active: isActive('/admin/iam/invites') })
     ])

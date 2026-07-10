@@ -1112,7 +1112,8 @@
           "profile": "账号资料",
           "stat": "分享数据",
           "mod": "账号限制",
-          "permission": "手动权限"
+          "permission": "手动权限",
+          "loginLog": "登录记录"
         },
         "form": {
           "empty": "选择用户",
@@ -1193,6 +1194,19 @@
           "bonusDiff": "魔力增量",
           "submit": "调整统计",
           "saved": "统计已更新"
+        },
+        "loginLogs": {
+          "title": "登录记录"
+        }
+      },
+      "loginLogs": {
+        "title": "登录记录",
+        "filters": {
+          "title": "筛选",
+          "userId": "用户 ID",
+          "userIdPlaceholder": "用户 ID",
+          "apply": "搜索",
+          "clear": "重置"
         }
       },
       "roles": {
@@ -2065,6 +2079,27 @@
       "passwordMismatch": "两次输入的新密码不一致",
       "submit": "修改密码",
       "changed": "密码已修改，请重新登录"
+    },
+    "loginLogs": {
+      "title": "登录记录",
+      "subtitle": "查看最近登录结果、IP 和客户端信息。",
+      "empty": "暂无登录记录",
+      "filters": {
+        "all": "全部",
+        "success": "成功",
+        "fail": "失败"
+      },
+      "results": {
+        "success": "成功",
+        "fail": "失败"
+      },
+      "failReasons": {
+        "userNotFound": "账号不存在",
+        "invalidPassword": "密码错误",
+        "accountUnavailable": "账号不可登录",
+        "roleMissing": "角色缺失",
+        "tokenCreateFailed": "会话创建失败"
+      }
     }
   }
 }

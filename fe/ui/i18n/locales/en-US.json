@@ -1112,7 +1112,8 @@
           "profile": "Profile",
           "stat": "Sharing",
           "mod": "Restrictions",
-          "permission": "Permissions"
+          "permission": "Permissions",
+          "loginLog": "Login history"
         },
         "form": {
           "empty": "Select a user",
@@ -1193,6 +1194,19 @@
           "bonusDiff": "Bonus diff",
           "submit": "Adjust stats",
           "saved": "Stats updated"
+        },
+        "loginLogs": {
+          "title": "Login history"
+        }
+      },
+      "loginLogs": {
+        "title": "Login History",
+        "filters": {
+          "title": "Filters",
+          "userId": "User ID",
+          "userIdPlaceholder": "User ID",
+          "apply": "Search",
+          "clear": "Reset"
         }
       },
       "roles": {
@@ -2065,6 +2079,27 @@
       "passwordMismatch": "The new passwords do not match",
       "submit": "Change password",
       "changed": "Password changed. Please log in again."
+    },
+    "loginLogs": {
+      "title": "Login history",
+      "subtitle": "Review recent sign-in results, IPs, and clients.",
+      "empty": "No login history yet",
+      "filters": {
+        "all": "All",
+        "success": "Success",
+        "fail": "Failed"
+      },
+      "results": {
+        "success": "Success",
+        "fail": "Failed"
+      },
+      "failReasons": {
+        "userNotFound": "User not found",
+        "invalidPassword": "Invalid password",
+        "accountUnavailable": "Account unavailable",
+        "roleMissing": "Role missing",
+        "tokenCreateFailed": "Session creation failed"
+      }
     }
   }
 }

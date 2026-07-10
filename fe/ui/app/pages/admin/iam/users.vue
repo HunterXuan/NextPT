@@ -159,7 +159,7 @@
                 </div>
               </div>
 
-              <div class="mt-4 grid grid-cols-2 gap-1 rounded-md bg-slate-100 p-1 dark:bg-slate-800/80">
+              <div class="mt-4 grid grid-cols-2 gap-1 rounded-md bg-slate-100 p-1 sm:grid-cols-5 dark:bg-slate-800/80">
                 <button
                   v-for="panel in userPanelOptions"
                   :key="panel.value"
@@ -548,6 +548,14 @@
               </template>
             </div>
           </div>
+
+          <IamLoginLogs
+            v-if="selectedUser && activeUserPanel === 'loginLog'"
+            :key="selectedUser.id"
+            admin
+            :user-id="selectedUser.id"
+            :title="$t('admin.iam.users.loginLogs.title')"
+          />
         </section>
       </div>
     </div>
@@ -592,7 +600,7 @@ const modsError = ref('')
 const permissionError = ref('')
 const statError = ref('')
 const searchInput = ref('')
-const activeUserPanel = ref<'profile' | 'stat' | 'mod' | 'permission'>('profile')
+const activeUserPanel = ref<'profile' | 'stat' | 'mod' | 'permission' | 'loginLog'>('profile')
 const selectedPermissionKeys = ref<string[]>([])
 const selectedUserAclIds = ref<number[]>([])
 
@@ -694,7 +702,8 @@ const userPanelOptions = computed(() => [
   { value: 'profile' as const, label: t('admin.iam.users.panels.profile'), icon: 'i-lucide-id-card' },
   { value: 'stat' as const, label: t('admin.iam.users.panels.stat'), icon: 'i-lucide-chart-no-axes-combined' },
   { value: 'mod' as const, label: t('admin.iam.users.panels.mod'), icon: 'i-lucide-shield-alert' },
-  { value: 'permission' as const, label: t('admin.iam.users.panels.permission'), icon: 'i-lucide-key-round' }
+  { value: 'permission' as const, label: t('admin.iam.users.panels.permission'), icon: 'i-lucide-key-round' },
+  { value: 'loginLog' as const, label: t('admin.iam.users.panels.loginLog'), icon: 'i-lucide-history' }
 ])
 
 onMounted(async () => {

@@ -47,6 +47,35 @@ type IamUserPermissionListOptions struct {
 	Size         int
 }
 
+type IamLoginLogListOptions struct {
+	UserId uint64
+	Result *int
+	Page   int
+	Size   int
+}
+
+type IamLoginLogItem struct {
+	Id         uint64      `json:"id"`
+	UserId     uint64      `json:"userId"`
+	Ip         string      `json:"ip"`
+	UserAgent  string      `json:"userAgent"`
+	Result     int         `json:"result"`
+	FailReason string      `json:"failReason"`
+	CreatedAt  *gtime.Time `json:"createdAt"`
+}
+
+func NewIamLoginLogItem(log entity.IamLoginLog) IamLoginLogItem {
+	return IamLoginLogItem{
+		Id:         log.Id,
+		UserId:     log.UserId,
+		Ip:         log.Ip,
+		UserAgent:  log.UserAgent,
+		Result:     log.Result,
+		FailReason: log.FailReason,
+		CreatedAt:  log.CreatedAt,
+	}
+}
+
 type IamRankCandidate struct {
 	UserId     uint64
 	RoleId     uint
