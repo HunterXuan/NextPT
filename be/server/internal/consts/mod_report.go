@@ -2,6 +2,7 @@ package consts
 
 const (
 	ModReportTargetTypeCatalogTorrent  = "catalog_torrent"
+	ModReportTargetTypeCatalogRequest  = "catalog_request"
 	ModReportTargetTypeCatalogComment  = "catalog_comment"
 	ModReportTargetTypeCatalogSubtitle = "catalog_subtitle"
 	ModReportTargetTypeForumTopic      = "forum_topic"

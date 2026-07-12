@@ -15,6 +15,8 @@ type IAdminV1 interface {
 	CatalogCategoryUpdate(ctx context.Context, req *v1.CatalogCategoryUpdateReq) (res *v1.CatalogCategoryUpdateRes, err error)
 	CatalogCategoryDelete(ctx context.Context, req *v1.CatalogCategoryDeleteReq) (res *v1.CatalogCategoryDeleteRes, err error)
 	CatalogCategoryList(ctx context.Context, req *v1.CatalogCategoryListReq) (res *v1.CatalogCategoryListRes, err error)
+	CatalogRequestComplete(ctx context.Context, req *v1.CatalogRequestCompleteReq) (res *v1.CatalogRequestCompleteRes, err error)
+	CatalogRequestCancel(ctx context.Context, req *v1.CatalogRequestCancelReq) (res *v1.CatalogRequestCancelRes, err error)
 	CatalogTorrentPin(ctx context.Context, req *v1.CatalogTorrentPinReq) (res *v1.CatalogTorrentPinRes, err error)
 	CatalogTorrentUnpin(ctx context.Context, req *v1.CatalogTorrentUnpinReq) (res *v1.CatalogTorrentUnpinRes, err error)
 	CatalogTorrentFeature(ctx context.Context, req *v1.CatalogTorrentFeatureReq) (res *v1.CatalogTorrentFeatureRes, err error)

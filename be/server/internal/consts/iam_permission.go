@@ -43,6 +43,7 @@ const (
 	IamPermissionAdminCatalogTorrentManage  = "admin:catalog/torrent:*"
 	IamPermissionAdminCatalogSubtitleManage = "admin:catalog/subtitle:*"
 	IamPermissionAdminCatalogCommentManage  = "admin:catalog/comment:*"
+	IamPermissionAdminCatalogRequestManage  = "admin:catalog/request:*"
 
 	// IAM
 	IamPermissionIamInviteRead   = "read:iam/invite:*"
@@ -69,6 +70,9 @@ const (
 	IamPermissionCatalogSubtitleDownload = "download:catalog/subtitle:*"
 	IamPermissionCatalogCommentRead      = "read:catalog/comment:*"
 	IamPermissionCatalogCommentCreate    = "create:catalog/comment:*"
+	IamPermissionCatalogRequestRead      = "read:catalog/request:*"
+	IamPermissionCatalogRequestCreate    = "create:catalog/request:*"
+	IamPermissionCatalogRequestUpdate    = "update:catalog/request:*"
 )
 
 var (
@@ -99,6 +103,7 @@ var (
 		IamPermissionAdminCatalogTorrentManage,
 		IamPermissionAdminCatalogSubtitleManage,
 		IamPermissionAdminCatalogCommentManage,
+		IamPermissionAdminCatalogRequestManage,
 
 		IamPermissionIamInviteRead,
 		IamPermissionIamInviteCreate,
@@ -121,5 +126,8 @@ var (
 		IamPermissionCatalogSubtitleDownload,
 		IamPermissionCatalogCommentRead,
 		IamPermissionCatalogCommentCreate,
+		IamPermissionCatalogRequestRead,
+		IamPermissionCatalogRequestCreate,
+		IamPermissionCatalogRequestUpdate,
 	}
 )

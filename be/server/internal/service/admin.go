@@ -9,6 +9,7 @@ import (
 	"context"
 	"server/internal/model"
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/catalogin"
 	"server/internal/model/out/adminout"
 	"server/internal/model/out/modout"
 )
@@ -19,6 +20,10 @@ type (
 		Update(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryUpdateInp) error
 		Delete(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryDeleteInp) error
 		List(ctx context.Context, actor *model.Actor, in adminin.CatalogCategoryListInp) (*adminout.CatalogCategoryListOut, error)
+	}
+	IAdminCatalogRequestUsecase interface {
+		Complete(ctx context.Context, actor *model.Actor, in catalogin.RequestCompleteInp) error
+		Cancel(ctx context.Context, actor *model.Actor, in catalogin.RequestCancelInp) error
 	}
 	IAdminCatalogTorrentUsecase interface {
 		Pin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentPinInp) error
@@ -104,6 +109,7 @@ type (
 
 var (
 	localAdminCatalogCategoryUsecase IAdminCatalogCategoryUsecase
+	localAdminCatalogRequestUsecase  IAdminCatalogRequestUsecase
 	localAdminCatalogTorrentUsecase  IAdminCatalogTorrentUsecase
 	localAdminForumCategoryUsecase   IAdminForumCategoryUsecase
 	localAdminForumNodeUsecase       IAdminForumNodeUsecase
@@ -130,6 +136,17 @@ func AdminCatalogCategoryUsecase() IAdminCatalogCategoryUsecase {
 
 func RegisterAdminCatalogCategoryUsecase(i IAdminCatalogCategoryUsecase) {
 	localAdminCatalogCategoryUsecase = i
+}
+
+func AdminCatalogRequestUsecase() IAdminCatalogRequestUsecase {
+	if localAdminCatalogRequestUsecase == nil {
+		panic("implement not found for interface IAdminCatalogRequestUsecase, forgot register?")
+	}
+	return localAdminCatalogRequestUsecase
+}
+
+func RegisterAdminCatalogRequestUsecase(i IAdminCatalogRequestUsecase) {
+	localAdminCatalogRequestUsecase = i
 }
 
 func AdminCatalogTorrentUsecase() IAdminCatalogTorrentUsecase {

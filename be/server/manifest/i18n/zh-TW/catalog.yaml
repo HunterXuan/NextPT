@@ -1,5 +1,12 @@
 catalog.category.invalid: 无效的分类ID
 
+catalog.comment.content_len: 評論內容長度應為 3 到 10000 個字元
+catalog.comment.content_req: 請輸入評論內容
+catalog.comment.not_found: 找不到評論
+catalog.comment.report_reason_len: 檢舉原因長度應為 5 到 500 個字元
+catalog.comment.report_reason_req: 請輸入檢舉原因
+catalog.comment.reward_self_denied: 不能讚賞自己的評論
+
 catalog.general.unauthorized: 请先登录
 catalog.general.user_stat_error: 获取用户统计信息失败
 
@@ -7,7 +14,34 @@ catalog.reward.amount_min: 赞赏金额至少为1
 catalog.reward.amount_req: 请输入赞赏金额
 catalog.reward.insufficient_balance: 魔力值余额不足
 catalog.reward.self_denied: 不能赞赏自己的种子
-catalog.comment.reward_self_denied: 不能讚賞自己的評論
+
+catalog.request.abandon_denied: 只有目前認領人可以放棄認領
+catalog.request.cancel_denied: 目前請求不能取消
+catalog.request.cancel_reason_invalid: 取消原因不能超過 500 個字元
+catalog.request.claim_expired: 認領已經過期
+catalog.request.claim_publish_denied: 你沒有發布種子的權限，不能認領該求種請求
+catalog.request.claim_self_denied: 不能認領自己建立的請求
+catalog.request.claimer_missing: 請求缺少認領人
+catalog.request.complete_denied: 只有請求人或有權限的管理人員可以確認完成
+catalog.request.description_invalid: 請求說明長度應為 3 到 10000 個字元
+catalog.request.description_req: 請輸入請求說明
+catalog.request.id_req: 缺少請求ID參數
+catalog.request.not_found: 請求不存在
+catalog.request.not_open: 請求目前不可認領
+catalog.request.not_submitted: 請求尚未提交結果
+catalog.request.query_failed: 取得請求列表失敗
+catalog.request.reseed_exists: 該種子已經存在進行中的續種請求
+catalog.request.reseed_has_seeders: 該種子目前仍有做種者，無需請求續種
+catalog.request.reseed_not_seeding: 尚未偵測到你正在為該種子做種
+catalog.request.result_torrent_req: 請選擇用於完成請求的種子
+catalog.request.reward_invalid: 魔力獎勵必須大於 0
+catalog.request.reward_req: 請選擇魔力獎勵
+catalog.request.state_changed: 請求狀態已經變更，請重新整理後再試
+catalog.request.submit_denied: 只有目前認領人可以提交結果
+catalog.request.title_invalid: 請求標題不能超過 500 個字元
+catalog.request.title_req: 請輸入請求標題
+catalog.request.type_invalid: 無效的請求類型
+catalog.request.type_req: 請選擇請求類型
 
 catalog.subtitle.download_s3_failed: 下載字幕文件失敗
 catalog.subtitle.open_upload_failed: 打開上傳字幕文件失敗
@@ -46,6 +80,5 @@ catalog.torrent.unmarshal_info_failed: 解析種子 Info 字典失敗
 catalog.torrent.upload_config_invalid: 分類發布配置無效
 catalog.torrent.upload_storage_failed: 上傳種子到存儲失敗
 catalog.torrent.write_reward_failed: 寫入讚賞記錄失敗
-catalog.comment.not_found: 未找到评论
 catalog.general.forbidden: 无权进行此操作
 catalog.subtitle.not_found: 未找到字幕

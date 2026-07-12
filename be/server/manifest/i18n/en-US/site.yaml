@@ -1,4 +1,17 @@
 site.message.catalog_comment.title: New comment on torrent "%s"
+site.message.catalog_request.abandoned.content: The claimant abandoned your request "%s"
+site.message.catalog_request.abandoned.title: Request claim abandoned
+site.message.catalog_request.cancelled.content: Request "%s" was cancelled
+site.message.catalog_request.cancelled.title: Request cancelled
+site.message.catalog_request.claimed.content: Your request "%s" has been claimed
+site.message.catalog_request.claimed.title: Request claimed
+site.message.catalog_request.completed.content: Request "%s" was completed and the bonus reward was paid
+site.message.catalog_request.completed.title: Request completed
+site.message.catalog_request.expired.content: The claim on request "%s" expired and the request is open again
+site.message.catalog_request.expired.title: Request claim expired
+site.message.catalog_request.submitted.content: A result was submitted for request "%s" and awaits your confirmation
+site.message.catalog_request.submitted.title: Request result awaiting confirmation
+site.message.catalog_request_comment.title: New comment on request "%s"
 site.message.forum_topic_reply.title: New reply to topic "%s"
 site.message.forum_reply_reply.title: New response to your reply in "%s"
 site.message.reward.catalog_torrent.title: Your torrent received a reward

@@ -41,6 +41,15 @@ func (s *sCatalogTorrentDomain) GetTorrentById(ctx context.Context, id uint64) (
 	return &torrent, nil
 }
 
+func (s *sCatalogTorrentDomain) GetTorrentByIdForUpdate(ctx context.Context, id uint64) (*entity.CatalogTorrent, error) {
+	var torrent entity.CatalogTorrent
+	err := dao.CatalogTorrent.Ctx(ctx).LockUpdate().Where(dao.CatalogTorrent.Columns().Id, id).Scan(&torrent)
+	if err != nil || torrent.Id == 0 {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.not_found"))
+	}
+	return &torrent, nil
+}
+
 func (s *sCatalogTorrentDomain) GetTorrentByInfoHash(ctx context.Context, infoHash string) (*entity.CatalogTorrent, error) {
 	var torrent *entity.CatalogTorrent
 	err := dao.CatalogTorrent.Ctx(ctx).

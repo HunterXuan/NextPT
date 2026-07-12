@@ -222,8 +222,11 @@ func (s *sModReportUsecase) loadCatalogCommentTargets(ctx context.Context, repor
 	}
 	for _, comment := range comments {
 		parentType := ""
-		if comment.TargetType == consts.CatalogCommentTargetTypeCatalogTorrent && comment.TargetId > 0 {
+		switch comment.TargetType {
+		case consts.CatalogCommentTargetTypeCatalogTorrent:
 			parentType = consts.ModReportTargetTypeCatalogTorrent
+		case consts.CatalogCommentTargetTypeCatalogRequest:
+			parentType = consts.ModReportTargetTypeCatalogRequest
 		}
 		s.assignReportTargetSummary(reportIdsByTarget[comment.Id], targets, modout.ReportTargetSummary{
 			Type:       consts.ModReportTargetTypeCatalogComment,

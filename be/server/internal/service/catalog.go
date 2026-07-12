@@ -48,6 +48,38 @@ type (
 		ToggleLike(ctx context.Context, actor *model.Actor, in catalogin.CommentToggleLikeInp) (*catalogout.CommentToggleLikeOut, error)
 		Reward(ctx context.Context, actor *model.Actor, in catalogin.CommentRewardInp) error
 		Report(ctx context.Context, actor *model.Actor, in catalogin.CommentReportInp) error
+		CreateForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentCreateInp) (*catalogout.CommentCreateOut, error)
+		ListForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentListInp) (*catalogout.CommentListOut, error)
+		ToggleLikeForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentActionInp) (*catalogout.CommentToggleLikeOut, error)
+		RewardForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentRewardInp) error
+		ReportForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentReportInp) error
+	}
+	ICatalogRequestDomain interface {
+		InsertRequest(ctx context.Context, request entity.CatalogRequest) (uint64, error)
+		GetRequestById(ctx context.Context, id uint64) (*entity.CatalogRequest, error)
+		GetRequestByIdForUpdate(ctx context.Context, id uint64) (*entity.CatalogRequest, error)
+		QueryRequests(ctx context.Context, options model.CatalogRequestListOptions) ([]entity.CatalogRequest, int, error)
+		HasActiveReseedRequest(ctx context.Context, torrentId uint64) (bool, error)
+		ClaimRequest(ctx context.Context, id uint64, userId uint64, claimedAt *gtime.Time, expiresAt *gtime.Time) (bool, error)
+		AbandonRequest(ctx context.Context, id uint64, userId uint64) (bool, error)
+		SubmitRequest(ctx context.Context, id uint64, userId uint64, resultTorrentId uint64, submittedAt *gtime.Time) (bool, error)
+		CompleteRequest(ctx context.Context, id uint64, completedAt *gtime.Time) (bool, error)
+		CancelRequest(ctx context.Context, id uint64, cancelledBy uint64, reason string, cancelledAt *gtime.Time) (bool, error)
+		QueryExpiredClaims(ctx context.Context, now *gtime.Time, limit int) ([]entity.CatalogRequest, error)
+		ReleaseExpiredClaim(ctx context.Context, id uint64, claimedBy uint64, now *gtime.Time) (bool, error)
+	}
+	ICatalogRequestUsecase interface {
+		List(ctx context.Context, actor *model.Actor, in catalogin.RequestListInp) (*catalogout.RequestListOut, error)
+		Get(ctx context.Context, actor *model.Actor, in catalogin.RequestGetInp) (*catalogout.RequestDetailOut, error)
+		Create(ctx context.Context, actor *model.Actor, in catalogin.RequestCreateInp) (*catalogout.RequestCreateOut, error)
+		Claim(ctx context.Context, actor *model.Actor, in catalogin.RequestClaimInp) error
+		Abandon(ctx context.Context, actor *model.Actor, in catalogin.RequestAbandonInp) error
+		Submit(ctx context.Context, actor *model.Actor, in catalogin.RequestSubmitInp) error
+		Complete(ctx context.Context, actor *model.Actor, in catalogin.RequestCompleteInp) error
+		CompleteByAdmin(ctx context.Context, actor *model.Actor, in catalogin.RequestCompleteInp) error
+		Cancel(ctx context.Context, actor *model.Actor, in catalogin.RequestCancelInp) error
+		CancelByAdmin(ctx context.Context, actor *model.Actor, in catalogin.RequestCancelInp) error
+		ReleaseExpiredClaims(ctx context.Context, limit int) (int, error)
 	}
 	ICatalogSubtitleDomain interface {
 		InsertSubtitle(ctx context.Context, torrentId uint64, userId uint64, fileName string, ext string, size int, language string, anonymous bool) (uint64, error)
@@ -71,6 +103,7 @@ type (
 	}
 	ICatalogTorrentDomain interface {
 		GetTorrentById(ctx context.Context, id uint64) (*entity.CatalogTorrent, error)
+		GetTorrentByIdForUpdate(ctx context.Context, id uint64) (*entity.CatalogTorrent, error)
 		GetTorrentByInfoHash(ctx context.Context, infoHash string) (*entity.CatalogTorrent, error)
 		ResolveEffectiveTorrentPromotion(ctx context.Context, torrent *entity.CatalogTorrent, now *gtime.Time) model.CatalogTorrentPromotion
 		PickNewTorrentPromotion(ctx context.Context, size uint64, now *gtime.Time) model.CatalogTorrentPromotion
@@ -142,6 +175,8 @@ var (
 	localCatalogCategoryUsecase ICatalogCategoryUsecase
 	localCatalogCommentDomain   ICatalogCommentDomain
 	localCatalogCommentUsecase  ICatalogCommentUsecase
+	localCatalogRequestDomain   ICatalogRequestDomain
+	localCatalogRequestUsecase  ICatalogRequestUsecase
 	localCatalogSubtitleDomain  ICatalogSubtitleDomain
 	localCatalogSubtitleUsecase ICatalogSubtitleUsecase
 	localCatalogTorrentDomain   ICatalogTorrentDomain
@@ -190,6 +225,28 @@ func CatalogCommentUsecase() ICatalogCommentUsecase {
 
 func RegisterCatalogCommentUsecase(i ICatalogCommentUsecase) {
 	localCatalogCommentUsecase = i
+}
+
+func CatalogRequestDomain() ICatalogRequestDomain {
+	if localCatalogRequestDomain == nil {
+		panic("implement not found for interface ICatalogRequestDomain, forgot register?")
+	}
+	return localCatalogRequestDomain
+}
+
+func RegisterCatalogRequestDomain(i ICatalogRequestDomain) {
+	localCatalogRequestDomain = i
+}
+
+func CatalogRequestUsecase() ICatalogRequestUsecase {
+	if localCatalogRequestUsecase == nil {
+		panic("implement not found for interface ICatalogRequestUsecase, forgot register?")
+	}
+	return localCatalogRequestUsecase
+}
+
+func RegisterCatalogRequestUsecase(i ICatalogRequestUsecase) {
+	localCatalogRequestUsecase = i
 }
 
 func CatalogSubtitleDomain() ICatalogSubtitleDomain {

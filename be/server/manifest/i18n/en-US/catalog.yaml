@@ -1,5 +1,12 @@
 catalog.category.invalid: Invalid category ID
 
+catalog.comment.content_len: Comment content must be between 3 and 10000 characters
+catalog.comment.content_req: Comment content is required
+catalog.comment.not_found: Comment not found
+catalog.comment.report_reason_len: Report reason must be between 5 and 500 characters
+catalog.comment.report_reason_req: Report reason is required
+catalog.comment.reward_self_denied: You cannot reward your own comment
+
 catalog.general.unauthorized: Please log in first
 catalog.general.user_stat_error: Failed to get user statistics
 
@@ -7,7 +14,34 @@ catalog.reward.amount_min: Reward amount must be at least 1
 catalog.reward.amount_req: Reward amount is required
 catalog.reward.insufficient_balance: Insufficient bonus balance
 catalog.reward.self_denied: You cannot reward your own torrent
-catalog.comment.reward_self_denied: You cannot reward your own comment
+
+catalog.request.abandon_denied: Only the current claimant can abandon this request
+catalog.request.cancel_denied: This request cannot be cancelled
+catalog.request.cancel_reason_invalid: Cancellation reason cannot exceed 500 characters
+catalog.request.claim_expired: The claim has expired
+catalog.request.claim_publish_denied: You need torrent publishing permission to claim this request
+catalog.request.claim_self_denied: You cannot claim your own request
+catalog.request.claimer_missing: The request has no claimant
+catalog.request.complete_denied: Only the requester or an authorized staff member can complete this request
+catalog.request.description_invalid: Request description must be between 3 and 10000 characters
+catalog.request.description_req: Request description is required
+catalog.request.id_req: Request ID is required
+catalog.request.not_found: Request not found
+catalog.request.not_open: This request is not open for claiming
+catalog.request.not_submitted: The request result has not been submitted
+catalog.request.query_failed: Failed to load requests
+catalog.request.reseed_exists: An active reseed request already exists for this torrent
+catalog.request.reseed_has_seeders: This torrent still has active seeders
+catalog.request.reseed_not_seeding: You are not currently seeding this torrent
+catalog.request.result_torrent_req: Select a torrent that fulfills this request
+catalog.request.reward_invalid: Bonus reward must be greater than 0
+catalog.request.reward_req: Select a bonus reward
+catalog.request.state_changed: The request state has changed. Refresh and try again
+catalog.request.submit_denied: Only the current claimant can submit a result
+catalog.request.title_invalid: Request title cannot exceed 500 characters
+catalog.request.title_req: Request title is required
+catalog.request.type_invalid: Invalid request type
+catalog.request.type_req: Request type is required
 
 catalog.subtitle.download_s3_failed: failed to download subtitle from s3
 catalog.subtitle.open_upload_failed: failed to open upload file
@@ -46,6 +80,5 @@ catalog.torrent.unmarshal_info_failed: failed to unmarshal torrent info dictiona
 catalog.torrent.upload_config_invalid: Invalid category upload config
 catalog.torrent.upload_storage_failed: failed to upload torrent to storage
 catalog.torrent.write_reward_failed: Failed to write reward record
-catalog.comment.not_found: Comment not found
 catalog.general.forbidden: Forbidden action
 catalog.subtitle.not_found: Subtitle not found

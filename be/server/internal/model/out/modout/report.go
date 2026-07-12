@@ -28,7 +28,7 @@ func (m ReportTargetSummary) SiteMessageTarget() (string, uint64) {
 	}
 
 	switch targetType {
-	case consts.SiteMessageTargetTypeCatalogTorrent, consts.SiteMessageTargetTypeForumTopic:
+	case consts.SiteMessageTargetTypeCatalogTorrent, consts.SiteMessageTargetTypeCatalogRequest, consts.SiteMessageTargetTypeForumTopic:
 		return targetType, targetId
 	default:
 		return "", 0

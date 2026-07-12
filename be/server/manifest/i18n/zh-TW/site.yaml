@@ -1,4 +1,17 @@
 site.message.catalog_comment.title: 種子《%s》收到了新評論
+site.message.catalog_request.abandoned.content: 你的請求《%s》的認領人已放棄認領
+site.message.catalog_request.abandoned.title: 請求認領已被放棄
+site.message.catalog_request.cancelled.content: 請求《%s》已被取消
+site.message.catalog_request.cancelled.title: 請求已取消
+site.message.catalog_request.claimed.content: 你的請求《%s》已被認領
+site.message.catalog_request.claimed.title: 請求已被認領
+site.message.catalog_request.completed.content: 請求《%s》已確認完成，魔力獎勵已發放
+site.message.catalog_request.completed.title: 請求已完成
+site.message.catalog_request.expired.content: 請求《%s》的認領已逾時並重新開放
+site.message.catalog_request.expired.title: 請求認領已逾時
+site.message.catalog_request.submitted.content: 請求《%s》已提交結果，等待你的確認
+site.message.catalog_request.submitted.title: 請求結果待確認
+site.message.catalog_request_comment.title: 請求《%s》收到了新評論
 site.message.forum_topic_reply.title: 主題《%s》收到了新回覆
 site.message.forum_reply_reply.title: 你在主題《%s》中的回覆收到了回應
 site.message.reward.catalog_torrent.title: 你的種子收到了讚賞

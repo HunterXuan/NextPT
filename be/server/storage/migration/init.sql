@@ -396,6 +396,37 @@ CREATE TABLE `catalog_torrent_bookmark` (
     KEY `idx_torrent` (`torrent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子收藏表';
 
+-- 求种 / 续种请求
+CREATE TABLE `catalog_request` (
+    `id`                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `request_type`      TINYINT UNSIGNED NOT NULL COMMENT '1=求种 2=续种',
+    `requester_id`      BIGINT UNSIGNED NOT NULL,
+    `category_id`       INT UNSIGNED    NOT NULL DEFAULT 0,
+    `target_torrent_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '续种目标种子',
+    `result_torrent_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '求种完成后关联的种子',
+    `title`             VARCHAR(500)    NOT NULL DEFAULT '',
+    `description`       TEXT            NOT NULL COMMENT '请求说明 (Markdown/BBCode)',
+    `reward_amount`     DECIMAL(12,1)   NOT NULL DEFAULT 0.0 COMMENT '已托管的魔力奖励',
+    `status`            TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=开放 1=已认领 2=待确认 3=已完成 4=已取消',
+    `claimed_by`        BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    `claimed_at`        DATETIME        NULL,
+    `claim_expires_at`  DATETIME        NULL,
+    `submitted_at`      DATETIME        NULL,
+    `completed_at`      DATETIME        NULL,
+    `cancelled_by`      BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    `cancelled_at`      DATETIME        NULL,
+    `cancel_reason`     VARCHAR(500)    NOT NULL DEFAULT '',
+    `created_at`        DATETIME        NULL,
+    `updated_at`        DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_status_created` (`status`, `created_at`),
+    KEY `idx_type_status_created` (`request_type`, `status`, `created_at`),
+    KEY `idx_requester_status` (`requester_id`, `status`, `created_at`),
+    KEY `idx_claimed_status` (`claimed_by`, `status`, `claim_expires_at`),
+    KEY `idx_category_status` (`category_id`, `status`, `created_at`),
+    KEY `idx_target_status` (`target_torrent_id`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='求种与续种请求表';
+
 -- 种子感谢
 -- 种子赞赏
 -- 作弊检测记录
@@ -427,7 +458,7 @@ CREATE TABLE `mod_cheater_log` (
 -- 通用评论表（支持域/资源形式的多种对象）
 CREATE TABLE `catalog_comment` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `target_type`     VARCHAR(20)     NOT NULL COMMENT 'catalog_torrent',
+    `target_type`     VARCHAR(20)     NOT NULL COMMENT 'catalog_torrent/catalog_request',
     `target_id`       BIGINT UNSIGNED NOT NULL,
     `user_id`         BIGINT UNSIGNED NOT NULL,
     `content`         TEXT            NOT NULL COMMENT '评论内容 (Markdown/BBCode)',

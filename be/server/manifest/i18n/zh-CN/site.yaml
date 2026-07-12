@@ -1,4 +1,17 @@
 site.message.catalog_comment.title: 种子《%s》收到了新评论
+site.message.catalog_request.abandoned.content: 你的请求《%s》的认领人已放弃认领
+site.message.catalog_request.abandoned.title: 请求认领已被放弃
+site.message.catalog_request.cancelled.content: 请求《%s》已被取消
+site.message.catalog_request.cancelled.title: 请求已取消
+site.message.catalog_request.claimed.content: 你的请求《%s》已被认领
+site.message.catalog_request.claimed.title: 请求已被认领
+site.message.catalog_request.completed.content: 请求《%s》已确认完成，魔力奖励已发放
+site.message.catalog_request.completed.title: 请求已完成
+site.message.catalog_request.expired.content: 请求《%s》的认领已超时并重新开放
+site.message.catalog_request.expired.title: 请求认领已超时
+site.message.catalog_request.submitted.content: 请求《%s》已提交结果，等待你的确认
+site.message.catalog_request.submitted.title: 请求结果待确认
+site.message.catalog_request_comment.title: 请求《%s》收到了新评论
 site.message.forum_topic_reply.title: 主题《%s》收到了新回复
 site.message.forum_reply_reply.title: 你在主题《%s》中的回复收到了回应
 site.message.reward.catalog_torrent.title: 你的种子收到了赞赏

@@ -1,5 +1,12 @@
 catalog.category.invalid: 无效的分类ID
 
+catalog.comment.content_len: 评论内容长度应为 3 到 10000 个字符
+catalog.comment.content_req: 请输入评论内容
+catalog.comment.not_found: 未找到评论
+catalog.comment.report_reason_len: 举报原因长度应为 5 到 500 个字符
+catalog.comment.report_reason_req: 请输入举报原因
+catalog.comment.reward_self_denied: 不能赞赏自己的评论
+
 catalog.general.unauthorized: 请先登录
 catalog.general.user_stat_error: 获取用户统计信息失败
 
@@ -7,7 +14,34 @@ catalog.reward.amount_min: 赞赏金额至少为1
 catalog.reward.amount_req: 请输入赞赏金额
 catalog.reward.insufficient_balance: 魔力值余额不足
 catalog.reward.self_denied: 不能赞赏自己的种子
-catalog.comment.reward_self_denied: 不能赞赏自己的评论
+
+catalog.request.abandon_denied: 只有当前认领人可以放弃认领
+catalog.request.cancel_denied: 当前请求不能取消
+catalog.request.cancel_reason_invalid: 取消原因不能超过 500 个字符
+catalog.request.claim_expired: 认领已经过期
+catalog.request.claim_publish_denied: 你没有发布种子的权限，不能认领该求种请求
+catalog.request.claim_self_denied: 不能认领自己创建的请求
+catalog.request.claimer_missing: 请求缺少认领人
+catalog.request.complete_denied: 只有请求人或有权限的管理人员可以确认完成
+catalog.request.description_invalid: 请求说明长度应为 3 到 10000 个字符
+catalog.request.description_req: 请输入请求说明
+catalog.request.id_req: 缺少请求ID参数
+catalog.request.not_found: 请求不存在
+catalog.request.not_open: 请求当前不可认领
+catalog.request.not_submitted: 请求尚未提交结果
+catalog.request.query_failed: 获取请求列表失败
+catalog.request.reseed_exists: 该种子已经存在进行中的续种请求
+catalog.request.reseed_has_seeders: 该种子当前仍有做种者，无需请求续种
+catalog.request.reseed_not_seeding: 尚未检测到你正在为该种子做种
+catalog.request.result_torrent_req: 请选择用于完成请求的种子
+catalog.request.reward_invalid: 魔力奖励必须大于 0
+catalog.request.reward_req: 请选择魔力奖励
+catalog.request.state_changed: 请求状态已经变化，请刷新后重试
+catalog.request.submit_denied: 只有当前认领人可以提交结果
+catalog.request.title_invalid: 请求标题不能超过 500 个字符
+catalog.request.title_req: 请输入请求标题
+catalog.request.type_invalid: 无效的请求类型
+catalog.request.type_req: 请选择请求类型
 
 catalog.subtitle.download_s3_failed: 下载字幕文件失败
 catalog.subtitle.open_upload_failed: 打开上传字幕文件失败
@@ -46,6 +80,5 @@ catalog.torrent.unmarshal_info_failed: 解析种子 Info 字典失败
 catalog.torrent.upload_config_invalid: 分类发布配置无效
 catalog.torrent.upload_storage_failed: 上传种子到存储失败
 catalog.torrent.write_reward_failed: 写入赞赏记录失败
-catalog.comment.not_found: 未找到评论
 catalog.general.forbidden: 无权进行此操作
 catalog.subtitle.not_found: 未找到字幕

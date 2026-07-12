@@ -22,7 +22,8 @@ SET @iam_permissions_limited = JSON_ARRAY(
     'download:catalog/torrent:*',
     'read:catalog/subtitle:*',
     'download:catalog/subtitle:*',
-    'read:catalog/comment:*'
+    'read:catalog/comment:*',
+    'read:catalog/request:*'
 );
 
 SET @iam_permissions_member = JSON_ARRAY_APPEND(
@@ -36,7 +37,9 @@ SET @iam_permissions_member = JSON_ARRAY_APPEND(
     '$',
     'create:forum/reply:*',
     '$',
-    'create:catalog/comment:*'
+    'create:catalog/comment:*',
+    '$',
+    'create:catalog/request:*'
 );
 
 SET @iam_permissions_power_user = JSON_ARRAY_APPEND(
@@ -64,7 +67,9 @@ SET @iam_permissions_catalog_staff = JSON_ARRAY_APPEND(
     '$',
     'admin:catalog/subtitle:*',
     '$',
-    'admin:catalog/comment:*'
+    'admin:catalog/comment:*',
+    '$',
+    'admin:catalog/request:*'
 );
 
 SET @iam_permissions_admin = JSON_ARRAY_APPEND(

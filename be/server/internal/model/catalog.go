@@ -29,6 +29,25 @@ type CatalogTorrentSummary struct {
 	Exist bool   `json:"exist"`
 }
 
+type CatalogRequestListOptions struct {
+	ActorId     uint64
+	Keyword     string
+	RequestType uint
+	Status      *uint
+	CategoryId  uint
+	View        string
+	Page        int
+	Size        int
+}
+
+type CatalogRequestActions struct {
+	CanClaim    bool `json:"canClaim"`
+	CanAbandon  bool `json:"canAbandon"`
+	CanSubmit   bool `json:"canSubmit"`
+	CanComplete bool `json:"canComplete"`
+	CanCancel   bool `json:"canCancel"`
+}
+
 type CatalogTorrentPromotion struct {
 	SpState    int
 	SpExpireAt *gtime.Time

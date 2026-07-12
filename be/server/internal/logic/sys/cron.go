@@ -61,6 +61,17 @@ func (s *sSysCron) Start(ctx context.Context) {
 		return nil
 	}), "iam_invite_expiry_cleanup")
 
+	gcron.AddSingleton(ctx, "0 */10 * * * *", s.runWrapper("catalog_request_claim_expiry", 300, func(ctx context.Context) error {
+		rows, err := service.CatalogRequestUsecase().ReleaseExpiredClaims(ctx, 500)
+		if err != nil {
+			return err
+		}
+		if rows > 0 {
+			glog.Infof(ctx, "[Cron] Catalog request claim expiry completed. Released %d claims.", rows)
+		}
+		return nil
+	}), "catalog_request_claim_expiry")
+
 	gcron.AddSingleton(ctx, "@daily", s.runWrapper("iam_rank_sync", 3600, func(ctx context.Context) error {
 		_, err := service.IamRoleUsecase().SyncRanks(ctx)
 		return err
