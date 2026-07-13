@@ -136,6 +136,7 @@ export const Permission = {
   AdminCatalogTorrentManage: 'admin:catalog/torrent:*',
   AdminCatalogSubtitleManage: 'admin:catalog/subtitle:*',
   AdminCatalogCommentManage: 'admin:catalog/comment:*',
+  AdminCatalogRequestManage: 'admin:catalog/request:*',
   IamInviteRead: 'read:iam/invite:*',
   IamInviteCreate: 'create:iam/invite:*',
   SiteAnnouncementRead: 'read:site/announcement:*',
@@ -153,7 +154,10 @@ export const Permission = {
   CatalogSubtitleCreate: 'create:catalog/subtitle:*',
   CatalogSubtitleDownload: 'download:catalog/subtitle:*',
   CatalogCommentRead: 'read:catalog/comment:*',
-  CatalogCommentCreate: 'create:catalog/comment:*'
+  CatalogCommentCreate: 'create:catalog/comment:*',
+  CatalogRequestRead: 'read:catalog/request:*',
+  CatalogRequestCreate: 'create:catalog/request:*',
+  CatalogRequestUpdate: 'update:catalog/request:*'
 } as const
 
 export const AdminPermissions = [
@@ -175,7 +179,8 @@ export const AdminPermissions = [
   Permission.AdminCatalogCategoryManage,
   Permission.AdminCatalogTorrentManage,
   Permission.AdminCatalogSubtitleManage,
-  Permission.AdminCatalogCommentManage
+  Permission.AdminCatalogCommentManage,
+  Permission.AdminCatalogRequestManage
 ]
 
 export function useAuth() {

@@ -227,6 +227,8 @@ function messageTargetPath(item: SiteMessage) {
   switch (item.targetType) {
     case 'catalog_torrent':
       return `/catalog/torrents/${item.targetId}`
+    case 'catalog_request':
+      return `/catalog/requests/${item.targetId}`
     case 'forum_topic':
       return `/forum/topics/${item.targetId}`
     default:

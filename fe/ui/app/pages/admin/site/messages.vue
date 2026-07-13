@@ -382,6 +382,7 @@ function targetTypeLabel(type: string) {
 function messageTargetPath(item: AdminSiteMessage) {
   if (!item.targetType || !item.targetId) return ''
   if (item.targetType === 'catalog_torrent') return `/catalog/torrents/${item.targetId}`
+  if (item.targetType === 'catalog_request') return `/catalog/requests/${item.targetId}`
   if (item.targetType === 'forum_topic') return `/forum/topics/${item.targetId}`
   return ''
 }

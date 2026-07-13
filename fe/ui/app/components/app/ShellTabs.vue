@@ -421,6 +421,7 @@ function tabIcon(tab: WorkspaceTabItem) {
   const to = tab.to
   if (to.includes('/admin')) return 'i-lucide-shield-check'
   if (to.includes('/catalog/torrents')) return 'i-lucide-library'
+  if (to.includes('/catalog/requests')) return 'i-lucide-hand-helping'
   if (to.includes('/catalog/subtitles')) return 'i-lucide-captions'
   if (to.includes('/forum')) return 'i-lucide-messages-square'
   if (to.includes('/iam/users')) return 'i-lucide-user-round'

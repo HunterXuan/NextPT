@@ -222,6 +222,12 @@ function bonusActionIcon(action?: string | null) {
       return 'i-lucide-sprout'
     case 'admin_adjustment':
       return 'i-lucide-shield'
+    case 'request_escrow':
+      return 'i-lucide-lock-keyhole'
+    case 'request_reward':
+      return 'i-lucide-circle-check'
+    case 'request_refund':
+      return 'i-lucide-undo-2'
     case 'forum_topic':
       return 'i-lucide-message-square'
     case 'forum_reply':
@@ -233,6 +239,7 @@ function bonusActionIcon(action?: string | null) {
 
 function bonusActionIconClass(log: BonusLogItem) {
   if (log.action === 'seed_bonus') return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-300'
+  if (log.action === 'request_reward' || log.action === 'request_refund') return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-300'
   if (log.amount < 0) return 'bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-300'
   return 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300'
 }

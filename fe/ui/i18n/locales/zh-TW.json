@@ -411,6 +411,7 @@
           "bookmarked": "已收藏",
           "edit": "編輯種子",
           "report": "檢舉",
+          "requestReseed": "請求續種",
           "managementTitle": "管理操作",
           "adminDelete": "刪除種子",
           "confirmAdminDelete": "確認刪除？",
@@ -598,6 +599,109 @@
           "torrentId": "種子 ID",
           "category": "分類"
         }
+      }
+    },
+    "requests": {
+      "metaTitle": "求種與續種",
+      "navLabel": "求種",
+      "title": "求種與續種",
+      "types": {
+        "torrent": "求種",
+        "reseed": "續種"
+      },
+      "status": {
+        "0": "開放中",
+        "1": "已認領",
+        "2": "待確認",
+        "3": "已完成",
+        "4": "已取消"
+      },
+      "search": {
+        "placeholder": "搜尋請求標題",
+        "submit": "搜尋"
+      },
+      "filters": {
+        "allTypes": "全部類型",
+        "allStatuses": "全部狀態"
+      },
+      "views": {
+        "all": "全部請求",
+        "created": "我的請求",
+        "claimed": "我的認領"
+      },
+      "fields": {
+        "type": "類型",
+        "category": "分類",
+        "title": "標題",
+        "description": "請求說明",
+        "reward": "魔力獎勵",
+        "status": "狀態",
+        "requester": "請求人",
+        "claimer": "認領人",
+        "targetTorrent": "目標種子",
+        "resultTorrent": "結果種子",
+        "claimExpiresAt": "認領期限",
+        "cancelReason": "取消原因"
+      },
+      "empty": {
+        "title": "暫無請求",
+        "description": "目前篩選條件下還沒有求種或續種請求。"
+      },
+      "create": {
+        "metaTitle": "建立請求",
+        "title": "建立請求",
+        "formTitle": "請求內容",
+        "publishTitle": "發佈請求",
+        "action": "建立請求",
+        "submit": "發布請求",
+        "success": "請求已發布",
+        "categoryPlaceholder": "選擇分類",
+        "titlePlaceholder": "填寫希望取得的資源",
+        "descriptionPlaceholder": "說明版本、規格或其他要求",
+        "targetPlaceholder": "搜尋需要續種的種子",
+        "noTorrentResults": "沒有找到符合的種子",
+        "seeders": "{count} 個做種者",
+        "changeTarget": "更換目標種子",
+        "previewEmpty": "填寫說明後可在這裡預覽",
+        "rewardHelp": "獎勵會在請求發布時託管，完成後發給認領人，取消時退回。",
+        "summary": {
+          "title": "請求摘要",
+          "currentBalance": "目前餘額",
+          "balance": "託管後餘額"
+        },
+        "guide": {
+          "title": "發布提示",
+          "search": "發布前先搜尋站內是否已有相同資源。",
+          "confirm": "請清楚說明版本、品質和檔案規格要求。",
+          "reward": "請求完成前，所選魔力獎勵會暫時託管。"
+        }
+      },
+      "detail": {
+        "metaTitle": "請求詳情",
+        "title": "請求詳情",
+        "invalidId": "無效的請求 ID",
+        "progress": "請求狀態",
+        "relatedTorrent": "關聯種子",
+        "comments": "討論",
+        "resultTorrentPlaceholder": "輸入結果種子 ID"
+      },
+      "actions": {
+        "claim": "認領請求",
+        "claimed": "請求已認領",
+        "abandon": "放棄認領",
+        "abandoned": "已放棄認領",
+        "submit": "提交結果",
+        "submitReseed": "確認已經續種",
+        "submitted": "結果已提交",
+        "complete": "確認完成",
+        "completeConfirm": "確認請求已經完成？",
+        "completeHint": "確認後，託管的魔力將發放給認領人。",
+        "completed": "請求已完成",
+        "cancel": "取消請求",
+        "cancelConfirm": "確認取消請求？",
+        "cancelHint": "取消後，託管的魔力會退回請求人。",
+        "cancelReason": "可選填寫取消原因",
+        "cancelled": "請求已取消"
       }
     },
     "bookmarks": {
@@ -1609,6 +1713,8 @@
           "revoke_permission": "撤銷權限",
           "remove_session": "移除會話",
           "update_stat": "調整資料",
+          "complete": "確認完成",
+          "cancel": "取消",
           "resolve": "處理",
           "apply": "套用限制",
           "remove": "移除"
@@ -1616,6 +1722,7 @@
         "targets": {
           "site_config": "站點配置",
           "catalog_category": "種子分類",
+          "catalog_request": "求種與續種請求",
           "catalog_torrent": "種子",
           "forum_category": "論壇分類",
           "forum_node": "論壇版塊",
@@ -1968,12 +2075,16 @@
         "reward_received": "收到讚賞",
         "seed_bonus": "做種獎勵",
         "admin_adjustment": "管理員調整",
+        "request_escrow": "請求獎勵託管",
+        "request_reward": "請求完成獎勵",
+        "request_refund": "請求獎勵退回",
         "forum_topic": "論壇主題",
         "forum_reply": "論壇回覆"
       },
       "targetTypes": {
         "catalog_torrent": "種子",
         "catalog_comment": "種子評論",
+        "catalog_request": "求種與續種請求",
         "forum_topic": "論壇主題",
         "forum_reply": "論壇回覆"
       },

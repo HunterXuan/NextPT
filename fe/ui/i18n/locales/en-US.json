@@ -411,6 +411,7 @@
           "bookmarked": "Bookmarked",
           "edit": "Edit torrent",
           "report": "Report",
+          "requestReseed": "Request reseed",
           "managementTitle": "Management",
           "adminDelete": "Delete torrent",
           "confirmAdminDelete": "Delete this torrent?",
@@ -598,6 +599,109 @@
           "torrentId": "Torrent ID",
           "category": "Category"
         }
+      }
+    },
+    "requests": {
+      "metaTitle": "Requests",
+      "navLabel": "Requests",
+      "title": "Requests",
+      "types": {
+        "torrent": "Request",
+        "reseed": "Reseed"
+      },
+      "status": {
+        "0": "Open",
+        "1": "Claimed",
+        "2": "Awaiting confirmation",
+        "3": "Completed",
+        "4": "Cancelled"
+      },
+      "search": {
+        "placeholder": "Search request titles",
+        "submit": "Search"
+      },
+      "filters": {
+        "allTypes": "All types",
+        "allStatuses": "All statuses"
+      },
+      "views": {
+        "all": "All requests",
+        "created": "My requests",
+        "claimed": "My claims"
+      },
+      "fields": {
+        "type": "Type",
+        "category": "Category",
+        "title": "Title",
+        "description": "Description",
+        "reward": "Bonus reward",
+        "status": "Status",
+        "requester": "Requester",
+        "claimer": "Claimant",
+        "targetTorrent": "Target torrent",
+        "resultTorrent": "Result torrent",
+        "claimExpiresAt": "Claim deadline",
+        "cancelReason": "Cancellation reason"
+      },
+      "empty": {
+        "title": "No requests",
+        "description": "No torrent or reseed requests match the current filters."
+      },
+      "create": {
+        "metaTitle": "Create request",
+        "title": "Create request",
+        "formTitle": "Request details",
+        "publishTitle": "Publish request",
+        "action": "Create request",
+        "submit": "Publish request",
+        "success": "Request published",
+        "categoryPlaceholder": "Select a category",
+        "titlePlaceholder": "Describe the resource you need",
+        "descriptionPlaceholder": "Describe the version, quality, or other requirements",
+        "targetPlaceholder": "Search for a torrent to reseed",
+        "noTorrentResults": "No matching torrents",
+        "seeders": "{count} seeders",
+        "changeTarget": "Change target torrent",
+        "previewEmpty": "Enter a description to preview it here",
+        "rewardHelp": "The reward is held when published, paid to the claimant on completion, and refunded if cancelled.",
+        "summary": {
+          "title": "Request summary",
+          "currentBalance": "Current balance",
+          "balance": "After escrow"
+        },
+        "guide": {
+          "title": "Posting tips",
+          "search": "Search the site for the same resource before posting.",
+          "confirm": "Clearly describe version, quality, and file requirements.",
+          "reward": "The selected bonus reward is held until the request is resolved."
+        }
+      },
+      "detail": {
+        "metaTitle": "Request details",
+        "title": "Request details",
+        "invalidId": "Invalid request ID",
+        "progress": "Request status",
+        "relatedTorrent": "Related torrent",
+        "comments": "Discussion",
+        "resultTorrentPlaceholder": "Enter result torrent ID"
+      },
+      "actions": {
+        "claim": "Claim request",
+        "claimed": "Request claimed",
+        "abandon": "Abandon claim",
+        "abandoned": "Claim abandoned",
+        "submit": "Submit result",
+        "submitReseed": "Confirm reseeding",
+        "submitted": "Result submitted",
+        "complete": "Confirm completion",
+        "completeConfirm": "Confirm this request is complete?",
+        "completeHint": "The held bonus will be paid to the claimant.",
+        "completed": "Request completed",
+        "cancel": "Cancel request",
+        "cancelConfirm": "Cancel this request?",
+        "cancelHint": "The held bonus will be refunded to the requester.",
+        "cancelReason": "Optional cancellation reason",
+        "cancelled": "Request cancelled"
       }
     },
     "bookmarks": {
@@ -1609,6 +1713,8 @@
           "revoke_permission": "Revoke permission",
           "remove_session": "Remove session",
           "update_stat": "Update stats",
+          "complete": "Complete",
+          "cancel": "Cancel",
           "resolve": "Resolve",
           "apply": "Apply restriction",
           "remove": "Remove"
@@ -1616,6 +1722,7 @@
         "targets": {
           "site_config": "Site config",
           "catalog_category": "Catalog category",
+          "catalog_request": "Request",
           "catalog_torrent": "Torrent",
           "forum_category": "Forum category",
           "forum_node": "Forum node",
@@ -1968,12 +2075,16 @@
         "reward_received": "Reward received",
         "seed_bonus": "Seeding bonus",
         "admin_adjustment": "Admin adjustment",
+        "request_escrow": "Request reward held",
+        "request_reward": "Request completion reward",
+        "request_refund": "Request reward refunded",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
       },
       "targetTypes": {
         "catalog_torrent": "Torrent",
         "catalog_comment": "Torrent comment",
+        "catalog_request": "Torrent request",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
       },

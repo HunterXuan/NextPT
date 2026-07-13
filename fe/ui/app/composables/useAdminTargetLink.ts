@@ -10,8 +10,12 @@ export function useAdminTargetLink() {
   function getTargetPath(target: AdminTargetLinkTarget) {
     if (target.status !== 'normal') return ''
     if (target.type === 'catalog_torrent') return `/catalog/torrents/${target.id}`
+    if (target.type === 'catalog_request') return `/catalog/requests/${target.id}`
     if (target.type === 'catalog_comment' && target.parent_type === 'catalog_torrent' && target.parent_id) {
       return `/catalog/torrents/${target.parent_id}#comment-${target.id}`
+    }
+    if (target.type === 'catalog_comment' && target.parent_type === 'catalog_request' && target.parent_id) {
+      return `/catalog/requests/${target.parent_id}#comment-${target.id}`
     }
     if (target.type === 'catalog_subtitle' && target.parent_type === 'catalog_torrent' && target.parent_id) {
       return `/catalog/torrents/${target.parent_id}`

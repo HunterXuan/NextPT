@@ -39,3 +39,13 @@
   * 纯计算函数，返回指定用户当前每小时可获得的魔力值预估。
   * 与 `DistributeBonusPoints` 共享底层公式 `calculateBonusForPeers`，保证算法一致性。
   * 调用方：BonusUsecase (`GetMyHourlyBonus`)。
+
+## 求种与续种奖励托管
+
+Catalog RequestUsecase 通过 EconomyBonusDomain 的原子余额和流水能力完成奖励托管，不在 Economy 域内编排请求状态：
+
+- 创建请求时，在同一事务内调用 `DebitBonusIfEnough` 扣除请求人余额，并写入 `request_escrow` 流水。
+- 请求完成时，在同一事务内调用 `CreditBonus` 向认领人发放奖励，并写入 `request_reward` 流水。
+- 请求取消时，在同一事务内调用 `CreditBonus` 向请求人退款，并写入 `request_refund` 流水。
+- 三类流水统一使用 `target_type=catalog_request` 和请求 ID，前端可据此跳转到请求详情。
+- 托管金额按数据库精度归一化后必须大于 0；余额、请求状态和流水任一步失败时，整个事务回滚。

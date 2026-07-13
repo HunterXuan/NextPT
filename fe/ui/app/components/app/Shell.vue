@@ -218,6 +218,7 @@ const appNavSections = computed(() => {
       label: t('nav.catalog'),
       items: [
         { label: t('catalog.torrents.title'), to: '/catalog/torrents', icon: 'i-lucide-library', active: isCatalogTorrentsActive() },
+        { label: t('catalog.requests.navLabel'), to: '/catalog/requests', icon: 'i-lucide-hand-helping', active: isActive('/catalog/requests') },
         { label: t('nav.subtitles'), to: '/catalog/subtitles', icon: 'i-lucide-captions', active: isActive('/catalog/subtitles') },
         { label: t('catalog.bookmarks.title'), to: '/catalog/bookmarks', icon: 'i-lucide-bookmark', active: isActive('/catalog/bookmarks') }
       ]
@@ -337,6 +338,9 @@ const routeSpecificLabel = computed(() => {
   if (torrentDetailMatch?.[1]) return t('catalog.torrents.detail.titleFallback', { id: torrentDetailMatch[1] })
   if (path === '/catalog/torrents/upload') return t('catalog.torrents.upload.title')
   if (/^\/catalog\/torrents\/[^/]+\/edit$/.test(path)) return t('catalog.torrents.edit.title')
+  if (path === '/catalog/requests/create') return t('catalog.requests.create.title')
+  if (/^\/catalog\/requests\/[^/]+$/.test(path)) return t('catalog.requests.detail.title')
+  if (path === '/catalog/requests') return t('catalog.requests.title')
   if (path === '/catalog/bookmarks') return t('catalog.bookmarks.title')
   if (path === '/catalog/subtitles') return t('catalog.subtitles.title')
   const forumTopicMatch = path.match(/^\/forum\/topics\/([^/]+)$/)

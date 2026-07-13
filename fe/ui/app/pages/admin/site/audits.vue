@@ -224,6 +224,7 @@ const auditActions = [
 const auditTargetTypes = [
   'site_config',
   'catalog_category',
+  'catalog_request',
   'catalog_torrent',
   'forum_category',
   'forum_node',

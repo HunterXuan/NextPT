@@ -7,6 +7,7 @@
 - `Tag` / `TagGroup` (标签与标签组)
 - `Subtitle` (字幕)
 - `Bookmark` (收藏)
+- `Request` (求种 / 续种请求)
 
 ## Usecase 划分及 RESTful 接口设计
 
@@ -89,3 +90,71 @@
   * **Method/Path**: `GET /categories`
 * **获取标签组 (ListTagGroups)**
   * **Method/Path**: `GET /tag-groups`
+
+### 7. RequestUsecase (求种与续种)
+
+> 求种和续种共用 `catalog_request` 实体，通过 `request_type` 区分。请求奖励在创建时从请求人余额扣除，完成时发给认领人，取消时退回请求人。所有余额和状态变更必须由 RequestUsecase 在同一事务内编排，RequestDomain 与 EconomyBonusDomain 只提供原子操作。
+
+* **获取请求列表 (ListRequests)**
+  * **Method/Path**: `GET /requests`
+  * **参数概述**: `page`, `size`, `keyword`, `requestType`, `status`, `categoryId`, `view`
+  * `view=created` 仅查询当前用户创建的请求，`view=claimed` 仅查询当前用户认领的请求。
+* **获取请求详情 (GetRequest)**
+  * **Method/Path**: `GET /requests/{id}`
+* **创建请求 (CreateRequest)**
+  * **Method/Path**: `POST /requests`
+  * 求种需要 `categoryId`、`title`、`description` 和 `rewardAmount`。
+  * 续种需要 `targetTorrentId`、`description` 和 `rewardAmount`；目标种子必须可见且当前没有做种者，也不能存在其他进行中的续种请求。
+  * 前端提供固定的魔力档位，后端仍校验奖励金额为正数、精度合法且余额充足。
+  * 创建成功后向请求人授予 `update:catalog/request:{id}` 资源权限。
+* **认领请求 (ClaimRequest)**
+  * **权限**: `read:catalog/request:*`；认领资格由 Usecase 按请求状态、请求人和发布权限继续校验。
+  * **Method/Path**: `POST /requests/{id}:claim`
+  * 请求人不能认领自己的请求；求种认领人必须具有种子发布权限。
+  * 求种认领有效期为 72 小时，续种认领有效期为 24 小时。
+  * 认领成功后向认领人授予 `update:catalog/request:{id}`，用于提交结果；放弃或过期时回收。
+* **放弃认领 (AbandonRequest)**
+  * **权限**: `read:catalog/request:*`；仅当前认领人可以放弃。
+  * **Method/Path**: `POST /requests/{id}:abandon`
+  * 仅当前认领人可以在提交结果前放弃，状态重新回到开放。
+* **提交结果 (SubmitRequest)**
+  * **权限**: `update:catalog/request:{id}`。
+  * **Method/Path**: `POST /requests/{id}:submit`
+  * 求种提交 `resultTorrentId`，后端校验种子存在且可见。
+  * 续种不提交结果种子，后端校验当前认领人已经是目标种子的活跃 Seeder。
+  * 提交成功后回收认领人的资源 update 权限。
+* **确认完成 (CompleteRequest)**
+  * **用户接口权限**: `update:catalog/request:{id}`。
+  * **Method/Path**: `POST /requests/{id}:complete`
+  * 仅请求人可以通过用户接口确认；确认后向认领人发放奖励。
+  * Staff 代确认使用 `POST /admin/catalog/requests/{id}:complete`，权限为 `admin:catalog/request:*`。
+  * Staff 操作通过 AdminCatalogRequestUsecase 调用统一事务，并写入 `catalog_request` 审计日志。
+* **取消请求 (CancelRequest)**
+  * **用户接口权限**: `update:catalog/request:{id}`。
+  * **Method/Path**: `POST /requests/{id}:cancel`
+  * 请求人只能取消尚未认领的请求；取消后奖励退回请求人。
+  * Staff 取消使用 `POST /admin/catalog/requests/{id}:cancel`，权限为 `admin:catalog/request:*`，可以取消任何未完成请求。
+  * 完成或取消后回收该请求相关的用户资源权限。
+
+#### 状态流
+
+```text
+open -> claimed -> submitted -> completed
+  |         |
+  |         +-> open (主动放弃或认领超时)
+  +---------------------------> cancelled
+```
+
+#### 认领超时
+
+`sys` 域定时任务周期性释放 `claim_expires_at` 已经过期且仍处于 `claimed` 状态的请求。释放采用带状态和认领人条件的原子更新，避免与提交动作竞争。释放成功后通知请求人和原认领人。
+
+#### 评论
+
+请求评论复用 `catalog_comment`，使用 `target_type=catalog_request`。API 保持请求资源层级：
+
+* `GET /requests/{id}/comments`
+* `POST /requests/{id}/comments`
+* `POST /requests/{id}/comments/{cid}:like`
+* `POST /requests/{id}/comments/{cid}:reward`
+* `POST /requests/{id}/comments/{cid}:report`

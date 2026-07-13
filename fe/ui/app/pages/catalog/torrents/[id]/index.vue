@@ -428,77 +428,30 @@
             </div>
           </section>
 
-          <section id="torrent-comments" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.comments.title') }}</h2>
-              <UBadge color="neutral" variant="soft">
-                {{ $t('catalog.torrents.detail.comments.summary', { count: numberFormatter.format(commentTotal) }) }}
-              </UBadge>
-            </div>
-
-            <form id="torrent-comment-composer" class="border-b border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40" @submit.prevent="handleCommentSubmit">
-              <UTextarea
-                v-if="commentEditorMode === 'write'"
-                v-model="commentForm.content"
-                class="w-full"
-                :rows="4"
-                :placeholder="canCreateCatalogComment ? $t('catalog.torrents.detail.comments.placeholder') : $t('common.noPermission')"
-                :disabled="!canCreateCatalogComment || commentSubmitPending"
-              />
-              <div v-else class="min-h-28 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
-                <div v-if="renderedCommentPreview" class="rich-text rich-text-compact" v-html="renderedCommentPreview" />
-                <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.comments.previewEmpty') }}</p>
-              </div>
-              <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
-                  <button
-                    type="button"
-                    :class="commentEditorTabClass('write')"
-                    @click="commentEditorMode = 'write'"
-                  >
-                    {{ $t('catalog.torrents.detail.comments.edit') }}
-                  </button>
-                  <button
-                    type="button"
-                    :class="commentEditorTabClass('preview')"
-                    @click="commentEditorMode = 'preview'"
-                  >
-                    {{ $t('catalog.torrents.detail.comments.preview') }}
-                  </button>
-                </div>
-                <AppPermissionButton
-                  :permission="Permission.CatalogCommentCreate"
-                  type="submit"
-                  color="primary"
-                  icon="i-lucide-send"
-                  :tooltip="$t('catalog.torrents.detail.comments.submit')"
-                  :loading="commentSubmitPending"
-                  :disabled="commentForm.content.trim().length < 3"
-                >
-                  {{ $t('catalog.torrents.detail.comments.submit') }}
-                </AppPermissionButton>
-              </div>
-            </form>
-
-            <CatalogCommentList
-              v-model:active-report-id="activeCommentReportId"
-              v-model:report-reason="commentReportReason"
-              :comments="comments"
-              :total="commentTotal"
-              :page="commentPage"
-              :page-size="commentSize"
-              :pending="commentsPending"
-              :error="commentsError"
-              :like-pending-id="commentLikePendingId"
-              :report-pending="reportPending"
-              :submit-reward="submitCommentReward"
-              @page-change="goToCommentPage"
-              @toggle-like="handleCommentLike"
-              @reward-success="handleCommentRewardSuccess"
-              @quote="insertCommentQuote"
-              @report="handleCommentReport"
-            />
-          </section>
+          <CatalogCommentSection
+            v-model:content="commentForm.content"
+            v-model:editor-mode="commentEditorMode"
+            v-model:active-report-id="activeCommentReportId"
+            v-model:report-reason="commentReportReason"
+            section-id="torrent-comments"
+            composer-id="torrent-comment-composer"
+            :comments="comments"
+            :total="commentTotal"
+            :page="commentPage"
+            :page-size="commentSize"
+            :can-create="canCreateCatalogComment"
+            :submit-pending="commentSubmitPending"
+            :pending="commentsPending"
+            :error="commentsError"
+            :like-pending-id="commentLikePendingId"
+            :report-pending="reportPending"
+            :submit-reward="submitCommentReward"
+            @submit="handleCommentSubmit"
+            @page-change="goToCommentPage"
+            @toggle-like="handleCommentLike"
+            @reward-success="handleCommentRewardSuccess"
+            @report="handleCommentReport"
+          />
           <div id="torrent-bottom" class="h-px scroll-mt-24" />
         </main>
 
@@ -579,6 +532,20 @@
               >
                 {{ $t('catalog.torrents.detail.actions.report') }}
               </UButton>
+              <AppPermissionButton
+                v-if="torrent.seeders === 0"
+                :permission="Permission.CatalogRequestCreate"
+                color="warning"
+                variant="soft"
+                size="sm"
+                icon="i-lucide-refresh-cw"
+                block
+                class="col-span-2"
+                :to="localePath(`/catalog/requests/create?type=reseed&torrentId=${torrent.id}`)"
+                :tooltip="$t('catalog.torrents.detail.actions.requestReseed')"
+              >
+                {{ $t('catalog.torrents.detail.actions.requestReseed') }}
+              </AppPermissionButton>
             </div>
 
             <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
@@ -941,7 +908,6 @@ const hasFileTreeDirectories = computed(() => fileTreeDirectoryIds.value.length 
 const allFileTreeExpanded = computed(() => hasFileTreeDirectories.value && fileTreeDirectoryIds.value.every((id) => expandedFileNodeIds.value.has(id)))
 const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expandedFileNodeIds.value))
 const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
-const renderedCommentPreview = computed(() => renderRichText(commentForm.content))
 const canDownloadTorrent = computed(() => hasPermission(Permission.CatalogTorrentDownload))
 const canCreateSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleCreate))
 const canDownloadSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleDownload))
@@ -1010,14 +976,6 @@ function rawTorrentOwnerName(torrent: TorrentDetail) {
 
 function renderRichText(content: string) {
   return renderUserMarkdown(content).trim()
-}
-
-function commentEditorTabClass(mode: CommentEditorMode) {
-  const base = 'h-8 rounded px-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
-  if (commentEditorMode.value === mode) {
-    return `${base} bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white`
-  }
-  return `${base} text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white`
 }
 
 function sectionRailButtonClass(id: string) {
@@ -1591,17 +1549,6 @@ function scrollToCommentHash(behavior: ScrollBehavior = 'smooth') {
   if (!id.startsWith('comment-')) return
 
   scrollToCommentAnchor(id, behavior)
-}
-
-function insertCommentQuote(quote: string) {
-  if (!canCreateCatalogComment.value) return
-  commentForm.content = commentForm.content.trim()
-    ? `${commentForm.content.trim()}\n\n${quote}`
-    : quote
-  commentEditorMode.value = 'write'
-  void nextTick(() => {
-    document.getElementById('torrent-comment-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  })
 }
 
 async function handleCommentSubmit() {
