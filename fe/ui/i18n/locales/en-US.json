@@ -630,6 +630,7 @@
         "claimed": "My claims"
       },
       "fields": {
+        "request": "Request",
         "type": "Type",
         "category": "Category",
         "title": "Title",
@@ -642,6 +643,9 @@
         "resultTorrent": "Result torrent",
         "claimExpiresAt": "Claim deadline",
         "cancelReason": "Cancellation reason"
+      },
+      "list": {
+        "unclaimed": "Unclaimed"
       },
       "empty": {
         "title": "No requests",

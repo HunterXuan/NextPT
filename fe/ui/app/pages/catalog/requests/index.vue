@@ -23,12 +23,11 @@
             color="primary"
             variant="soft"
             icon="i-lucide-plus"
-            class="h-10 shrink-0"
+            class="h-10 w-10 shrink-0 justify-center"
             :to="localePath('/catalog/requests/create')"
             :tooltip="$t('catalog.requests.create.action')"
-          >
-            {{ $t('catalog.requests.create.action') }}
-          </AppPermissionButton>
+            :aria-label="$t('catalog.requests.create.action')"
+          />
         </div>
 
         <div class="flex flex-col gap-3 border-b border-slate-200 p-3 lg:flex-row lg:items-center lg:justify-between dark:border-slate-800">
@@ -64,8 +63,21 @@
           <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.empty.description') }}</p>
         </div>
 
-        <div v-else class="divide-y divide-slate-100 dark:divide-slate-800">
-          <article v-for="item in requests" :key="item.id" class="grid gap-3 px-4 py-3 transition-colors hover:bg-slate-50/70 lg:grid-cols-[minmax(0,1fr)_110px_130px_170px] lg:items-center dark:hover:bg-slate-950/50">
+        <div v-else>
+          <div class="hidden grid-cols-[minmax(0,1fr)_110px_130px_170px] items-center gap-3 border-b border-slate-200 bg-slate-50/70 px-4 py-2 text-xs font-medium text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-400">
+            <span>{{ $t('catalog.requests.fields.request') }}</span>
+            <span class="text-right">{{ $t('catalog.requests.fields.reward') }}</span>
+            <span class="text-right">{{ $t('catalog.requests.fields.status') }}</span>
+            <span class="text-right">{{ $t('catalog.requests.fields.claimer') }}</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+          <NuxtLink
+            v-for="item in requests"
+            :key="item.id"
+            :to="localePath(`/catalog/requests/${item.id}`)"
+            class="group grid gap-2 px-4 py-2.5 outline-none transition-colors hover:bg-slate-50/70 focus-visible:bg-sky-50/70 lg:grid-cols-[minmax(0,1fr)_110px_130px_170px] lg:items-center lg:gap-3 dark:hover:bg-slate-950/50 dark:focus-visible:bg-sky-950/30"
+          >
             <div class="min-w-0">
               <div class="flex min-w-0 items-center gap-2">
                 <UBadge :color="item.requestType === CatalogRequestType.Reseed ? 'warning' : 'primary'" variant="soft" size="sm">
@@ -73,10 +85,10 @@
                 </UBadge>
                 <span v-if="categoryName(item.categoryId)" class="shrink-0 text-xs text-slate-500 dark:text-slate-400">{{ categoryName(item.categoryId) }}</span>
               </div>
-              <NuxtLink :to="localePath(`/catalog/requests/${item.id}`)" class="mt-1.5 block truncate text-sm font-semibold text-slate-950 outline-none hover:text-sky-600 focus-visible:text-sky-600 dark:text-white dark:hover:text-sky-400">
+              <span class="mt-1 block truncate text-sm font-semibold text-slate-950 transition-colors group-hover:text-sky-600 dark:text-white dark:group-hover:text-sky-400">
                 {{ item.title }}
-              </NuxtLink>
-              <div class="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-slate-500 dark:text-slate-400">
+              </span>
+              <div class="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-slate-500 dark:text-slate-400">
                 <span>{{ item.requester.username || `#${item.requester.id}` }}</span>
                 <span>/</span>
                 <UTooltip :text="formatDateTime(item.updatedAt, locale)" :delay-duration="600">
@@ -85,28 +97,31 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between lg:block lg:text-right">
-              <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.reward') }}</span>
-              <span class="inline-flex items-center gap-1 text-sm font-semibold text-amber-600 dark:text-amber-400">
-                <UIcon name="i-lucide-coins" class="size-4" />
-                {{ numberFormatter.format(item.rewardAmount) }}
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between lg:justify-end">
-              <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.status') }}</span>
-              <UBadge :color="requestStatusColor(item.status)" variant="soft" size="sm">{{ requestStatusLabel(item.status) }}</UBadge>
-            </div>
-
-            <div class="flex min-w-0 items-center justify-between gap-2 lg:justify-end">
-              <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</span>
-              <div v-if="item.claimer" class="flex min-w-0 items-center gap-2">
-                <IamUserAvatar :user="item.claimer" size="xs" />
-                <span class="truncate text-sm text-slate-700 dark:text-slate-200">{{ item.claimer.username || `#${item.claimer.id}` }}</span>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-slate-100 pt-2 lg:contents dark:border-slate-800">
+              <div class="flex items-center justify-between lg:block lg:text-right">
+                <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.reward') }}</span>
+                <span class="inline-flex items-center gap-1 text-sm font-semibold text-amber-600 dark:text-amber-400">
+                  <UIcon name="i-lucide-coins" class="size-4" />
+                  {{ numberFormatter.format(item.rewardAmount) }}
+                </span>
               </div>
-              <span v-else class="text-sm text-slate-400">-</span>
+
+              <div class="flex items-center justify-between lg:justify-end">
+                <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.status') }}</span>
+                <UBadge :color="requestStatusColor(item.status)" variant="soft" size="sm">{{ requestStatusLabel(item.status) }}</UBadge>
+              </div>
+
+              <div class="col-span-2 flex min-w-0 items-center justify-between gap-2 lg:col-span-1 lg:justify-end">
+                <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</span>
+                <div v-if="item.claimer" class="flex min-w-0 items-center gap-2">
+                  <IamUserAvatar :user="item.claimer" size="xs" />
+                  <span class="truncate text-sm text-slate-700 dark:text-slate-200">{{ item.claimer.username || `#${item.claimer.id}` }}</span>
+                </div>
+                <span v-else class="text-sm text-slate-400">{{ $t('catalog.requests.list.unclaimed') }}</span>
+              </div>
             </div>
-          </article>
+          </NuxtLink>
+          </div>
         </div>
       </section>
 

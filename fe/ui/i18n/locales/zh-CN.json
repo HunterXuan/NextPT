@@ -630,6 +630,7 @@
         "claimed": "我的认领"
       },
       "fields": {
+        "request": "请求",
         "type": "类型",
         "category": "分类",
         "title": "标题",
@@ -642,6 +643,9 @@
         "resultTorrent": "结果种子",
         "claimExpiresAt": "认领期限",
         "cancelReason": "取消原因"
+      },
+      "list": {
+        "unclaimed": "未认领"
       },
       "empty": {
         "title": "暂无请求",

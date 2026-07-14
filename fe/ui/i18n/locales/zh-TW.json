@@ -630,6 +630,7 @@
         "claimed": "我的認領"
       },
       "fields": {
+        "request": "請求",
         "type": "類型",
         "category": "分類",
         "title": "標題",
@@ -642,6 +643,9 @@
         "resultTorrent": "結果種子",
         "claimExpiresAt": "認領期限",
         "cancelReason": "取消原因"
+      },
+      "list": {
+        "unclaimed": "未認領"
       },
       "empty": {
         "title": "暫無請求",
