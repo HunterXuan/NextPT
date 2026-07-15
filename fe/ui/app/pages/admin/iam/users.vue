@@ -12,9 +12,15 @@
               :placeholder="$t('admin.iam.users.searchPlaceholder')"
             >
           </div>
-          <select v-model="query.order" class="h-10 shrink-0 rounded-md border border-slate-200 bg-white px-3 text-sm leading-10 text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 lg:w-52 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" @change="reloadFromFirstPage">
-            <option v-for="option in orderOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-          </select>
+          <USelect
+            v-model="query.order"
+            class="w-full shrink-0 lg:w-52"
+            size="lg"
+            :ui="{ base: 'h-10 w-full' }"
+            :items="orderOptions"
+            value-key="value"
+            @update:model-value="reloadFromFirstPage"
+          />
           <UButton type="submit" color="primary" icon="i-lucide-search" :loading="pending" class="h-10 shrink-0 justify-center px-4">
             {{ $t('admin.iam.users.search') }}
           </UButton>
@@ -195,16 +201,28 @@
             <form class="space-y-4 p-4" @submit.prevent="saveUser">
               <label class="block">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.form.status') }}</span>
-                <select v-model.number="form.status" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || saving">
-                  <option v-for="option in userStatusOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-                </select>
+                <USelect
+                  v-model="form.status"
+                  class="mt-1 w-full"
+                  size="lg"
+                  :ui="{ base: 'h-10 w-full' }"
+                  :items="userStatusOptions"
+                  value-key="value"
+                  :disabled="!selectedUser || saving"
+                />
               </label>
 
               <label class="block">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.form.role') }}</span>
-                <select v-model.number="form.role" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || saving || roles.length === 0">
-                  <option v-for="role in roles" :key="role.id" :value="role.id">{{ roleNameWithLevel(role) }}</option>
-                </select>
+                <USelect
+                  v-model="form.role"
+                  class="mt-1 w-full"
+                  size="lg"
+                  :ui="{ base: 'h-10 w-full' }"
+                  :items="userRoleOptions"
+                  value-key="value"
+                  :disabled="!selectedUser || saving || roles.length === 0"
+                />
               </label>
 
               <label class="block">
@@ -324,9 +342,15 @@
                 <form class="space-y-3" @submit.prevent="applyUserMod">
                   <label class="block">
                     <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.mod.type') }}</span>
-                    <select v-model.number="modForm.type" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || modApplying">
-                      <option v-for="option in modTypeOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-                    </select>
+                    <USelect
+                      v-model="modForm.type"
+                      class="mt-1 w-full"
+                      size="lg"
+                      :ui="{ base: 'h-10 w-full' }"
+                      :items="modTypeOptions"
+                      value-key="value"
+                      :disabled="!selectedUser || modApplying"
+                    />
                   </label>
 
                   <label class="block">
@@ -690,6 +714,10 @@ const userStatusOptions = computed(() => [
   { value: 1, label: t('admin.iam.users.status.confirmed') },
   { value: 2, label: t('admin.iam.users.status.disabled') }
 ])
+const userRoleOptions = computed(() => roles.value.map((role) => ({
+  value: role.id,
+  label: roleNameWithLevel(role)
+})))
 const modTypeOptions = computed(() => [
   { value: 1, label: t('admin.iam.users.mod.types.warned') },
   { value: 2, label: t('admin.iam.users.mod.types.banned') },

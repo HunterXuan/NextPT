@@ -18,18 +18,17 @@
         :required="Boolean(field.required)"
         :error="fieldError(field)"
       >
-        <select
+        <USelect
           v-if="field.type === 'select'"
-          :value="String(modelValue[field.key] || '')"
-          class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+          :model-value="String(modelValue[field.key] || '')"
+          class="w-full"
+          size="lg"
+          :ui="{ base: 'h-10 w-full' }"
+          :items="releaseSelectOptions(field)"
+          value-key="value"
           :disabled="disabled || optionsPending"
-          @change="handleReleaseSelectChange(field.key, $event)"
-        >
-          <option value="">{{ t('catalog.torrents.upload.fields.optionPlaceholder') }}</option>
-          <option v-for="option in fieldOptions(field)" :key="option.value" :value="option.value">
-            {{ optionLabel(option) }}
-          </option>
-        </select>
+          @update:model-value="setReleaseField(field.key, String($event || ''))"
+        />
 
         <div v-else-if="field.type === 'multiSelect'" class="grid gap-2 rounded-md border border-slate-200 bg-white p-2 sm:grid-cols-2 dark:border-slate-700 dark:bg-slate-950">
           <label
@@ -153,6 +152,13 @@ function fieldOptions(field: UploadFieldConfig): UploadOptionItem[] {
     .map((tag) => ({ value: tag.value, label: tag.name }))
 }
 
+function releaseSelectOptions(field: UploadFieldConfig) {
+  return [
+    { value: '', label: t('catalog.torrents.upload.fields.optionPlaceholder') },
+    ...fieldOptions(field).map(option => ({ value: option.value, label: optionLabel(option) }))
+  ]
+}
+
 function tagGroupAppliesToCategory(group: CatalogTagGroup) {
   if (!props.category || !group.categories?.length) return true
   return group.categories.includes(props.category.id)
@@ -168,10 +174,6 @@ function setReleaseField(key: string, value: string) {
     ...props.modelValue,
     [key]: value
   })
-}
-
-function handleReleaseSelectChange(key: string, event: Event) {
-  setReleaseField(key, (event.target as HTMLSelectElement).value)
 }
 
 function releaseFieldListValue(key: string) {

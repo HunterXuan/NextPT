@@ -62,18 +62,18 @@
       </div>
 
       <form class="mt-4 grid gap-2 border-t border-slate-200 pt-4 dark:border-slate-800" @submit.prevent="$emit('move')">
-        <label class="block">
-          <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ t('forum.detail.admin.moveTo') }}</span>
-          <select
-            v-model.number="moveNodeIdValue"
-            class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none dark:border-slate-700 dark:bg-slate-950"
+        <UFormField :label="t('forum.detail.admin.moveTo')">
+          <USelect
+            :model-value="moveNodeIdValue"
+            class="w-full"
+            size="lg"
+            :ui="{ base: 'h-10 w-full' }"
+            :items="adminNodeOptions"
+            value-key="value"
             :disabled="adminNodesPending || adminActionPending === 'move'"
-          >
-            <optgroup v-for="group in adminNodeGroups" :key="group.key" :label="group.name">
-              <option v-for="node in group.nodes" :key="node.id" :value="node.id">{{ forumNodeName(node) }}</option>
-            </optgroup>
-          </select>
-        </label>
+            @update:model-value="moveNodeIdValue = Number($event || 0)"
+          />
+        </UFormField>
         <UButton type="submit" color="primary" variant="soft" icon="i-lucide-move-right" :loading="adminActionPending === 'move'" :disabled="!moveNodeIdValue || moveNodeIdValue === topic.nodeId">
           {{ t('forum.detail.admin.move') }}
         </UButton>
@@ -187,6 +187,10 @@ const adminNodeGroups = computed(() => {
 
   return groups
 })
+const adminNodeOptions = computed(() => adminNodeGroups.value.flatMap(group => group.nodes.map(node => ({
+  value: node.id,
+  label: `${group.name} / ${forumNodeName(node)}`
+}))))
 
 function forumNodeName(node: AdminForumNode) {
   return localizeI18nName(node.nameI18N as any, locale.value, node.slug || `#${node.id}`)

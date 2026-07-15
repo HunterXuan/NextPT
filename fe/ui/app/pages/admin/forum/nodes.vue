@@ -142,14 +142,15 @@
               <div class="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_112px]">
                 <label class="block">
                   <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.forum.nodes.form.category') }}</span>
-                  <select
-                    v-model.number="form.categoryId"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                  <USelect
+                    v-model="form.categoryId"
+                    class="mt-1 w-full"
+                    size="lg"
+                    :ui="{ base: 'h-10 w-full' }"
+                    :items="categoryOptions"
+                    value-key="value"
                     :disabled="saving || categories.length === 0"
-                  >
-                    <option :value="0">{{ $t('admin.forum.nodes.form.selectCategory') }}</option>
-                    <option v-for="category in categories" :key="category.id" :value="category.id">{{ forumCategoryName(category) }}</option>
-                  </select>
+                  />
                 </label>
 
                 <label class="block">
@@ -355,6 +356,13 @@ const primaryLocaleLabel = computed(() => {
 })
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const categoryMap = computed(() => new Map(categories.value.map((item) => [item.id, item])))
+const categoryOptions = computed(() => [
+  { value: 0, label: t('admin.forum.nodes.form.selectCategory') },
+  ...categories.value.map((category) => ({
+    value: category.id,
+    label: forumCategoryName(category)
+  }))
+])
 const { roleNameByLevel } = useAdminIamRoleLevels(roles)
 const selectedNode = computed(() => nodes.value.find((item) => item.id === selectedId.value) || null)
 const isFormDirty = computed(() => formSnapshot() !== originalFormSnapshot.value)

@@ -25,10 +25,15 @@
 
               <template v-if="form.requestType === CatalogRequestType.Torrent">
                 <UFormField :label="$t('catalog.requests.fields.category')" required>
-                  <select v-model.number="form.categoryId" class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="pending || categoriesPending">
-                    <option :value="0">{{ $t('catalog.requests.create.categoryPlaceholder') }}</option>
-                    <option v-for="category in categories" :key="category.id" :value="category.id">{{ categoryName(category) }}</option>
-                  </select>
+                  <USelect
+                    v-model="form.categoryId"
+                    class="w-full"
+                    size="lg"
+                    :ui="{ base: 'h-10 w-full' }"
+                    :items="categoryOptions"
+                    value-key="value"
+                    :disabled="pending || categoriesPending"
+                  />
                 </UFormField>
 
                 <UFormField :label="$t('catalog.requests.fields.title')" required>
@@ -170,6 +175,10 @@ const torrentResults = ref<TorrentListItem[]>([])
 const torrentSearchPending = ref(false)
 const rewardOptions = [10, 50, 100, 500]
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value, { maximumFractionDigits: 1 }))
+const categoryOptions = computed(() => [
+  { value: 0, label: t('catalog.requests.create.categoryPlaceholder') },
+  ...categories.value.map(category => ({ value: category.id, label: categoryName(category) }))
+])
 let searchTimer: ReturnType<typeof setTimeout> | null = null
 
 const initialTorrentId = readPositiveQuery('torrentId')

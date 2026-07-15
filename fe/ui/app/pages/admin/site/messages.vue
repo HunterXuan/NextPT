@@ -40,14 +40,9 @@
             </div>
 
             <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_130px]">
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.targetType') }}</span>
-                <select v-model="form.targetType" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950">
-                  <option value="">{{ $t('admin.site.messages.targetTypes.none') }}</option>
-                  <option value="catalog_torrent">{{ $t('admin.site.messages.targetTypes.catalogTorrent') }}</option>
-                  <option value="forum_topic">{{ $t('admin.site.messages.targetTypes.forumTopic') }}</option>
-                </select>
-              </label>
+              <UFormField :label="$t('admin.site.messages.fields.targetType')">
+                <USelect v-model="form.targetType" class="w-full" size="lg" :ui="{ base: 'h-10 w-full' }" :items="messageTargetTypeOptions" value-key="value" />
+              </UFormField>
               <label class="block">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.targetId') }}</span>
                 <input v-model.number="form.targetId" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:disabled:bg-slate-900 dark:disabled:text-slate-600 dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!form.targetType">
@@ -246,6 +241,11 @@ const readFilterOptions = computed(() => [
   { value: '', label: t('admin.site.messages.filters.all') },
   { value: 'false', label: t('admin.site.messages.filters.unread') },
   { value: 'true', label: t('admin.site.messages.filters.read') }
+])
+const messageTargetTypeOptions = computed(() => [
+  { value: '', label: t('admin.site.messages.targetTypes.none') },
+  { value: 'catalog_torrent', label: t('admin.site.messages.targetTypes.catalogTorrent') },
+  { value: 'forum_topic', label: t('admin.site.messages.targetTypes.forumTopic') }
 ])
 const receiverCount = computed(() => parseReceiverIds(form.receiverIds).length)
 const isFormFilled = computed(() => Boolean(form.receiverIds || form.title || form.content || form.targetType || form.targetId))

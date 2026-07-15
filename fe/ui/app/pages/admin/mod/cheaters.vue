@@ -7,9 +7,7 @@
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.mod.cheaters.list') }}</h2>
               <form class="grid gap-2 sm:w-[160px]" @submit.prevent="reloadFromFirstPage">
-                <select v-model.number="query.status" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" @change="reloadFromFirstPage">
-                  <option v-for="option in statusOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-                </select>
+                <USelect v-model="query.status" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="statusOptions" value-key="value" @update:model-value="reloadFromFirstPage" />
               </form>
             </div>
           </div>

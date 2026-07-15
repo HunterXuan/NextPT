@@ -2,19 +2,19 @@
   <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
       <span v-if="showTotal">{{ t('common.pagination.total', { total: numberFormatter.format(safeTotal) }) }}</span>
-      <label v-if="normalizedPageSizeOptions.length > 0" class="flex items-center gap-2">
+      <div v-if="normalizedPageSizeOptions.length > 0" class="flex items-center gap-2">
         <span>{{ t('common.pagination.pageSize') }}</span>
-        <select
-          :value="safePageSize"
-          class="h-9 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+        <USelect
+          :model-value="safePageSize"
+          class="w-20"
+          size="lg"
+          :ui="{ base: 'h-9 w-full' }"
+          :items="pageSizeSelectOptions"
+          value-key="value"
           :disabled="disabled"
-          @change="handlePageSizeChange"
-        >
-          <option v-for="option in normalizedPageSizeOptions" :key="option" :value="option">
-            {{ option }}
-          </option>
-        </select>
-      </label>
+          @update:model-value="handlePageSizeChange"
+        />
+      </div>
     </div>
 
     <nav v-if="totalPages > 0" class="flex flex-wrap items-center gap-1" :aria-label="t('common.pagination.label')">
@@ -120,6 +120,7 @@ const safePage = computed(() => clampPage(props.page))
 const normalizedPageSizeOptions = computed(() => {
   return Array.from(new Set(props.pageSizeOptions.map((value) => Number(value)).filter((value) => Number.isInteger(value) && value > 0)))
 })
+const pageSizeSelectOptions = computed(() => normalizedPageSizeOptions.value.map(value => ({ value, label: String(value) })))
 
 const pageItems = computed<PageItem[]>(() => {
   const pages = buildVisiblePages(safePage.value, totalPages.value)
@@ -178,11 +179,10 @@ function changePage(page: number) {
   emit('page-change', nextPage)
 }
 
-function handlePageSizeChange(event: Event) {
+function handlePageSizeChange(value: unknown) {
   if (props.disabled) return
 
-  const target = event.target as HTMLSelectElement | null
-  const nextPageSize = Number(target?.value)
+  const nextPageSize = Number(value)
   if (!Number.isInteger(nextPageSize) || nextPageSize <= 0 || nextPageSize === safePageSize.value) return
   emit('page-size-change', nextPageSize)
 }

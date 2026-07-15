@@ -173,14 +173,15 @@
 
             <label v-else-if="selectedUsesRoleSelect" class="block">
               <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
-              <select
-                v-model.number="selectedRoleId"
-                class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-slate-900 dark:disabled:text-slate-500"
+              <USelect
+                v-model="selectedRoleId"
+                class="mt-1 w-full"
+                size="lg"
+                :ui="{ base: 'h-10 w-full' }"
+                :items="selectedRoleOptions"
+                value-key="value"
                 :disabled="saving || rolesPending || roleOptions.length === 0"
-              >
-                <option v-if="!hasSelectedRole" :value="selectedRoleId">{{ $t('admin.site.configs.form.unknownRole', { id: selectedRoleId }) }}</option>
-                <option v-for="role in roleOptions" :key="role.id" :value="role.id">{{ roleNameWithLevel(role) }}</option>
-              </select>
+              />
               <p v-if="rolesError" class="mt-1 text-xs text-red-600 dark:text-red-300">{{ rolesError }}</p>
             </label>
 
@@ -306,6 +307,19 @@ const selectedRoleId = computed({
   }
 })
 const hasSelectedRole = computed(() => roleOptions.value.some((role) => role.id === selectedRoleId.value))
+const selectedRoleOptions = computed(() => {
+  const options = roleOptions.value.map((role) => ({
+    value: role.id,
+    label: roleNameWithLevel(role)
+  }))
+  if (!hasSelectedRole.value) {
+    options.unshift({
+      value: selectedRoleId.value,
+      label: t('admin.site.configs.form.unknownRole', { id: selectedRoleId.value })
+    })
+  }
+  return options
+})
 
 onMounted(loadConfigs)
 

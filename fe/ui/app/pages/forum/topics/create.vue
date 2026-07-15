@@ -11,29 +11,28 @@
             <template v-else>
               <div class="grid gap-3 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
                 <UFormField :label="$t('forum.create.fields.category')">
-                  <select
-                    v-model.number="selectedCategoryId"
-                    class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  <USelect
+                    :model-value="selectedCategoryId"
+                    class="w-full"
+                    size="lg"
+                    :ui="{ base: 'h-10 w-full' }"
+                    :items="categoryOptions"
+                    value-key="value"
                     :disabled="pending || categories.length === 0"
-                    @change="handleCategoryChange"
-                  >
-                    <option v-for="category in categories" :key="category.id" :value="category.id">
-                      {{ categoryDisplayName(category) }}
-                    </option>
-                  </select>
+                    @update:model-value="changeCategory"
+                  />
                 </UFormField>
 
                 <UFormField :label="$t('forum.create.fields.node')" required>
-                  <select
+                  <USelect
                     v-model="form.nodeId"
-                    class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                    class="w-full"
+                    size="lg"
+                    :ui="{ base: 'h-10 w-full' }"
+                    :items="nodeOptions"
+                    value-key="value"
                     :disabled="pending || selectedCategoryNodes.length === 0"
-                  >
-                    <option value="0">{{ $t('forum.create.fields.nodePlaceholder') }}</option>
-                    <option v-for="node in selectedCategoryNodes" :key="node.id" :value="String(node.id)">
-                      {{ nodeDisplayName(node) }}
-                    </option>
-                  </select>
+                  />
                 </UFormField>
               </div>
 
@@ -193,6 +192,11 @@ const selectedCategory = computed(() => {
     || null
 })
 const selectedCategoryNodes = computed(() => selectedCategory.value?.nodes || [])
+const categoryOptions = computed(() => categories.value.map(category => ({ value: category.id, label: categoryDisplayName(category) })))
+const nodeOptions = computed(() => [
+  { value: '0', label: t('forum.create.fields.nodePlaceholder') },
+  ...selectedCategoryNodes.value.map(node => ({ value: String(node.id), label: nodeDisplayName(node) }))
+])
 const selectedNode = computed(() => selectedNodeItem.value?.node || null)
 const renderedContentPreview = computed(() => renderUserMarkdown(form.content).trim())
 const canCreateTopic = computed(() => hasPermission(Permission.ForumTopicCreate))
@@ -254,6 +258,11 @@ function handleCategoryChange() {
   if (!currentNodeInCategory) {
     form.nodeId = String(category.nodes[0]?.id || 0)
   }
+}
+
+function changeCategory(value: unknown) {
+  selectedCategoryId.value = Number(value || 0)
+  handleCategoryChange()
 }
 
 async function handleSubmit() {

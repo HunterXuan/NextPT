@@ -17,16 +17,15 @@
 
             <div class="grid grid-cols-1 gap-4">
               <UFormField id="edit-category" :label="$t('catalog.torrents.upload.fields.category')" required>
-                <select
+                <USelect
                   v-model="form.categoryId"
-                  class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  class="w-full"
+                  size="lg"
+                  :ui="{ base: 'h-10 w-full' }"
+                  :items="categoryOptions"
+                  value-key="value"
                   :disabled="savePending || categories.length === 0"
-                >
-                  <option value="0">{{ $t('catalog.torrents.upload.fields.categoryPlaceholder') }}</option>
-                  <option v-for="category in categories" :key="category.id" :value="String(category.id)">
-                    {{ categoryDisplayName(category) }}
-                  </option>
-                </select>
+                />
               </UFormField>
 
               <CatalogTorrentReleaseFieldsForm
@@ -160,6 +159,10 @@ const torrentId = computed(() => readRouteId())
 const canEditTorrent = computed(() => Boolean(torrent.value && (hasPermission(Permission.AdminCatalogTorrentManage) || user.value?.user.id === torrent.value.owner?.id)))
 const selectedCategory = computed(() => categories.value.find((item) => item.id === Number(form.categoryId)) || null)
 const selectedCategoryName = computed(() => selectedCategory.value ? categoryDisplayName(selectedCategory.value) : '-')
+const categoryOptions = computed(() => [
+  { value: '0', label: t('catalog.torrents.upload.fields.categoryPlaceholder') },
+  ...categories.value.map(category => ({ value: String(category.id), label: categoryDisplayName(category) }))
+])
 const selectedUploadConfig = computed(() => selectedCategory.value?.uploadConfig || null)
 const isGeneratedTitleMode = computed(() => selectedUploadConfig.value?.title?.mode === 'generated')
 const showManualTitleInput = computed(() => !isGeneratedTitleMode.value || Boolean(selectedUploadConfig.value?.title?.allowManualOverride))

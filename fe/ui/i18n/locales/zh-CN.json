@@ -630,7 +630,6 @@
         "claimed": "我的认领"
       },
       "fields": {
-        "request": "请求",
         "type": "类型",
         "category": "分类",
         "title": "标题",
@@ -638,6 +637,8 @@
         "reward": "魔力奖励",
         "status": "状态",
         "requester": "请求人",
+        "publisher": "发布者",
+        "publishedAt": "发布时间",
         "claimer": "认领人",
         "targetTorrent": "目标种子",
         "resultTorrent": "结果种子",

@@ -630,7 +630,6 @@
         "claimed": "My claims"
       },
       "fields": {
-        "request": "Request",
         "type": "Type",
         "category": "Category",
         "title": "Title",
@@ -638,6 +637,8 @@
         "reward": "Bonus reward",
         "status": "Status",
         "requester": "Requester",
+        "publisher": "Publisher",
+        "publishedAt": "Published",
         "claimer": "Claimant",
         "targetTorrent": "Target torrent",
         "resultTorrent": "Result torrent",

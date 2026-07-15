@@ -75,16 +75,15 @@
 
             <div class="grid grid-cols-1 gap-4 p-4">
               <UFormField id="upload-category" :label="$t('catalog.torrents.upload.fields.category')" required>
-                <select
+                <USelect
                   v-model="form.categoryId"
-                  class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  class="w-full"
+                  size="lg"
+                  :ui="{ base: 'h-10 w-full' }"
+                  :items="categoryOptions"
+                  value-key="value"
                   :disabled="pending || categoriesPending || categories.length === 0"
-                >
-                  <option value="0">{{ $t('catalog.torrents.upload.fields.categoryPlaceholder') }}</option>
-                  <option v-for="category in categories" :key="category.id" :value="String(category.id)">
-                    {{ categoryDisplayName(category) }}
-                  </option>
-                </select>
+                />
               </UFormField>
 
               <div v-if="categoriesError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
@@ -233,6 +232,10 @@ const selectedCategory = computed(() => {
 const selectedCategoryName = computed(() => {
   return selectedCategory.value ? categoryDisplayName(selectedCategory.value) : '-'
 })
+const categoryOptions = computed(() => [
+  { value: '0', label: t('catalog.torrents.upload.fields.categoryPlaceholder') },
+  ...categories.value.map(category => ({ value: String(category.id), label: categoryDisplayName(category) }))
+])
 
 const selectedUploadConfig = computed(() => selectedCategory.value?.uploadConfig || null)
 const isGeneratedTitleMode = computed(() => selectedUploadConfig.value?.title?.mode === 'generated')

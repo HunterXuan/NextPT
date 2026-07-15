@@ -630,7 +630,6 @@
         "claimed": "我的認領"
       },
       "fields": {
-        "request": "請求",
         "type": "類型",
         "category": "分類",
         "title": "標題",
@@ -638,6 +637,8 @@
         "reward": "魔力獎勵",
         "status": "狀態",
         "requester": "請求人",
+        "publisher": "發佈者",
+        "publishedAt": "發佈時間",
         "claimer": "認領人",
         "targetTorrent": "目標種子",
         "resultTorrent": "結果種子",

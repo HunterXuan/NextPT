@@ -128,9 +128,7 @@
                 <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.invites.siteList.title') }}</h2>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.siteList.description') }}</p>
               </div>
-              <select v-model="siteInviteStatusFilter" class="h-9 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-700 outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200">
-                <option v-for="option in siteInviteStatusOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-              </select>
+              <USelect v-model="siteInviteStatusFilter" class="w-32" size="lg" :ui="{ base: 'h-9 w-full' }" :items="siteInviteStatusOptions" value-key="value" />
             </div>
 
             <div v-if="siteInvitesPending && siteInvites.length === 0" class="space-y-2 p-4">

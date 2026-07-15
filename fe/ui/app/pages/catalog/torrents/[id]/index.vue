@@ -316,15 +316,15 @@
                   <span class="min-w-0 truncate">{{ selectedSubtitleFile?.name || $t('catalog.torrents.detail.subtitles.choose') }}</span>
                   <input :key="subtitleFileInputKey" class="sr-only" type="file" :disabled="!canCreateSubtitle || subtitleUploadPending" @change="handleSubtitleFileChange">
                 </label>
-                <select
+                <USelect
                   v-model="subtitleForm.language"
-                  class="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  class="w-full"
+                  size="lg"
+                  :ui="{ base: 'h-10 w-full' }"
+                  :items="subtitleLanguageOptions"
+                  value-key="value"
                   :disabled="!canCreateSubtitle || subtitleUploadPending"
-                >
-                  <option v-for="option in subtitleLanguageOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
+                />
                 <label class="flex h-10 items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
                   <span>{{ $t('catalog.torrents.detail.subtitles.anonymous') }}</span>
                   <input
@@ -711,16 +711,16 @@
                   </UButton>
                 </div>
                 <div class="grid gap-2 sm:grid-cols-2">
-                  <select
+                  <USelect
                     v-model.number="adminPromotionState"
-                    class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                    class="w-full"
+                    size="lg"
+                    :ui="{ base: 'h-10 w-full' }"
+                    :items="adminPromotionOptions"
+                    value-key="value"
                     :aria-label="$t('catalog.torrents.detail.admin.promotion')"
                     :disabled="adminActionPending === 'promotion'"
-                  >
-                    <option v-for="option in adminPromotionOptions" :key="option.value" :value="option.value">
-                      {{ option.label }}
-                    </option>
-                  </select>
+                  />
                   <UInput
                     v-model="adminPromotionExpireAt"
                     type="datetime-local"

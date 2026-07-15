@@ -85,14 +85,9 @@
               <input v-model.trim="form.title" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950">
             </label>
             <div class="grid gap-3 sm:grid-cols-2">
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.announcements.fields.status') }}</span>
-                <select v-model.number="form.status" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950">
-                  <option :value="0">{{ $t('admin.site.announcements.status.draft') }}</option>
-                  <option :value="1">{{ $t('admin.site.announcements.status.published') }}</option>
-                  <option :value="2">{{ $t('admin.site.announcements.status.archived') }}</option>
-                </select>
-              </label>
+              <UFormField :label="$t('admin.site.announcements.fields.status')">
+                <USelect v-model="form.status" class="w-full" size="lg" :ui="{ base: 'h-10 w-full' }" :items="formStatusOptions" value-key="value" />
+              </UFormField>
               <label class="block">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.announcements.fields.publishedAt') }}</span>
                 <input v-model="form.publishedAt" type="datetime-local" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950">
@@ -189,6 +184,7 @@ const statusOptions = computed(() => [
   { value: 0, label: t('admin.site.announcements.status.draft') },
   { value: 2, label: t('admin.site.announcements.status.archived') }
 ])
+const formStatusOptions = computed(() => statusOptions.value.filter(option => option.value >= 0))
 
 useHead(() => ({ title: t('admin.site.announcements.title') }))
 onMounted(loadAnnouncements)

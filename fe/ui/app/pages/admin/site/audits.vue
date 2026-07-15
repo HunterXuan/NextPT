@@ -5,15 +5,9 @@
         <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
           <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.audits.list') }}</h2>
           <form class="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-[130px_150px_170px_120px_minmax(280px,320px)_auto] xl:items-center" @submit.prevent="applyFilters">
-            <select v-model="filters.level" class="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :aria-label="$t('admin.site.audits.filters.level')">
-              <option v-for="option in levelOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-            </select>
-            <select v-model="filters.action" class="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :aria-label="$t('admin.site.audits.filters.action')">
-              <option v-for="option in actionOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-            </select>
-            <select v-model="filters.targetType" class="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :aria-label="$t('admin.site.audits.filters.targetType')">
-              <option v-for="option in targetTypeOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-            </select>
+            <USelect v-model="filters.level" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="levelOptions" value-key="value" :aria-label="$t('admin.site.audits.filters.level')" />
+            <USelect v-model="filters.action" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="actionOptions" value-key="value" :aria-label="$t('admin.site.audits.filters.action')" />
+            <USelect v-model="filters.targetType" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="targetTypeOptions" value-key="value" :aria-label="$t('admin.site.audits.filters.targetType')" />
             <input v-model.trim="filters.userId" inputmode="numeric" class="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :placeholder="$t('admin.site.audits.filters.userIdPlaceholder')" :aria-label="$t('admin.site.audits.filters.userId')">
             <div class="flex h-9 min-w-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus-within:border-sky-700" :aria-label="`${$t('admin.site.audits.filters.startAt')} / ${$t('admin.site.audits.filters.endAt')}`" role="group">
               <input v-model="filters.startAt" type="date" class="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none [color-scheme:light] dark:[color-scheme:dark]" :aria-label="$t('admin.site.audits.filters.startAt')">
