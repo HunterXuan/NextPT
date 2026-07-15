@@ -69,6 +69,7 @@ catalog.torrent.rss.title: Torrent RSS
 catalog.torrent.rss.description: Latest torrent feed
 catalog.torrent.rss.unknown_category: Uncategorized
 catalog.torrent.rss.item_description: "Size %s / Seeders %d / Leechers %d / Completed %d"
+catalog.torrent.size_range_invalid: Minimum size cannot exceed maximum size
 catalog.torrent.read_cache_failed: failed to read local torrent cache
 catalog.torrent.read_upload_failed: failed to read uploaded file
 catalog.torrent.reencode_info_failed: failed to re-encode torrent info dictionary

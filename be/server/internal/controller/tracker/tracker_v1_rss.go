@@ -57,10 +57,16 @@ type trackerRssEnclosure struct {
 
 func (c *ControllerV1) Rss(ctx context.Context, req *v1.RssReq) (res *v1.RssRes, err error) {
 	out, err := service.CatalogTorrentUsecase().ListRss(ctx, contexts.GetActor(ctx), catalogin.TorrentRssInp{
-		Size:          req.Size,
-		Keyword:       req.Keyword,
-		CategoryIds:   req.CategoryIds,
-		PromotionOnly: req.PromotionOnly,
+		Size:            req.Size,
+		Keyword:         req.Keyword,
+		CategoryIds:     req.CategoryIds,
+		Promotion:       req.Promotion,
+		PromotionOnly:   req.PromotionOnly,
+		SeedStatus:      req.SeedStatus,
+		FeaturedOnly:    req.FeaturedOnly,
+		MinSize:         req.MinSize,
+		MaxSize:         req.MaxSize,
+		PublishedWithin: req.PublishedWithin,
 	})
 	if err != nil {
 		return nil, err

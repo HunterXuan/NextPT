@@ -130,8 +130,8 @@ type (
 		UpdateTorrentPeerStats(ctx context.Context, torrentId uint64, seeders int, leechers int) error
 		IncrementTorrentStats(ctx context.Context, torrentId uint64, field string, amount float64) error
 		GetTorrentsByHashes(ctx context.Context, hashes []string) ([]entity.CatalogTorrent, error)
-		QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page int, size int) ([]entity.CatalogTorrent, int, error)
-		QueryRssTorrents(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, size int) ([]entity.CatalogTorrent, error)
+		QueryTorrents(ctx context.Context, actor *model.Actor, options model.CatalogTorrentListOptions) ([]entity.CatalogTorrent, int, error)
+		QueryRssTorrents(ctx context.Context, actor *model.Actor, options model.CatalogTorrentListOptions) ([]entity.CatalogTorrent, error)
 		QueryHotVisibleTorrents(ctx context.Context, size int) ([]entity.CatalogTorrent, error)
 		CheckTorrentBookmarked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		CheckTorrentLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)

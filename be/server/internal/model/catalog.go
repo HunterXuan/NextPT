@@ -29,6 +29,92 @@ type CatalogTorrentSummary struct {
 	Exist bool   `json:"exist"`
 }
 
+type CatalogTorrentListOptions struct {
+	Keyword             string
+	CategoryIds         []uint
+	Promotion           string
+	SeedStatus          string
+	FeaturedOnly        bool
+	MinSize             uint64
+	MaxSize             uint64
+	PublishedWithinDays int
+	Sort                string
+	Page                int
+	Size                int
+}
+
+func (o CatalogTorrentListOptions) Normalized() CatalogTorrentListOptions {
+	o.Keyword = strings.TrimSpace(o.Keyword)
+	o.CategoryIds = normalizeCatalogTorrentCategoryIds(o.CategoryIds)
+	if o.Page <= 0 {
+		o.Page = 1
+	}
+	if o.Size <= 0 {
+		o.Size = 50
+	}
+	if o.Size > 100 {
+		o.Size = 100
+	}
+	if o.PublishedWithinDays < 0 {
+		o.PublishedWithinDays = 0
+	}
+
+	switch o.Promotion {
+	case consts.CatalogTorrentPromotionFilterPromoted,
+		consts.ResourceTorrentPromotionStateNormal,
+		consts.ResourceTorrentPromotionStateFree,
+		consts.ResourceTorrentPromotionState2x,
+		consts.ResourceTorrentPromotionState2xFree,
+		consts.ResourceTorrentPromotionState50Percent,
+		consts.ResourceTorrentPromotionState2x50Percent,
+		consts.ResourceTorrentPromotionState30Percent:
+	default:
+		o.Promotion = consts.CatalogTorrentPromotionFilterAll
+	}
+
+	switch o.SeedStatus {
+	case consts.CatalogTorrentSeedStatusSeeded, consts.CatalogTorrentSeedStatusUnseeded:
+	default:
+		o.SeedStatus = consts.CatalogTorrentSeedStatusAll
+	}
+
+	switch o.Sort {
+	case consts.CatalogTorrentSortOldest,
+		consts.CatalogTorrentSortSeeders,
+		consts.CatalogTorrentSortLeechers,
+		consts.CatalogTorrentSortComplete,
+		consts.CatalogTorrentSortSizeAsc,
+		consts.CatalogTorrentSortSizeDesc:
+	default:
+		o.Sort = consts.CatalogTorrentSortNewest
+	}
+	return o
+}
+
+func (o CatalogTorrentListOptions) HasInvalidSizeRange() bool {
+	return o.MinSize > 0 && o.MaxSize > 0 && o.MinSize > o.MaxSize
+}
+
+func normalizeCatalogTorrentCategoryIds(categoryIds []uint) []uint {
+	if len(categoryIds) == 0 {
+		return nil
+	}
+
+	seen := make(map[uint]struct{}, len(categoryIds))
+	list := make([]uint, 0, len(categoryIds))
+	for _, id := range categoryIds {
+		if id == 0 {
+			continue
+		}
+		if _, ok := seen[id]; ok {
+			continue
+		}
+		seen[id] = struct{}{}
+		list = append(list, id)
+	}
+	return list
+}
+
 type CatalogRequestListOptions struct {
 	ActorId     uint64
 	Keyword     string

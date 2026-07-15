@@ -30,6 +30,50 @@ func TestCatalogTorrentPromotionStateToSp(t *testing.T) {
 	}
 }
 
+func TestCatalogTorrentListOptionsNormalized(t *testing.T) {
+	got := (CatalogTorrentListOptions{
+		Keyword:             "  test  ",
+		CategoryIds:         []uint{3, 0, 3, 2},
+		Promotion:           "missing",
+		SeedStatus:          "missing",
+		PublishedWithinDays: -1,
+		Sort:                "missing",
+		Page:                0,
+		Size:                500,
+	}).Normalized()
+
+	if got.Keyword != "test" {
+		t.Fatalf("keyword = %q, want test", got.Keyword)
+	}
+	if len(got.CategoryIds) != 2 || got.CategoryIds[0] != 3 || got.CategoryIds[1] != 2 {
+		t.Fatalf("category ids = %v, want [3 2]", got.CategoryIds)
+	}
+	if got.Promotion != consts.CatalogTorrentPromotionFilterAll {
+		t.Fatalf("promotion = %q, want all", got.Promotion)
+	}
+	if got.SeedStatus != consts.CatalogTorrentSeedStatusAll {
+		t.Fatalf("seed status = %q, want all", got.SeedStatus)
+	}
+	if got.PublishedWithinDays != 0 {
+		t.Fatalf("published within = %d, want 0", got.PublishedWithinDays)
+	}
+	if got.Sort != consts.CatalogTorrentSortNewest {
+		t.Fatalf("sort = %q, want newest", got.Sort)
+	}
+	if got.Page != 1 || got.Size != 100 {
+		t.Fatalf("page/size = %d/%d, want 1/100", got.Page, got.Size)
+	}
+}
+
+func TestCatalogTorrentListOptionsInvalidSizeRange(t *testing.T) {
+	if !(CatalogTorrentListOptions{MinSize: 2, MaxSize: 1}).HasInvalidSizeRange() {
+		t.Fatal("expected invalid size range")
+	}
+	if (CatalogTorrentListOptions{MinSize: 1, MaxSize: 2}).HasInvalidSizeRange() {
+		t.Fatal("expected valid size range")
+	}
+}
+
 func TestResolveCatalogTorrentPromotionGlobalOverridesTorrent(t *testing.T) {
 	now := gtime.NewFromStr("2026-07-08 12:00:00")
 	torrentExpireAt := now.AddDate(0, 0, 1)

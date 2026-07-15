@@ -44,7 +44,24 @@ func NewCatalogTorrentUsecase() *sCatalogTorrentUsecase {
 
 // List 获取种子分页列表
 func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, in catalogin.TorrentListInp) (*catalogout.TorrentListOut, error) {
-	entities, total, err := service.CatalogTorrentDomain().QueryTorrentsByConditions(ctx, actor, in.Keyword, in.CategoryIds, in.Page, in.Size)
+	options := model.CatalogTorrentListOptions{
+		Keyword:             in.Keyword,
+		CategoryIds:         in.CategoryIds,
+		Promotion:           in.Promotion,
+		SeedStatus:          in.SeedStatus,
+		FeaturedOnly:        in.FeaturedOnly,
+		MinSize:             in.MinSize,
+		MaxSize:             in.MaxSize,
+		PublishedWithinDays: in.PublishedWithin,
+		Sort:                in.Sort,
+		Page:                in.Page,
+		Size:                in.Size,
+	}.Normalized()
+	if options.HasInvalidSizeRange() {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.size_range_invalid"))
+	}
+
+	entities, total, err := service.CatalogTorrentDomain().QueryTorrents(ctx, actor, options)
 	if err != nil {
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
 	}
@@ -70,28 +87,30 @@ func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor
 		size = 100
 	}
 
-	querySize := size
+	promotion := in.Promotion
 	if in.PromotionOnly {
-		querySize = 500
+		promotion = consts.CatalogTorrentPromotionFilterPromoted
 	}
-	entities, err := service.CatalogTorrentDomain().QueryRssTorrents(ctx, actor, in.Keyword, in.CategoryIds, querySize)
-	if err != nil {
-		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
+	options := model.CatalogTorrentListOptions{
+		Keyword:             in.Keyword,
+		CategoryIds:         in.CategoryIds,
+		Promotion:           promotion,
+		SeedStatus:          in.SeedStatus,
+		FeaturedOnly:        in.FeaturedOnly,
+		MinSize:             in.MinSize,
+		MaxSize:             in.MaxSize,
+		PublishedWithinDays: in.PublishedWithin,
+		Sort:                consts.CatalogTorrentSortNewest,
+		Page:                1,
+		Size:                size,
+	}.Normalized()
+	if options.HasInvalidSizeRange() {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.size_range_invalid"))
 	}
 
-	if in.PromotionOnly {
-		filtered := make([]entity.CatalogTorrent, 0, size)
-		for i := range entities {
-			promotion := service.CatalogTorrentDomain().ResolveEffectiveTorrentPromotion(ctx, &entities[i], nil)
-			if promotion.SpState == consts.ResourceTorrentSpNormal {
-				continue
-			}
-			filtered = append(filtered, entities[i])
-			if len(filtered) == size {
-				break
-			}
-		}
-		entities = filtered
+	entities, err := service.CatalogTorrentDomain().QueryRssTorrents(ctx, actor, options)
+	if err != nil {
+		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.query_failed"))
 	}
 
 	categories, err := service.CatalogCategoryDomain().ListCategories(ctx)

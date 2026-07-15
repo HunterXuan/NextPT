@@ -69,6 +69,7 @@ catalog.torrent.rss.title: 种子 RSS
 catalog.torrent.rss.description: 最新种子订阅
 catalog.torrent.rss.unknown_category: 未分类
 catalog.torrent.rss.item_description: "大小 %s / 做种 %d / 下载 %d / 完成 %d"
+catalog.torrent.size_range_invalid: 最小体积不能大于最大体积
 catalog.torrent.read_cache_failed: 读取本地种子缓存失败
 catalog.torrent.read_upload_failed: 读取上传文件失败
 catalog.torrent.reencode_info_failed: 重新编码种子 Info 字典失败

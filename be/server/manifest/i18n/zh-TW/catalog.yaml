@@ -69,6 +69,7 @@ catalog.torrent.rss.title: 種子 RSS
 catalog.torrent.rss.description: 最新種子訂閱
 catalog.torrent.rss.unknown_category: 未分類
 catalog.torrent.rss.item_description: "大小 %s / 做種 %d / 下載 %d / 完成 %d"
+catalog.torrent.size_range_invalid: 最小體積不能大於最大體積
 catalog.torrent.read_cache_failed: 讀取本地種子緩存失敗
 catalog.torrent.read_upload_failed: 讀取上傳文件失敗
 catalog.torrent.reencode_info_failed: 重新編碼種子 Info 字典失敗

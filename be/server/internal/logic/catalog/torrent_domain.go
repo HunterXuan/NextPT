@@ -3,7 +3,6 @@ package catalog
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"server/internal/consts"
@@ -460,46 +459,126 @@ func (s *sCatalogTorrentDomain) GetTorrentsByHashes(ctx context.Context, hashes 
 	return torrents, err
 }
 
-func (s *sCatalogTorrentDomain) QueryTorrentsByConditions(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, page, size int) ([]entity.CatalogTorrent, int, error) {
-	m := s.buildTorrentQuery(ctx, actor, keyword, categoryIds)
+func (s *sCatalogTorrentDomain) QueryTorrents(ctx context.Context, actor *model.Actor, options model.CatalogTorrentListOptions) ([]entity.CatalogTorrent, int, error) {
+	options = options.Normalized()
+	m := s.buildTorrentQuery(ctx, actor, options)
 	total, err := m.Count()
 	if err != nil {
 		return nil, 0, err
 	}
-	columns := dao.CatalogTorrent.Columns()
+
 	var entities []entity.CatalogTorrent
-	err = m.Page(page, size).
-		OrderDesc(columns.IsPinned).
-		OrderDesc(columns.PinWeight).
-		OrderDesc(columns.CreatedAt).
+	err = s.applyTorrentOrder(m, options.Sort, true).
+		Page(options.Page, options.Size).
 		Scan(&entities)
 	return entities, total, err
 }
 
-func (s *sCatalogTorrentDomain) QueryRssTorrents(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint, size int) ([]entity.CatalogTorrent, error) {
+func (s *sCatalogTorrentDomain) QueryRssTorrents(ctx context.Context, actor *model.Actor, options model.CatalogTorrentListOptions) ([]entity.CatalogTorrent, error) {
+	options = options.Normalized()
 	columns := dao.CatalogTorrent.Columns()
 	var entities []entity.CatalogTorrent
-	err := s.buildTorrentQuery(ctx, actor, keyword, categoryIds).
+	err := s.buildTorrentQuery(ctx, actor, options).
 		OrderDesc(columns.CreatedAt).
-		Limit(size).
+		OrderDesc(columns.Id).
+		Limit(options.Size).
 		Scan(&entities)
 	return entities, err
 }
 
-func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *model.Actor, keyword string, categoryIds []uint) *gdb.Model {
+func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *model.Actor, options model.CatalogTorrentListOptions) *gdb.Model {
+	options = options.Normalized()
 	m := s.ApplyTorrentVisibleScope(dao.CatalogTorrent.Ctx(ctx), actor)
 	columns := dao.CatalogTorrent.Columns()
-	categoryIds = s.normalizeTorrentCategoryIds(categoryIds)
-	if len(categoryIds) > 0 {
-		m = m.WhereIn(columns.CategoryId, categoryIds)
+	if len(options.CategoryIds) > 0 {
+		m = m.WhereIn(columns.CategoryId, options.CategoryIds)
 	}
 
-	keyword = strings.TrimSpace(keyword)
-	if keyword != "" {
-		like := "%" + keyword + "%"
+	if options.Keyword != "" {
+		like := "%" + options.Keyword + "%"
 		m = m.Where(fmt.Sprintf("(%s LIKE ? OR %s LIKE ?)", columns.Name, columns.SubTitle), like, like)
 	}
-	return m
+	if options.FeaturedOnly {
+		m = m.Where(columns.IsFeatured, true)
+	}
+	if options.MinSize > 0 {
+		m = m.WhereGTE(columns.Size, options.MinSize)
+	}
+	if options.MaxSize > 0 {
+		m = m.WhereLTE(columns.Size, options.MaxSize)
+	}
+	if options.PublishedWithinDays > 0 {
+		m = m.WhereGTE(columns.CreatedAt, gtime.Now().Add(-time.Duration(options.PublishedWithinDays)*24*time.Hour))
+	}
+
+	switch options.SeedStatus {
+	case consts.CatalogTorrentSeedStatusSeeded:
+		m = m.WhereGT(columns.Seeders, 0)
+	case consts.CatalogTorrentSeedStatusUnseeded:
+		m = m.Where(columns.Seeders, 0)
+	}
+
+	return s.applyTorrentPromotionFilter(ctx, m, options.Promotion)
+}
+
+func (s *sCatalogTorrentDomain) applyTorrentPromotionFilter(ctx context.Context, m *gdb.Model, filter string) *gdb.Model {
+	if filter == consts.CatalogTorrentPromotionFilterAll {
+		return m
+	}
+
+	globalPromotion := model.ResolveCatalogTorrentPromotion(
+		consts.ResourceTorrentSpNormal,
+		nil,
+		s.getGlobalPromotionConfig(ctx),
+		nil,
+	)
+	if globalPromotion.SpState != consts.ResourceTorrentSpNormal {
+		if filter == consts.CatalogTorrentPromotionFilterPromoted || model.CatalogTorrentPromotionStateToSp(filter) == globalPromotion.SpState {
+			return m
+		}
+		return m.Where("1 = 0")
+	}
+
+	columns := dao.CatalogTorrent.Columns()
+	now := gtime.Now()
+	activeCondition := fmt.Sprintf("(%s IS NULL OR %s > ?)", columns.SpExpireAt, columns.SpExpireAt)
+	expiredCondition := fmt.Sprintf("(%s IS NOT NULL AND %s <= ?)", columns.SpExpireAt, columns.SpExpireAt)
+	switch filter {
+	case consts.CatalogTorrentPromotionFilterPromoted:
+		return m.Where(fmt.Sprintf("%s != ? AND %s", columns.SpState, activeCondition), consts.ResourceTorrentSpNormal, now)
+	case consts.ResourceTorrentPromotionStateNormal:
+		return m.Where(fmt.Sprintf("(%s = ? OR %s)", columns.SpState, expiredCondition), consts.ResourceTorrentSpNormal, now)
+	default:
+		spState := model.CatalogTorrentPromotionStateToSp(filter)
+		if spState == consts.ResourceTorrentSpNormal {
+			return m.Where("1 = 0")
+		}
+		return m.Where(fmt.Sprintf("%s = ? AND %s", columns.SpState, activeCondition), spState, now)
+	}
+}
+
+func (s *sCatalogTorrentDomain) applyTorrentOrder(m *gdb.Model, sort string, pinnedFirst bool) *gdb.Model {
+	columns := dao.CatalogTorrent.Columns()
+	if pinnedFirst {
+		m = m.OrderDesc(columns.IsPinned).OrderDesc(columns.PinWeight)
+	}
+
+	switch sort {
+	case consts.CatalogTorrentSortOldest:
+		return m.OrderAsc(columns.CreatedAt).OrderAsc(columns.Id)
+	case consts.CatalogTorrentSortSeeders:
+		return m.OrderDesc(columns.Seeders).OrderDesc(columns.CreatedAt).OrderDesc(columns.Id)
+	case consts.CatalogTorrentSortLeechers:
+		return m.OrderDesc(columns.Leechers).OrderDesc(columns.CreatedAt).OrderDesc(columns.Id)
+	case consts.CatalogTorrentSortComplete:
+		return m.OrderDesc(columns.TimesCompleted).OrderDesc(columns.CreatedAt).OrderDesc(columns.Id)
+	case consts.CatalogTorrentSortSizeAsc:
+		return m.OrderAsc(columns.Size).OrderDesc(columns.CreatedAt).OrderDesc(columns.Id)
+	case consts.CatalogTorrentSortSizeDesc:
+		return m.OrderDesc(columns.Size).OrderDesc(columns.CreatedAt).OrderDesc(columns.Id)
+	default:
+		return m.OrderDesc(columns.CreatedAt).OrderDesc(columns.Id)
+	}
 }
 
 func (s *sCatalogTorrentDomain) QueryHotVisibleTorrents(ctx context.Context, size int) ([]entity.CatalogTorrent, error) {
@@ -530,26 +609,6 @@ func (s *sCatalogTorrentDomain) QueryHotVisibleTorrents(ctx context.Context, siz
 		Limit(size).
 		Scan(&entities)
 	return entities, err
-}
-
-func (s *sCatalogTorrentDomain) normalizeTorrentCategoryIds(categoryIds []uint) []uint {
-	if len(categoryIds) == 0 {
-		return nil
-	}
-
-	seen := make(map[uint]struct{}, len(categoryIds))
-	list := make([]uint, 0, len(categoryIds))
-	for _, id := range categoryIds {
-		if id == 0 {
-			continue
-		}
-		if _, ok := seen[id]; ok {
-			continue
-		}
-		seen[id] = struct{}{}
-		list = append(list, id)
-	}
-	return list
 }
 
 func (s *sCatalogTorrentDomain) CheckTorrentBookmarked(ctx context.Context, torrentId, userId uint64) (bool, error) {
