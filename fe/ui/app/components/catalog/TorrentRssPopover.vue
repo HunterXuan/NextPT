@@ -32,8 +32,8 @@
         </h2>
       </div>
 
-      <div class="mt-4 grid grid-cols-[minmax(0,1fr)_116px] items-end gap-3">
-        <div class="flex h-9 items-center justify-between rounded-md border border-slate-200 px-3 dark:border-slate-700">
+      <div class="mt-4 grid items-end gap-3" :class="props.promotion === 'all' ? 'grid-cols-[minmax(0,1fr)_116px]' : 'grid-cols-1'">
+        <div v-if="props.promotion === 'all'" class="flex h-9 items-center justify-between rounded-md border border-slate-200 px-3 dark:border-slate-700">
           <span class="text-sm text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.rss.promotionOnly') }}</span>
           <USwitch v-model="promotionOnly" size="sm" />
         </div>
@@ -82,9 +82,21 @@
 const props = withDefaults(defineProps<{
   keyword?: string
   categoryIds?: number[]
+  promotion?: string
+  seedStatus?: string
+  featuredOnly?: boolean
+  minSize?: number
+  maxSize?: number
+  publishedWithin?: number
 }>(), {
   keyword: '',
-  categoryIds: () => []
+  categoryIds: () => [],
+  promotion: 'all',
+  seedStatus: 'all',
+  featuredOnly: false,
+  minSize: 0,
+  maxSize: 0,
+  publishedWithin: 0
 })
 
 const { t, locale } = useI18n()
@@ -120,7 +132,16 @@ const rssUrl = computed(() => {
   for (const categoryId of props.categoryIds) {
     url.searchParams.append('categoryIds[]', String(categoryId))
   }
-  if (promotionOnly.value) url.searchParams.set('promotionOnly', 'true')
+  if (props.promotion !== 'all') {
+    url.searchParams.set('promotion', props.promotion)
+  } else if (promotionOnly.value) {
+    url.searchParams.set('promotionOnly', 'true')
+  }
+  if (props.seedStatus !== 'all') url.searchParams.set('seedStatus', props.seedStatus)
+  if (props.featuredOnly) url.searchParams.set('featuredOnly', 'true')
+  if (props.minSize > 0) url.searchParams.set('minSize', String(props.minSize))
+  if (props.maxSize > 0) url.searchParams.set('maxSize', String(props.maxSize))
+  if (props.publishedWithin > 0) url.searchParams.set('publishedWithin', String(props.publishedWithin))
   return url.toString()
 })
 

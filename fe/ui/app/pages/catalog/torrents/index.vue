@@ -25,9 +25,35 @@
           </form>
 
           <div class="flex shrink-0 items-center gap-2">
+            <UTooltip :text="$t('catalog.torrents.search.advanced')" :content="{ side: 'bottom', sideOffset: 8 }" :delay-duration="600">
+              <span class="relative inline-flex">
+                <UButton
+                  type="button"
+                  color="neutral"
+                  :variant="advancedOpen || activeAdvancedFilterCount > 0 ? 'soft' : 'outline'"
+                  icon="i-lucide-list-filter"
+                  class="h-10 w-10 justify-center p-0"
+                  :aria-label="$t('catalog.torrents.search.advanced')"
+                  :aria-expanded="advancedOpen"
+                  @click="advancedOpen = !advancedOpen"
+                />
+                <span
+                  v-if="activeAdvancedFilterCount > 0"
+                  class="pointer-events-none absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-sky-600 text-[10px] font-semibold text-white ring-2 ring-white dark:ring-slate-900"
+                >
+                  {{ activeAdvancedFilterCount }}
+                </span>
+              </span>
+            </UTooltip>
             <CatalogTorrentRssPopover
               :keyword="appliedKeyword"
               :category-ids="selectedCategoryIds"
+              :promotion="appliedAdvancedFilters.promotion"
+              :seed-status="appliedAdvancedFilters.seedStatus"
+              :featured-only="appliedAdvancedFilters.featuredOnly"
+              :min-size="appliedAdvancedFilters.minSize"
+              :max-size="appliedAdvancedFilters.maxSize"
+              :published-within="appliedAdvancedFilters.publishedWithin"
             />
             <AppPermissionButton
               :permission="Permission.CatalogTorrentCreate"
@@ -85,6 +111,14 @@
         <p v-if="categories.length === 0" class="mt-3 text-sm text-slate-500 dark:text-slate-400">
           {{ $t('catalog.torrents.filters.noCategories') }}
         </p>
+
+        <div v-if="advancedOpen" class="mt-3 border-t border-slate-200 pt-3 dark:border-slate-800">
+          <CatalogTorrentAdvancedFilters
+            :value="appliedAdvancedFilters"
+            :pending="pending"
+            @apply="applyAdvancedFilters"
+          />
+        </div>
       </section>
 
       <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
@@ -262,7 +296,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, TorrentListItem } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, TorrentAdvancedFilters, TorrentListItem } from '~/composables/useCatalogTorrents'
 
 definePageMeta({
   middleware: 'auth'
@@ -289,11 +323,14 @@ const keyword = ref(readStringQuery('keyword'))
 const appliedKeyword = ref(keyword.value)
 const selectedCategoryIds = ref(readCategoryIdsQuery())
 const selectedSize = ref(String(readPageSizeQuery()))
+const appliedAdvancedFilters = reactive<TorrentAdvancedFilters>(readAdvancedFilters())
+const advancedOpen = ref(advancedFilterCount(appliedAdvancedFilters) > 0)
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const relativeTimeFormatter = computed(() => new Intl.RelativeTimeFormat(locale.value, { numeric: 'auto' }))
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / Number(selectedSize.value || 50))))
 const canDownloadTorrent = computed(() => hasPermission(Permission.CatalogTorrentDownload))
+const activeAdvancedFilterCount = computed(() => advancedFilterCount(appliedAdvancedFilters))
 
 const categoryNameMap = computed(() => {
   const map = new Map<number, string>()
@@ -314,6 +351,44 @@ function readFirstQueryValue(key: string) {
 
 function readStringQuery(key: string) {
   return String(readFirstQueryValue(key) || '').trim()
+}
+
+function readBooleanQuery(key: string) {
+  const value = readStringQuery(key).toLowerCase()
+  return value === 'true' || value === '1'
+}
+
+function readAdvancedFilters(): TorrentAdvancedFilters {
+  const promotion = readStringQuery('promotion')
+  const seedStatus = readStringQuery('seedStatus')
+  const publishedWithin = Number(readFirstQueryValue('publishedWithin'))
+  const sort = readStringQuery('sort')
+  return {
+    promotion: ['promoted', 'normal', 'free', '2x', '2x_free', '50_percent', '2x_50_percent', '30_percent'].includes(promotion) ? promotion : 'all',
+    seedStatus: ['seeded', 'unseeded'].includes(seedStatus) ? seedStatus : 'all',
+    featuredOnly: readBooleanQuery('featuredOnly'),
+    minSize: readNonnegativeIntegerQuery('minSize'),
+    maxSize: readNonnegativeIntegerQuery('maxSize'),
+    publishedWithin: [1, 7, 30, 90].includes(publishedWithin) ? publishedWithin : 0,
+    sort: ['oldest', 'seeders', 'leechers', 'completed', 'size_asc', 'size_desc'].includes(sort) ? sort : 'newest'
+  }
+}
+
+function readNonnegativeIntegerQuery(key: string) {
+  const value = Number(readFirstQueryValue(key))
+  return Number.isSafeInteger(value) && value > 0 ? value : 0
+}
+
+function advancedFilterCount(value: TorrentAdvancedFilters) {
+  return [
+    value.promotion !== 'all',
+    value.seedStatus !== 'all',
+    value.featuredOnly,
+    value.minSize > 0,
+    value.maxSize > 0,
+    value.publishedWithin > 0,
+    value.sort !== 'newest'
+  ].filter(Boolean).length
 }
 
 function readPositiveIntQuery(key: string, fallback: number) {
@@ -349,15 +424,21 @@ async function loadCategories() {
 async function loadTorrents() {
   pending.value = true
   errorMessage.value = ''
-  appliedKeyword.value = keyword.value.trim()
   syncQuery()
 
   try {
     const data = await catalogTorrents.listTorrents({
       page: page.value,
       size: Number(selectedSize.value),
-      keyword: keyword.value,
-      categoryIds: selectedCategoryIds.value
+      keyword: appliedKeyword.value,
+      categoryIds: selectedCategoryIds.value,
+      promotion: appliedAdvancedFilters.promotion,
+      seedStatus: appliedAdvancedFilters.seedStatus,
+      featuredOnly: appliedAdvancedFilters.featuredOnly,
+      minSize: appliedAdvancedFilters.minSize,
+      maxSize: appliedAdvancedFilters.maxSize,
+      publishedWithin: appliedAdvancedFilters.publishedWithin,
+      sort: appliedAdvancedFilters.sort
     })
     torrents.value = data.list || []
     total.value = data.total || 0
@@ -376,6 +457,13 @@ async function loadTorrents() {
 }
 
 function handleSearchSubmit() {
+  appliedKeyword.value = keyword.value.trim()
+  page.value = 1
+  loadTorrents()
+}
+
+function applyAdvancedFilters(value: TorrentAdvancedFilters) {
+  Object.assign(appliedAdvancedFilters, value)
   page.value = 1
   loadTorrents()
 }
@@ -410,8 +498,15 @@ function syncQuery() {
     query: {
       page: page.value > 1 ? String(page.value) : undefined,
       size: selectedSize.value !== '50' ? selectedSize.value : undefined,
-      keyword: keyword.value.trim() || undefined,
-      categoryIds: selectedCategoryIds.value.length ? selectedCategoryIds.value.map(String) : undefined
+      keyword: appliedKeyword.value || undefined,
+      categoryIds: selectedCategoryIds.value.length ? selectedCategoryIds.value.map(String) : undefined,
+      promotion: appliedAdvancedFilters.promotion !== 'all' ? appliedAdvancedFilters.promotion : undefined,
+      seedStatus: appliedAdvancedFilters.seedStatus !== 'all' ? appliedAdvancedFilters.seedStatus : undefined,
+      featuredOnly: appliedAdvancedFilters.featuredOnly ? 'true' : undefined,
+      minSize: appliedAdvancedFilters.minSize > 0 ? String(appliedAdvancedFilters.minSize) : undefined,
+      maxSize: appliedAdvancedFilters.maxSize > 0 ? String(appliedAdvancedFilters.maxSize) : undefined,
+      publishedWithin: appliedAdvancedFilters.publishedWithin > 0 ? String(appliedAdvancedFilters.publishedWithin) : undefined,
+      sort: appliedAdvancedFilters.sort !== 'newest' ? appliedAdvancedFilters.sort : undefined
     }
   })
 }

@@ -149,6 +149,23 @@ export interface TorrentListParams {
   size?: number
   keyword?: string
   categoryIds?: number[]
+  promotion?: string
+  seedStatus?: string
+  featuredOnly?: boolean
+  minSize?: number
+  maxSize?: number
+  publishedWithin?: number
+  sort?: string
+}
+
+export interface TorrentAdvancedFilters {
+  promotion: string
+  seedStatus: string
+  featuredOnly: boolean
+  minSize: number
+  maxSize: number
+  publishedWithin: number
+  sort: string
 }
 
 export interface TorrentUploadInput {
@@ -253,6 +270,13 @@ export function useCatalogTorrents() {
     if (params.size) query.size = params.size
     if (params.keyword?.trim()) query.keyword = params.keyword.trim()
     if (params.categoryIds?.length) query['categoryIds[]'] = params.categoryIds
+    if (params.promotion && params.promotion !== 'all') query.promotion = params.promotion
+    if (params.seedStatus && params.seedStatus !== 'all') query.seedStatus = params.seedStatus
+    if (params.featuredOnly) query.featuredOnly = true
+    if (params.minSize && params.minSize > 0) query.minSize = params.minSize
+    if (params.maxSize && params.maxSize > 0) query.maxSize = params.maxSize
+    if (params.publishedWithin && params.publishedWithin > 0) query.publishedWithin = params.publishedWithin
+    if (params.sort && params.sort !== 'newest') query.sort = params.sort
 
     return await fetchApi<TorrentListOut>('/api/catalog/torrents', { query })
   }
