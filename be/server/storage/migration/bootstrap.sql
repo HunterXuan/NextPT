@@ -16,6 +16,7 @@ SET NAMES utf8mb4;
 SET @iam_permissions_limited = JSON_ARRAY(
     'read:site/announcement:*',
     'read:site/message:*',
+    'read:economy/shop-product:*',
     'read:forum/topic:*',
     'read:forum/reply:*',
     'read:catalog/torrent:*',
@@ -28,6 +29,10 @@ SET @iam_permissions_limited = JSON_ARRAY(
 
 SET @iam_permissions_member = JSON_ARRAY_APPEND(
     @iam_permissions_limited,
+    '$',
+    'read:economy/shop-order:*',
+    '$',
+    'create:economy/shop-order:*',
     '$',
     'read:iam/invite:*',
     '$',
@@ -205,6 +210,16 @@ VALUES
     ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
     ('iam', 'default_register_role', '{"val":2}', NOW(), NOW()),
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
+    ('economy', 'shop_products', JSON_OBJECT('val', JSON_ARRAY(
+        JSON_OBJECT(
+            'key', 'invite',
+            'type', 'invite',
+            'enabled', true,
+            'price', 1000.00,
+            'sortOrder', 10,
+            'options', JSON_OBJECT('amount', 1)
+        )
+    )), NOW(), NOW()),
     ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW()),
     ('catalog', 'global_promotion', JSON_OBJECT('val', JSON_OBJECT(
         'enabled', false,

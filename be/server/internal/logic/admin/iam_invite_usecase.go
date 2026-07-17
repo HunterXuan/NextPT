@@ -5,7 +5,6 @@ import (
 
 	"server/internal/consts"
 	"server/internal/model"
-	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/adminin"
 	"server/internal/model/in/sitein"
@@ -13,19 +12,12 @@ import (
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/database/gdb"
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/util/grand"
-
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
 )
 
 type sAdminIamInviteUsecase struct{}
-
-const (
-	inviteHashAlphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
-	inviteHashLength   = 32
-)
 
 func NewAdminIamInviteUsecase() *sAdminIamInviteUsecase {
 	return &sAdminIamInviteUsecase{}
@@ -68,22 +60,16 @@ func (s *sAdminIamInviteUsecase) Grant(ctx context.Context, actor *model.Actor, 
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.invite.grant_failed"))
 	}
 
-	list := make([]do.IamInvite, 0, len(inviterIds)*in.Amount)
 	isTemporary := in.IsTemp || in.ExpireAt != nil
-	for _, inviterId := range inviterIds {
-		for i := 0; i < in.Amount; i++ {
-			list = append(list, do.IamInvite{
-				InviterId:   inviterId,
-				Hash:        s.generateInviteHash(),
-				Status:      consts.IamInviteStatusUnused,
-				IsTemporary: isTemporary,
-				ExpireAt:    in.ExpireAt,
-			})
-		}
-	}
-
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		return service.IamInviteDomain().AdminCreateInvites(ctx, list)
+		for _, inviterId := range inviterIds {
+			for i := 0; i < in.Amount; i++ {
+				if _, err := service.IamInviteDomain().CreateInvite(ctx, inviterId, isTemporary, in.ExpireAt); err != nil {
+					return err
+				}
+			}
+		}
+		return nil
 	})
 	if err != nil {
 		return gerror.Wrap(err, gi18n.T(ctx, "admin.invite.grant_failed"))
@@ -181,10 +167,6 @@ func (s *sAdminIamInviteUsecase) normalizeRoleIds(roleIds []uint) []uint {
 		normalized = append(normalized, roleId)
 	}
 	return normalized
-}
-
-func (s *sAdminIamInviteUsecase) generateInviteHash() string {
-	return grand.Str(inviteHashAlphabet, inviteHashLength)
 }
 
 func (s *sAdminIamInviteUsecase) loadInviteeUsernameMap(ctx context.Context, inviteeIds []uint64) (map[uint64]string, error) {

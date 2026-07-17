@@ -8,6 +8,7 @@ const (
 	EconomyBonusActionRequestEscrow    = "request_escrow"
 	EconomyBonusActionRequestReward    = "request_reward"
 	EconomyBonusActionRequestRefund    = "request_refund"
+	EconomyBonusActionShopPurchase     = "shop_purchase"
 )
 
 const (
@@ -16,4 +17,5 @@ const (
 	EconomyBonusTargetTypeForumTopic     = "forum_topic"
 	EconomyBonusTargetTypeForumReply     = "forum_reply"
 	EconomyBonusTargetTypeCatalogRequest = "catalog_request"
+	EconomyBonusTargetTypeShopOrder      = "economy_shop_order"
 )

@@ -785,6 +785,23 @@ CREATE TABLE `economy_bonus_log` (
     UNIQUE KEY `uk_user_action_period` (`user_id`, `action`, `period`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='魔力值交易日志';
 
+CREATE TABLE `economy_shop_order` (
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id`         BIGINT UNSIGNED NOT NULL,
+    `product_key`     VARCHAR(64)     NOT NULL COMMENT '商品标识快照',
+    `product_type`    VARCHAR(32)     NOT NULL COMMENT '商品类型快照',
+    `product_snapshot` JSON           NOT NULL COMMENT '购买时商品配置快照',
+    `price`           DECIMAL(12,2)   NOT NULL DEFAULT 0.00 COMMENT '成交价格快照',
+    `status`          TINYINT         NOT NULL DEFAULT 0 COMMENT '0=待处理, 1=已完成',
+    `target_type`     VARCHAR(50)     NOT NULL DEFAULT '' COMMENT '履约目标类型',
+    `target_id`       BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '履约目标ID',
+    `created_at`      DATETIME        NULL,
+    `completed_at`    DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_user_created` (`user_id`, `created_at`, `id`),
+    KEY `idx_product_created` (`product_key`, `created_at`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='魔力商城兑换订单表';
+
 CREATE TABLE `economy_reward_record` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `target_type`     VARCHAR(50)     NOT NULL COMMENT 'catalog_torrent/catalog_comment/forum_topic/forum_reply',

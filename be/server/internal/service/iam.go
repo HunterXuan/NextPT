@@ -19,6 +19,7 @@ import (
 
 type (
 	IIamInviteDomain interface {
+		CreateInvite(ctx context.Context, inviterId uint64, isTemporary bool, expireAt *gtime.Time) (uint64, error)
 		GetInviteByHashForUpdate(ctx context.Context, hash string) (*entity.IamInvite, error)
 		GetInviteByHash(ctx context.Context, hash string) (*entity.IamInvite, error)
 		GetInviteByInviterIdAndId(ctx context.Context, inviterId uint64, id uint64) (*entity.IamInvite, error)
@@ -29,7 +30,6 @@ type (
 		ExpireInvites(ctx context.Context, now *gtime.Time) (int64, error)
 		UpdateInviteStatus(ctx context.Context, id uint64, status uint) error
 		UpdateInvite(ctx context.Context, id uint64, data do.IamInvite) error
-		AdminCreateInvites(ctx context.Context, invites []do.IamInvite) error
 	}
 	IIamInviteUsecase interface {
 		List(ctx context.Context, actor *model.Actor, in iamin.InviteListInp) (*iamout.InviteListOut, error)

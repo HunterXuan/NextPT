@@ -69,6 +69,8 @@ const (
 	SiteConfigCatalogNewTorrentPromotion = "catalog.new_torrent_promotion"
 )
 
+const SiteConfigEconomyShopProducts = "economy.shop_products"
+
 // ==============================================================================
 // 后台业务配置的统一默认值字典
 // 供 AdminConfig.GetByPath 取不到数据库值时兜底使用
@@ -122,6 +124,16 @@ var SiteConfigDefaults = map[string]any{
 					{"state": ResourceTorrentPromotionState2x50Percent, "weight": 30},
 				},
 			},
+		},
+	},
+	SiteConfigEconomyShopProducts: []map[string]any{
+		{
+			"key":       EconomyShopProductTypeInvite,
+			"type":      EconomyShopProductTypeInvite,
+			"enabled":   true,
+			"price":     1000.0,
+			"sortOrder": 10,
+			"options":   map[string]any{"amount": 1},
 		},
 	},
 }

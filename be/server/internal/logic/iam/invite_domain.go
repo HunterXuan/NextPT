@@ -10,9 +10,15 @@ import (
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/grand"
 )
 
 type sIamInviteDomain struct{}
+
+const (
+	iamInviteHashAlphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
+	iamInviteHashLength   = 32
+)
 
 func init() {
 	service.RegisterIamInviteDomain(NewIamInviteDomain())
@@ -20,6 +26,22 @@ func init() {
 
 func NewIamInviteDomain() *sIamInviteDomain {
 	return &sIamInviteDomain{}
+}
+
+func (s *sIamInviteDomain) CreateInvite(ctx context.Context, inviterId uint64, isTemporary bool, expireAt *gtime.Time) (uint64, error) {
+	result, err := dao.IamInvite.Ctx(ctx).Data(do.IamInvite{
+		InviterId:   inviterId,
+		Hash:        grand.Str(iamInviteHashAlphabet, iamInviteHashLength),
+		Status:      consts.IamInviteStatusUnused,
+		IsTemporary: isTemporary,
+		ExpireAt:    expireAt,
+		CreatedAt:   gtime.Now(),
+	}).Insert()
+	if err != nil {
+		return 0, err
+	}
+	id, err := result.LastInsertId()
+	return uint64(id), err
 }
 
 func (s *sIamInviteDomain) GetInviteByHashForUpdate(ctx context.Context, hash string) (*entity.IamInvite, error) {
@@ -116,14 +138,4 @@ func (s *sIamInviteDomain) UpdateInviteStatus(ctx context.Context, id uint64, st
 func (s *sIamInviteDomain) UpdateInvite(ctx context.Context, id uint64, data do.IamInvite) error {
 	_, err := dao.IamInvite.Ctx(ctx).Where(dao.IamInvite.Columns().Id, id).Data(data).Update()
 	return err
-}
-
-func (s *sIamInviteDomain) AdminCreateInvites(ctx context.Context, invites []do.IamInvite) error {
-	for _, inv := range invites {
-		_, err := dao.IamInvite.Ctx(ctx).Data(inv).Insert()
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }

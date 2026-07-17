@@ -40,12 +40,25 @@ type (
 		DeleteRewardRecordsByTarget(ctx context.Context, targetType string, targetId uint64) error
 		DeleteRewardRecordsByTargets(ctx context.Context, targetType string, targetIds []uint64) error
 	}
+	IEconomyShopDomain interface {
+		LoadProducts(ctx context.Context) (model.EconomyShopProducts, error)
+		InsertOrder(ctx context.Context, order entity.EconomyShopOrder) (uint64, error)
+		CompleteOrder(ctx context.Context, id uint64, targetType string, targetId uint64) error
+		QueryOrdersByUser(ctx context.Context, userId uint64, page int, size int) ([]entity.EconomyShopOrder, int, error)
+	}
+	IEconomyShopUsecase interface {
+		ListProducts(ctx context.Context, actor *model.Actor, in economyin.ShopProductListInp) (*economyout.ShopProductListOut, error)
+		CreateOrder(ctx context.Context, actor *model.Actor, in economyin.ShopOrderCreateInp) (*economyout.ShopOrderCreateOut, error)
+		ListMyOrders(ctx context.Context, actor *model.Actor, in economyin.ShopOrderListInp) (*economyout.ShopOrderListOut, error)
+	}
 )
 
 var (
 	localEconomyBonusDomain  IEconomyBonusDomain
 	localEconomyBonusUsecase IEconomyBonusUsecase
 	localEconomyRewardDomain IEconomyRewardDomain
+	localEconomyShopDomain   IEconomyShopDomain
+	localEconomyShopUsecase  IEconomyShopUsecase
 )
 
 func EconomyBonusDomain() IEconomyBonusDomain {
@@ -79,4 +92,26 @@ func EconomyRewardDomain() IEconomyRewardDomain {
 
 func RegisterEconomyRewardDomain(i IEconomyRewardDomain) {
 	localEconomyRewardDomain = i
+}
+
+func EconomyShopDomain() IEconomyShopDomain {
+	if localEconomyShopDomain == nil {
+		panic("implement not found for interface IEconomyShopDomain, forgot register?")
+	}
+	return localEconomyShopDomain
+}
+
+func RegisterEconomyShopDomain(i IEconomyShopDomain) {
+	localEconomyShopDomain = i
+}
+
+func EconomyShopUsecase() IEconomyShopUsecase {
+	if localEconomyShopUsecase == nil {
+		panic("implement not found for interface IEconomyShopUsecase, forgot register?")
+	}
+	return localEconomyShopUsecase
+}
+
+func RegisterEconomyShopUsecase(i IEconomyShopUsecase) {
+	localEconomyShopUsecase = i
 }

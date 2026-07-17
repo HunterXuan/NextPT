@@ -49,6 +49,11 @@ const (
 	IamPermissionIamInviteRead   = "read:iam/invite:*"
 	IamPermissionIamInviteCreate = "create:iam/invite:*"
 
+	// Economy
+	IamPermissionEconomyShopProductRead = "read:economy/shop-product:*"
+	IamPermissionEconomyShopOrderRead   = "read:economy/shop-order:*"
+	IamPermissionEconomyShopOrderCreate = "create:economy/shop-order:*"
+
 	// Site
 	IamPermissionSiteAnnouncementRead = "read:site/announcement:*"
 	IamPermissionSiteMessageRead      = "read:site/message:*"
@@ -107,6 +112,10 @@ var (
 
 		IamPermissionIamInviteRead,
 		IamPermissionIamInviteCreate,
+
+		IamPermissionEconomyShopProductRead,
+		IamPermissionEconomyShopOrderRead,
+		IamPermissionEconomyShopOrderCreate,
 
 		IamPermissionSiteAnnouncementRead,
 		IamPermissionSiteMessageRead,

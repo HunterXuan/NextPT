@@ -8,3 +8,11 @@ economy.bonus.invalid_amount: 轉帳金額無效，必須大於 0
 economy.bonus.update_failed: 修改魔力值失敗
 economy.bonus.user_stat_error: 获取用户统计信息失败
 economy.bonus.write_log_failed: 寫入魔力值流水失敗
+economy.shop.complete_order_failed: 完成商城訂單失敗
+economy.shop.create_order_failed: 建立商城訂單失敗
+economy.shop.fulfill_failed: 發放商城商品失敗
+economy.shop.invalid_config: 商城商品設定無效
+economy.shop.product_disabled: 此商品目前不可兌換
+economy.shop.product_not_found: 商城商品不存在
+economy.shop.product_not_implemented: 此商品類型尚未開放兌換
+economy.shop.query_orders_failed: 取得商城兌換記錄失敗
