@@ -238,6 +238,7 @@ const appNavSections = computed(() => {
         { label: t('user.nav.overview'), to: '/iam/users/me', icon: 'i-lucide-user-round', active: isExactActive('/iam/users/me') },
         { label: t('user.nav.activity'), to: '/iam/users/me/activity', icon: 'i-lucide-chart-line', active: isActive('/iam/users/me/activity') },
         { label: t('user.nav.bonus'), to: '/iam/users/me/bonus', icon: 'i-lucide-coins', active: isActive('/iam/users/me/bonus') },
+        { label: t('user.shop.title'), to: '/economy/shop', icon: 'i-lucide-store', active: isActive('/economy/shop') },
         { label: t('user.nav.settings'), to: '/iam/users/me/settings', icon: 'i-lucide-settings', active: isActive('/iam/users/me/settings') }
       ]
     }
@@ -350,6 +351,7 @@ const routeSpecificLabel = computed(() => {
   if (path === '/site/messages') return t('site.messages.title')
   if (path === '/iam/users/me/activity') return t('user.nav.activity')
   if (path === '/iam/users/me/bonus') return t('user.nav.bonus')
+  if (path === '/economy/shop') return t('user.shop.title')
   if (path === '/iam/users/me/settings') return t('user.nav.settings')
   return ''
 })

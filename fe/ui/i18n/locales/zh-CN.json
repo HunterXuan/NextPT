@@ -1473,7 +1473,8 @@
         "groups": {
           "tracker": "Tracker",
           "iam": "用户",
-          "catalog": "资源库"
+          "catalog": "资源库",
+          "economy": "经济系统"
         },
         "stats": {
           "group": "当前分组",
@@ -1553,6 +1554,35 @@
             "number": "第 {index} 项的 {field} 必须是不小于 {min} 的有效数字"
           }
         },
+        "shop": {
+          "editMode": "编辑方式",
+          "editModeHint": "表单用于日常调整，JSON 用于修改商品结构。",
+          "modeForm": "表单",
+          "modeJson": "JSON",
+          "empty": "暂无商品配置，可切换到 JSON 模式添加。",
+          "price": "兑换价格",
+          "sortOrder": "排序",
+          "inviteAmount": "邀请码数量",
+          "structureHint": "商品标识和类型属于配置结构，如需增删商品或调整类型，请使用 JSON 模式。",
+          "formatJson": "格式化",
+          "jsonTitle": "商城商品 JSON",
+          "jsonPlaceholder": "输入商城商品配置 JSON",
+          "jsonHint": "保存前会校验商品类型、价格、排序和类型选项。",
+          "jsonValid": "JSON 可用",
+          "jsonInvalidShort": "JSON 有误",
+          "jsonFullscreen": "全屏编辑商城配置",
+          "errors": {
+            "array": "商城商品配置必须是 JSON 数组",
+            "object": "第 {index} 个商品必须是 JSON 对象",
+            "key": "第 {index} 个商品缺少商品标识",
+            "duplicateKey": "商品标识 {key} 重复",
+            "type": "第 {index} 个商品类型不合法",
+            "price": "第 {index} 个商品价格必须大于 0",
+            "sortOrder": "第 {index} 个商品排序必须是整数",
+            "notImplemented": "商品类型 {type} 暂未实现，不能启用",
+            "inviteAmount": "第 {index} 个邀请码商品数量必须是大于 0 的整数"
+          }
+        },
         "types": {
           "string": "文本",
           "int": "整数",
@@ -1584,6 +1614,9 @@
             "torrent_source": "种子 Source 标识",
             "global_promotion": "全站优惠",
             "new_torrent_promotion": "新种自动优惠"
+          },
+          "economy": {
+            "shop_products": "商城商品"
           }
         },
         "descriptions": {
@@ -1605,6 +1638,9 @@
             "torrent_source": "写入私有种子 source 字段的站点标识。",
             "global_promotion": "全站范围内优先级最高的种子优惠配置，可设置优惠类型和结束时间。",
             "new_torrent_promotion": "新发布种子的自动优惠规则，支持按体积匹配并按权重随机抽取。"
+          },
+          "economy": {
+            "shop_products": "魔力商城的商品、价格、排序和履约选项配置。"
           }
         }
       },
@@ -1812,6 +1848,7 @@
           "ownerId": "发布者",
           "operation": "具体操作",
           "passkeyChanged": "Passkey 变更",
+          "productCount": "商品数量",
           "permissionsChanged": "权限变更",
           "permKeys": "权限",
           "reason": "原因",
@@ -1988,6 +2025,36 @@
       "bonus": "魔力记录",
       "settings": "账号设置"
     },
+    "shop": {
+      "title": "魔力商城",
+      "productsTitle": "可兑换商品",
+      "ordersTitle": "兑换记录",
+      "balance": "当前魔力",
+      "redeem": "兑换",
+      "insufficient": "魔力值余额不足",
+      "confirmTitle": "确认兑换？",
+      "confirmDescription": "将使用 {price} 魔力兑换“{product}”。",
+      "success": "兑换成功",
+      "emptyProducts": "当前没有可兑换的商品",
+      "emptyOrders": "暂无兑换记录",
+      "viewInvites": "查看邀请码",
+      "table": {
+        "product": "商品",
+        "price": "消耗魔力",
+        "status": "状态",
+        "time": "兑换时间"
+      },
+      "status": {
+        "completed": "已完成"
+      },
+      "products": {
+        "invite": {
+          "title": "邀请码名额",
+          "description": "兑换后会生成归属于你的可用邀请码。",
+          "amount": "{count} 个名额"
+        }
+      }
+    },
     "overview": {
       "enter": "进入",
       "links": {
@@ -2112,6 +2179,7 @@
         "request_escrow": "请求奖励托管",
         "request_reward": "请求完成奖励",
         "request_refund": "请求奖励退回",
+        "shop_purchase": "商城兑换",
         "forum_topic": "论坛主题",
         "forum_reply": "论坛回复"
       },
@@ -2119,6 +2187,7 @@
         "catalog_torrent": "种子",
         "catalog_comment": "种子评论",
         "catalog_request": "求种与续种请求",
+        "economy_shop_order": "商城订单",
         "forum_topic": "论坛主题",
         "forum_reply": "论坛回复"
       },

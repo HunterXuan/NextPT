@@ -228,6 +228,8 @@ function bonusActionIcon(action?: string | null) {
       return 'i-lucide-circle-check'
     case 'request_refund':
       return 'i-lucide-undo-2'
+    case 'shop_purchase':
+      return 'i-lucide-shopping-bag'
     case 'forum_topic':
       return 'i-lucide-message-square'
     case 'forum_reply':

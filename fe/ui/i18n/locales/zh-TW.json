@@ -1473,7 +1473,8 @@
         "groups": {
           "tracker": "Tracker",
           "iam": "使用者",
-          "catalog": "資源庫"
+          "catalog": "資源庫",
+          "economy": "經濟系統"
         },
         "stats": {
           "group": "目前分組",
@@ -1553,6 +1554,35 @@
             "number": "第 {index} 項的 {field} 必須是不小於 {min} 的有效數字"
           }
         },
+        "shop": {
+          "editMode": "編輯方式",
+          "editModeHint": "表單用於日常調整，JSON 用於修改商品結構。",
+          "modeForm": "表單",
+          "modeJson": "JSON",
+          "empty": "暫無商品設定，可切換到 JSON 模式新增。",
+          "price": "兌換價格",
+          "sortOrder": "排序",
+          "inviteAmount": "邀請碼數量",
+          "structureHint": "商品標識和類型屬於配置結構，如需增刪商品或調整類型，請使用 JSON 模式。",
+          "formatJson": "格式化",
+          "jsonTitle": "商城商品 JSON",
+          "jsonPlaceholder": "輸入商城商品配置 JSON",
+          "jsonHint": "儲存前會校驗商品類型、價格、排序和類型選項。",
+          "jsonValid": "JSON 可用",
+          "jsonInvalidShort": "JSON 有誤",
+          "jsonFullscreen": "全螢幕編輯商城配置",
+          "errors": {
+            "array": "商城商品配置必須是 JSON 陣列",
+            "object": "第 {index} 個商品必須是 JSON 物件",
+            "key": "第 {index} 個商品缺少商品標識",
+            "duplicateKey": "商品標識 {key} 重複",
+            "type": "第 {index} 個商品類型不合法",
+            "price": "第 {index} 個商品價格必須大於 0",
+            "sortOrder": "第 {index} 個商品排序必須是整數",
+            "notImplemented": "商品類型 {type} 尚未實現，不能啟用",
+            "inviteAmount": "第 {index} 個邀請碼商品數量必須是大於 0 的整數"
+          }
+        },
         "types": {
           "string": "文字",
           "int": "整數",
@@ -1584,6 +1614,9 @@
             "torrent_source": "種子 Source 標識",
             "global_promotion": "全站優惠",
             "new_torrent_promotion": "新種自動優惠"
+          },
+          "economy": {
+            "shop_products": "商城商品"
           }
         },
         "descriptions": {
@@ -1605,6 +1638,9 @@
             "torrent_source": "寫入私有種子 source 欄位的站點標識。",
             "global_promotion": "全站範圍內優先級最高的種子優惠配置，可設定優惠類型和結束時間。",
             "new_torrent_promotion": "新發布種子的自動優惠規則，支援按體積匹配並按權重隨機抽取。"
+          },
+          "economy": {
+            "shop_products": "魔力商城的商品、價格、排序和履約選項配置。"
           }
         }
       },
@@ -1812,6 +1848,7 @@
           "ownerId": "發布者",
           "operation": "具體操作",
           "passkeyChanged": "Passkey 變更",
+          "productCount": "商品數量",
           "permissionsChanged": "權限變更",
           "permKeys": "權限",
           "reason": "原因",
@@ -1988,6 +2025,36 @@
       "bonus": "魔力記錄",
       "settings": "帳號設定"
     },
+    "shop": {
+      "title": "魔力商城",
+      "productsTitle": "可兌換商品",
+      "ordersTitle": "兌換記錄",
+      "balance": "目前魔力",
+      "redeem": "兌換",
+      "insufficient": "魔力值餘額不足",
+      "confirmTitle": "確認兌換？",
+      "confirmDescription": "將使用 {price} 魔力兌換「{product}」。",
+      "success": "兌換成功",
+      "emptyProducts": "目前沒有可兌換的商品",
+      "emptyOrders": "暫無兌換記錄",
+      "viewInvites": "查看邀請碼",
+      "table": {
+        "product": "商品",
+        "price": "消耗魔力",
+        "status": "狀態",
+        "time": "兌換時間"
+      },
+      "status": {
+        "completed": "已完成"
+      },
+      "products": {
+        "invite": {
+          "title": "邀請碼名額",
+          "description": "兌換後會產生歸屬於你的可用邀請碼。",
+          "amount": "{count} 個名額"
+        }
+      }
+    },
     "overview": {
       "enter": "進入",
       "links": {
@@ -2112,6 +2179,7 @@
         "request_escrow": "請求獎勵託管",
         "request_reward": "請求完成獎勵",
         "request_refund": "請求獎勵退回",
+        "shop_purchase": "商城兌換",
         "forum_topic": "論壇主題",
         "forum_reply": "論壇回覆"
       },
@@ -2119,6 +2187,7 @@
         "catalog_torrent": "種子",
         "catalog_comment": "種子評論",
         "catalog_request": "求種與續種請求",
+        "economy_shop_order": "商城訂單",
         "forum_topic": "論壇主題",
         "forum_reply": "論壇回覆"
       },

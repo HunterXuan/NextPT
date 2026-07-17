@@ -150,6 +150,13 @@
               :disabled="saving"
             />
 
+            <AdminSiteShopProductsConfigEditor
+              v-else-if="selectedUsesShopEditor"
+              ref="shopEditorRef"
+              v-model="shopFormValue"
+              :disabled="saving"
+            />
+
             <label v-else-if="selectedKind === 'boolean'" class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
               <span>
                 <span class="block text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.form.booleanValue') }}</span>
@@ -250,6 +257,10 @@ interface PromotionConfigEditorExpose {
   validate: () => PromotionValidationResult
 }
 
+interface ShopProductsConfigEditorExpose {
+  validate: () => PromotionValidationResult
+}
+
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t, locale } = useI18n()
@@ -261,7 +272,8 @@ useHead({ title: t('admin.site.configs.title') })
 const groups = computed(() => [
   { value: 'tracker', label: t('admin.site.configs.groups.tracker') },
   { value: 'iam', label: t('admin.site.configs.groups.iam') },
-  { value: 'catalog', label: t('admin.site.configs.groups.catalog') }
+  { value: 'catalog', label: t('admin.site.configs.groups.catalog') },
+  { value: 'economy', label: t('admin.site.configs.groups.economy') }
 ])
 
 const configs = ref<AdminSiteConfig[]>([])
@@ -277,6 +289,8 @@ const rolesPending = ref(false)
 const rolesError = ref('')
 const promotionFormValue = ref<unknown>(null)
 const promotionEditorRef = ref<PromotionConfigEditorExpose | null>(null)
+const shopFormValue = ref<unknown>(null)
+const shopEditorRef = ref<ShopProductsConfigEditorExpose | null>(null)
 
 const form = reactive({
   textValue: '',
@@ -292,6 +306,7 @@ const selectedConfigLabel = computed(() => selectedConfig.value ? displayConfigL
 const selectedConfigPath = computed(() => selectedConfig.value ? `${selectedConfig.value.group}.${selectedConfig.value.key}` : '')
 const selectedDescription = computed(() => selectedConfig.value ? displayConfigDescription(selectedConfig.value) : '')
 const selectedUsesPromotionEditor = computed(() => selectedConfigPath.value === 'catalog.global_promotion' || selectedConfigPath.value === 'catalog.new_torrent_promotion')
+const selectedUsesShopEditor = computed(() => selectedConfigPath.value === 'economy.shop_products')
 const selectedUpdatedAtLabel = computed(() => {
   if (!selectedConfig.value) return '-'
   return formatDateTime(selectedConfig.value.updatedAt || selectedConfig.value.createdAt, locale.value)
@@ -383,6 +398,10 @@ function resetFormFromSelected(updateSnapshot = false) {
     promotionFormValue.value = cloneConfigValue(value)
     form.textValue = ''
     form.booleanValue = false
+  } else if (selectedUsesShopEditor.value) {
+    shopFormValue.value = cloneConfigValue(value)
+    form.textValue = ''
+    form.booleanValue = false
   } else if (selectedKind.value === 'boolean') {
     form.booleanValue = Boolean(value)
     form.textValue = ''
@@ -452,6 +471,12 @@ function formSnapshot() {
       value: promotionFormValue.value
     })
   }
+  if (selectedUsesShopEditor.value) {
+    return JSON.stringify({
+      kind: 'shop-products',
+      value: shopFormValue.value
+    })
+  }
   return JSON.stringify({
     kind: selectedKind.value,
     textValue: selectedKind.value === 'boolean' ? '' : form.textValue,
@@ -464,6 +489,9 @@ function buildSubmitValue() {
   if (selectedUsesPromotionEditor.value) {
     return getPromotionSubmitValue()
   }
+  if (selectedUsesShopEditor.value) {
+    return getShopSubmitValue()
+  }
   if (selectedKind.value === 'boolean') return form.booleanValue
   if (selectedKind.value === 'int') return Number.parseInt(getTextFormValue(), 10)
   if (selectedKind.value === 'float') return Number(getTextFormValue())
@@ -475,6 +503,15 @@ function validateFormValue() {
   if (selectedUsesPromotionEditor.value) {
     try {
       getPromotionSubmitValue()
+      return true
+    } catch (error: unknown) {
+      formError.value = error instanceof Error ? error.message : t('admin.site.configs.form.jsonInvalid')
+      return false
+    }
+  }
+  if (selectedUsesShopEditor.value) {
+    try {
+      getShopSubmitValue()
       return true
     } catch (error: unknown) {
       formError.value = error instanceof Error ? error.message : t('admin.site.configs.form.jsonInvalid')
@@ -507,6 +544,14 @@ function validateFormValue() {
 
 function getPromotionSubmitValue() {
   const result = promotionEditorRef.value?.validate()
+  if (!result?.valid) {
+    throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
+  }
+  return result.value
+}
+
+function getShopSubmitValue() {
+  const result = shopEditorRef.value?.validate()
   if (!result?.valid) {
     throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
   }

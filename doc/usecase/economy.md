@@ -49,3 +49,44 @@ Catalog RequestUsecase 通过 EconomyBonusDomain 的原子余额和流水能力�
 - 请求取消时，在同一事务内调用 `CreditBonus` 向请求人退款，并写入 `request_refund` 流水。
 - 三类流水统一使用 `target_type=catalog_request` 和请求 ID，前端可据此跳转到请求详情。
 - 托管金额按数据库精度归一化后必须大于 0；余额、请求状态和流水任一步失败时，整个事务回滚。
+
+## 魔力商城
+
+商城采用配置驱动，不为商品定义单独建表。后台配置项 `economy.shop_products` 保存商品列表：
+
+```json
+[
+  {
+    "key": "invite",
+    "type": "invite",
+    "enabled": true,
+    "price": 1000,
+    "sortOrder": 10,
+    "options": { "amount": 1 }
+  }
+]
+```
+
+- `key` 是稳定商品标识，同一配置内必须唯一。
+- `type` 是后端枚举，目前定义 `invite`、`vip`、`upload`、`download`、`download_coupon`。
+- `options` 由对应商品类型的履约逻辑解析和校验，不能携带任意执行逻辑。
+- 当前 MVP 只实现 `invite`；未实现的类型可以保留为停用配置，但不能启用。
+
+### 用户接口
+
+- `GET /api/economy/shop/products`：返回当前启用的商品。
+- `POST /api/economy/shop/orders`：传入 `productKey` 兑换商品。
+- `GET /api/economy/shop/orders`：分页查询当前用户的兑换记录。
+
+兑换在一个数据库事务内完成：保存商品快照订单、扣除魔力、执行类型履约、完成订单并写入 `shop_purchase` 魔力流水。任何一步失败均整体回滚。
+
+邀请码商品会生成归属于购买用户的永久未使用邀请码。魔力流水使用 `target_type=economy_shop_order` 关联商城订单，订单使用 `target_type=iam_invite` 记录履约结果。
+
+### 后台配置
+
+商城商品沿用统一站点配置接口：
+
+- `GET /api/admin/site/configs/economy`：读取 Economy 分组配置。
+- `PUT /api/admin/site/configs/economy/shop_products`：整体保存商品 JSON 配置并写入站点配置审计日志。
+
+站点配置页针对 `economy.shop_products` 提供表单与 JSON 两种编辑方式，不设置独立商城管理接口和页面。普通用户权限为 `read:economy/shop-product:*`、`read:economy/shop-order:*` 和 `create:economy/shop-order:*`；后台修改沿用 `admin:site/config:*`。

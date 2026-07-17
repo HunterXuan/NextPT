@@ -1473,7 +1473,8 @@
         "groups": {
           "tracker": "Tracker",
           "iam": "Users",
-          "catalog": "Catalog"
+          "catalog": "Catalog",
+          "economy": "Economy"
         },
         "stats": {
           "group": "Current group",
@@ -1553,6 +1554,35 @@
             "number": "{field} in item {index} must be a valid number not less than {min}"
           }
         },
+        "shop": {
+          "editMode": "Edit mode",
+          "editModeHint": "Use the form for routine changes and JSON for structural changes.",
+          "modeForm": "Form",
+          "modeJson": "JSON",
+          "empty": "No products are configured. Switch to JSON mode to add one.",
+          "price": "Redemption price",
+          "sortOrder": "Sort order",
+          "inviteAmount": "Invite amount",
+          "structureHint": "Product keys and types define the configuration structure. Use JSON mode to add, remove, or change product types.",
+          "formatJson": "Format",
+          "jsonTitle": "Shop products JSON",
+          "jsonPlaceholder": "Enter the shop product configuration JSON",
+          "jsonHint": "Product types, prices, sorting, and type options are validated before saving.",
+          "jsonValid": "JSON is valid",
+          "jsonInvalidShort": "Invalid JSON",
+          "jsonFullscreen": "Edit shop configuration in fullscreen",
+          "errors": {
+            "array": "Shop product configuration must be a JSON array",
+            "object": "Product {index} must be a JSON object",
+            "key": "Product {index} is missing a product key",
+            "duplicateKey": "Product key {key} is duplicated",
+            "type": "Product {index} has an unsupported type",
+            "price": "Product {index} price must be greater than 0",
+            "sortOrder": "Product {index} sort order must be an integer",
+            "notImplemented": "Product type {type} is not implemented and cannot be enabled",
+            "inviteAmount": "Invite product {index} amount must be a positive integer"
+          }
+        },
         "types": {
           "string": "Text",
           "int": "Integer",
@@ -1584,6 +1614,9 @@
             "torrent_source": "Torrent source identifier",
             "global_promotion": "Global promotion",
             "new_torrent_promotion": "New torrent auto promotion"
+          },
+          "economy": {
+            "shop_products": "Shop products"
           }
         },
         "descriptions": {
@@ -1605,6 +1638,9 @@
             "torrent_source": "Site identifier written into the private torrent source field.",
             "global_promotion": "Highest-priority site-wide torrent promotion, including promotion state and optional expiration time.",
             "new_torrent_promotion": "Automatic promotion rules for newly uploaded torrents, with size-based matching and weighted random options."
+          },
+          "economy": {
+            "shop_products": "Products, prices, ordering, and fulfillment options for the bonus shop."
           }
         }
       },
@@ -1812,6 +1848,7 @@
           "ownerId": "Owner",
           "operation": "Operation",
           "passkeyChanged": "Passkey changed",
+          "productCount": "Product count",
           "permissionsChanged": "Permissions changed",
           "permKeys": "Permissions",
           "reason": "Reason",
@@ -1988,6 +2025,36 @@
       "bonus": "Bonus History",
       "settings": "Account Settings"
     },
+    "shop": {
+      "title": "Bonus Shop",
+      "productsTitle": "Available products",
+      "ordersTitle": "Redemption history",
+      "balance": "Current bonus",
+      "redeem": "Redeem",
+      "insufficient": "Insufficient bonus balance",
+      "confirmTitle": "Confirm redemption?",
+      "confirmDescription": "Spend {price} bonus to redeem “{product}”.",
+      "success": "Redeemed successfully",
+      "emptyProducts": "No products are currently available",
+      "emptyOrders": "No redemption history yet",
+      "viewInvites": "View invites",
+      "table": {
+        "product": "Product",
+        "price": "Bonus spent",
+        "status": "Status",
+        "time": "Redeemed at"
+      },
+      "status": {
+        "completed": "Completed"
+      },
+      "products": {
+        "invite": {
+          "title": "Invite allowance",
+          "description": "Creates a new invite owned by your account.",
+          "amount": "{count} invite(s)"
+        }
+      }
+    },
     "overview": {
       "enter": "Open",
       "links": {
@@ -2112,6 +2179,7 @@
         "request_escrow": "Request reward held",
         "request_reward": "Request completion reward",
         "request_refund": "Request reward refunded",
+        "shop_purchase": "Shop redemption",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
       },
@@ -2119,6 +2187,7 @@
         "catalog_torrent": "Torrent",
         "catalog_comment": "Torrent comment",
         "catalog_request": "Torrent request",
+        "economy_shop_order": "Shop order",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
       },
