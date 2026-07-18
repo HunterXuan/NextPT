@@ -98,6 +98,9 @@ type (
 		AdminUpdateUser(ctx context.Context, id uint64, status *int, role *uint, passkey *string) error
 		AdminGetUserStat(ctx context.Context, id uint64) (*entity.IamUserStat, error)
 		AdminUpdateUserStat(ctx context.Context, id uint64, uploadedDiff *int64, downloadedDiff *int64) (int64, error)
+		AddUserUploaded(ctx context.Context, userId uint64, amount uint64) error
+		ReduceUserDownloaded(ctx context.Context, userId uint64, amount uint64) error
+		ExtendUserVip(ctx context.Context, userId uint64, durationDays int, remark string) error
 		GetUsersByIds(ctx context.Context, ids []uint64) ([]entity.IamUser, error)
 		GetUserIdsByRoles(ctx context.Context, roleIds []uint) ([]uint64, error)
 		GetUserProfilesByUserIds(ctx context.Context, userIds []uint64) ([]entity.IamUserProfile, error)

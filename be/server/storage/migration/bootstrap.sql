@@ -218,6 +218,30 @@ VALUES
             'price', 1000.00,
             'sortOrder', 10,
             'options', JSON_OBJECT('amount', 1)
+        ),
+        JSON_OBJECT(
+            'key', 'upload_100_gib',
+            'type', 'upload',
+            'enabled', true,
+            'price', 500.00,
+            'sortOrder', 20,
+            'options', JSON_OBJECT('amountGiB', 100)
+        ),
+        JSON_OBJECT(
+            'key', 'download_50_gib',
+            'type', 'download',
+            'enabled', true,
+            'price', 800.00,
+            'sortOrder', 30,
+            'options', JSON_OBJECT('amountGiB', 50)
+        ),
+        JSON_OBJECT(
+            'key', 'vip_30d',
+            'type', 'vip',
+            'enabled', true,
+            'price', 3000.00,
+            'sortOrder', 40,
+            'options', JSON_OBJECT('durationDays', 30)
         )
     )), NOW(), NOW()),
     ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW()),

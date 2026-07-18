@@ -109,6 +109,7 @@ func (s *sEconomyShopUsecase) CreateOrder(ctx context.Context, actor *model.Acto
 	if err != nil {
 		return nil, err
 	}
+	service.IamUserUsecase().InvalidateUserCache(ctx, actor.Id)
 	return &out, nil
 }
 
@@ -171,6 +172,12 @@ func (s *sEconomyShopUsecase) fulfillProduct(ctx context.Context, userId uint64,
 	switch product.Type {
 	case consts.EconomyShopProductTypeInvite:
 		return s.fulfillInvite(ctx, userId, product)
+	case consts.EconomyShopProductTypeVip:
+		return s.fulfillVip(ctx, userId, product)
+	case consts.EconomyShopProductTypeUpload:
+		return s.fulfillUpload(ctx, userId, product)
+	case consts.EconomyShopProductTypeDownload:
+		return s.fulfillDownload(ctx, userId, product)
 	default:
 		return "", 0, gerror.New(gi18n.T(ctx, "economy.shop.product_not_implemented"))
 	}
@@ -189,4 +196,35 @@ func (s *sEconomyShopUsecase) fulfillInvite(ctx context.Context, userId uint64, 
 		}
 	}
 	return consts.EconomyShopOrderTargetTypeIamInvite, firstInviteId, nil
+}
+
+func (s *sEconomyShopUsecase) fulfillVip(ctx context.Context, userId uint64, product model.EconomyShopProductConfig) (string, uint64, error) {
+	if err := service.IamUserDomain().ExtendUserVip(ctx, userId, product.VipDurationDays(), consts.EconomyShopVipRemark); err != nil {
+		return "", 0, gerror.Wrap(err, gi18n.T(ctx, "economy.shop.fulfill_failed"))
+	}
+	return consts.EconomyShopOrderTargetTypeIamUser, userId, nil
+}
+
+func (s *sEconomyShopUsecase) fulfillUpload(ctx context.Context, userId uint64, product model.EconomyShopProductConfig) (string, uint64, error) {
+	if err := service.IamUserDomain().AddUserUploaded(ctx, userId, product.TrafficBytes()); err != nil {
+		return "", 0, gerror.Wrap(err, gi18n.T(ctx, "economy.shop.fulfill_failed"))
+	}
+	return consts.EconomyShopOrderTargetTypeIamUserStat, userId, nil
+}
+
+func (s *sEconomyShopUsecase) fulfillDownload(ctx context.Context, userId uint64, product model.EconomyShopProductConfig) (string, uint64, error) {
+	stat, err := service.IamUserDomain().GetUserStat(ctx, userId)
+	if err != nil {
+		return "", 0, gerror.Wrap(err, gi18n.T(ctx, "economy.shop.fulfill_failed"))
+	}
+	if stat == nil {
+		return "", 0, gerror.New(gi18n.T(ctx, "economy.shop.fulfill_failed"))
+	}
+	if stat.Downloaded < product.TrafficBytes() {
+		return "", 0, gerror.New(gi18n.T(ctx, "economy.shop.insufficient_download"))
+	}
+	if err := service.IamUserDomain().ReduceUserDownloaded(ctx, userId, product.TrafficBytes()); err != nil {
+		return "", 0, gerror.Wrap(err, gi18n.T(ctx, "economy.shop.fulfill_failed"))
+	}
+	return consts.EconomyShopOrderTargetTypeIamUserStat, userId, nil
 }

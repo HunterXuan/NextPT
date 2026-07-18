@@ -5,7 +5,6 @@ const (
 	EconomyShopProductTypeVip      = "vip"
 	EconomyShopProductTypeUpload   = "upload"
 	EconomyShopProductTypeDownload = "download"
-	EconomyShopProductTypeCoupon   = "download_coupon"
 )
 
 var EconomyShopProductTypes = []string{
@@ -13,11 +12,6 @@ var EconomyShopProductTypes = []string{
 	EconomyShopProductTypeVip,
 	EconomyShopProductTypeUpload,
 	EconomyShopProductTypeDownload,
-	EconomyShopProductTypeCoupon,
-}
-
-var EconomyShopImplementedProductTypes = []string{
-	EconomyShopProductTypeInvite,
 }
 
 const (
@@ -26,5 +20,9 @@ const (
 )
 
 const (
-	EconomyShopOrderTargetTypeIamInvite = "iam_invite"
+	EconomyShopOrderTargetTypeIamInvite   = "iam_invite"
+	EconomyShopOrderTargetTypeIamUser     = "iam_user"
+	EconomyShopOrderTargetTypeIamUserStat = "iam_user_stat"
 )
+
+const EconomyShopVipRemark = "economy_shop"

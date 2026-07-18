@@ -22,6 +22,8 @@ type EconomyShopProductConfig struct {
 
 type EconomyShopProducts []EconomyShopProductConfig
 
+const economyShopBytesPerGiB = uint64(1024 * 1024 * 1024)
+
 func NewEconomyShopProductSnapshot(key string, productType string, price float64) EconomyShopProductConfig {
 	return EconomyShopProductConfig{
 		Key:     key,
@@ -79,14 +81,23 @@ func (products EconomyShopProducts) Validate() error {
 		if !slices.Contains(consts.EconomyShopProductTypes, product.Type) {
 			return gerror.New("unsupported shop product type")
 		}
-		if product.Enabled && !slices.Contains(consts.EconomyShopImplementedProductTypes, product.Type) {
-			return gerror.New("enabled shop product type is not implemented")
-		}
 		if product.Price <= 0 {
 			return gerror.New("shop product price must be greater than 0")
 		}
-		if product.Type == consts.EconomyShopProductTypeInvite && gvar.New(product.Options["amount"]).Int() <= 0 {
-			return gerror.New("invite product amount must be greater than 0")
+		switch product.Type {
+		case consts.EconomyShopProductTypeInvite:
+			if product.InviteAmount() <= 0 {
+				return gerror.New("invite product amount must be greater than 0")
+			}
+		case consts.EconomyShopProductTypeVip:
+			if product.VipDurationDays() <= 0 {
+				return gerror.New("vip product durationDays must be greater than 0")
+			}
+		case consts.EconomyShopProductTypeUpload, consts.EconomyShopProductTypeDownload:
+			amountGiB := gvar.New(product.Options["amountGiB"]).Float64()
+			if amountGiB <= 0 || math.Trunc(amountGiB) != amountGiB || amountGiB > float64(math.MaxInt64)/float64(economyShopBytesPerGiB) {
+				return gerror.New("traffic product amountGiB must be a positive integer")
+			}
 		}
 	}
 	return nil
@@ -94,4 +105,16 @@ func (products EconomyShopProducts) Validate() error {
 
 func (product EconomyShopProductConfig) InviteAmount() int {
 	return gvar.New(product.Options["amount"]).Int()
+}
+
+func (product EconomyShopProductConfig) VipDurationDays() int {
+	return gvar.New(product.Options["durationDays"]).Int()
+}
+
+func (product EconomyShopProductConfig) TrafficAmountGiB() uint64 {
+	return gvar.New(product.Options["amountGiB"]).Uint64()
+}
+
+func (product EconomyShopProductConfig) TrafficBytes() uint64 {
+	return product.TrafficAmountGiB() * economyShopBytesPerGiB
 }

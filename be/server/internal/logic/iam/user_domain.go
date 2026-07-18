@@ -277,6 +277,63 @@ func (s *sIamUserDomain) AdminUpdateUserStat(ctx context.Context, id uint64, upl
 	return res.RowsAffected()
 }
 
+func (s *sIamUserDomain) AddUserUploaded(ctx context.Context, userId uint64, amount uint64) error {
+	res, err := dao.IamUserStat.Ctx(ctx).
+		Where(dao.IamUserStat.Columns().UserId, userId).
+		Increment(dao.IamUserStat.Columns().Uploaded, amount)
+	if err != nil {
+		return err
+	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return fmt.Errorf("user stat not found: %d", userId)
+	}
+	return nil
+}
+
+func (s *sIamUserDomain) ReduceUserDownloaded(ctx context.Context, userId uint64, amount uint64) error {
+	columns := dao.IamUserStat.Columns()
+	res, err := dao.IamUserStat.Ctx(ctx).
+		Where(columns.UserId, userId).
+		WhereGTE(columns.Downloaded, amount).
+		Decrement(columns.Downloaded, amount)
+	if err != nil {
+		return err
+	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return fmt.Errorf("insufficient credited download for user: %d", userId)
+	}
+	return nil
+}
+
+func (s *sIamUserDomain) ExtendUserVip(ctx context.Context, userId uint64, durationDays int, remark string) error {
+	columns := dao.IamUser.Columns()
+	res, err := dao.IamUser.Ctx(ctx).
+		Where(columns.Id, userId).
+		Data(g.Map{
+			columns.VipUntil:  gdb.Raw(fmt.Sprintf("DATE_ADD(GREATEST(COALESCE(vip_until, NOW()), NOW()), INTERVAL %d DAY)", durationDays)),
+			columns.VipRemark: remark,
+		}).Update()
+	if err != nil {
+		return err
+	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return fmt.Errorf("user not found: %d", userId)
+	}
+	return nil
+}
+
 func (s *sIamUserDomain) GetUsersByIds(ctx context.Context, ids []uint64) ([]entity.IamUser, error) {
 	if len(ids) == 0 {
 		return nil, nil

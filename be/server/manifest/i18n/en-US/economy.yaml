@@ -12,6 +12,7 @@ economy.shop.complete_order_failed: Failed to complete shop order
 economy.shop.create_order_failed: Failed to create shop order
 economy.shop.fulfill_failed: Failed to fulfill shop product
 economy.shop.invalid_config: Invalid shop product configuration
+economy.shop.insufficient_download: Credited download traffic is insufficient for this reduction
 economy.shop.product_disabled: This product is currently unavailable
 economy.shop.product_not_found: Shop product not found
 economy.shop.product_not_implemented: This product type is not available yet

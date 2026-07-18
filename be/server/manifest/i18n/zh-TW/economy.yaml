@@ -12,6 +12,7 @@ economy.shop.complete_order_failed: 完成商城訂單失敗
 economy.shop.create_order_failed: 建立商城訂單失敗
 economy.shop.fulfill_failed: 發放商城商品失敗
 economy.shop.invalid_config: 商城商品設定無效
+economy.shop.insufficient_download: 目前入帳下載量不足以兌換此抵扣規格
 economy.shop.product_disabled: 此商品目前不可兌換
 economy.shop.product_not_found: 商城商品不存在
 economy.shop.product_not_implemented: 此商品類型尚未開放兌換
