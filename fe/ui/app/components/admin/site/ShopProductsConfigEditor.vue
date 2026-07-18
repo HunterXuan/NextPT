@@ -22,6 +22,21 @@
     </div>
 
     <div v-if="editorMode === 'form'" class="space-y-3">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+        <USelect
+          v-model="newProductType"
+          class="w-full sm:w-44"
+          size="lg"
+          :items="productTypeOptions"
+          value-key="value"
+          :disabled="disabled"
+          :aria-label="$t('admin.site.configs.shop.newProductType')"
+        />
+        <UButton type="button" color="neutral" variant="outline" size="lg" icon="i-lucide-plus" :disabled="disabled" @click="addProduct">
+          {{ $t('admin.site.configs.shop.addProduct') }}
+        </UButton>
+      </div>
+
       <div v-if="products.length === 0" class="rounded-md border border-dashed border-slate-300 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
         {{ $t('admin.site.configs.shop.empty') }}
       </div>
@@ -32,7 +47,7 @@
             <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ productTitle(product.type, product.key) }}</p>
             <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ product.key }} / {{ product.type }}</p>
           </div>
-          <USwitch v-model="product.enabled" :disabled="disabled || (!implementedTypes.has(product.type) && !product.enabled)" />
+          <USwitch v-model="product.enabled" :disabled="disabled" />
         </div>
 
         <div class="grid gap-3 p-3 sm:grid-cols-2">
@@ -44,6 +59,12 @@
           </UFormField>
           <UFormField v-if="product.type === 'invite'" :label="$t('admin.site.configs.shop.inviteAmount')" class="sm:col-span-2">
             <UInput v-model="product.amount" type="number" min="1" step="1" class="w-full" size="lg" :disabled="disabled" />
+          </UFormField>
+          <UFormField v-if="product.type === 'vip'" :label="$t('admin.site.configs.shop.vipDurationDays')" class="sm:col-span-2">
+            <UInput v-model="product.durationDays" type="number" min="1" step="1" class="w-full" size="lg" :disabled="disabled" />
+          </UFormField>
+          <UFormField v-if="product.type === 'upload' || product.type === 'download'" :label="$t('admin.site.configs.shop.trafficAmountGiB')" class="sm:col-span-2">
+            <UInput v-model="product.amountGiB" type="number" min="1" step="1" class="w-full" size="lg" :disabled="disabled" />
           </UFormField>
         </div>
       </div>
@@ -84,6 +105,8 @@ interface ProductForm {
   price: string
   sortOrder: string
   amount: string
+  durationDays: string
+  amountGiB: string
   options: Record<string, unknown>
 }
 
@@ -105,12 +128,12 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const productTypes = ['invite', 'vip', 'upload', 'download', 'download_coupon']
+const productTypes = ['invite', 'vip', 'upload', 'download']
 const productTypeSet = new Set(productTypes)
-const implementedTypes = new Set(['invite'])
 const editorMode = ref<EditorMode>('form')
 const products = ref<ProductForm[]>([])
 const jsonText = ref('')
+const newProductType = ref('invite')
 let resetting = false
 let lastEmittedSnapshot = ''
 
@@ -118,6 +141,10 @@ const editorModes = computed(() => [
   { value: 'form' as const, label: t('admin.site.configs.shop.modeForm'), icon: 'i-lucide-sliders-horizontal' },
   { value: 'json' as const, label: t('admin.site.configs.shop.modeJson'), icon: 'i-lucide-braces' }
 ])
+const productTypeOptions = computed(() => productTypes.map(type => ({
+  value: type,
+  label: productTitle(type, type)
+})))
 const jsonState = computed(() => {
   if (editorMode.value !== 'json') return { valid: true, message: '' }
   try {
@@ -181,6 +208,35 @@ function emitValue(value: unknown) {
   emit('update:modelValue', value)
 }
 
+function addProduct() {
+  const type = newProductType.value
+  const baseKey = {
+    invite: 'invite',
+    vip: 'vip_30d',
+    upload: 'upload_100_gib',
+    download: 'download_100_gib'
+  }[type] || type
+  const keys = new Set(products.value.map(product => product.key))
+  let key = baseKey
+  let suffix = 2
+  while (keys.has(key)) {
+    key = `${type}_${suffix}`
+    suffix++
+  }
+
+  products.value.push({
+    key,
+    type,
+    enabled: true,
+    price: '1000',
+    sortOrder: String(Math.max(0, ...products.value.map(product => Number(product.sortOrder) || 0)) + 10),
+    amount: '1',
+    durationDays: '30',
+    amountGiB: '100',
+    options: {}
+  })
+}
+
 function buildProductsValue() {
   return products.value.map(product => ({
     key: product.key,
@@ -188,10 +244,16 @@ function buildProductsValue() {
     enabled: product.enabled,
     price: Number(product.price),
     sortOrder: Number(product.sortOrder),
-    options: product.type === 'invite'
-      ? { ...product.options, amount: Number(product.amount) }
-      : { ...product.options }
+    options: buildProductOptions(product)
   }))
+}
+
+function buildProductOptions(product: ProductForm) {
+  const options = { ...product.options }
+  if (product.type === 'invite') options.amount = Number(product.amount)
+  if (product.type === 'vip') options.durationDays = Number(product.durationDays)
+  if (product.type === 'upload' || product.type === 'download') options.amountGiB = Number(product.amountGiB)
+  return options
 }
 
 function validateProducts(value: unknown) {
@@ -214,9 +276,14 @@ function validateProducts(value: unknown) {
     if (!productTypeSet.has(type)) throw new Error(t('admin.site.configs.shop.errors.type', { index: index + 1 }))
     if (!Number.isFinite(price) || price <= 0) throw new Error(t('admin.site.configs.shop.errors.price', { index: index + 1 }))
     if (!Number.isInteger(sortOrder)) throw new Error(t('admin.site.configs.shop.errors.sortOrder', { index: index + 1 }))
-    if (Boolean(product.enabled) && !implementedTypes.has(type)) throw new Error(t('admin.site.configs.shop.errors.notImplemented', { type }))
     if (type === 'invite' && (!Number.isInteger(Number(options.amount)) || Number(options.amount) <= 0)) {
       throw new Error(t('admin.site.configs.shop.errors.inviteAmount', { index: index + 1 }))
+    }
+    if (type === 'vip' && (!Number.isInteger(Number(options.durationDays)) || Number(options.durationDays) <= 0)) {
+      throw new Error(t('admin.site.configs.shop.errors.vipDurationDays', { index: index + 1 }))
+    }
+    if ((type === 'upload' || type === 'download') && (!Number.isInteger(Number(options.amountGiB)) || Number(options.amountGiB) <= 0)) {
+      throw new Error(t('admin.site.configs.shop.errors.trafficAmountGiB', { index: index + 1 }))
     }
     return { ...product, key, type, enabled: Boolean(product.enabled), price, sortOrder, options }
   })
@@ -232,6 +299,8 @@ function toProductForms(value: Array<Record<string, unknown>>) {
       price: String(product.price),
       sortOrder: String(product.sortOrder),
       amount: String(options.amount ?? 1),
+      durationDays: String(options.durationDays ?? 30),
+      amountGiB: String(options.amountGiB ?? 100),
       options: { ...options }
     }
   })

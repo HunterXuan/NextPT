@@ -1563,7 +1563,11 @@
           "price": "Redemption price",
           "sortOrder": "Sort order",
           "inviteAmount": "Invite amount",
-          "structureHint": "Product keys and types define the configuration structure. Use JSON mode to add, remove, or change product types.",
+          "vipDurationDays": "VIP days",
+          "trafficAmountGiB": "Traffic GiB",
+          "newProductType": "Product type",
+          "addProduct": "Add product",
+          "structureHint": "Use the form to add and tune products. Use JSON mode to remove products or change product keys and types.",
           "formatJson": "Format",
           "jsonTitle": "Shop products JSON",
           "jsonPlaceholder": "Enter the shop product configuration JSON",
@@ -1579,8 +1583,9 @@
             "type": "Product {index} has an unsupported type",
             "price": "Product {index} price must be greater than 0",
             "sortOrder": "Product {index} sort order must be an integer",
-            "notImplemented": "Product type {type} is not implemented and cannot be enabled",
-            "inviteAmount": "Invite product {index} amount must be a positive integer"
+            "inviteAmount": "Invite product {index} amount must be a positive integer",
+            "vipDurationDays": "VIP duration for product {index} must be a positive integer",
+            "trafficAmountGiB": "Traffic amount for product {index} must be a positive integer"
           }
         },
         "types": {
@@ -2032,6 +2037,7 @@
       "balance": "Current bonus",
       "redeem": "Redeem",
       "insufficient": "Insufficient bonus balance",
+      "downloadInsufficient": "Insufficient credited download traffic for this reduction",
       "confirmTitle": "Confirm redemption?",
       "confirmDescription": "Spend {price} bonus to redeem “{product}”.",
       "success": "Redeemed successfully",
@@ -2052,6 +2058,21 @@
           "title": "Invite allowance",
           "description": "Creates a new invite owned by your account.",
           "amount": "{count} invite(s)"
+        },
+        "vip": {
+          "title": "VIP duration",
+          "description": "Extends the current VIP expiry, or starts from now if you are not VIP.",
+          "duration": "{count} days"
+        },
+        "upload": {
+          "title": "Upload credit",
+          "description": "Adds credited upload traffic without changing raw upload statistics.",
+          "amount": "{count} GiB upload"
+        },
+        "download": {
+          "title": "Download reduction",
+          "description": "Reduces the specified credited download traffic without changing raw statistics.",
+          "amount": "{count} GiB reduction"
         }
       }
     },

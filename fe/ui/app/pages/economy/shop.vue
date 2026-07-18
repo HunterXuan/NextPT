@@ -84,8 +84,8 @@
                     size="md"
                     icon="i-lucide-shopping-bag"
                     :loading="purchasingKey === product.key"
-                    :disabled="purchasingKey !== '' || !canAfford(product)"
-                    :tooltip="canAfford(product) ? $t('user.shop.redeem') : $t('user.shop.insufficient')"
+                    :disabled="purchasingKey !== '' || !canAfford(product) || !canRedeemProduct(product)"
+                    :tooltip="redeemTooltip(product)"
                     :aria-label="$t('user.shop.redeem')"
                   />
 
@@ -99,7 +99,7 @@
                       </div>
                       <div class="flex justify-end gap-2">
                         <UButton color="neutral" variant="ghost" size="xs" @click="close()">{{ $t('common.cancel') }}</UButton>
-                        <UButton color="primary" size="xs" icon="i-lucide-shopping-bag" :loading="purchasingKey === product.key" :disabled="!canCreateOrders || !canAfford(product)" @click="purchase(product, close)">
+                        <UButton color="primary" size="xs" icon="i-lucide-shopping-bag" :loading="purchasingKey === product.key" :disabled="!canCreateOrders || !canAfford(product) || !canRedeemProduct(product)" @click="purchase(product, close)">
                           {{ $t('user.shop.redeem') }}
                         </UButton>
                       </div>
@@ -274,7 +274,7 @@ async function loadOrders() {
 }
 
 async function purchase(product: ShopProduct, close: () => void) {
-  if (purchasingKey.value || !canCreateOrders.value || !canAfford(product)) return
+  if (purchasingKey.value || !canCreateOrders.value || !canAfford(product) || !canRedeemProduct(product)) return
   purchasingKey.value = product.key
   try {
     await economyApi.createShopOrder(product.key)
@@ -296,6 +296,17 @@ function canAfford(product: ShopProduct) {
   return Number(user.value?.stat.bonus || 0) >= Number(product.price || 0)
 }
 
+function canRedeemProduct(product: ShopProduct) {
+  if (product.type !== 'download') return true
+  const amountBytes = Number(product.options?.amountGiB || 0) * 1024 * 1024 * 1024
+  return Number(user.value?.stat.downloaded || 0) >= amountBytes
+}
+
+function redeemTooltip(product: ShopProduct) {
+  if (!canRedeemProduct(product)) return t('user.shop.downloadInsufficient')
+  return canAfford(product) ? t('user.shop.redeem') : t('user.shop.insufficient')
+}
+
 function formatBonus(value?: number | null) {
   return numberFormatter.value.format(Number(value || 0))
 }
@@ -314,6 +325,9 @@ function productDescription(product: ShopProduct) {
 
 function productOptionLabel(product: ShopProduct) {
   if (product.type === 'invite') return t('user.shop.products.invite.amount', { count: Number(product.options?.amount || 1) })
+  if (product.type === 'vip') return t('user.shop.products.vip.duration', { count: Number(product.options?.durationDays || 0) })
+  if (product.type === 'upload') return t('user.shop.products.upload.amount', { count: Number(product.options?.amountGiB || 0) })
+  if (product.type === 'download') return t('user.shop.products.download.amount', { count: Number(product.options?.amountGiB || 0) })
   return product.type
 }
 

@@ -1563,7 +1563,11 @@
           "price": "兌換價格",
           "sortOrder": "排序",
           "inviteAmount": "邀請碼數量",
-          "structureHint": "商品標識和類型屬於配置結構，如需增刪商品或調整類型，請使用 JSON 模式。",
+          "vipDurationDays": "VIP 天數",
+          "trafficAmountGiB": "流量 GiB",
+          "newProductType": "商品類型",
+          "addProduct": "新增商品",
+          "structureHint": "表單可新增和調整商品；如需刪除商品或修改商品標識、類型，請使用 JSON 模式。",
           "formatJson": "格式化",
           "jsonTitle": "商城商品 JSON",
           "jsonPlaceholder": "輸入商城商品配置 JSON",
@@ -1579,8 +1583,9 @@
             "type": "第 {index} 個商品類型不合法",
             "price": "第 {index} 個商品價格必須大於 0",
             "sortOrder": "第 {index} 個商品排序必須是整數",
-            "notImplemented": "商品類型 {type} 尚未實現，不能啟用",
-            "inviteAmount": "第 {index} 個邀請碼商品數量必須是大於 0 的整數"
+            "inviteAmount": "第 {index} 個邀請碼商品數量必須是大於 0 的整數",
+            "vipDurationDays": "第 {index} 個 VIP 商品天數必須是大於 0 的整數",
+            "trafficAmountGiB": "第 {index} 個流量商品的 GiB 數量必須是大於 0 的整數"
           }
         },
         "types": {
@@ -2032,6 +2037,7 @@
       "balance": "目前魔力",
       "redeem": "兌換",
       "insufficient": "魔力值餘額不足",
+      "downloadInsufficient": "入帳下載量不足以兌換此抵扣規格",
       "confirmTitle": "確認兌換？",
       "confirmDescription": "將使用 {price} 魔力兌換「{product}」。",
       "success": "兌換成功",
@@ -2052,6 +2058,21 @@
           "title": "邀請碼名額",
           "description": "兌換後會產生歸屬於你的可用邀請碼。",
           "amount": "{count} 個名額"
+        },
+        "vip": {
+          "title": "VIP 時長",
+          "description": "從目前 VIP 到期時間順延，未開通則從現在開始計算。",
+          "duration": "{count} 天"
+        },
+        "upload": {
+          "title": "上傳量",
+          "description": "增加入帳上傳量，不改變真實上傳統計。",
+          "amount": "{count} GiB 上傳量"
+        },
+        "download": {
+          "title": "下載量抵扣",
+          "description": "抵扣指定的入帳下載量，不改變真實下載統計。",
+          "amount": "{count} GiB 抵扣"
         }
       }
     },

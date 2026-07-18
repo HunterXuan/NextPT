@@ -63,14 +63,41 @@ Catalog RequestUsecase 通过 EconomyBonusDomain 的原子余额和流水能力�
     "price": 1000,
     "sortOrder": 10,
     "options": { "amount": 1 }
+  },
+  {
+    "key": "upload_100_gib",
+    "type": "upload",
+    "enabled": true,
+    "price": 500,
+    "sortOrder": 20,
+    "options": { "amountGiB": 100 }
+  },
+  {
+    "key": "download_50_gib",
+    "type": "download",
+    "enabled": true,
+    "price": 800,
+    "sortOrder": 30,
+    "options": { "amountGiB": 50 }
+  },
+  {
+    "key": "vip_30d",
+    "type": "vip",
+    "enabled": true,
+    "price": 3000,
+    "sortOrder": 40,
+    "options": { "durationDays": 30 }
   }
 ]
 ```
 
 - `key` 是稳定商品标识，同一配置内必须唯一。
-- `type` 是后端枚举，目前定义 `invite`、`vip`、`upload`、`download`、`download_coupon`。
+- `type` 是后端枚举，目前定义 `invite`、`vip`、`upload`、`download`。
 - `options` 由对应商品类型的履约逻辑解析和校验，不能携带任意执行逻辑。
-- 当前 MVP 只实现 `invite`；未实现的类型可以保留为停用配置，但不能启用。
+- `invite` 使用 `options.amount` 指定生成的邀请码数量。
+- `vip` 使用 `options.durationDays` 指定顺延天数；已有 VIP 从当前到期时间继续顺延，否则从兑换时间开始计算。
+- `upload` 使用 `options.amountGiB` 增加入账上传量，不修改真实上传量。
+- `download` 使用 `options.amountGiB` 抵扣入账下载量，不修改真实下载量；用户当前入账下载量必须不少于商品规格，不支持部分抵扣。
 
 ### 用户接口
 
@@ -80,7 +107,7 @@ Catalog RequestUsecase 通过 EconomyBonusDomain 的原子余额和流水能力�
 
 兑换在一个数据库事务内完成：保存商品快照订单、扣除魔力、执行类型履约、完成订单并写入 `shop_purchase` 魔力流水。任何一步失败均整体回滚。
 
-邀请码商品会生成归属于购买用户的永久未使用邀请码。魔力流水使用 `target_type=economy_shop_order` 关联商城订单，订单使用 `target_type=iam_invite` 记录履约结果。
+邀请码商品会生成归属于购买用户的永久未使用邀请码。VIP、上传量和下载抵扣会直接更新 IAM 用户或统计数据，并在事务完成后失效用户缓存。魔力流水使用 `target_type=economy_shop_order` 关联商城订单；订单使用 `iam_invite`、`iam_user` 或 `iam_user_stat` 记录履约目标。
 
 ### 后台配置
 
