@@ -99,8 +99,50 @@ export type TorrentHotItem = Omit<TorrentListItem, 'owner' | 'anonymous'> & {
 export interface TorrentDetail extends TorrentListItem {
   description: string
   releaseFields?: Record<string, unknown> | null
+  metadata?: TorrentMetadataOut | null
   isBookmarked: boolean
   isLiked: boolean
+}
+
+export interface TorrentMetadataBinding {
+  imdbId: string
+  imdbRating?: number
+  doubanId: string
+  doubanRating?: number
+  bangumiId: string
+  bangumiRating?: number
+  tmdbId: string
+  tmdbType: 'movie' | 'tv' | ''
+  tmdbRating?: number
+}
+
+export interface TorrentMetadataItem {
+  provider: string
+  providerId: string
+  tmdbType: 'movie' | 'tv' | ''
+  title: string
+  originalTitle: string
+  year: string
+  releaseDate: string
+  overview: string
+  posterUrl: string
+  backdropUrl: string
+  rating: number
+  genres: string[]
+  imdbId: string
+}
+
+export interface TorrentMetadataOut {
+  binding: TorrentMetadataBinding
+  data?: TorrentMetadataItem | null
+  sources: TorrentMetadataItem[]
+}
+
+export interface TorrentMetadataSearchOut {
+  list: TorrentMetadataItem[]
+  page: number
+  totalPages: number
+  totalResults: number
 }
 
 export interface TorrentFileItem {
@@ -175,6 +217,7 @@ export interface TorrentUploadInput {
   categoryId: number
   description?: string
   releaseFields?: Record<string, unknown>
+  metadata?: TorrentMetadataBinding
   anonymous?: boolean
 }
 
@@ -184,6 +227,7 @@ export interface TorrentUpdateInput {
   categoryId?: number
   description?: string
   releaseFields?: Record<string, unknown>
+  metadata?: TorrentMetadataBinding
   anonymous?: boolean
 }
 
@@ -284,6 +328,12 @@ export function useCatalogTorrents() {
   async function listHotTorrents(size = 5) {
     return await fetchApi<TorrentHotListOut>('/api/catalog/torrents:getHot', {
       query: { size }
+    })
+  }
+
+  async function searchMetadata(query: string, tmdbType: 'movie' | 'tv', page = 1) {
+    return await fetchApi<TorrentMetadataSearchOut>('/api/catalog/torrent-metadata:search', {
+      query: { query, tmdbType, page }
     })
   }
 
@@ -399,6 +449,7 @@ export function useCatalogTorrents() {
     if (input.releaseFields && Object.keys(input.releaseFields).length > 0) {
       body.append('releaseFields', JSON.stringify(input.releaseFields))
     }
+    if (input.metadata) body.append('metadata', JSON.stringify(input.metadata))
 
     return await fetchApi<TorrentUploadOut>('/api/catalog/torrents', {
       method: 'POST',
@@ -413,7 +464,8 @@ export function useCatalogTorrents() {
   async function updateTorrent(id: number, input: TorrentUpdateInput) {
     const body = {
       ...input,
-      releaseFields: input.releaseFields === undefined ? undefined : JSON.stringify(input.releaseFields)
+      releaseFields: input.releaseFields === undefined ? undefined : JSON.stringify(input.releaseFields),
+      metadata: input.metadata === undefined ? undefined : JSON.stringify(input.metadata)
     }
 
     return await fetchApi<TorrentUpdateOut>(`/api/catalog/torrents/${id}`, {
@@ -451,6 +503,7 @@ export function useCatalogTorrents() {
     listCategories,
     listTorrents,
     listHotTorrents,
+    searchMetadata,
     listBookmarks,
     getTorrent,
     listFiles,

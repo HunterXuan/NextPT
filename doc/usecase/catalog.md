@@ -3,6 +3,7 @@
 ## 核心实体 (Domain Entities)
 - `Torrent` (种子)
 - `TorrentFile` (种子文件列表)
+- `TorrentMeta` (种子外部资源身份绑定与评分快照)
 - `Category` (分类)
 - `Tag` / `TagGroup` (标签与标签组)
 - `Subtitle` (字幕)
@@ -35,6 +36,7 @@
   * RSS 查询复用同一个筛选对象，保证页面筛选与 BT 客户端订阅条件一致。
 * **获取种子详情 (GetTorrent)**
   * **Method/Path**: `GET /torrents/{id}`
+  * 详情中的 `metadata` 包含外部身份绑定、固定优先级合并后的媒体资料和各来源资料。完整资料按 provider 缓存在 Redis，不在每个种子行中复制。
 * **获取种子内部文件列表 (ListTorrentFiles)**
   * **Method/Path**: `GET /torrents/{id}/files`
 * **获取种子做种/下载者列表 (ListTorrentPeers)**
@@ -42,7 +44,55 @@
 * **获取种子收藏列表 (ListBookmarkedTorrents)**
   * **Method/Path**: `GET /bookmarks` (基于前缀即为 `/api/v1/catalog/bookmarks`)
 
-### 3. TorrentInteractionUsecase (种子互动)
+### 3. TorrentMetadataUsecase (资源元数据增强)
+
+* **搜索外部资源 (SearchMetadata)**
+  * **Method/Path**: `GET /torrent-metadata:search`
+  * 当前 provider 为 TMDB，参数为 `query`、`tmdbType(movie|tv)`、`page`。
+  * 服务端 token 只放在服务配置中，不通过站点配置或前端暴露。
+* **绑定外部资源**
+  * 上传和编辑种子时通过 `metadata` JSON 保存 `imdbId`、`doubanId`、`bangumiId`、`tmdbId`、`tmdbType`。
+  * 绑定只保存外部身份和评分快照；标题、年份、简介、海报、类型等可变资料由 provider 按需解析并写入 Redis。
+  * provider 优先级固定为 `TMDB -> IMDb -> 豆瓣 -> Bangumi`，不随界面语言变化。四个来源均保留独立评分快照，并按顺序补齐主资料缺失字段。
+  * 用户只填写 IMDb ID 且没有 TMDB 绑定时，服务端通过 TMDB `find` 接口自动补全 TMDB ID 和 movie/TV 类型。IMDb provider 从页面使用的 GraphQL JSON 获取资料和评分，并以标题页 JSON-LD 作为回退；TMDB 详情返回的 IMDb ID 也会反向补回绑定。
+  * 豆瓣 provider 优先读取移动页面使用的 ReXXar JSON，移动 HTML 的 JSON-LD、Schema meta 和媒体摘要结构作为回退。能够提取 IMDb ID 时继续尝试映射 TMDB；抓取失败不会阻止种子发布、编辑或详情加载。
+  * 用户只填写 Bangumi ID 时，服务端通过 Bangumi API 获取资料，并从 infobox 中提取 IMDb ID 后尝试映射 TMDB。Bangumi 请求失败同样不会阻止主流程。
+* **代码边界**
+  * `internal/library/metadata` 只负责请求第三方接口、解析响应并转换成统一 `Item`，不依赖 Redis、service、catalog inp/out 或持久化逻辑。
+  * `CatalogMetadataUsecase` 负责缓存、固定 provider 优先级、跨来源补缺、身份映射和评分快照更新。
+  * `CatalogMetadataDomain` 只负责 `catalog_torrent_meta` 的查询与写入。
+* **缓存策略**
+  * TMDB 详情缓存键为 `catalog:metadata:tmdb:{tmdbType}:{tmdbId}:{locale}`；IMDb、豆瓣与 Bangumi 分别使用 `catalog:metadata:imdb:{imdbId}`、`catalog:metadata:douban:{doubanId}`、`catalog:metadata:bangumi:{bangumiId}`。
+  * 各 provider 默认缓存 7 至 30 天；缓存失效后重新请求 provider，并更新对应来源的评分快照。
+* **服务配置**
+  ```yaml
+  catalog:
+    metadata:
+      userAgent: "Mozilla/5.0 (...) Version/17.0 Mobile/15E148 Safari/604.1"
+      tmdb:
+        token: "<server-side-token>"
+        baseUrl: "https://api.themoviedb.org/3"
+        imageBaseUrl: "https://image.tmdb.org/t/p/w500"
+        cacheTtl: "168h"
+      imdb:
+        enabled: true
+        baseUrl: "https://www.imdb.com"
+        graphqlUrl: "https://api.graphql.imdb.com/"
+        cacheTtl: "168h"
+      douban:
+        enabled: true
+        baseUrl: "https://m.douban.com/movie"
+        apiBaseUrl: "https://m.douban.com/rexxar/api/v2"
+        cacheTtl: "720h"
+      bangumi:
+        enabled: true
+        baseUrl: "https://api.bgm.tv/v0"
+        cacheTtl: "720h"
+  ```
+
+> 元数据 provider 必须输出统一结构。新增来源时在 usecase 中明确固定优先级与补缺策略，不根据界面语言切换主数据源。
+
+### 4. TorrentInteractionUsecase (种子互动)
 * **下载私有种子文件 (DownloadTorrent)**
   * **Method/Path**: `GET /torrents/{id}:download`
 * **收藏种子 (BookmarkTorrent)**
@@ -60,7 +110,7 @@
 * **举报种子 (ReportTorrent)**
   * **Method/Path**: `POST /torrents/{id}:report`
 
-### 4. TorrentCommentUsecase (种子评论)
+### 5. TorrentCommentUsecase (种子评论)
 * **发表评论 (CreateComment)**
   * **Method/Path**: `POST /torrents/{id}/comments`
 * **获取评论列表 (ListComments)**
@@ -74,7 +124,7 @@
 
 > 普通用户侧不提供评论删除入口。违规评论通过举报进入 Mod 域，再由 Admin/Mod 后台处理。
 
-### 5. SubtitleUsecase (独立字幕中心)
+### 6. SubtitleUsecase (独立字幕中心)
 > **注意**: 字幕强关联于种子，但在管理与查询上提供全局视角的接口。
 * **获取全局字幕列表 (ListSubtitles)**
   * **Method/Path**: `GET /subtitles`
@@ -91,13 +141,13 @@
 
 > 普通用户侧不提供字幕删除入口。违规字幕通过举报进入 Mod 域，再由 Admin/Mod 后台处理。
 
-### 6. CategoryUsecase (分类与标签)
+### 7. CategoryUsecase (分类与标签)
 * **获取分类列表 (ListCategories)**
   * **Method/Path**: `GET /categories`
 * **获取标签组 (ListTagGroups)**
   * **Method/Path**: `GET /tag-groups`
 
-### 7. RequestUsecase (求种与续种)
+### 8. RequestUsecase (求种与续种)
 
 > 求种和续种共用 `catalog_request` 实体，通过 `request_type` 区分。请求奖励在创建时从请求人余额扣除，完成时发给认领人，取消时退回请求人。所有余额和状态变更必须由 RequestUsecase 在同一事务内编排，RequestDomain 与 EconomyBonusDomain 只提供原子操作。
 

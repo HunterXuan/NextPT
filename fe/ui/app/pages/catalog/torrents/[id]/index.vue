@@ -428,6 +428,8 @@
             </div>
           </section>
 
+          <CatalogTorrentMetadataDetail v-if="hasTorrentMetadata && torrent.metadata" :metadata="torrent.metadata" />
+
           <CatalogCommentSection
             v-model:content="commentForm.content"
             v-model:editor-mode="commentEditorMode"
@@ -908,6 +910,12 @@ const hasFileTreeDirectories = computed(() => fileTreeDirectoryIds.value.length 
 const allFileTreeExpanded = computed(() => hasFileTreeDirectories.value && fileTreeDirectoryIds.value.every((id) => expandedFileNodeIds.value.has(id)))
 const visibleFileTreeRows = computed(() => flattenFileTree(fileTree.value, expandedFileNodeIds.value))
 const renderedDescription = computed(() => renderRichText(torrent.value?.description || ''))
+const hasTorrentMetadata = computed(() => {
+  const metadata = torrent.value?.metadata
+  if (metadata?.data) return true
+  const binding = metadata?.binding
+  return Boolean(binding && (binding.tmdbId || binding.imdbId || binding.doubanId || binding.bangumiId))
+})
 const canDownloadTorrent = computed(() => hasPermission(Permission.CatalogTorrentDownload))
 const canCreateSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleCreate))
 const canDownloadSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleDownload))
@@ -924,33 +932,38 @@ const visiblePeers = computed(() => {
   if (peerView.value === 'leechers') return peers.value.filter((item) => !item.isSeeder)
   return []
 })
-const sectionNavItems = computed<SectionNavItem[]>(() => [
-  {
+const sectionNavItems = computed<SectionNavItem[]>(() => {
+  const items: SectionNavItem[] = [{
     id: 'torrent-top',
     icon: 'i-lucide-arrow-up',
     label: t('catalog.torrents.detail.navigation.top')
-  },
-  {
+  }, {
     id: 'torrent-subtitles',
     icon: 'i-lucide-captions',
     label: t('catalog.torrents.detail.subtitles.title')
-  },
-  {
+  }, {
     id: 'torrent-description',
     icon: 'i-lucide-align-left',
     label: t('catalog.torrents.detail.description.title')
-  },
-  {
+  }]
+  if (hasTorrentMetadata.value) {
+    items.push({
+      id: 'torrent-metadata',
+      icon: 'i-lucide-clapperboard',
+      label: t('catalog.torrents.metadata.title')
+    })
+  }
+  items.push({
     id: 'torrent-comments',
     icon: 'i-lucide-message-square',
     label: t('catalog.torrents.detail.comments.title')
-  },
-  {
+  }, {
     id: 'torrent-bottom',
     icon: 'i-lucide-arrow-down',
     label: t('catalog.torrents.detail.navigation.bottom')
-  }
-])
+  })
+  return items
+})
 const categoryName = computed(() => {
   if (!torrent.value) return '-'
 

@@ -58,6 +58,8 @@
                 <UInput v-model="form.subTitle" class="w-full" :disabled="savePending" />
               </UFormField>
 
+              <CatalogTorrentMetadataForm v-model="metadataBinding" :initial-data="torrent?.metadata?.data" :disabled="savePending" />
+
               <CatalogTorrentDescriptionEditor v-model="form.description" :disabled="savePending" :rows="12" />
             </div>
           </UCard>
@@ -112,7 +114,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue, TorrentDetail } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue, TorrentDetail, TorrentMetadataBinding } from '~/composables/useCatalogTorrents'
 import { localizeI18nName } from '~/utils/format'
 
 definePageMeta({
@@ -143,6 +145,13 @@ const form = reactive({
   anonymous: false
 })
 const releaseFields = ref<Record<string, ReleaseFieldValue>>({})
+const metadataBinding = ref<TorrentMetadataBinding>({
+  imdbId: '',
+  doubanId: '',
+  bangumiId: '',
+  tmdbId: '',
+  tmdbType: ''
+})
 const releaseState = ref<ReleaseFieldsState>({
   generatedTitle: '',
   valid: true,
@@ -254,6 +263,7 @@ async function loadPage() {
     form.description = detail.description || ''
     form.anonymous = Boolean(detail.anonymous)
     releaseFields.value = normalizeStoredReleaseFields(detail.releaseFields)
+    metadataBinding.value = normalizeMetadataBinding(detail.metadata?.binding)
     if (categoryNeedsTagGroups(selectedCategory.value)) {
       await loadTagGroups()
     }
@@ -302,6 +312,7 @@ async function handleSubmit() {
       subTitle: form.subTitle.trim(),
       description: form.description.trim(),
       releaseFields: releaseState.value.output,
+      metadata: metadataBinding.value,
       anonymous: form.anonymous
     })
     toast.add({
@@ -369,6 +380,20 @@ function normalizeStoredReleaseFields(source?: Record<string, unknown> | null) {
   return fields
 }
 
+function normalizeMetadataBinding(source?: TorrentMetadataBinding | null): TorrentMetadataBinding {
+  return {
+    imdbId: source?.imdbId || '',
+    doubanId: source?.doubanId || '',
+    bangumiId: source?.bangumiId || '',
+    tmdbId: source?.tmdbId || '',
+    tmdbType: source?.tmdbType === 'movie' || source?.tmdbType === 'tv' ? source.tmdbType : '',
+    imdbRating: source?.imdbRating,
+    doubanRating: source?.doubanRating,
+    bangumiRating: source?.bangumiRating,
+    tmdbRating: source?.tmdbRating
+  }
+}
+
 function handleReleaseStateChange(state: ReleaseFieldsState) {
   releaseState.value = state
   if (initialSnapshotPending.value) {
@@ -383,7 +408,8 @@ function editSnapshot() {
     subTitle: form.subTitle.trim(),
     description: form.description.trim(),
     anonymous: form.anonymous,
-    releaseFields: releaseState.value.output
+    releaseFields: releaseState.value.output,
+    metadata: metadataBinding.value
   })
 }
 

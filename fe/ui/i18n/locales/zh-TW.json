@@ -421,6 +421,27 @@
         "summary": "第 {page} / {pages} 頁",
         "pageSize": "每頁"
       },
+      "metadata": {
+        "title": "媒體資訊",
+        "description": "關聯外部媒體條目，用於展示海報、年份、簡介和來源評分。",
+        "searchLabel": "搜尋 TMDB",
+        "searchPlaceholder": "輸入標題或原名",
+        "typeLabel": "類型",
+        "search": "搜尋",
+        "movie": "電影",
+        "tv": "劇集",
+        "empty": "找不到符合的外部資源",
+        "removeBinding": "移除 TMDB 綁定",
+        "noOverview": "暫無簡介",
+        "providers": {
+          "tmdb": "TMDB",
+          "douban": "豆瓣",
+          "bangumi": "Bangumi"
+        },
+        "imdb": "IMDb ID",
+        "douban": "豆瓣 ID",
+        "bangumi": "Bangumi ID"
+      },
       "detail": {
         "metaTitle": "種子詳情",
         "back": "返回種子列表",

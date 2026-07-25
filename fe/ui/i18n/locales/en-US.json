@@ -421,6 +421,27 @@
         "summary": "Page {page} / {pages}",
         "pageSize": "Per page"
       },
+      "metadata": {
+        "title": "Media metadata",
+        "description": "Link an external media entry to display its poster, year, overview, and source ratings.",
+        "searchLabel": "Search TMDB",
+        "searchPlaceholder": "Enter a title or original title",
+        "typeLabel": "Type",
+        "search": "Search",
+        "movie": "Movie",
+        "tv": "TV",
+        "empty": "No matching external resources",
+        "removeBinding": "Remove TMDB binding",
+        "noOverview": "No overview",
+        "providers": {
+          "tmdb": "TMDB",
+          "douban": "Douban",
+          "bangumi": "Bangumi"
+        },
+        "imdb": "IMDb ID",
+        "douban": "Douban ID",
+        "bangumi": "Bangumi ID"
+      },
       "detail": {
         "metaTitle": "Torrent Detail",
         "back": "Back to torrents",

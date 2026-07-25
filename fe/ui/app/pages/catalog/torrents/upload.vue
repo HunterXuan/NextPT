@@ -117,6 +117,8 @@
                 <UInput v-model="form.subTitle" class="w-full" :disabled="pending" />
               </UFormField>
 
+              <CatalogTorrentMetadataForm v-model="metadataBinding" :disabled="pending" />
+
               <CatalogTorrentDescriptionEditor v-model="form.description" :disabled="pending" :rows="12" />
             </div>
           </section>
@@ -182,7 +184,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue, TorrentMetadataBinding } from '~/composables/useCatalogTorrents'
 import { localizeI18nName } from '~/utils/format'
 
 definePageMeta({
@@ -216,6 +218,13 @@ const form = reactive({
   anonymous: false
 })
 const releaseFields = ref<Record<string, ReleaseFieldValue>>({})
+const metadataBinding = ref<TorrentMetadataBinding>({
+  imdbId: '',
+  doubanId: '',
+  bangumiId: '',
+  tmdbId: '',
+  tmdbType: ''
+})
 const releaseState = ref<ReleaseFieldsState>({
   generatedTitle: '',
   valid: true,
@@ -414,6 +423,7 @@ async function handleSubmit() {
       subTitle: form.subTitle,
       description: form.description,
       releaseFields: releaseState.value.output,
+      metadata: metadataBinding.value,
       anonymous: form.anonymous
     })
 
