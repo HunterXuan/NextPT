@@ -23,6 +23,7 @@ type sSysCache struct {
 	prefixTrackerUser           string
 	prefixTrackerActiveTorrents string
 	prefixTrackerSeedingUsers   string
+	prefixIam                   string
 	prefixIamPasskey            string
 	prefixCatalogTorrentHash    string
 	prefixCatalogMetadata       string
@@ -49,6 +50,7 @@ func NewSysCache() *sSysCache {
 		prefixTrackerUser:           p + "tracker:user:",
 		prefixTrackerActiveTorrents: p + "tracker:active_torrents",
 		prefixTrackerSeedingUsers:   p + "tracker:seeding_users",
+		prefixIam:                   p + "iam:",
 		prefixIamPasskey:            p + "iam:passkey:",
 		prefixCatalogTorrentHash:    p + "catalog:torrent:hash:",
 		prefixCatalogMetadata:       p + "catalog:metadata:",
@@ -153,19 +155,19 @@ func (s *sSysCache) KeyTrackerTorrentLeechers(ctx context.Context, torrentId uin
 }
 
 func (s *sSysCache) KeyIamUserAcls(ctx context.Context, userId uint64) string {
-	return fmt.Sprintf("iam:user:%d:acls", userId)
+	return fmt.Sprintf("%suser:%d:acls", s.prefixIam, userId)
 }
 
 func (s *sSysCache) KeyIamRolePerms(ctx context.Context, roleId uint) string {
-	return fmt.Sprintf("iam:role:%d:perms", roleId)
+	return fmt.Sprintf("%srole:%d:perms", s.prefixIam, roleId)
 }
 
 func (s *sSysCache) KeyIamRoleActorVersion(ctx context.Context, roleId uint) string {
-	return fmt.Sprintf("iam:role:%d:actor_version", roleId)
+	return fmt.Sprintf("%srole:%d:actor_version", s.prefixIam, roleId)
 }
 
 func (s *sSysCache) KeyIamActor(ctx context.Context, userId uint64) string {
-	return fmt.Sprintf("iam:actor:%d", userId)
+	return fmt.Sprintf("%sactor:%d", s.prefixIam, userId)
 }
 
 func (s *sSysCache) KeyTrackerUserSeeding(ctx context.Context, userId uint64) string {
