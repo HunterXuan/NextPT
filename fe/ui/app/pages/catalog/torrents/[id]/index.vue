@@ -412,6 +412,8 @@
             </div>
           </section>
 
+          <CatalogTorrentMetadataDetail v-if="hasTorrentMetadata && torrent.metadata" :metadata="torrent.metadata" />
+
           <section id="torrent-description" class="scroll-mt-24 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <div class="border-b border-slate-200 pb-4 dark:border-slate-800">
               <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.description.title') }}</h2>
@@ -427,8 +429,6 @@
               </p>
             </div>
           </section>
-
-          <CatalogTorrentMetadataDetail v-if="hasTorrentMetadata && torrent.metadata" :metadata="torrent.metadata" />
 
           <CatalogCommentSection
             v-model:content="commentForm.content"
@@ -947,10 +947,6 @@ const sectionNavItems = computed<SectionNavItem[]>(() => {
     id: 'torrent-subtitles',
     icon: 'i-lucide-captions',
     label: t('catalog.torrents.detail.subtitles.title')
-  }, {
-    id: 'torrent-description',
-    icon: 'i-lucide-align-left',
-    label: t('catalog.torrents.detail.description.title')
   }]
   if (hasTorrentMetadata.value) {
     items.push({
@@ -960,6 +956,10 @@ const sectionNavItems = computed<SectionNavItem[]>(() => {
     })
   }
   items.push({
+    id: 'torrent-description',
+    icon: 'i-lucide-align-left',
+    label: t('catalog.torrents.detail.description.title')
+  }, {
     id: 'torrent-comments',
     icon: 'i-lucide-message-square',
     label: t('catalog.torrents.detail.comments.title')
