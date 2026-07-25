@@ -45,7 +45,7 @@
               </UFormField>
               <label class="block">
                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.targetId') }}</span>
-                <input v-model.number="form.targetId" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:disabled:bg-slate-900 dark:disabled:text-slate-600 dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!form.targetType">
+                <input v-model.number="form.targetId" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:disabled:bg-slate-900 dark:disabled:text-slate-600 dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="form.targetType === noMessageTargetValue">
               </label>
             </div>
 
@@ -235,7 +235,8 @@ const readFilter = ref('')
 const editorMode = ref<EditorMode>('write')
 const detailModalOpen = ref(false)
 const selectedMessage = ref<AdminSiteMessage | null>(null)
-const form = reactive({ receiverIds: '', title: '', content: '', targetType: '', targetId: 0 })
+const noMessageTargetValue = '__none__'
+const form = reactive({ receiverIds: '', title: '', content: '', targetType: noMessageTargetValue, targetId: 0 })
 
 const readFilterOptions = computed(() => [
   { value: '', label: t('admin.site.messages.filters.all') },
@@ -243,12 +244,13 @@ const readFilterOptions = computed(() => [
   { value: 'true', label: t('admin.site.messages.filters.read') }
 ])
 const messageTargetTypeOptions = computed(() => [
-  { value: '', label: t('admin.site.messages.targetTypes.none') },
+  { value: noMessageTargetValue, label: t('admin.site.messages.targetTypes.none') },
   { value: 'catalog_torrent', label: t('admin.site.messages.targetTypes.catalogTorrent') },
   { value: 'forum_topic', label: t('admin.site.messages.targetTypes.forumTopic') }
 ])
 const receiverCount = computed(() => parseReceiverIds(form.receiverIds).length)
-const isFormFilled = computed(() => Boolean(form.receiverIds || form.title || form.content || form.targetType || form.targetId))
+const hasMessageTarget = computed(() => form.targetType !== noMessageTargetValue)
+const isFormFilled = computed(() => Boolean(form.receiverIds || form.title || form.content || hasMessageTarget.value || form.targetId))
 const selectedMessageContent = computed(() => renderUserMarkdown(selectedMessage.value?.content || '').trim())
 const selectedMessageTargetPath = computed(() => selectedMessage.value ? messageTargetPath(selectedMessage.value) : '')
 const selectedMessageDescription = computed(() => {
@@ -257,7 +259,7 @@ const selectedMessageDescription = computed(() => {
 })
 
 watch(() => form.targetType, (targetType) => {
-  if (!targetType) form.targetId = 0
+  if (targetType === noMessageTargetValue) form.targetId = 0
 })
 
 useHead(() => ({ title: t('admin.site.messages.title') }))
@@ -289,7 +291,7 @@ async function sendMessage() {
     formError.value = t('admin.site.messages.required')
     return
   }
-  if (form.targetType && Number(form.targetId || 0) <= 0) {
+  if (hasMessageTarget.value && Number(form.targetId || 0) <= 0) {
     formError.value = t('admin.site.messages.targetRequired')
     return
   }
@@ -299,8 +301,8 @@ async function sendMessage() {
       receiverIds,
       title: form.title,
       content: form.content,
-      targetType: form.targetType,
-      targetId: Number(form.targetId) || 0
+      targetType: hasMessageTarget.value ? form.targetType : '',
+      targetId: hasMessageTarget.value ? Number(form.targetId) || 0 : 0
     })
     toast.add({ color: 'success', title: t('admin.site.messages.sent', { count: data.count || 0 }), icon: 'i-lucide-check' })
     resetForm()
@@ -323,7 +325,7 @@ function resetForm() {
   form.receiverIds = ''
   form.title = ''
   form.content = ''
-  form.targetType = ''
+  form.targetType = noMessageTargetValue
   form.targetId = 0
   editorMode.value = 'write'
   formError.value = ''

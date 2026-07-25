@@ -175,10 +175,11 @@ const errorMessage = ref('')
 const detailModalOpen = ref(false)
 const selectedAudit = ref<AdminSiteAuditItem | null>(null)
 const query = reactive({ page: 1, size: 30 })
+const allAuditFilterValue = '__all__'
 const filters = reactive({
-  level: '',
-  action: '',
-  targetType: '',
+  level: allAuditFilterValue,
+  action: allAuditFilterValue,
+  targetType: allAuditFilterValue,
   userId: '',
   startAt: '',
   endAt: ''
@@ -186,25 +187,25 @@ const filters = reactive({
 const pageSizes = [20, 30, 50, 100]
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / query.size)))
 const hasFilters = computed(() => Boolean(
-  filters.level
-  || filters.action
-  || filters.targetType
+  filters.level !== allAuditFilterValue
+  || filters.action !== allAuditFilterValue
+  || filters.targetType !== allAuditFilterValue
   || filters.userId
   || filters.startAt
   || filters.endAt
 ))
 const levelOptions = computed(() => [
-  { value: '', label: t('admin.site.audits.filters.allLevels') },
+  { value: allAuditFilterValue, label: t('admin.site.audits.filters.allLevels') },
   { value: '0', label: auditLevelLabel(0) },
   { value: '1', label: auditLevelLabel(1) },
   { value: '2', label: auditLevelLabel(2) }
 ])
 const actionOptions = computed(() => [
-  { value: '', label: t('admin.site.audits.filters.allActions') },
+  { value: allAuditFilterValue, label: t('admin.site.audits.filters.allActions') },
   ...auditActions.map(action => ({ value: action, label: auditActionLabel(action) }))
 ])
 const targetTypeOptions = computed(() => [
-  { value: '', label: t('admin.site.audits.filters.allTargets') },
+  { value: allAuditFilterValue, label: t('admin.site.audits.filters.allTargets') },
   ...auditTargetTypes.map(targetType => ({ value: targetType, label: auditTargetLabel(targetType) }))
 ])
 const selectedAuditDetailText = computed(() => formatAuditDetail(selectedAudit.value?.detail || ''))
@@ -259,9 +260,9 @@ function applyFilters() {
 }
 
 function clearFilters() {
-  filters.level = ''
-  filters.action = ''
-  filters.targetType = ''
+  filters.level = allAuditFilterValue
+  filters.action = allAuditFilterValue
+  filters.targetType = allAuditFilterValue
   filters.userId = ''
   filters.startAt = ''
   filters.endAt = ''
@@ -273,17 +274,17 @@ function buildAuditQuery(): AdminSiteAuditListParams {
     page: query.page,
     size: query.size
   }
-  if (filters.level !== '') {
+  if (filters.level !== allAuditFilterValue) {
     params.level = Number(filters.level)
   }
   const userId = Number(filters.userId)
   if (Number.isInteger(userId) && userId > 0) {
     params.userId = userId
   }
-  if (filters.action) {
+  if (filters.action !== allAuditFilterValue) {
     params.action = filters.action
   }
-  if (filters.targetType) {
+  if (filters.targetType !== allAuditFilterValue) {
     params.targetType = filters.targetType
   }
   if (filters.startAt) {

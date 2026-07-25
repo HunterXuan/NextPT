@@ -265,12 +265,13 @@ const reportStatus = {
   accepted: 1,
   rejected: 2
 } as const
+const allTargetTypesValue = '__all__'
 
 const query = reactive({
   page: 1,
   size: 30,
   status: -1,
-  targetType: ''
+  targetType: allTargetTypesValue
 })
 
 const resolveForm = reactive({
@@ -287,7 +288,7 @@ const statusOptions = computed(() => [
   { value: reportStatus.rejected, label: t('admin.mod.status.rejected') }
 ])
 const targetTypeOptions = computed(() => [
-  { value: '', label: t('admin.mod.targetTypes.all') },
+  { value: allTargetTypesValue, label: t('admin.mod.targetTypes.all') },
   { value: 'catalog_torrent', label: t('admin.mod.targetTypes.catalogTorrent') },
   { value: 'catalog_comment', label: t('admin.mod.targetTypes.catalogComment') },
   { value: 'catalog_subtitle', label: t('admin.mod.targetTypes.catalogSubtitle') },
@@ -310,7 +311,10 @@ async function loadReports() {
   errorMessage.value = ''
   const currentSelected = selectedReport.value
   try {
-    const data = await adminApi.listModReports(query)
+    const data = await adminApi.listModReports({
+      ...query,
+      targetType: query.targetType === allTargetTypesValue ? undefined : query.targetType
+    })
     reports.value = data.list || []
     total.value = data.total || 0
     if (currentSelected) {

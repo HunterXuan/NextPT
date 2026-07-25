@@ -26,6 +26,7 @@
           :ui="{ base: 'h-10 w-full' }"
           :items="releaseSelectOptions(field)"
           value-key="value"
+          :placeholder="t('catalog.torrents.upload.fields.optionPlaceholder')"
           :disabled="disabled || optionsPending"
           @update:model-value="setReleaseField(field.key, String($event || ''))"
         />
@@ -153,10 +154,7 @@ function fieldOptions(field: UploadFieldConfig): UploadOptionItem[] {
 }
 
 function releaseSelectOptions(field: UploadFieldConfig) {
-  return [
-    { value: '', label: t('catalog.torrents.upload.fields.optionPlaceholder') },
-    ...fieldOptions(field).map(option => ({ value: option.value, label: optionLabel(option) }))
-  ]
+  return fieldOptions(field).map(option => ({ value: option.value, label: optionLabel(option) }))
 }
 
 function tagGroupAppliesToCategory(group: CatalogTagGroup) {

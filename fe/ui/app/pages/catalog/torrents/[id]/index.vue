@@ -489,9 +489,21 @@
           <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center justify-between gap-3">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
-              <span class="shrink-0 rounded border border-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                #{{ torrent.id }}
-              </span>
+              <div class="flex shrink-0 items-center gap-1">
+                <span class="rounded border border-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                  #{{ torrent.id }}
+                </span>
+                <UTooltip v-if="canOwnerEditTorrent" :text="$t('catalog.torrents.detail.actions.edit')">
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="xs"
+                    icon="i-lucide-pen-line"
+                    :aria-label="$t('catalog.torrents.detail.actions.edit')"
+                    :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
+                  />
+                </UTooltip>
+              </div>
             </div>
             <dl class="mt-3 divide-y divide-slate-100 text-sm dark:divide-slate-800">
               <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
@@ -507,47 +519,32 @@
                 <dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(torrent.createdAt, locale) }}</dd>
               </div>
             </dl>
-          </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.title') }}</h2>
-            <div class="mt-3 grid grid-cols-2 gap-2">
-              <UButton
-                v-if="canOwnerEditTorrent"
-                color="neutral"
-                variant="outline"
-                size="sm"
-                icon="i-lucide-pen-line"
-                block
-                :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
-              >
-                {{ $t('catalog.torrents.detail.actions.edit') }}
-              </UButton>
-              <UButton
-                color="neutral"
-                variant="outline"
-                size="sm"
-                icon="i-lucide-flag"
-                block
-                :class="canOwnerEditTorrent ? '' : 'col-span-2'"
-                @click="showTorrentReport = !showTorrentReport"
-              >
-                {{ $t('catalog.torrents.detail.actions.report') }}
-              </UButton>
+            <div class="mt-3 grid grid-cols-2 gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
               <AppPermissionButton
-                v-if="torrent.seeders === 0"
                 :permission="Permission.CatalogRequestCreate"
                 color="warning"
                 variant="soft"
                 size="sm"
                 icon="i-lucide-refresh-cw"
+                class="w-full"
                 block
-                class="col-span-2"
+                :disabled="torrent.seeders > 0"
                 :to="localePath(`/catalog/requests/create?type=reseed&torrentId=${torrent.id}`)"
                 :tooltip="$t('catalog.torrents.detail.actions.requestReseed')"
               >
                 {{ $t('catalog.torrents.detail.actions.requestReseed') }}
               </AppPermissionButton>
+              <UButton
+                :color="showTorrentReport ? 'error' : 'neutral'"
+                :variant="showTorrentReport ? 'soft' : 'outline'"
+                size="sm"
+                icon="i-lucide-flag"
+                block
+                @click="showTorrentReport = !showTorrentReport"
+              >
+                {{ $t('catalog.torrents.detail.actions.report') }}
+              </UButton>
             </div>
 
             <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
@@ -561,10 +558,29 @@
             </form>
           </section>
 
-          <section v-if="canManageCatalogTorrent" class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.actions.managementTitle') }}</h2>
+          <RewardPanel
+            :title="$t('catalog.torrents.detail.reward.title')"
+            :source-key="torrent.id"
+            summary-key="catalog.torrents.detail.reward.summary"
+            all-title-key="catalog.torrents.detail.reward.allTitle"
+            all-description-key="catalog.torrents.detail.reward.allDescription"
+            success-key="catalog.torrents.detail.reward.success"
+            :load-rewards="loadTorrentRewards"
+            :submit-reward="submitTorrentReward"
+          />
 
-            <div class="mt-3 grid grid-cols-2 gap-2">
+          <details v-if="canManageCatalogTorrent" class="group overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 transition hover:bg-slate-50 [&::-webkit-details-marker]:hidden dark:hover:bg-slate-800/60">
+              <span class="flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-950 dark:text-white">
+                <UIcon name="i-lucide-settings-2" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
+                {{ $t('catalog.torrents.detail.actions.managementTitle') }}
+              </span>
+              <UIcon name="i-lucide-chevron-down" class="size-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" />
+            </summary>
+
+            <div class="border-t border-slate-100 p-4 dark:border-slate-800">
+
+            <div class="grid grid-cols-2 gap-2">
               <UButton
                 color="neutral"
                 variant="outline"
@@ -748,18 +764,8 @@
                 </div>
               </div>
             </div>
-          </section>
-
-          <RewardPanel
-            :title="$t('catalog.torrents.detail.reward.title')"
-            :source-key="torrent.id"
-            summary-key="catalog.torrents.detail.reward.summary"
-            all-title-key="catalog.torrents.detail.reward.allTitle"
-            all-description-key="catalog.torrents.detail.reward.allDescription"
-            success-key="catalog.torrents.detail.reward.success"
-            :load-rewards="loadTorrentRewards"
-            :submit-reward="submitTorrentReward"
-          />
+            </div>
+          </details>
         </aside>
       </div>
     </div>
