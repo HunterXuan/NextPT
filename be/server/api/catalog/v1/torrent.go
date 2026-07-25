@@ -34,6 +34,15 @@ type TorrentGetHotRes struct {
 	catalogout.TorrentHotListOut
 }
 
+type TorrentMetadataSearchReq struct {
+	g.Meta `path:"/torrent-metadata:search" method:"get" tags:"Catalog" summary:"搜索外部资源元数据" perm:"read:catalog/torrent:*"`
+	catalogin.TorrentMetadataSearchInp
+}
+
+type TorrentMetadataSearchRes struct {
+	catalogout.TorrentMetadataSearchOut
+}
+
 type TorrentGetReq struct {
 	g.Meta `path:"/torrents/{id}" method:"get" tags:"Catalog" summary:"获取种子详情"`
 	catalogin.TorrentGetInp

@@ -2,6 +2,8 @@ package model
 
 import (
 	"math/rand"
+	"regexp"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -12,6 +14,45 @@ import (
 )
 
 const catalogBytesPerGiB = 1024 * 1024 * 1024
+
+var (
+	catalogMetadataImdbIdPattern  = regexp.MustCompile(`^tt\d+$`)
+	catalogMetadataNumericPattern = regexp.MustCompile(`^\d+$`)
+)
+
+type CatalogTorrentMetadataBinding struct {
+	ImdbId    string `json:"imdbId"`
+	DoubanId  string `json:"doubanId"`
+	BangumiId string `json:"bangumiId"`
+	TmdbId    string `json:"tmdbId"`
+	TmdbType  string `json:"tmdbType"`
+}
+
+func (b CatalogTorrentMetadataBinding) Normalized() CatalogTorrentMetadataBinding {
+	b.ImdbId = strings.ToLower(strings.TrimSpace(b.ImdbId))
+	b.DoubanId = strings.TrimSpace(b.DoubanId)
+	b.BangumiId = strings.TrimSpace(b.BangumiId)
+	b.TmdbId = strings.TrimSpace(b.TmdbId)
+	b.TmdbType = strings.ToLower(strings.TrimSpace(b.TmdbType))
+	return b
+}
+
+func (b CatalogTorrentMetadataBinding) IsValid() bool {
+	b = b.Normalized()
+	if b.ImdbId != "" && !catalogMetadataImdbIdPattern.MatchString(b.ImdbId) {
+		return false
+	}
+	if b.DoubanId != "" && !catalogMetadataNumericPattern.MatchString(b.DoubanId) {
+		return false
+	}
+	if b.BangumiId != "" && !catalogMetadataNumericPattern.MatchString(b.BangumiId) {
+		return false
+	}
+	if b.TmdbId == "" {
+		return b.TmdbType == ""
+	}
+	return catalogMetadataNumericPattern.MatchString(b.TmdbId) && slices.Contains(consts.CatalogMetadataTmdbTypes, b.TmdbType)
+}
 
 type CatalogTorrentUpdate struct {
 	Name          string

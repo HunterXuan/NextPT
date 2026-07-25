@@ -16,13 +16,6 @@ import (
 )
 
 type (
-	ISiteAuditDomain interface {
-		AdminListAudits(ctx context.Context, in sitein.AuditListInp) ([]entity.SiteAudit, int, error)
-		Create(ctx context.Context, in sitein.AuditCreateInp) error
-	}
-	ISiteAuditUsecase interface {
-		Record(ctx context.Context, actor *model.Actor, in sitein.AuditRecordInp)
-	}
 	ISiteAnnouncementDomain interface {
 		ListPublished(ctx context.Context, userId uint64, in sitein.AnnouncementListInp) ([]entity.SiteAnnouncement, int, error)
 		QueryReadAnnouncementIdsByUser(ctx context.Context, userId uint64) ([]uint64, error)
@@ -41,6 +34,13 @@ type (
 		AdminCreate(ctx context.Context, actor *model.Actor, in sitein.AdminAnnouncementCreateInp) (*siteout.AnnouncementCreateOut, error)
 		AdminUpdate(ctx context.Context, actor *model.Actor, in sitein.AdminAnnouncementUpdateInp) error
 		AdminDelete(ctx context.Context, actor *model.Actor, in sitein.AdminAnnouncementDeleteInp) error
+	}
+	ISiteAuditDomain interface {
+		AdminListAudits(ctx context.Context, in sitein.AuditListInp) ([]entity.SiteAudit, int, error)
+		Create(ctx context.Context, in sitein.AuditCreateInp) error
+	}
+	ISiteAuditUsecase interface {
+		Record(ctx context.Context, actor *model.Actor, in sitein.AuditRecordInp)
 	}
 	ISiteConfigDomain interface {
 		// Get 获取后台业务配置项，支持传入默认值兜底（直接查库，无缓存）
@@ -70,36 +70,14 @@ type (
 )
 
 var (
-	localSiteAuditDomain         ISiteAuditDomain
-	localSiteAuditUsecase        ISiteAuditUsecase
 	localSiteAnnouncementDomain  ISiteAnnouncementDomain
 	localSiteAnnouncementUsecase ISiteAnnouncementUsecase
+	localSiteAuditDomain         ISiteAuditDomain
+	localSiteAuditUsecase        ISiteAuditUsecase
 	localSiteConfigDomain        ISiteConfigDomain
 	localSiteMessageDomain       ISiteMessageDomain
 	localSiteMessageUsecase      ISiteMessageUsecase
 )
-
-func SiteAuditDomain() ISiteAuditDomain {
-	if localSiteAuditDomain == nil {
-		panic("implement not found for interface ISiteAuditDomain, forgot register?")
-	}
-	return localSiteAuditDomain
-}
-
-func RegisterSiteAuditDomain(i ISiteAuditDomain) {
-	localSiteAuditDomain = i
-}
-
-func SiteAuditUsecase() ISiteAuditUsecase {
-	if localSiteAuditUsecase == nil {
-		panic("implement not found for interface ISiteAuditUsecase, forgot register?")
-	}
-	return localSiteAuditUsecase
-}
-
-func RegisterSiteAuditUsecase(i ISiteAuditUsecase) {
-	localSiteAuditUsecase = i
-}
 
 func SiteAnnouncementDomain() ISiteAnnouncementDomain {
 	if localSiteAnnouncementDomain == nil {
@@ -121,6 +99,28 @@ func SiteAnnouncementUsecase() ISiteAnnouncementUsecase {
 
 func RegisterSiteAnnouncementUsecase(i ISiteAnnouncementUsecase) {
 	localSiteAnnouncementUsecase = i
+}
+
+func SiteAuditDomain() ISiteAuditDomain {
+	if localSiteAuditDomain == nil {
+		panic("implement not found for interface ISiteAuditDomain, forgot register?")
+	}
+	return localSiteAuditDomain
+}
+
+func RegisterSiteAuditDomain(i ISiteAuditDomain) {
+	localSiteAuditDomain = i
+}
+
+func SiteAuditUsecase() ISiteAuditUsecase {
+	if localSiteAuditUsecase == nil {
+		panic("implement not found for interface ISiteAuditUsecase, forgot register?")
+	}
+	return localSiteAuditUsecase
+}
+
+func RegisterSiteAuditUsecase(i ISiteAuditUsecase) {
+	localSiteAuditUsecase = i
 }
 
 func SiteConfigDomain() ISiteConfigDomain {

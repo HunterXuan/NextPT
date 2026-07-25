@@ -13,6 +13,7 @@ require (
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.8.3
 	github.com/gogf/gf/v2 v2.10.0
 	golang.org/x/crypto v0.53.0
+	golang.org/x/net v0.56.0
 )
 
 require (
@@ -69,7 +70,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.38.0 // indirect
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
 	golang.org/x/exp v0.0.0-20251113190631-e25ba8c21ef6 // indirect
-	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/text v0.38.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

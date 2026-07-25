@@ -10,6 +10,11 @@ catalog.comment.reward_self_denied: You cannot reward your own comment
 catalog.general.unauthorized: Please log in first
 catalog.general.user_stat_error: Failed to get user statistics
 
+catalog.metadata.invalid_binding: Invalid external metadata binding
+catalog.metadata.invalid_type: Invalid TMDB media type
+catalog.metadata.provider_failed: Failed to load external metadata
+catalog.metadata.query_required: Search query is required
+
 catalog.reward.amount_min: Reward amount must be at least 1
 catalog.reward.amount_req: Reward amount is required
 catalog.reward.insufficient_balance: Insufficient bonus balance

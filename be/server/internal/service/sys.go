@@ -32,6 +32,10 @@ type (
 		KeyTrackerSeedingUsers(ctx context.Context) string
 		KeyIamPasskeyActor(ctx context.Context, passkey string) string
 		KeyCatalogTorrentInfoHash(ctx context.Context, hexInfoHash string) string
+		KeyCatalogMetadataTmdb(ctx context.Context, tmdbType string, tmdbId string, locale string) string
+		KeyCatalogMetadataImdb(ctx context.Context, imdbId string) string
+		KeyCatalogMetadataDouban(ctx context.Context, doubanId string) string
+		KeyCatalogMetadataBangumi(ctx context.Context, bangumiId string) string
 		KeyCatalogHotTorrents(ctx context.Context) string
 		KeyForumHotTopics(ctx context.Context) string
 		KeyTrackerLockPeer(ctx context.Context, torrentId uint64, userId uint64, peerId string) string

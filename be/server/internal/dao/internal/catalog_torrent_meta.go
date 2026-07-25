@@ -30,8 +30,9 @@ type CatalogTorrentMetaColumns struct {
 	BangumiId     string //
 	BangumiRating string //
 	TmdbId        string //
+	TmdbType      string // movie/tv
 	TmdbRating    string //
-	Extra         string // 其他元数据 (JSON)
+	Extra         string // 其他外部标识与绑定参数
 	CreatedAt     string //
 	UpdatedAt     string //
 }
@@ -47,6 +48,7 @@ var catalogTorrentMetaColumns = CatalogTorrentMetaColumns{
 	BangumiId:     "bangumi_id",
 	BangumiRating: "bangumi_rating",
 	TmdbId:        "tmdb_id",
+	TmdbType:      "tmdb_type",
 	TmdbRating:    "tmdb_rating",
 	Extra:         "extra",
 	CreatedAt:     "created_at",

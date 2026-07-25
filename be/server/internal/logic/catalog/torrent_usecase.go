@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -323,6 +324,10 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 	if err != nil {
 		return nil, err
 	}
+	metadataBinding, err := s.prepareMetadataBinding(ctx, in.Metadata)
+	if err != nil {
+		return nil, err
+	}
 
 	var finalTorrentBuf bytes.Buffer
 	if err := mi.Write(&finalTorrentBuf); err != nil {
@@ -331,7 +336,7 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 
 	var torrentId uint64
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, releaseData, totalSize, fileCount, info)
+		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, releaseData, totalSize, fileCount, info, metadataBinding)
 		if err != nil {
 			return err
 		}
@@ -530,7 +535,7 @@ func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (ui
 	return totalSize, fileCount
 }
 
-func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData *uploadReleaseData, totalSize uint64, fileCount uint, info *metainfo.Info) (uint64, error) {
+func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData *uploadReleaseData, totalSize uint64, fileCount uint, info *metainfo.Info, metadataBinding *model.CatalogTorrentMetadataBinding) (uint64, error) {
 	if releaseData == nil {
 		releaseData = &uploadReleaseData{Name: s.resolveUploadName(strings.TrimSpace(in.Name), info.Name)}
 	}
@@ -572,7 +577,16 @@ func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *mod
 		})
 	}
 
-	return service.CatalogTorrentDomain().SaveTorrent(ctx, torrentInsert, filesToInsert)
+	torrentId, err := service.CatalogTorrentDomain().SaveTorrent(ctx, torrentInsert, filesToInsert)
+	if err != nil {
+		return 0, err
+	}
+	if metadataBinding != nil {
+		if err := service.CatalogMetadataDomain().UpsertTorrentBinding(ctx, torrentId, *metadataBinding); err != nil {
+			return 0, err
+		}
+	}
+	return torrentId, nil
 }
 
 // Reward 赞赏种子
@@ -864,11 +878,16 @@ func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Ac
 	if torrent.ReleaseFields != nil {
 		_ = torrent.ReleaseFields.Scan(&releaseFields)
 	}
+	metadata, metadataErr := service.CatalogMetadataUsecase().GetTorrentMetadata(ctx, in.Id)
+	if metadataErr != nil {
+		g.Log().Warningf(ctx, "catalog metadata: load torrent %d failed: %v", in.Id, metadataErr)
+	}
 
 	return &catalogout.TorrentDetailOut{
 		TorrentListItem: item,
 		Description:     torrent.Description,
 		ReleaseFields:   releaseFields,
+		Metadata:        metadata,
 		IsBookmarked:    isBookmarked,
 		IsLiked:         isLiked,
 	}, nil
@@ -971,12 +990,42 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 		updateData.ReleaseFields = gjson.New(releaseData.Fields)
 	}
 
-	err = service.CatalogTorrentDomain().UpdateTorrent(ctx, in.Id, updateData)
+	var metadataBinding *model.CatalogTorrentMetadataBinding
+	if in.Metadata != nil {
+		metadataBinding, err = s.prepareMetadataBinding(ctx, *in.Metadata)
+		if err != nil {
+			return nil, err
+		}
+	}
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		if err := service.CatalogTorrentDomain().UpdateTorrent(ctx, in.Id, updateData); err != nil {
+			return err
+		}
+		if metadataBinding != nil {
+			return service.CatalogMetadataDomain().UpsertTorrentBinding(ctx, in.Id, *metadataBinding)
+		}
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
 
 	return &catalogout.TorrentUpdateOut{Success: true}, nil
+}
+
+func (s *sCatalogTorrentUsecase) prepareMetadataBinding(ctx context.Context, raw string) (*model.CatalogTorrentMetadataBinding, error) {
+	if strings.TrimSpace(raw) == "" {
+		return nil, nil
+	}
+	var binding model.CatalogTorrentMetadataBinding
+	if err := json.Unmarshal([]byte(raw), &binding); err != nil {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.metadata.invalid_binding"))
+	}
+	resolved, err := service.CatalogMetadataUsecase().ResolveBinding(ctx, binding)
+	if err != nil {
+		return nil, err
+	}
+	return &resolved, nil
 }
 
 func (s *sCatalogTorrentUsecase) canEditTorrent(actor *model.Actor, torrent *entity.CatalogTorrent) bool {

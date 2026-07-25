@@ -9,6 +9,7 @@ type TorrentUploadInp struct {
 	CategoryId    uint              `json:"categoryId" v:"required#{#catalog.torrent.category_req}" description:"分类ID"`
 	Description   string            `json:"description" description:"种子详情描述"`
 	ReleaseFields string            `json:"releaseFields" description:"发布结构化字段 JSON"`
+	Metadata      string            `json:"metadata" description:"外部资源元数据绑定 JSON"`
 	Anonymous     bool              `json:"anonymous" description:"是否匿名上传"`
 }
 
@@ -41,6 +42,12 @@ type TorrentRssInp struct {
 
 type TorrentGetHotInp struct {
 	Size int `json:"size" d:"5" v:"min:1|max:10" description:"返回数量"`
+}
+
+type TorrentMetadataSearchInp struct {
+	Query    string `json:"query" v:"required|max-length:100" description:"搜索关键词"`
+	TmdbType string `json:"tmdbType" v:"required|in:movie,tv" description:"TMDB 资源类型"`
+	Page     int    `json:"page" d:"1" v:"min:1|max:500" description:"页码"`
 }
 
 type TorrentDownloadInp struct {
@@ -86,13 +93,14 @@ type TorrentLikeListInp struct {
 }
 
 type TorrentUpdateInp struct {
-	Id            uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
-	Name          string `json:"name" description:"种子标题"`
-	SubTitle      string `json:"subTitle" description:"副标题"`
-	CategoryId    uint   `json:"categoryId" description:"分类ID"`
-	Description   string `json:"description" description:"详情描述"`
-	ReleaseFields string `json:"releaseFields" description:"发布结构化字段 JSON"`
-	Anonymous     *bool  `json:"anonymous" description:"匿名上传"`
+	Id            uint64  `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
+	Name          string  `json:"name" description:"种子标题"`
+	SubTitle      string  `json:"subTitle" description:"副标题"`
+	CategoryId    uint    `json:"categoryId" description:"分类ID"`
+	Description   string  `json:"description" description:"详情描述"`
+	ReleaseFields string  `json:"releaseFields" description:"发布结构化字段 JSON"`
+	Metadata      *string `json:"metadata" description:"外部资源元数据绑定 JSON"`
+	Anonymous     *bool   `json:"anonymous" description:"匿名上传"`
 }
 
 type TorrentFileListInp struct {

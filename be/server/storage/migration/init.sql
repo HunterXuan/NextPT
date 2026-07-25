@@ -286,7 +286,7 @@ CREATE TABLE `catalog_torrent_tag` (
     KEY `idx_tag_id` (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子标签关联表';
 
--- 种子扩展元数据（评分/外部链接等）
+-- 种子外部资源身份绑定（完整元数据由外部来源按需获取并缓存）
 CREATE TABLE `catalog_torrent_meta` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `torrent_id`      BIGINT UNSIGNED NOT NULL,
@@ -297,15 +297,18 @@ CREATE TABLE `catalog_torrent_meta` (
     `bangumi_id`      VARCHAR(20)     NOT NULL DEFAULT '',
     `bangumi_rating`  DECIMAL(3,1)    NULL,
     `tmdb_id`         VARCHAR(20)     NOT NULL DEFAULT '',
+    `tmdb_type`       VARCHAR(10)     NOT NULL DEFAULT '' COMMENT 'movie/tv',
     `tmdb_rating`     DECIMAL(3,1)    NULL,
-    `extra`           JSON            NULL     COMMENT '其他元数据 (JSON)',
+    `extra`           JSON            NULL     COMMENT '其他外部标识与绑定参数',
     `created_at`      DATETIME        NULL,
     `updated_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_torrent_id` (`torrent_id`),
     KEY `idx_imdb` (`imdb_id`),
-    KEY `idx_douban` (`douban_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子扩展元数据';
+    KEY `idx_douban` (`douban_id`),
+    KEY `idx_bangumi` (`bangumi_id`),
+    KEY `idx_tmdb_type` (`tmdb_id`, `tmdb_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子外部资源身份绑定';
 
 -- 种子文件列表
 CREATE TABLE `catalog_torrent_file` (

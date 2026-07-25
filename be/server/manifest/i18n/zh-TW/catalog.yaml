@@ -10,6 +10,11 @@ catalog.comment.reward_self_denied: 不能讚賞自己的評論
 catalog.general.unauthorized: 请先登录
 catalog.general.user_stat_error: 获取用户统计信息失败
 
+catalog.metadata.invalid_binding: 外部資源元資料綁定格式無效
+catalog.metadata.invalid_type: 無效的 TMDB 資源類型
+catalog.metadata.provider_failed: 取得外部資源元資料失敗
+catalog.metadata.query_required: 請輸入搜尋關鍵字
+
 catalog.reward.amount_min: 赞赏金额至少为1
 catalog.reward.amount_req: 请输入赞赏金额
 catalog.reward.insufficient_balance: 魔力值余额不足

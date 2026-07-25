@@ -44,15 +44,28 @@ type (
 	}
 	ICatalogCommentUsecase interface {
 		Create(ctx context.Context, actor *model.Actor, in catalogin.CommentCreateInp) (*catalogout.CommentCreateOut, error)
-		List(ctx context.Context, actor *model.Actor, in catalogin.CommentListInp) (*catalogout.CommentListOut, error)
-		ToggleLike(ctx context.Context, actor *model.Actor, in catalogin.CommentToggleLikeInp) (*catalogout.CommentToggleLikeOut, error)
-		Reward(ctx context.Context, actor *model.Actor, in catalogin.CommentRewardInp) error
-		Report(ctx context.Context, actor *model.Actor, in catalogin.CommentReportInp) error
 		CreateForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentCreateInp) (*catalogout.CommentCreateOut, error)
+		List(ctx context.Context, actor *model.Actor, in catalogin.CommentListInp) (*catalogout.CommentListOut, error)
 		ListForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentListInp) (*catalogout.CommentListOut, error)
+		ToggleLike(ctx context.Context, actor *model.Actor, in catalogin.CommentToggleLikeInp) (*catalogout.CommentToggleLikeOut, error)
 		ToggleLikeForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentActionInp) (*catalogout.CommentToggleLikeOut, error)
+		Reward(ctx context.Context, actor *model.Actor, in catalogin.CommentRewardInp) error
 		RewardForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentRewardInp) error
+		Report(ctx context.Context, actor *model.Actor, in catalogin.CommentReportInp) error
 		ReportForRequest(ctx context.Context, actor *model.Actor, in catalogin.RequestCommentReportInp) error
+	}
+	ICatalogMetadataDomain interface {
+		GetTorrentMeta(ctx context.Context, torrentId uint64) (*entity.CatalogTorrentMeta, error)
+		UpsertTorrentBinding(ctx context.Context, torrentId uint64, binding model.CatalogTorrentMetadataBinding) error
+		UpdateTmdbRating(ctx context.Context, tmdbId string, tmdbType string, rating float64) error
+		UpdateImdbRating(ctx context.Context, imdbId string, rating float64) error
+		UpdateDoubanRating(ctx context.Context, doubanId string, rating float64) error
+		UpdateBangumiRating(ctx context.Context, bangumiId string, rating float64) error
+	}
+	ICatalogMetadataUsecase interface {
+		Search(ctx context.Context, actor *model.Actor, in catalogin.TorrentMetadataSearchInp) (*catalogout.TorrentMetadataSearchOut, error)
+		GetTorrentMetadata(ctx context.Context, torrentId uint64) (*catalogout.TorrentMetadataOut, error)
+		ResolveBinding(ctx context.Context, binding model.CatalogTorrentMetadataBinding) (model.CatalogTorrentMetadataBinding, error)
 	}
 	ICatalogRequestDomain interface {
 		InsertRequest(ctx context.Context, request entity.CatalogRequest) (uint64, error)
@@ -175,6 +188,8 @@ var (
 	localCatalogCategoryUsecase ICatalogCategoryUsecase
 	localCatalogCommentDomain   ICatalogCommentDomain
 	localCatalogCommentUsecase  ICatalogCommentUsecase
+	localCatalogMetadataDomain  ICatalogMetadataDomain
+	localCatalogMetadataUsecase ICatalogMetadataUsecase
 	localCatalogRequestDomain   ICatalogRequestDomain
 	localCatalogRequestUsecase  ICatalogRequestUsecase
 	localCatalogSubtitleDomain  ICatalogSubtitleDomain
@@ -225,6 +240,28 @@ func CatalogCommentUsecase() ICatalogCommentUsecase {
 
 func RegisterCatalogCommentUsecase(i ICatalogCommentUsecase) {
 	localCatalogCommentUsecase = i
+}
+
+func CatalogMetadataDomain() ICatalogMetadataDomain {
+	if localCatalogMetadataDomain == nil {
+		panic("implement not found for interface ICatalogMetadataDomain, forgot register?")
+	}
+	return localCatalogMetadataDomain
+}
+
+func RegisterCatalogMetadataDomain(i ICatalogMetadataDomain) {
+	localCatalogMetadataDomain = i
+}
+
+func CatalogMetadataUsecase() ICatalogMetadataUsecase {
+	if localCatalogMetadataUsecase == nil {
+		panic("implement not found for interface ICatalogMetadataUsecase, forgot register?")
+	}
+	return localCatalogMetadataUsecase
+}
+
+func RegisterCatalogMetadataUsecase(i ICatalogMetadataUsecase) {
+	localCatalogMetadataUsecase = i
 }
 
 func CatalogRequestDomain() ICatalogRequestDomain {

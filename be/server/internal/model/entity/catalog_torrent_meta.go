@@ -20,8 +20,9 @@ type CatalogTorrentMeta struct {
 	BangumiId     string      `json:"bangumiId"     orm:"bangumi_id"     description:""`
 	BangumiRating float64     `json:"bangumiRating" orm:"bangumi_rating" description:""`
 	TmdbId        string      `json:"tmdbId"        orm:"tmdb_id"        description:""`
+	TmdbType      string      `json:"tmdbType"      orm:"tmdb_type"      description:"movie/tv"`
 	TmdbRating    float64     `json:"tmdbRating"    orm:"tmdb_rating"    description:""`
-	Extra         *gjson.Json `json:"extra"         orm:"extra"          description:"其他元数据 (JSON)"`
+	Extra         *gjson.Json `json:"extra"         orm:"extra"          description:"其他外部标识与绑定参数"`
 	CreatedAt     *gtime.Time `json:"createdAt"     orm:"created_at"     description:""`
 	UpdatedAt     *gtime.Time `json:"updatedAt"     orm:"updated_at"     description:""`
 }

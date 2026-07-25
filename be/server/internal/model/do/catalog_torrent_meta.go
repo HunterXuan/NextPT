@@ -22,8 +22,9 @@ type CatalogTorrentMeta struct {
 	BangumiId     any         //
 	BangumiRating any         //
 	TmdbId        any         //
+	TmdbType      any         // movie/tv
 	TmdbRating    any         //
-	Extra         *gjson.Json // 其他元数据 (JSON)
+	Extra         *gjson.Json // 其他外部标识与绑定参数
 	CreatedAt     *gtime.Time //
 	UpdatedAt     *gtime.Time //
 }

@@ -84,10 +84,52 @@ type TorrentHotListOut struct {
 
 type TorrentDetailOut struct {
 	TorrentListItem
-	Description   string         `json:"description" description:"详细描述"`
-	ReleaseFields map[string]any `json:"releaseFields" description:"发布结构化字段值"`
-	IsBookmarked  bool           `json:"isBookmarked" description:"是否收藏"`
-	IsLiked       bool           `json:"isLiked" description:"是否已感谢(点赞)"`
+	Description   string              `json:"description" description:"详细描述"`
+	ReleaseFields map[string]any      `json:"releaseFields" description:"发布结构化字段值"`
+	Metadata      *TorrentMetadataOut `json:"metadata,omitempty" description:"外部资源元数据"`
+	IsBookmarked  bool                `json:"isBookmarked" description:"是否收藏"`
+	IsLiked       bool                `json:"isLiked" description:"是否已感谢(点赞)"`
+}
+
+type TorrentMetadataBinding struct {
+	ImdbId        string  `json:"imdbId"`
+	ImdbRating    float64 `json:"imdbRating"`
+	DoubanId      string  `json:"doubanId"`
+	DoubanRating  float64 `json:"doubanRating"`
+	BangumiId     string  `json:"bangumiId"`
+	BangumiRating float64 `json:"bangumiRating"`
+	TmdbId        string  `json:"tmdbId"`
+	TmdbType      string  `json:"tmdbType"`
+	TmdbRating    float64 `json:"tmdbRating"`
+}
+
+type TorrentMetadataItem struct {
+	Provider      string   `json:"provider"`
+	ProviderId    string   `json:"providerId"`
+	TmdbType      string   `json:"tmdbType"`
+	Title         string   `json:"title"`
+	OriginalTitle string   `json:"originalTitle"`
+	Year          string   `json:"year"`
+	ReleaseDate   string   `json:"releaseDate"`
+	Overview      string   `json:"overview"`
+	PosterUrl     string   `json:"posterUrl"`
+	BackdropUrl   string   `json:"backdropUrl"`
+	Rating        float64  `json:"rating"`
+	Genres        []string `json:"genres"`
+	ImdbId        string   `json:"imdbId"`
+}
+
+type TorrentMetadataOut struct {
+	Binding TorrentMetadataBinding `json:"binding"`
+	Data    *TorrentMetadataItem   `json:"data,omitempty"`
+	Sources []TorrentMetadataItem  `json:"sources"`
+}
+
+type TorrentMetadataSearchOut struct {
+	List         []TorrentMetadataItem `json:"list"`
+	Page         int                   `json:"page"`
+	TotalPages   int                   `json:"totalPages"`
+	TotalResults int                   `json:"totalResults"`
 }
 
 type TorrentDownloadOut struct {

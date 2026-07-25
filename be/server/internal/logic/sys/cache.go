@@ -25,6 +25,7 @@ type sSysCache struct {
 	prefixTrackerSeedingUsers   string
 	prefixIamPasskey            string
 	prefixCatalogTorrentHash    string
+	prefixCatalogMetadata       string
 	prefixTrackerLock           string
 	prefixTrackerAnnounceQueue  string
 	prefixTrackerAnnounceDedup  string
@@ -50,6 +51,7 @@ func NewSysCache() *sSysCache {
 		prefixTrackerSeedingUsers:   p + "tracker:seeding_users",
 		prefixIamPasskey:            p + "iam:passkey:",
 		prefixCatalogTorrentHash:    p + "catalog:torrent:hash:",
+		prefixCatalogMetadata:       p + "catalog:metadata:",
 		prefixTrackerLock:           p + "tracker:lock:",
 		prefixTrackerAnnounceQueue:  p + "tracker:announce_queue",
 		prefixTrackerAnnounceDedup:  p + "tracker:announce_dedup:",
@@ -188,6 +190,22 @@ func (s *sSysCache) KeyIamPasskeyActor(ctx context.Context, passkey string) stri
 
 func (s *sSysCache) KeyCatalogTorrentInfoHash(ctx context.Context, hexInfoHash string) string {
 	return s.prefixCatalogTorrentHash + hexInfoHash
+}
+
+func (s *sSysCache) KeyCatalogMetadataTmdb(ctx context.Context, tmdbType string, tmdbId string, locale string) string {
+	return fmt.Sprintf("%stmdb:%s:%s:%s", s.prefixCatalogMetadata, tmdbType, tmdbId, locale)
+}
+
+func (s *sSysCache) KeyCatalogMetadataImdb(ctx context.Context, imdbId string) string {
+	return fmt.Sprintf("%simdb:%s", s.prefixCatalogMetadata, imdbId)
+}
+
+func (s *sSysCache) KeyCatalogMetadataDouban(ctx context.Context, doubanId string) string {
+	return fmt.Sprintf("%sdouban:%s", s.prefixCatalogMetadata, doubanId)
+}
+
+func (s *sSysCache) KeyCatalogMetadataBangumi(ctx context.Context, bangumiId string) string {
+	return fmt.Sprintf("%sbangumi:%s", s.prefixCatalogMetadata, bangumiId)
 }
 
 func (s *sSysCache) KeyCatalogHotTorrents(ctx context.Context) string {
