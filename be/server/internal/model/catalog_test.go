@@ -74,6 +74,48 @@ func TestCatalogTorrentListOptionsInvalidSizeRange(t *testing.T) {
 	}
 }
 
+func TestCatalogTorrentMetadataFilterNormalized(t *testing.T) {
+	got := (CatalogTorrentMetadataFilter{
+		ImdbId:    "  TT1234567 ",
+		DoubanId:  " 1295644 ",
+		BangumiId: " 2 ",
+		TmdbId:    " 550 ",
+		TmdbType:  " MOVIE ",
+	}).Normalized()
+
+	if got.ImdbId != "tt1234567" || got.DoubanId != "1295644" || got.BangumiId != "2" || got.TmdbId != "550" || got.TmdbType != "movie" {
+		t.Fatalf("normalized metadata filter = %+v", got)
+	}
+	if !got.IsValid() || got.IsEmpty() {
+		t.Fatalf("expected valid non-empty metadata filter: %+v", got)
+	}
+}
+
+func TestCatalogTorrentMetadataFilterValidation(t *testing.T) {
+	tests := []struct {
+		name   string
+		filter CatalogTorrentMetadataFilter
+		valid  bool
+	}{
+		{name: "empty", filter: CatalogTorrentMetadataFilter{}, valid: true},
+		{name: "imdb", filter: CatalogTorrentMetadataFilter{ImdbId: "tt1234567"}, valid: true},
+		{name: "tmdb without type", filter: CatalogTorrentMetadataFilter{TmdbId: "550"}, valid: true},
+		{name: "tmdb movie", filter: CatalogTorrentMetadataFilter{TmdbId: "550", TmdbType: "movie"}, valid: true},
+		{name: "invalid imdb", filter: CatalogTorrentMetadataFilter{ImdbId: "1234567"}, valid: false},
+		{name: "invalid numeric id", filter: CatalogTorrentMetadataFilter{DoubanId: "movie-1"}, valid: false},
+		{name: "type without tmdb id", filter: CatalogTorrentMetadataFilter{TmdbType: "tv"}, valid: false},
+		{name: "invalid tmdb type", filter: CatalogTorrentMetadataFilter{TmdbId: "550", TmdbType: "anime"}, valid: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.filter.IsValid(); got != tt.valid {
+				t.Fatalf("IsValid() = %t, want %t", got, tt.valid)
+			}
+		})
+	}
+}
+
 func TestResolveCatalogTorrentPromotionGlobalOverridesTorrent(t *testing.T) {
 	now := gtime.NewFromStr("2026-07-08 12:00:00")
 	torrentExpireAt := now.AddDate(0, 0, 1)

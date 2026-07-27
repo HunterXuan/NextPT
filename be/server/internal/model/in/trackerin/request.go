@@ -31,4 +31,9 @@ type RssInp struct {
 	MinSize         uint64 `json:"minSize" in:"query" description:"最小体积(bytes)"`
 	MaxSize         uint64 `json:"maxSize" in:"query" description:"最大体积(bytes)"`
 	PublishedWithin int    `json:"publishedWithin" in:"query" v:"min:0|max:3650" description:"最近发布天数"`
+	ImdbId          string `json:"imdbId" in:"query" v:"max-length:20" description:"IMDb ID 精确筛选"`
+	DoubanId        string `json:"doubanId" in:"query" v:"max-length:20" description:"豆瓣 ID 精确筛选"`
+	BangumiId       string `json:"bangumiId" in:"query" v:"max-length:20" description:"Bangumi ID 精确筛选"`
+	TmdbId          string `json:"tmdbId" in:"query" v:"max-length:20" description:"TMDB ID 精确筛选"`
+	TmdbType        string `json:"tmdbType" in:"query" v:"max-length:10" description:"TMDB 资源类型(movie/tv)"`
 }

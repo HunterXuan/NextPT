@@ -54,6 +54,48 @@ func (b CatalogTorrentMetadataBinding) IsValid() bool {
 	return catalogMetadataNumericPattern.MatchString(b.TmdbId) && slices.Contains(consts.CatalogMetadataTmdbTypes, b.TmdbType)
 }
 
+type CatalogTorrentMetadataFilter struct {
+	ImdbId    string
+	DoubanId  string
+	BangumiId string
+	TmdbId    string
+	TmdbType  string
+}
+
+func (f CatalogTorrentMetadataFilter) Normalized() CatalogTorrentMetadataFilter {
+	f.ImdbId = strings.ToLower(strings.TrimSpace(f.ImdbId))
+	f.DoubanId = strings.TrimSpace(f.DoubanId)
+	f.BangumiId = strings.TrimSpace(f.BangumiId)
+	f.TmdbId = strings.TrimSpace(f.TmdbId)
+	f.TmdbType = strings.ToLower(strings.TrimSpace(f.TmdbType))
+	return f
+}
+
+func (f CatalogTorrentMetadataFilter) IsValid() bool {
+	f = f.Normalized()
+	if f.ImdbId != "" && !catalogMetadataImdbIdPattern.MatchString(f.ImdbId) {
+		return false
+	}
+	if f.DoubanId != "" && !catalogMetadataNumericPattern.MatchString(f.DoubanId) {
+		return false
+	}
+	if f.BangumiId != "" && !catalogMetadataNumericPattern.MatchString(f.BangumiId) {
+		return false
+	}
+	if f.TmdbId == "" {
+		return f.TmdbType == ""
+	}
+	if !catalogMetadataNumericPattern.MatchString(f.TmdbId) {
+		return false
+	}
+	return f.TmdbType == "" || slices.Contains(consts.CatalogMetadataTmdbTypes, f.TmdbType)
+}
+
+func (f CatalogTorrentMetadataFilter) IsEmpty() bool {
+	f = f.Normalized()
+	return f.ImdbId == "" && f.DoubanId == "" && f.BangumiId == "" && f.TmdbId == ""
+}
+
 type CatalogTorrentUpdate struct {
 	Name          string
 	SubTitle      string
@@ -73,6 +115,7 @@ type CatalogTorrentSummary struct {
 type CatalogTorrentListOptions struct {
 	Keyword             string
 	CategoryIds         []uint
+	Metadata            CatalogTorrentMetadataFilter
 	Promotion           string
 	SeedStatus          string
 	FeaturedOnly        bool
@@ -87,6 +130,7 @@ type CatalogTorrentListOptions struct {
 func (o CatalogTorrentListOptions) Normalized() CatalogTorrentListOptions {
 	o.Keyword = strings.TrimSpace(o.Keyword)
 	o.CategoryIds = normalizeCatalogTorrentCategoryIds(o.CategoryIds)
+	o.Metadata = o.Metadata.Normalized()
 	if o.Page <= 0 {
 		o.Page = 1
 	}

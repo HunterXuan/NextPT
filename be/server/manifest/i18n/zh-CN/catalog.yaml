@@ -11,6 +11,7 @@ catalog.general.unauthorized: 请先登录
 catalog.general.user_stat_error: 获取用户统计信息失败
 
 catalog.metadata.invalid_binding: 外部资源元数据绑定格式无效
+catalog.metadata.invalid_filter: 外部资源 ID 筛选格式无效
 catalog.metadata.invalid_type: 无效的 TMDB 资源类型
 catalog.metadata.provider_failed: 获取外部资源元数据失败
 catalog.metadata.query_required: 请输入搜索关键词

@@ -67,6 +67,13 @@ func (c *ControllerV1) Rss(ctx context.Context, req *v1.RssReq) (res *v1.RssRes,
 		MinSize:         req.MinSize,
 		MaxSize:         req.MaxSize,
 		PublishedWithin: req.PublishedWithin,
+		TorrentMetadataFilterInp: catalogin.TorrentMetadataFilterInp{
+			ImdbId:    req.ImdbId,
+			DoubanId:  req.DoubanId,
+			BangumiId: req.BangumiId,
+			TmdbId:    req.TmdbId,
+			TmdbType:  req.TmdbType,
+		},
 	})
 	if err != nil {
 		return nil, err

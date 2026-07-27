@@ -11,6 +11,7 @@ catalog.general.unauthorized: Please log in first
 catalog.general.user_stat_error: Failed to get user statistics
 
 catalog.metadata.invalid_binding: Invalid external metadata binding
+catalog.metadata.invalid_filter: Invalid external resource ID filter
 catalog.metadata.invalid_type: Invalid TMDB media type
 catalog.metadata.provider_failed: Failed to load external metadata
 catalog.metadata.query_required: Search query is required

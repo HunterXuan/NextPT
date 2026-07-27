@@ -46,8 +46,15 @@ func NewCatalogTorrentUsecase() *sCatalogTorrentUsecase {
 // List 获取种子分页列表
 func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, in catalogin.TorrentListInp) (*catalogout.TorrentListOut, error) {
 	options := model.CatalogTorrentListOptions{
-		Keyword:             in.Keyword,
-		CategoryIds:         in.CategoryIds,
+		Keyword:     in.Keyword,
+		CategoryIds: in.CategoryIds,
+		Metadata: model.CatalogTorrentMetadataFilter{
+			ImdbId:    in.ImdbId,
+			DoubanId:  in.DoubanId,
+			BangumiId: in.BangumiId,
+			TmdbId:    in.TmdbId,
+			TmdbType:  in.TmdbType,
+		},
 		Promotion:           in.Promotion,
 		SeedStatus:          in.SeedStatus,
 		FeaturedOnly:        in.FeaturedOnly,
@@ -60,6 +67,9 @@ func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, i
 	}.Normalized()
 	if options.HasInvalidSizeRange() {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.size_range_invalid"))
+	}
+	if !options.Metadata.IsValid() {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.metadata.invalid_filter"))
 	}
 
 	entities, total, err := service.CatalogTorrentDomain().QueryTorrents(ctx, actor, options)
@@ -93,8 +103,15 @@ func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor
 		promotion = consts.CatalogTorrentPromotionFilterPromoted
 	}
 	options := model.CatalogTorrentListOptions{
-		Keyword:             in.Keyword,
-		CategoryIds:         in.CategoryIds,
+		Keyword:     in.Keyword,
+		CategoryIds: in.CategoryIds,
+		Metadata: model.CatalogTorrentMetadataFilter{
+			ImdbId:    in.ImdbId,
+			DoubanId:  in.DoubanId,
+			BangumiId: in.BangumiId,
+			TmdbId:    in.TmdbId,
+			TmdbType:  in.TmdbType,
+		},
 		Promotion:           promotion,
 		SeedStatus:          in.SeedStatus,
 		FeaturedOnly:        in.FeaturedOnly,
@@ -107,6 +124,9 @@ func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor
 	}.Normalized()
 	if options.HasInvalidSizeRange() {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.size_range_invalid"))
+	}
+	if !options.Metadata.IsValid() {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.metadata.invalid_filter"))
 	}
 
 	entities, err := service.CatalogTorrentDomain().QueryRssTorrents(ctx, actor, options)

@@ -13,7 +13,16 @@ type TorrentUploadInp struct {
 	Anonymous     bool              `json:"anonymous" description:"是否匿名上传"`
 }
 
+type TorrentMetadataFilterInp struct {
+	ImdbId    string `json:"imdbId" v:"max-length:20" description:"IMDb ID 精确筛选"`
+	DoubanId  string `json:"doubanId" v:"max-length:20" description:"豆瓣 ID 精确筛选"`
+	BangumiId string `json:"bangumiId" v:"max-length:20" description:"Bangumi ID 精确筛选"`
+	TmdbId    string `json:"tmdbId" v:"max-length:20" description:"TMDB ID 精确筛选"`
+	TmdbType  string `json:"tmdbType" v:"max-length:10" description:"TMDB 资源类型(movie/tv)"`
+}
+
 type TorrentListInp struct {
+	TorrentMetadataFilterInp
 	Page            int    `json:"page" d:"1" v:"min:1" description:"页码"`
 	Size            int    `json:"size" d:"50" v:"min:1|max:100" description:"每页数量"`
 	Keyword         string `json:"keyword" v:"max-length:100" description:"标题关键词"`
@@ -28,6 +37,7 @@ type TorrentListInp struct {
 }
 
 type TorrentRssInp struct {
+	TorrentMetadataFilterInp
 	Size            int    `json:"size" d:"50" v:"min:1|max:100" description:"返回数量"`
 	Keyword         string `json:"keyword" v:"max-length:100" description:"标题关键词"`
 	CategoryIds     []uint `json:"categoryIds" description:"分类ID列表(可选)"`

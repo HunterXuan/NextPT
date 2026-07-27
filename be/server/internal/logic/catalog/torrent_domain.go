@@ -3,6 +3,7 @@ package catalog
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"server/internal/consts"
@@ -493,6 +494,7 @@ func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *mo
 	if len(options.CategoryIds) > 0 {
 		m = m.WhereIn(columns.CategoryId, options.CategoryIds)
 	}
+	m = s.applyTorrentMetadataFilter(m, options.Metadata)
 
 	if options.Keyword != "" {
 		like := "%" + options.Keyword + "%"
@@ -519,6 +521,43 @@ func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *mo
 	}
 
 	return s.applyTorrentPromotionFilter(ctx, m, options.Promotion)
+}
+
+func (s *sCatalogTorrentDomain) applyTorrentMetadataFilter(m *gdb.Model, filter model.CatalogTorrentMetadataFilter) *gdb.Model {
+	filter = filter.Normalized()
+	if filter.IsEmpty() {
+		return m
+	}
+
+	torrentTable := dao.CatalogTorrent.Table()
+	metaTable := dao.CatalogTorrentMeta.Table()
+	torrentColumns := dao.CatalogTorrent.Columns()
+	metaColumns := dao.CatalogTorrentMeta.Columns()
+	conditions := []string{fmt.Sprintf("%s.%s = %s.%s", metaTable, metaColumns.TorrentId, torrentTable, torrentColumns.Id)}
+	args := make([]any, 0, 5)
+	if filter.ImdbId != "" {
+		conditions = append(conditions, fmt.Sprintf("%s.%s = ?", metaTable, metaColumns.ImdbId))
+		args = append(args, filter.ImdbId)
+	}
+	if filter.DoubanId != "" {
+		conditions = append(conditions, fmt.Sprintf("%s.%s = ?", metaTable, metaColumns.DoubanId))
+		args = append(args, filter.DoubanId)
+	}
+	if filter.BangumiId != "" {
+		conditions = append(conditions, fmt.Sprintf("%s.%s = ?", metaTable, metaColumns.BangumiId))
+		args = append(args, filter.BangumiId)
+	}
+	if filter.TmdbId != "" {
+		conditions = append(conditions, fmt.Sprintf("%s.%s = ?", metaTable, metaColumns.TmdbId))
+		args = append(args, filter.TmdbId)
+		if filter.TmdbType != "" {
+			conditions = append(conditions, fmt.Sprintf("%s.%s = ?", metaTable, metaColumns.TmdbType))
+			args = append(args, filter.TmdbType)
+		}
+	}
+
+	query := fmt.Sprintf("EXISTS (SELECT 1 FROM %s WHERE %s)", metaTable, strings.Join(conditions, " AND "))
+	return m.Where(query, args...)
 }
 
 func (s *sCatalogTorrentDomain) applyTorrentPromotionFilter(ctx context.Context, m *gdb.Model, filter string) *gdb.Model {
