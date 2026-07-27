@@ -88,6 +88,11 @@ const props = withDefaults(defineProps<{
   minSize?: number
   maxSize?: number
   publishedWithin?: number
+  imdbId?: string
+  doubanId?: string
+  bangumiId?: string
+  tmdbId?: string
+  tmdbType?: string
 }>(), {
   keyword: '',
   categoryIds: () => [],
@@ -96,7 +101,12 @@ const props = withDefaults(defineProps<{
   featuredOnly: false,
   minSize: 0,
   maxSize: 0,
-  publishedWithin: 0
+  publishedWithin: 0,
+  imdbId: '',
+  doubanId: '',
+  bangumiId: '',
+  tmdbId: '',
+  tmdbType: 'all'
 })
 
 const { t, locale } = useI18n()
@@ -142,6 +152,13 @@ const rssUrl = computed(() => {
   if (props.minSize > 0) url.searchParams.set('minSize', String(props.minSize))
   if (props.maxSize > 0) url.searchParams.set('maxSize', String(props.maxSize))
   if (props.publishedWithin > 0) url.searchParams.set('publishedWithin', String(props.publishedWithin))
+  if (props.imdbId) url.searchParams.set('imdbId', props.imdbId)
+  if (props.doubanId) url.searchParams.set('doubanId', props.doubanId)
+  if (props.bangumiId) url.searchParams.set('bangumiId', props.bangumiId)
+  if (props.tmdbId) {
+    url.searchParams.set('tmdbId', props.tmdbId)
+    if (props.tmdbType !== 'all') url.searchParams.set('tmdbType', props.tmdbType)
+  }
   return url.toString()
 })
 

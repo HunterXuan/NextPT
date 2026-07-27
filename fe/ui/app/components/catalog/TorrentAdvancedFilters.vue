@@ -49,6 +49,62 @@
         />
       </UFormField>
 
+      <UFormField :label="$t('catalog.torrents.filters.imdbId')">
+        <UInput
+          v-model="draft.imdbId"
+          class="w-full"
+          maxlength="20"
+          :ui="{ base: 'h-10 w-full font-mono' }"
+          :placeholder="$t('catalog.torrents.filters.imdbIdPlaceholder')"
+          :disabled="pending"
+        />
+      </UFormField>
+
+      <UFormField :label="$t('catalog.torrents.filters.tmdbId')">
+        <div class="grid grid-cols-[minmax(0,1fr)_92px] gap-2">
+          <UInput
+            v-model="draft.tmdbId"
+            class="w-full"
+            maxlength="20"
+            :ui="{ base: 'h-10 w-full font-mono' }"
+            :placeholder="$t('catalog.torrents.filters.numericIdPlaceholder')"
+            :disabled="pending"
+          />
+          <USelect
+            v-model="draft.tmdbType"
+            class="w-full"
+            size="lg"
+            :ui="{ base: 'h-10 w-full' }"
+            :items="tmdbTypeOptions"
+            value-key="value"
+            :aria-label="$t('catalog.torrents.filters.tmdbType')"
+            :disabled="pending || !draft.tmdbId.trim()"
+          />
+        </div>
+      </UFormField>
+
+      <UFormField :label="$t('catalog.torrents.filters.doubanId')">
+        <UInput
+          v-model="draft.doubanId"
+          class="w-full"
+          maxlength="20"
+          :ui="{ base: 'h-10 w-full font-mono' }"
+          :placeholder="$t('catalog.torrents.filters.numericIdPlaceholder')"
+          :disabled="pending"
+        />
+      </UFormField>
+
+      <UFormField :label="$t('catalog.torrents.filters.bangumiId')">
+        <UInput
+          v-model="draft.bangumiId"
+          class="w-full"
+          maxlength="20"
+          :ui="{ base: 'h-10 w-full font-mono' }"
+          :placeholder="$t('catalog.torrents.filters.numericIdPlaceholder')"
+          :disabled="pending"
+        />
+      </UFormField>
+
       <div class="sm:col-span-2 xl:col-span-2">
         <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.filters.sizeRange') }}</span>
         <div class="mt-1 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
@@ -90,6 +146,9 @@
     <p v-if="sizeRangeError" class="mt-2 text-sm text-red-600 dark:text-red-300">
       {{ sizeRangeError }}
     </p>
+    <p v-if="metadataFilterError" class="mt-2 text-sm text-red-600 dark:text-red-300">
+      {{ metadataFilterError }}
+    </p>
 
     <div class="mt-3 flex justify-end gap-2">
       <UButton
@@ -107,7 +166,7 @@
         color="primary"
         icon="i-lucide-check"
         :loading="pending"
-        :disabled="Boolean(sizeRangeError)"
+        :disabled="Boolean(sizeRangeError || metadataFilterError)"
         @click="applyFilters"
       >
         {{ $t('catalog.torrents.filters.apply') }}
@@ -168,11 +227,25 @@ const sortOptions = computed(() => [
   { value: 'size_asc', label: t('catalog.torrents.filters.options.sortSizeAsc') },
   { value: 'size_desc', label: t('catalog.torrents.filters.options.sortSizeDesc') }
 ])
+const tmdbTypeOptions = computed(() => [
+  { value: 'all', label: t('catalog.torrents.filters.options.anyTmdbType') },
+  { value: 'movie', label: t('catalog.torrents.metadata.movie') },
+  { value: 'tv', label: t('catalog.torrents.metadata.tv') }
+])
 const sizeRangeError = computed(() => {
   const minSize = gibToBytes(minSizeGiB.value)
   const maxSize = gibToBytes(maxSizeGiB.value)
   return minSize > 0 && maxSize > 0 && minSize > maxSize
     ? t('catalog.torrents.filters.sizeRangeInvalid')
+    : ''
+})
+const metadataFilterError = computed(() => {
+  const imdbId = draft.imdbId.trim()
+  if (imdbId && !/^tt\d+$/i.test(imdbId)) return t('catalog.torrents.filters.imdbIdInvalid')
+
+  const numericIds = [draft.tmdbId, draft.doubanId, draft.bangumiId]
+  return numericIds.some((value) => value.trim() && !/^\d+$/.test(value.trim()))
+    ? t('catalog.torrents.filters.numericIdInvalid')
     : ''
 })
 const hasDraftFilters = computed(() => filterCount({
@@ -185,11 +258,16 @@ const hasAppliedFilters = computed(() => filterCount(props.value) > 0)
 watch(() => props.value, resetDraftFromValue, { deep: true, immediate: true })
 
 function applyFilters() {
-  if (sizeRangeError.value) return
+  if (sizeRangeError.value || metadataFilterError.value) return
   emit('apply', {
     ...draft,
     minSize: gibToBytes(minSizeGiB.value),
-    maxSize: gibToBytes(maxSizeGiB.value)
+    maxSize: gibToBytes(maxSizeGiB.value),
+    imdbId: draft.imdbId.trim().toLowerCase(),
+    doubanId: draft.doubanId.trim(),
+    bangumiId: draft.bangumiId.trim(),
+    tmdbId: draft.tmdbId.trim(),
+    tmdbType: draft.tmdbId.trim() ? draft.tmdbType : 'all'
   })
 }
 
@@ -215,7 +293,12 @@ function defaultFilters(): TorrentAdvancedFilters {
     minSize: 0,
     maxSize: 0,
     publishedWithin: 0,
-    sort: 'newest'
+    sort: 'newest',
+    imdbId: '',
+    doubanId: '',
+    bangumiId: '',
+    tmdbId: '',
+    tmdbType: 'all'
   }
 }
 
@@ -227,7 +310,11 @@ function filterCount(value: TorrentAdvancedFilters) {
     value.minSize > 0,
     value.maxSize > 0,
     value.publishedWithin > 0,
-    value.sort !== 'newest'
+    value.sort !== 'newest',
+    Boolean(value.imdbId),
+    Boolean(value.doubanId),
+    Boolean(value.bangumiId),
+    Boolean(value.tmdbId)
   ].filter(Boolean).length
 }
 

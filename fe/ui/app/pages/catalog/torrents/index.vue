@@ -54,6 +54,11 @@
               :min-size="appliedAdvancedFilters.minSize"
               :max-size="appliedAdvancedFilters.maxSize"
               :published-within="appliedAdvancedFilters.publishedWithin"
+              :imdb-id="appliedAdvancedFilters.imdbId"
+              :douban-id="appliedAdvancedFilters.doubanId"
+              :bangumi-id="appliedAdvancedFilters.bangumiId"
+              :tmdb-id="appliedAdvancedFilters.tmdbId"
+              :tmdb-type="appliedAdvancedFilters.tmdbType"
             />
             <AppPermissionButton
               :permission="Permission.CatalogTorrentCreate"
@@ -370,7 +375,12 @@ function readAdvancedFilters(): TorrentAdvancedFilters {
     minSize: readNonnegativeIntegerQuery('minSize'),
     maxSize: readNonnegativeIntegerQuery('maxSize'),
     publishedWithin: [1, 7, 30, 90].includes(publishedWithin) ? publishedWithin : 0,
-    sort: ['oldest', 'seeders', 'leechers', 'completed', 'size_asc', 'size_desc'].includes(sort) ? sort : 'newest'
+    sort: ['oldest', 'seeders', 'leechers', 'completed', 'size_asc', 'size_desc'].includes(sort) ? sort : 'newest',
+    imdbId: readStringQuery('imdbId').toLowerCase(),
+    doubanId: readStringQuery('doubanId'),
+    bangumiId: readStringQuery('bangumiId'),
+    tmdbId: readStringQuery('tmdbId'),
+    tmdbType: ['movie', 'tv'].includes(readStringQuery('tmdbType')) ? readStringQuery('tmdbType') : 'all'
   }
 }
 
@@ -387,7 +397,11 @@ function advancedFilterCount(value: TorrentAdvancedFilters) {
     value.minSize > 0,
     value.maxSize > 0,
     value.publishedWithin > 0,
-    value.sort !== 'newest'
+    value.sort !== 'newest',
+    Boolean(value.imdbId),
+    Boolean(value.doubanId),
+    Boolean(value.bangumiId),
+    Boolean(value.tmdbId)
   ].filter(Boolean).length
 }
 
@@ -438,7 +452,12 @@ async function loadTorrents() {
       minSize: appliedAdvancedFilters.minSize,
       maxSize: appliedAdvancedFilters.maxSize,
       publishedWithin: appliedAdvancedFilters.publishedWithin,
-      sort: appliedAdvancedFilters.sort
+      sort: appliedAdvancedFilters.sort,
+      imdbId: appliedAdvancedFilters.imdbId,
+      doubanId: appliedAdvancedFilters.doubanId,
+      bangumiId: appliedAdvancedFilters.bangumiId,
+      tmdbId: appliedAdvancedFilters.tmdbId,
+      tmdbType: appliedAdvancedFilters.tmdbType
     })
     torrents.value = data.list || []
     total.value = data.total || 0
@@ -506,7 +525,12 @@ function syncQuery() {
       minSize: appliedAdvancedFilters.minSize > 0 ? String(appliedAdvancedFilters.minSize) : undefined,
       maxSize: appliedAdvancedFilters.maxSize > 0 ? String(appliedAdvancedFilters.maxSize) : undefined,
       publishedWithin: appliedAdvancedFilters.publishedWithin > 0 ? String(appliedAdvancedFilters.publishedWithin) : undefined,
-      sort: appliedAdvancedFilters.sort !== 'newest' ? appliedAdvancedFilters.sort : undefined
+      sort: appliedAdvancedFilters.sort !== 'newest' ? appliedAdvancedFilters.sort : undefined,
+      imdbId: appliedAdvancedFilters.imdbId || undefined,
+      doubanId: appliedAdvancedFilters.doubanId || undefined,
+      bangumiId: appliedAdvancedFilters.bangumiId || undefined,
+      tmdbId: appliedAdvancedFilters.tmdbId || undefined,
+      tmdbType: appliedAdvancedFilters.tmdbId && appliedAdvancedFilters.tmdbType !== 'all' ? appliedAdvancedFilters.tmdbType : undefined
     }
   })
 }

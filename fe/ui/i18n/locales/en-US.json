@@ -365,6 +365,15 @@
         "sizeRange": "Size range",
         "minSize": "Minimum size",
         "maxSize": "Maximum size",
+        "imdbId": "IMDb",
+        "tmdbId": "TMDB",
+        "tmdbType": "TMDB type",
+        "doubanId": "Douban",
+        "bangumiId": "Bangumi",
+        "imdbIdPlaceholder": "e.g. tt1234567",
+        "numericIdPlaceholder": "Enter numeric ID",
+        "imdbIdInvalid": "IMDb ID must start with tt followed by digits",
+        "numericIdInvalid": "TMDB, Douban, and Bangumi IDs must contain digits only",
         "featured": "Featured status",
         "featuredOnly": "Featured only",
         "reset": "Reset filters",
@@ -385,7 +394,8 @@
           "sortLeechers": "Most leechers",
           "sortCompleted": "Most completed",
           "sortSizeAsc": "Smallest first",
-          "sortSizeDesc": "Largest first"
+          "sortSizeDesc": "Largest first",
+          "anyTmdbType": "Any"
         }
       },
       "status": {

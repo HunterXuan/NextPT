@@ -365,6 +365,15 @@
         "sizeRange": "体积范围",
         "minSize": "最小体积",
         "maxSize": "最大体积",
+        "imdbId": "IMDb",
+        "tmdbId": "TMDB",
+        "tmdbType": "TMDB 类型",
+        "doubanId": "豆瓣",
+        "bangumiId": "Bangumi",
+        "imdbIdPlaceholder": "例如 tt1234567",
+        "numericIdPlaceholder": "输入数字 ID",
+        "imdbIdInvalid": "IMDb ID 应为 tt 开头的数字编号",
+        "numericIdInvalid": "TMDB、豆瓣和 Bangumi ID 只能包含数字",
         "featured": "推荐状态",
         "featuredOnly": "仅推荐种子",
         "reset": "重置筛选",
@@ -385,7 +394,8 @@
           "sortLeechers": "下载数最多",
           "sortCompleted": "完成数最多",
           "sortSizeAsc": "体积从小到大",
-          "sortSizeDesc": "体积从大到小"
+          "sortSizeDesc": "体积从大到小",
+          "anyTmdbType": "不限"
         }
       },
       "status": {

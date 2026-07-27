@@ -198,6 +198,11 @@ export interface TorrentListParams {
   maxSize?: number
   publishedWithin?: number
   sort?: string
+  imdbId?: string
+  doubanId?: string
+  bangumiId?: string
+  tmdbId?: string
+  tmdbType?: string
 }
 
 export interface TorrentAdvancedFilters {
@@ -208,6 +213,11 @@ export interface TorrentAdvancedFilters {
   maxSize: number
   publishedWithin: number
   sort: string
+  imdbId: string
+  doubanId: string
+  bangumiId: string
+  tmdbId: string
+  tmdbType: string
 }
 
 export interface TorrentUploadInput {
@@ -321,6 +331,13 @@ export function useCatalogTorrents() {
     if (params.maxSize && params.maxSize > 0) query.maxSize = params.maxSize
     if (params.publishedWithin && params.publishedWithin > 0) query.publishedWithin = params.publishedWithin
     if (params.sort && params.sort !== 'newest') query.sort = params.sort
+    if (params.imdbId?.trim()) query.imdbId = params.imdbId.trim().toLowerCase()
+    if (params.doubanId?.trim()) query.doubanId = params.doubanId.trim()
+    if (params.bangumiId?.trim()) query.bangumiId = params.bangumiId.trim()
+    if (params.tmdbId?.trim()) {
+      query.tmdbId = params.tmdbId.trim()
+      if (params.tmdbType && params.tmdbType !== 'all') query.tmdbType = params.tmdbType
+    }
 
     return await fetchApi<TorrentListOut>('/api/catalog/torrents', { query })
   }

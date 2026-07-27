@@ -27,12 +27,13 @@
 ### 2. TorrentQueryUsecase (种子查阅)
 * **获取种子列表 (ListTorrents)**
   * **Method/Path**: `GET /torrents`
-  * **参数概述**: `page`, `size`, `keyword`, `categoryIds`, `promotion`, `seedStatus`, `featuredOnly`, `minSize`, `maxSize`, `publishedWithin`, `sort`
+  * **参数概述**: `page`, `size`, `keyword`, `categoryIds`, `promotion`, `seedStatus`, `featuredOnly`, `minSize`, `maxSize`, `publishedWithin`, `sort`, `imdbId`, `doubanId`, `bangumiId`, `tmdbId`, `tmdbType`
   * **筛选说明**:
     * `promotion` 支持全部、有优惠、无优惠和具体优惠类型；按全站优惠覆盖后的实际生效状态查询。
     * `seedStatus` 支持有做种和无做种，使用种子表中的 Tracker 缓存统计字段。
     * `publishedWithin` 表示最近发布天数；`minSize` / `maxSize` 使用字节。
     * `sort` 支持发布时间、做种数、下载数、完成数和体积排序；普通列表始终优先展示置顶种子。
+    * 外部资源 ID 使用 `catalog_torrent_meta` 精确匹配；多个 ID 同时传入时按交集查询。`tmdbType` 是 `tmdbId` 的可选附加条件，用于区分电影和剧集。
   * RSS 查询复用同一个筛选对象，保证页面筛选与 BT 客户端订阅条件一致。
 * **获取种子详情 (GetTorrent)**
   * **Method/Path**: `GET /torrents/{id}`

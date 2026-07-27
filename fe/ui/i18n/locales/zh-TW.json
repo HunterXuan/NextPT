@@ -365,6 +365,15 @@
         "sizeRange": "體積範圍",
         "minSize": "最小體積",
         "maxSize": "最大體積",
+        "imdbId": "IMDb",
+        "tmdbId": "TMDB",
+        "tmdbType": "TMDB 類型",
+        "doubanId": "豆瓣",
+        "bangumiId": "Bangumi",
+        "imdbIdPlaceholder": "例如 tt1234567",
+        "numericIdPlaceholder": "輸入數字 ID",
+        "imdbIdInvalid": "IMDb ID 應為 tt 開頭的數字編號",
+        "numericIdInvalid": "TMDB、豆瓣和 Bangumi ID 只能包含數字",
         "featured": "推薦狀態",
         "featuredOnly": "僅推薦種子",
         "reset": "重設篩選",
@@ -385,7 +394,8 @@
           "sortLeechers": "下載數最多",
           "sortCompleted": "完成數最多",
           "sortSizeAsc": "體積從小到大",
-          "sortSizeDesc": "體積從大到小"
+          "sortSizeDesc": "體積從大到小",
+          "anyTmdbType": "不限"
         }
       },
       "status": {
