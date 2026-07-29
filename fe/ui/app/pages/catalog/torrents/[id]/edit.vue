@@ -38,6 +38,13 @@
                 @state-change="handleReleaseStateChange"
               />
 
+              <CatalogTorrentTagSelector
+                v-model="selectedTagIds"
+                :category="selectedCategory"
+                :groups="tagGroups"
+                :disabled="savePending || tagGroupsPending"
+              />
+
               <UFormField v-if="showManualTitleInput" :label="manualTitleLabel">
                 <UInput v-model="form.name" class="w-full" :disabled="savePending" />
               </UFormField>
@@ -145,6 +152,7 @@ const form = reactive({
   anonymous: false
 })
 const releaseFields = ref<Record<string, ReleaseFieldValue>>({})
+const selectedTagIds = ref<number[]>([])
 const metadataBinding = ref<TorrentMetadataBinding>({
   imdbId: '',
   doubanId: '',
@@ -220,9 +228,6 @@ watch(currentEditSnapshot, () => {
 })
 
 watch(selectedCategory, (category) => {
-  if (categoryNeedsTagGroups(category)) {
-    void loadTagGroups()
-  }
   if (isGeneratedTitleMode.value && !selectedUploadConfig.value?.title?.allowManualOverride) {
     form.name = ''
   }
@@ -250,23 +255,23 @@ async function loadPage() {
       await fetchUser()
     }
 
-    const [detail, categoryList] = await Promise.all([
+    const [detail, categoryList, tagGroupList] = await Promise.all([
       catalogTorrents.getTorrent(torrentId.value),
-      catalogTorrents.listCategories().catch(() => ({ list: [] }))
+      catalogTorrents.listCategories().catch(() => ({ list: [] })),
+      catalogTorrents.listTagGroups().catch(() => ({ list: [] }))
     ])
 
     torrent.value = detail
     categories.value = categoryList.list || []
+    tagGroups.value = tagGroupList.list || []
     form.categoryId = String(detail.categoryId || 0)
     form.name = detail.name || ''
     form.subTitle = detail.subTitle || ''
     form.description = detail.description || ''
     form.anonymous = Boolean(detail.anonymous)
     releaseFields.value = normalizeStoredReleaseFields(detail.releaseFields)
+    selectedTagIds.value = (detail.tags || []).map(tag => tag.id)
     metadataBinding.value = normalizeMetadataBinding(detail.metadata?.binding)
-    if (categoryNeedsTagGroups(selectedCategory.value)) {
-      await loadTagGroups()
-    }
 
     if (!canEditTorrent.value) {
       errorMessage.value = t('catalog.torrents.edit.forbidden')
@@ -313,6 +318,7 @@ async function handleSubmit() {
       description: form.description.trim(),
       releaseFields: releaseState.value.output,
       metadata: metadataBinding.value,
+      tagIds: selectedTagIds.value,
       anonymous: form.anonymous
     })
     toast.add({
@@ -351,10 +357,6 @@ async function loadTagGroups() {
   } finally {
     tagGroupsPending.value = false
   }
-}
-
-function categoryNeedsTagGroups(category: CatalogCategory | null) {
-  return Boolean(category?.uploadConfig?.fields?.some((field) => field.options?.source === 'tagGroup'))
 }
 
 function submitTitleValue() {
@@ -409,7 +411,8 @@ function editSnapshot() {
     description: form.description.trim(),
     anonymous: form.anonymous,
     releaseFields: releaseState.value.output,
-    metadata: metadataBinding.value
+    metadata: metadataBinding.value,
+    tagIds: selectedTagIds.value
   })
 }
 

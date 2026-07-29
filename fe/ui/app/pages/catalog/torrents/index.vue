@@ -48,6 +48,7 @@
             <CatalogTorrentRssPopover
               :keyword="appliedKeyword"
               :category-ids="selectedCategoryIds"
+              :tag-ids="appliedAdvancedFilters.tagIds"
               :promotion="appliedAdvancedFilters.promotion"
               :seed-status="appliedAdvancedFilters.seedStatus"
               :featured-only="appliedAdvancedFilters.featuredOnly"
@@ -120,6 +121,8 @@
         <div v-if="advancedOpen" class="mt-3 border-t border-slate-200 pt-3 dark:border-slate-800">
           <CatalogTorrentAdvancedFilters
             :value="appliedAdvancedFilters"
+            :tag-groups="tagGroups"
+            :category-ids="selectedCategoryIds"
             :pending="pending"
             @apply="applyAdvancedFilters"
           />
@@ -202,6 +205,16 @@
                   <p v-if="torrent.subTitle" class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
                     {{ torrent.subTitle }}
                   </p>
+                  <div v-if="torrent.tags?.length" class="mt-1 flex min-w-0 flex-wrap gap-1">
+                    <span
+                      v-for="tag in torrent.tags.slice(0, 3)"
+                      :key="tag.id"
+                      class="inline-flex h-5 max-w-28 items-center truncate rounded border border-slate-200 bg-slate-50 px-1.5 text-[10px] font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400"
+                    >
+                      {{ tagName(tag) }}
+                    </span>
+                    <span v-if="torrent.tags.length > 3" class="inline-flex h-5 items-center text-[10px] text-slate-400">+{{ torrent.tags.length - 3 }}</span>
+                  </div>
                 </div>
                 <AppPermissionButton
                   :permission="Permission.CatalogTorrentDownload"
@@ -301,7 +314,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, TorrentAdvancedFilters, TorrentListItem } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, CatalogTagGroup, CatalogTagItem, TorrentAdvancedFilters, TorrentListItem } from '~/composables/useCatalogTorrents'
 
 definePageMeta({
   middleware: 'auth'
@@ -316,6 +329,7 @@ const catalogTorrents = useCatalogTorrents()
 const { hasPermission } = useAuth()
 
 const categories = ref<CatalogCategory[]>([])
+const tagGroups = ref<CatalogTagGroup[]>([])
 const torrents = ref<TorrentListItem[]>([])
 const total = ref(0)
 const pending = ref(false)
@@ -346,7 +360,7 @@ const categoryNameMap = computed(() => {
 })
 
 onMounted(async () => {
-  await Promise.all([loadCategories(), loadTorrents()])
+  await Promise.all([loadCategories(), loadTagGroups(), loadTorrents()])
 })
 
 function readFirstQueryValue(key: string) {
@@ -380,7 +394,8 @@ function readAdvancedFilters(): TorrentAdvancedFilters {
     doubanId: readStringQuery('doubanId'),
     bangumiId: readStringQuery('bangumiId'),
     tmdbId: readStringQuery('tmdbId'),
-    tmdbType: ['movie', 'tv'].includes(readStringQuery('tmdbType')) ? readStringQuery('tmdbType') : 'all'
+    tmdbType: ['movie', 'tv'].includes(readStringQuery('tmdbType')) ? readStringQuery('tmdbType') : 'all',
+    tagIds: readIdListQuery('tagIds')
   }
 }
 
@@ -401,7 +416,8 @@ function advancedFilterCount(value: TorrentAdvancedFilters) {
     Boolean(value.imdbId),
     Boolean(value.doubanId),
     Boolean(value.bangumiId),
-    Boolean(value.tmdbId)
+    Boolean(value.tmdbId),
+    value.tagIds.length > 0
   ].filter(Boolean).length
 }
 
@@ -416,7 +432,11 @@ function readPageSizeQuery() {
 }
 
 function readCategoryIdsQuery() {
-  const rawValues = route.query.categoryIds || route.query['categoryIds[]']
+  return readIdListQuery('categoryIds')
+}
+
+function readIdListQuery(key: string) {
+  const rawValues = route.query[key] || route.query[`${key}[]`]
   const values = Array.isArray(rawValues) ? rawValues : [rawValues]
   const ids = values
     .flatMap((value) => String(value || '').split(','))
@@ -435,6 +455,15 @@ async function loadCategories() {
   }
 }
 
+async function loadTagGroups() {
+  try {
+    const data = await catalogTorrents.listTagGroups()
+    tagGroups.value = data.list || []
+  } catch {
+    tagGroups.value = []
+  }
+}
+
 async function loadTorrents() {
   pending.value = true
   errorMessage.value = ''
@@ -446,6 +475,7 @@ async function loadTorrents() {
       size: Number(selectedSize.value),
       keyword: appliedKeyword.value,
       categoryIds: selectedCategoryIds.value,
+      tagIds: appliedAdvancedFilters.tagIds,
       promotion: appliedAdvancedFilters.promotion,
       seedStatus: appliedAdvancedFilters.seedStatus,
       featuredOnly: appliedAdvancedFilters.featuredOnly,
@@ -491,6 +521,7 @@ function toggleCategory(categoryId: number) {
   selectedCategoryIds.value = selectedCategoryIds.value.includes(categoryId)
     ? selectedCategoryIds.value.filter((id) => id !== categoryId)
     : [...selectedCategoryIds.value, categoryId]
+  pruneUnavailableTagFilters()
   page.value = 1
   loadTorrents()
 }
@@ -499,6 +530,14 @@ function clearCategories() {
   selectedCategoryIds.value = []
   page.value = 1
   loadTorrents()
+}
+
+function pruneUnavailableTagFilters() {
+  if (!selectedCategoryIds.value.length || !tagGroups.value.length) return
+  const available = new Set(tagGroups.value
+    .filter(group => !group.categories?.length || group.categories.some(id => selectedCategoryIds.value.includes(id)))
+    .flatMap(group => group.tags.map(tag => tag.id)))
+  appliedAdvancedFilters.tagIds = appliedAdvancedFilters.tagIds.filter(id => available.has(id))
 }
 
 function handlePageSizeChange(nextSize: number) {
@@ -530,7 +569,8 @@ function syncQuery() {
       doubanId: appliedAdvancedFilters.doubanId || undefined,
       bangumiId: appliedAdvancedFilters.bangumiId || undefined,
       tmdbId: appliedAdvancedFilters.tmdbId || undefined,
-      tmdbType: appliedAdvancedFilters.tmdbId && appliedAdvancedFilters.tmdbType !== 'all' ? appliedAdvancedFilters.tmdbType : undefined
+      tmdbType: appliedAdvancedFilters.tmdbId && appliedAdvancedFilters.tmdbType !== 'all' ? appliedAdvancedFilters.tmdbType : undefined,
+      tagIds: appliedAdvancedFilters.tagIds.length ? appliedAdvancedFilters.tagIds.map(String) : undefined
     }
   })
 }
@@ -559,6 +599,10 @@ function categoryDisplayName(category: CatalogCategory) {
 
 function categoryName(categoryId: number) {
   return categoryNameMap.value.get(categoryId) || t('catalog.torrents.unknownCategory')
+}
+
+function tagName(tag: CatalogTagItem) {
+  return localizeI18nName(tag.name, locale.value, tag.value)
 }
 
 function torrentOwnerName(torrent: TorrentListItem) {

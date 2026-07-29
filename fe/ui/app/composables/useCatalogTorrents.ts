@@ -59,6 +59,7 @@ export interface ReleaseFieldsState {
 
 export interface CatalogTagItem {
   id: number
+  groupId: number
   name: I18nName
   value: string
 }
@@ -76,6 +77,7 @@ export interface TorrentListItem {
   name: string
   subTitle: string
   categoryId: number
+  tags: CatalogTagItem[]
   size: number
   fileCount: number
   spState: number
@@ -92,7 +94,7 @@ export interface TorrentListItem {
   createdAt: string
 }
 
-export type TorrentHotItem = Omit<TorrentListItem, 'owner' | 'anonymous'> & {
+export type TorrentHotItem = Omit<TorrentListItem, 'owner' | 'anonymous' | 'tags'> & {
   category?: CatalogCategory | null
 }
 
@@ -191,6 +193,7 @@ export interface TorrentListParams {
   size?: number
   keyword?: string
   categoryIds?: number[]
+  tagIds?: number[]
   promotion?: string
   seedStatus?: string
   featuredOnly?: boolean
@@ -218,6 +221,7 @@ export interface TorrentAdvancedFilters {
   bangumiId: string
   tmdbId: string
   tmdbType: string
+  tagIds: number[]
 }
 
 export interface TorrentUploadInput {
@@ -228,6 +232,7 @@ export interface TorrentUploadInput {
   description?: string
   releaseFields?: Record<string, unknown>
   metadata?: TorrentMetadataBinding
+  tagIds?: number[]
   anonymous?: boolean
 }
 
@@ -238,6 +243,7 @@ export interface TorrentUpdateInput {
   description?: string
   releaseFields?: Record<string, unknown>
   metadata?: TorrentMetadataBinding
+  tagIds?: number[]
   anonymous?: boolean
 }
 
@@ -324,6 +330,7 @@ export function useCatalogTorrents() {
     if (params.size) query.size = params.size
     if (params.keyword?.trim()) query.keyword = params.keyword.trim()
     if (params.categoryIds?.length) query['categoryIds[]'] = params.categoryIds
+    if (params.tagIds?.length) query['tagIds[]'] = params.tagIds
     if (params.promotion && params.promotion !== 'all') query.promotion = params.promotion
     if (params.seedStatus && params.seedStatus !== 'all') query.seedStatus = params.seedStatus
     if (params.featuredOnly) query.featuredOnly = true
@@ -467,6 +474,7 @@ export function useCatalogTorrents() {
       body.append('releaseFields', JSON.stringify(input.releaseFields))
     }
     if (input.metadata) body.append('metadata', JSON.stringify(input.metadata))
+    for (const tagId of input.tagIds || []) body.append('tagIds[]', String(tagId))
 
     return await fetchApi<TorrentUploadOut>('/api/catalog/torrents', {
       method: 'POST',

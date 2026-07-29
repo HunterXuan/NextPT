@@ -33,6 +33,13 @@
                     >
                       {{ badge.label }}
                     </span>
+                    <span
+                      v-for="tag in torrent.tags || []"
+                      :key="`tag-${tag.id}`"
+                      class="inline-flex h-6 max-w-36 items-center truncate rounded border border-sky-200 bg-sky-50 px-2 text-xs font-medium text-sky-700 dark:border-sky-800 dark:bg-sky-950 dark:text-sky-300"
+                    >
+                      {{ tagName(tag) }}
+                    </span>
                   </div>
 
                   <div class="flex shrink-0 flex-wrap items-center gap-2 lg:justify-end">
@@ -774,7 +781,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CommentItem, SubtitleItem, TorrentDetail, TorrentFileItem, TorrentPeerItem } from '~/composables/useCatalogTorrents'
+import type { CatalogCategory, CatalogTagItem, CommentItem, SubtitleItem, TorrentDetail, TorrentFileItem, TorrentPeerItem } from '~/composables/useCatalogTorrents'
 import { renderUserMarkdown } from '~/utils/richText'
 
 interface FileTreeNode {
@@ -991,6 +998,10 @@ function torrentOwnerName(torrent: TorrentDetail) {
 
 function rawTorrentOwnerName(torrent: TorrentDetail) {
   return torrent.owner?.username || (torrent.owner?.id > 0 ? `#${torrent.owner.id}` : '')
+}
+
+function tagName(tag: CatalogTagItem) {
+  return localizeI18nName(tag.name, locale.value, tag.value)
 }
 
 function renderRichText(content: string) {

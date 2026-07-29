@@ -24,6 +24,44 @@ export interface AdminCatalogCategoryInput {
   uploadConfig?: UploadConfig | null
 }
 
+export interface AdminCatalogTag {
+  id: number
+  groupId: number
+  nameI18N: I18nName
+  value: string
+  sortOrder: number
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface AdminCatalogTagGroup {
+  id: number
+  nameI18N: I18nName
+  slug: string
+  categoryIds: number[]
+  sortOrder: number
+  tags: AdminCatalogTag[]
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface AdminCatalogTagGroupListOut {
+  groups: AdminCatalogTagGroup[]
+}
+
+export interface AdminCatalogTagGroupInput {
+  nameI18N: I18nName
+  slug?: string
+  categoryIds: number[]
+  sortOrder: number
+}
+
+export interface AdminCatalogTagInput {
+  nameI18N: I18nName
+  value?: string
+  sortOrder: number
+}
+
 export interface AdminCatalogTorrentPinInput {
   pinWeight: number
 }
@@ -553,6 +591,34 @@ export function useAdmin() {
     })
   }
 
+  async function listCatalogTagGroups() {
+    return await fetchApi<AdminCatalogTagGroupListOut>('/api/admin/catalog/tag-groups')
+  }
+
+  async function createCatalogTagGroup(input: AdminCatalogTagGroupInput) {
+    await fetchApi('/api/admin/catalog/tag-groups', { method: 'POST', body: input })
+  }
+
+  async function updateCatalogTagGroup(id: number, input: AdminCatalogTagGroupInput) {
+    await fetchApi(`/api/admin/catalog/tag-groups/${id}`, { method: 'PATCH', body: input })
+  }
+
+  async function deleteCatalogTagGroup(id: number) {
+    await fetchApi(`/api/admin/catalog/tag-groups/${id}`, { method: 'DELETE' })
+  }
+
+  async function createCatalogTag(groupId: number, input: AdminCatalogTagInput) {
+    await fetchApi(`/api/admin/catalog/tag-groups/${groupId}/tags`, { method: 'POST', body: input })
+  }
+
+  async function updateCatalogTag(id: number, input: AdminCatalogTagInput) {
+    await fetchApi(`/api/admin/catalog/tags/${id}`, { method: 'PATCH', body: input })
+  }
+
+  async function deleteCatalogTag(id: number) {
+    await fetchApi(`/api/admin/catalog/tags/${id}`, { method: 'DELETE' })
+  }
+
   async function listForumCategories() {
     return await fetchApi<AdminForumCategoryListOut>('/api/admin/forum/categories')
   }
@@ -907,6 +973,13 @@ export function useAdmin() {
     createCatalogCategory,
     updateCatalogCategory,
     deleteCatalogCategory,
+    listCatalogTagGroups,
+    createCatalogTagGroup,
+    updateCatalogTagGroup,
+    deleteCatalogTagGroup,
+    createCatalogTag,
+    updateCatalogTag,
+    deleteCatalogTag,
     listForumCategories,
     createForumCategory,
     updateForumCategory,

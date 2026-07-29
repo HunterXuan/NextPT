@@ -17,8 +17,8 @@
 ### 1. TorrentPublishUsecase (种子发布与管理)
 * **发布种子 (CreateTorrent)**
   * **Method/Path**: `POST /torrents`
-  * **参数概述**: `file` (Torrent 文件), `name`, `sub_title`, `category_id`, `description`, `anonymous`
-  * **核心逻辑**: Bencode 解析 -> S3 存储 -> 写表。
+  * **参数概述**: `file` (Torrent 文件), `name`, `subTitle`, `categoryId`, `description`, `releaseFields`, `metadata`, `tagIds`, `anonymous`
+  * **核心逻辑**: Bencode 解析 -> 校验分类发布字段和标签 -> 在事务内写种子、文件、元数据绑定和标签关系 -> 事务外写对象存储。
 * **局部更新种子信息 (UpdateTorrent)**
   * **Method/Path**: `PATCH /torrents/{id}`
 * **删除种子 (DeleteTorrent)**
@@ -27,13 +27,14 @@
 ### 2. TorrentQueryUsecase (种子查阅)
 * **获取种子列表 (ListTorrents)**
   * **Method/Path**: `GET /torrents`
-  * **参数概述**: `page`, `size`, `keyword`, `categoryIds`, `promotion`, `seedStatus`, `featuredOnly`, `minSize`, `maxSize`, `publishedWithin`, `sort`, `imdbId`, `doubanId`, `bangumiId`, `tmdbId`, `tmdbType`
+  * **参数概述**: `page`, `size`, `keyword`, `categoryIds`, `tagIds`, `promotion`, `seedStatus`, `featuredOnly`, `minSize`, `maxSize`, `publishedWithin`, `sort`, `imdbId`, `doubanId`, `bangumiId`, `tmdbId`, `tmdbType`
   * **筛选说明**:
     * `promotion` 支持全部、有优惠、无优惠和具体优惠类型；按全站优惠覆盖后的实际生效状态查询。
     * `seedStatus` 支持有做种和无做种，使用种子表中的 Tracker 缓存统计字段。
     * `publishedWithin` 表示最近发布天数；`minSize` / `maxSize` 使用字节。
     * `sort` 支持发布时间、做种数、下载数、完成数和体积排序；普通列表始终优先展示置顶种子。
     * 外部资源 ID 使用 `catalog_torrent_meta` 精确匹配；多个 ID 同时传入时按交集查询。`tmdbType` 是 `tmdbId` 的可选附加条件，用于区分电影和剧集。
+    * `tagIds` 先按标签组归类；同组多个标签按 OR，跨组按 AND。列表和详情批量返回已关联标签，不逐条查询。
   * RSS 查询复用同一个筛选对象，保证页面筛选与 BT 客户端订阅条件一致。
 * **获取种子详情 (GetTorrent)**
   * **Method/Path**: `GET /torrents/{id}`
@@ -147,6 +148,14 @@
   * **Method/Path**: `GET /categories`
 * **获取标签组 (ListTagGroups)**
   * **Method/Path**: `GET /tag-groups`
+  * 返回标签组、适用分类和组内标签，供发布表单、筛选器及管理页面复用。
+
+#### 标签关系规则
+
+* 分类发布字段中 `options.source=tagGroup` 的字段会按稳定 `slug/value` 自动生成 `catalog_torrent_tag` 关系。
+* 发布和编辑页同时提供独立标签选择，但隐藏已经由发布字段承载的标签组，避免同一信息出现两套控件。
+* 编辑时，发布字段承载的分组以当前字段值为准；其它标签在仍适用于新分类时保留。
+* 标签组 `slug` 和标签 `value` 创建后不可修改，避免分类发布配置及历史 `releaseFields` 失效。
 
 ### 8. RequestUsecase (求种与续种)
 

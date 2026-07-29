@@ -1160,6 +1160,27 @@
           "uploadTitleCustom": "自訂標題",
           "uploadRuleNoFields": "無欄位"
         }
+      },
+      "tags": {
+        "title": "種子標籤",
+        "list": "標籤組",
+        "empty": "暫無標籤組",
+        "tags": "組內標籤",
+        "noTags": "暫無標籤",
+        "tagCount": "{count} 個標籤",
+        "saved": "標籤組已儲存",
+        "deleted": "標籤組已刪除",
+        "tagSaved": "標籤已儲存",
+        "tagDeleted": "標籤已刪除",
+        "form": {
+          "createGroup": "新增標籤組",
+          "editGroup": "編輯標籤組",
+          "slug": "穩定標識",
+          "value": "穩定值",
+          "sortOrder": "排序",
+          "categories": "適用分類",
+          "allCategories": "未選擇分類時適用於全部分類"
+        }
       }
     },
     "forum": {

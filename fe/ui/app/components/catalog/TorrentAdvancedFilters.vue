@@ -143,6 +143,29 @@
       </div>
     </div>
 
+    <div v-if="visibleTagGroups.length" class="mt-3 border-t border-slate-200 pt-3 dark:border-slate-800">
+      <div class="grid gap-2">
+        <div v-for="group in visibleTagGroups" :key="group.id" class="grid gap-2 sm:grid-cols-[112px_minmax(0,1fr)] sm:items-center">
+          <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ groupName(group) }}</span>
+          <div class="flex min-w-0 flex-wrap gap-1.5">
+            <UButton
+              v-for="tag in group.tags"
+              :key="tag.id"
+              type="button"
+              color="neutral"
+              size="xs"
+              :variant="draft.tagIds.includes(tag.id) ? 'soft' : 'outline'"
+              :class="draft.tagIds.includes(tag.id) ? 'ring-1 ring-sky-300 dark:ring-sky-700' : ''"
+              :disabled="pending"
+              @click="toggleTag(tag.id)"
+            >
+              {{ tagName(tag) }}
+            </UButton>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <p v-if="sizeRangeError" class="mt-2 text-sm text-red-600 dark:text-red-300">
       {{ sizeRangeError }}
     </p>
@@ -176,12 +199,17 @@
 </template>
 
 <script setup lang="ts">
-import type { TorrentAdvancedFilters } from '~/composables/useCatalogTorrents'
+import type { CatalogTagGroup, CatalogTagItem, TorrentAdvancedFilters } from '~/composables/useCatalogTorrents'
+import { localizeI18nName } from '~/utils/format'
 
 const props = withDefaults(defineProps<{
   value: TorrentAdvancedFilters
+  tagGroups?: CatalogTagGroup[]
+  categoryIds?: number[]
   pending?: boolean
 }>(), {
+  tagGroups: () => [],
+  categoryIds: () => [],
   pending: false
 })
 
@@ -189,11 +217,15 @@ const emit = defineEmits<{
   apply: [value: TorrentAdvancedFilters]
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const bytesPerGiB = 1024 ** 3
 const minSizeGiB = ref<string | number>('')
 const maxSizeGiB = ref<string | number>('')
 const draft = reactive<TorrentAdvancedFilters>(defaultFilters())
+const visibleTagGroups = computed(() => props.tagGroups.filter((group) => {
+  if (!props.categoryIds.length || !group.categories?.length) return true
+  return group.categories.some(id => props.categoryIds.includes(id))
+}))
 
 const promotionOptions = computed(() => [
   { value: 'all', label: t('catalog.torrents.filters.options.allPromotions') },
@@ -298,7 +330,8 @@ function defaultFilters(): TorrentAdvancedFilters {
     doubanId: '',
     bangumiId: '',
     tmdbId: '',
-    tmdbType: 'all'
+    tmdbType: 'all',
+    tagIds: []
   }
 }
 
@@ -314,8 +347,23 @@ function filterCount(value: TorrentAdvancedFilters) {
     Boolean(value.imdbId),
     Boolean(value.doubanId),
     Boolean(value.bangumiId),
-    Boolean(value.tmdbId)
+    Boolean(value.tmdbId),
+    value.tagIds.length > 0
   ].filter(Boolean).length
+}
+
+function toggleTag(tagId: number) {
+  draft.tagIds = draft.tagIds.includes(tagId)
+    ? draft.tagIds.filter(id => id !== tagId)
+    : [...draft.tagIds, tagId]
+}
+
+function groupName(group: CatalogTagGroup) {
+  return localizeI18nName(group.name, locale.value, group.slug)
+}
+
+function tagName(tag: CatalogTagItem) {
+  return localizeI18nName(tag.name, locale.value, tag.value)
 }
 
 function bytesToGiB(bytes: number) {

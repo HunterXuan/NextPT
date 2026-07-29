@@ -46,9 +46,14 @@
 * **撤销处罚记录 (RemoveMod)**
   * **Method/Path**: `POST /mod/users/{id}:removeMod`
 
-### 4. AdminCatalogTorrentUsecase (资源管理后台)
+### 4. AdminCatalogTorrentUsecase 和 AdminCatalogTagUsecase (资源管理后台)
 * **强制删除种子 (DeleteTorrent)**
   * **Method/Path**: `DELETE /catalog/torrents/{id}`
+* **管理标签组 (TagGroups)**
+  * **Method/Path**: `GET /catalog/tag-groups`, `POST /catalog/tag-groups`, `PATCH /catalog/tag-groups/{id}`, `DELETE /catalog/tag-groups/{id}`
+* **管理标签 (Tags)**
+  * **Method/Path**: `POST /catalog/tag-groups/{id}/tags`, `PATCH /catalog/tags/{id}`, `DELETE /catalog/tags/{id}`
+  * 标签组仍有标签、或标签仍被种子使用时拒绝删除；所有操作使用 `admin:catalog/tag:*` 并写入审计日志。
 
 ### 5. AdminSysCronUsecase (系统基建后台)
 * **查阅系统审计日志 (ListSiteAudits)**

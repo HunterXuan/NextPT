@@ -37,7 +37,8 @@
 * **BT 客户端 RSS (Rss)**
   * **Method/Path**: `GET /rss`
   * 使用用户 passkey 和 `download:catalog/torrent:*` 权限，只经过 Tracker 客户端鉴权链路。
-  * 支持 `keyword`、`categoryIds`、`promotionOnly` 和 `size`，筛选与种子可见范围复用 Catalog 逻辑。
+  * 支持页面高级筛选中的 `keyword`、`categoryIds`、`tagIds`、优惠、做种状态、体积、发布时间和外部资源 ID 等条件，筛选与种子可见范围复用 Catalog 逻辑。
+  * 标签筛选保持同组 OR、跨组 AND，与 Web 列表一致。
   * RSS enclosure 指向 `GET /download`，不经过 Catalog Web 下载接口。
 * **客户端白名单校验 (CheckClientWhitelist)**
   * 全量白名单内存缓存（1 小时过期），预编译正则。匹配规则：PeerID 前缀 + User-Agent 正则。由中间件统一调用。

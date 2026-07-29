@@ -100,6 +100,13 @@
                 @state-change="releaseState = $event"
               />
 
+              <CatalogTorrentTagSelector
+                v-model="selectedTagIds"
+                :category="selectedCategory"
+                :groups="tagGroups"
+                :disabled="pending || tagGroupsPending"
+              />
+
               <UFormField v-if="showManualTitleInput" :label="manualTitleLabel">
                 <UInput v-model="form.name" class="w-full" :disabled="pending" @update:model-value="titleManuallyEdited = true" />
               </UFormField>
@@ -218,6 +225,7 @@ const form = reactive({
   anonymous: false
 })
 const releaseFields = ref<Record<string, ReleaseFieldValue>>({})
+const selectedTagIds = ref<number[]>([])
 const metadataBinding = ref<TorrentMetadataBinding>({
   imdbId: '',
   doubanId: '',
@@ -312,9 +320,6 @@ const publishChecks = computed(() => [
 onMounted(loadCategories)
 
 watch(selectedCategory, (category) => {
-  if (categoryNeedsTagGroups(category)) {
-    void loadTagGroups()
-  }
   if (isGeneratedTitleMode.value && !titleManuallyEdited.value) {
     form.name = ''
   }
@@ -338,9 +343,7 @@ async function loadCategories() {
     if (Number(form.categoryId) > 0 && !categories.value.some((item) => item.id === Number(form.categoryId))) {
       form.categoryId = '0'
     }
-    if (categories.value.some(categoryNeedsTagGroups)) {
-      await loadTagGroups()
-    }
+    await loadTagGroups()
   } catch (error) {
     categories.value = []
     categoriesError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
@@ -424,6 +427,7 @@ async function handleSubmit() {
       description: form.description,
       releaseFields: releaseState.value.output,
       metadata: metadataBinding.value,
+      tagIds: selectedTagIds.value,
       anonymous: form.anonymous
     })
 
@@ -446,10 +450,6 @@ async function handleSubmit() {
 
 function categoryDisplayName(category: CatalogCategory) {
   return localizeI18nName(category.name, locale.value, category.slug || `#${category.id}`)
-}
-
-function categoryNeedsTagGroups(category: CatalogCategory | null) {
-  return Boolean(category?.uploadConfig?.fields?.some((field) => field.options?.source === 'tagGroup'))
 }
 
 function submitTitleValue() {

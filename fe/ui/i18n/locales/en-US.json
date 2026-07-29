@@ -1160,6 +1160,27 @@
           "uploadTitleCustom": "Custom title",
           "uploadRuleNoFields": "No fields"
         }
+      },
+      "tags": {
+        "title": "Torrent Tags",
+        "list": "Tag Groups",
+        "empty": "No tag groups",
+        "tags": "Tags",
+        "noTags": "No tags",
+        "tagCount": "{count} tags",
+        "saved": "Tag group saved",
+        "deleted": "Tag group deleted",
+        "tagSaved": "Tag saved",
+        "tagDeleted": "Tag deleted",
+        "form": {
+          "createGroup": "New Tag Group",
+          "editGroup": "Edit Tag Group",
+          "slug": "Stable Slug",
+          "value": "Stable Value",
+          "sortOrder": "Sort Order",
+          "categories": "Categories",
+          "allCategories": "Applies to all categories when none are selected"
+        }
       }
     },
     "forum": {

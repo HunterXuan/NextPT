@@ -1160,6 +1160,27 @@
           "uploadTitleCustom": "自定义标题",
           "uploadRuleNoFields": "无字段"
         }
+      },
+      "tags": {
+        "title": "种子标签",
+        "list": "标签组",
+        "empty": "暂无标签组",
+        "tags": "组内标签",
+        "noTags": "暂无标签",
+        "tagCount": "{count} 个标签",
+        "saved": "标签组已保存",
+        "deleted": "标签组已删除",
+        "tagSaved": "标签已保存",
+        "tagDeleted": "标签已删除",
+        "form": {
+          "createGroup": "新建标签组",
+          "editGroup": "编辑标签组",
+          "slug": "稳定标识",
+          "value": "稳定值",
+          "sortOrder": "排序",
+          "categories": "适用分类",
+          "allCategories": "未选择分类时适用于全部分类"
+        }
       }
     },
     "forum": {

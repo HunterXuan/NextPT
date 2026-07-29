@@ -82,6 +82,7 @@
 const props = withDefaults(defineProps<{
   keyword?: string
   categoryIds?: number[]
+  tagIds?: number[]
   promotion?: string
   seedStatus?: string
   featuredOnly?: boolean
@@ -96,6 +97,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   keyword: '',
   categoryIds: () => [],
+  tagIds: () => [],
   promotion: 'all',
   seedStatus: 'all',
   featuredOnly: false,
@@ -142,6 +144,7 @@ const rssUrl = computed(() => {
   for (const categoryId of props.categoryIds) {
     url.searchParams.append('categoryIds[]', String(categoryId))
   }
+  for (const tagId of props.tagIds) url.searchParams.append('tagIds[]', String(tagId))
   if (props.promotion !== 'all') {
     url.searchParams.set('promotion', props.promotion)
   } else if (promotionOnly.value) {
