@@ -40,6 +40,7 @@ const (
 
 	// Catalog Management
 	IamPermissionAdminCatalogCategoryManage = "admin:catalog/category:*"
+	IamPermissionAdminCatalogTagManage      = "admin:catalog/tag:*"
 	IamPermissionAdminCatalogTorrentManage  = "admin:catalog/torrent:*"
 	IamPermissionAdminCatalogSubtitleManage = "admin:catalog/subtitle:*"
 	IamPermissionAdminCatalogCommentManage  = "admin:catalog/comment:*"
@@ -105,6 +106,7 @@ var (
 		IamPermissionAdminForumReplyManage,
 
 		IamPermissionAdminCatalogCategoryManage,
+		IamPermissionAdminCatalogTagManage,
 		IamPermissionAdminCatalogTorrentManage,
 		IamPermissionAdminCatalogSubtitleManage,
 		IamPermissionAdminCatalogCommentManage,

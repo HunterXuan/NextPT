@@ -34,6 +34,7 @@ func TestCatalogTorrentListOptionsNormalized(t *testing.T) {
 	got := (CatalogTorrentListOptions{
 		Keyword:             "  test  ",
 		CategoryIds:         []uint{3, 0, 3, 2},
+		TagGroups:           [][]uint{{5, 0, 5, 6}, {}, {9}},
 		Promotion:           "missing",
 		SeedStatus:          "missing",
 		PublishedWithinDays: -1,
@@ -47,6 +48,9 @@ func TestCatalogTorrentListOptionsNormalized(t *testing.T) {
 	}
 	if len(got.CategoryIds) != 2 || got.CategoryIds[0] != 3 || got.CategoryIds[1] != 2 {
 		t.Fatalf("category ids = %v, want [3 2]", got.CategoryIds)
+	}
+	if len(got.TagGroups) != 2 || len(got.TagGroups[0]) != 2 || got.TagGroups[0][0] != 5 || got.TagGroups[0][1] != 6 || len(got.TagGroups[1]) != 1 || got.TagGroups[1][0] != 9 {
+		t.Fatalf("tag groups = %v, want [[5 6] [9]]", got.TagGroups)
 	}
 	if got.Promotion != consts.CatalogTorrentPromotionFilterAll {
 		t.Fatalf("promotion = %q, want all", got.Promotion)

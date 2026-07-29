@@ -9,7 +9,7 @@ import (
 )
 
 func (c *ControllerV1) TagGroupList(ctx context.Context, req *v1.TagGroupListReq) (res *v1.TagGroupListRes, err error) {
-	out, err := service.CatalogCategoryUsecase().ListTagGroups(ctx, contexts.GetActor(ctx), req.TagGroupListInp)
+	out, err := service.CatalogTagUsecase().ListTagGroups(ctx, contexts.GetActor(ctx), req.TagGroupListInp)
 	if err != nil {
 		return nil, err
 	}

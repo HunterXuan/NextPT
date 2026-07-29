@@ -17,6 +17,7 @@ type TorrentListItem struct {
 	Name       string               `json:"name" description:"标题"`
 	SubTitle   string               `json:"subTitle" description:"副标题"`
 	CategoryId uint                 `json:"categoryId" description:"分类ID"`
+	Tags       []TagItem            `json:"tags" description:"标签"`
 	Size       uint64               `json:"size" description:"总大小(字节)"`
 	FileCount  uint                 `json:"fileCount" description:"文件数量"`
 	SpState    int                  `json:"spState" description:"促销状态"`

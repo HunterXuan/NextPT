@@ -3,6 +3,10 @@ admin.config.key_req: Configuration key is required
 admin.config.value_req: Configuration value is required
 
 admin.catalog.category_has_torrents: "cannot delete category: it still contains torrents"
+admin.catalog.tag_group_has_tags: "cannot delete tag group: remove its tags first"
+admin.catalog.tag_group_not_found: Tag group not found
+admin.catalog.tag_in_use: "cannot delete tag: it is still used by torrents"
+admin.catalog.tag_not_found: Tag not found
 
 admin.forum.category_has_nodes: "cannot delete category: it still contains nodes"
 admin.forum.new_node_not_found: new node not found

@@ -14,9 +14,10 @@ type CategoryListOut struct {
 }
 
 type TagItem struct {
-	Id    uint           `json:"id"`
-	Name  map[string]any `json:"name"`
-	Value string         `json:"value"`
+	Id      uint           `json:"id"`
+	GroupId uint           `json:"groupId"`
+	Name    map[string]any `json:"name"`
+	Value   string         `json:"value"`
 }
 
 type TagGroupItem struct {

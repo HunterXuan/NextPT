@@ -21,6 +21,9 @@ catalog.reward.amount_req: 请输入赞赏金额
 catalog.reward.insufficient_balance: 魔力值余额不足
 catalog.reward.self_denied: 不能赞赏自己的种子
 
+catalog.tag.category_invalid: 標籤不適用於目前分類
+catalog.tag.invalid: 標籤不存在或已失效
+
 catalog.request.abandon_denied: 只有目前認領人可以放棄認領
 catalog.request.cancel_denied: 目前請求不能取消
 catalog.request.cancel_reason_invalid: 取消原因不能超過 500 個字元

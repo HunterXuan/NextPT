@@ -25,6 +25,15 @@ type (
 		Complete(ctx context.Context, actor *model.Actor, in catalogin.RequestCompleteInp) error
 		Cancel(ctx context.Context, actor *model.Actor, in catalogin.RequestCancelInp) error
 	}
+	IAdminCatalogTagUsecase interface {
+		List(ctx context.Context, actor *model.Actor, in adminin.CatalogTagGroupListInp) (*adminout.CatalogTagGroupListOut, error)
+		CreateGroup(ctx context.Context, actor *model.Actor, in adminin.CatalogTagGroupCreateInp) error
+		UpdateGroup(ctx context.Context, actor *model.Actor, in adminin.CatalogTagGroupUpdateInp) error
+		DeleteGroup(ctx context.Context, actor *model.Actor, in adminin.CatalogTagGroupDeleteInp) error
+		CreateTag(ctx context.Context, actor *model.Actor, in adminin.CatalogTagCreateInp) error
+		UpdateTag(ctx context.Context, actor *model.Actor, in adminin.CatalogTagUpdateInp) error
+		DeleteTag(ctx context.Context, actor *model.Actor, in adminin.CatalogTagDeleteInp) error
+	}
 	IAdminCatalogTorrentUsecase interface {
 		Pin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentPinInp) error
 		Unpin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentUnpinInp) error
@@ -110,6 +119,7 @@ type (
 var (
 	localAdminCatalogCategoryUsecase IAdminCatalogCategoryUsecase
 	localAdminCatalogRequestUsecase  IAdminCatalogRequestUsecase
+	localAdminCatalogTagUsecase      IAdminCatalogTagUsecase
 	localAdminCatalogTorrentUsecase  IAdminCatalogTorrentUsecase
 	localAdminForumCategoryUsecase   IAdminForumCategoryUsecase
 	localAdminForumNodeUsecase       IAdminForumNodeUsecase
@@ -147,6 +157,17 @@ func AdminCatalogRequestUsecase() IAdminCatalogRequestUsecase {
 
 func RegisterAdminCatalogRequestUsecase(i IAdminCatalogRequestUsecase) {
 	localAdminCatalogRequestUsecase = i
+}
+
+func AdminCatalogTagUsecase() IAdminCatalogTagUsecase {
+	if localAdminCatalogTagUsecase == nil {
+		panic("implement not found for interface IAdminCatalogTagUsecase, forgot register?")
+	}
+	return localAdminCatalogTagUsecase
+}
+
+func RegisterAdminCatalogTagUsecase(i IAdminCatalogTagUsecase) {
+	localAdminCatalogTagUsecase = i
 }
 
 func AdminCatalogTorrentUsecase() IAdminCatalogTorrentUsecase {

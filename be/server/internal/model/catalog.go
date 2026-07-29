@@ -115,6 +115,7 @@ type CatalogTorrentSummary struct {
 type CatalogTorrentListOptions struct {
 	Keyword             string
 	CategoryIds         []uint
+	TagGroups           [][]uint
 	Metadata            CatalogTorrentMetadataFilter
 	Promotion           string
 	SeedStatus          string
@@ -130,6 +131,7 @@ type CatalogTorrentListOptions struct {
 func (o CatalogTorrentListOptions) Normalized() CatalogTorrentListOptions {
 	o.Keyword = strings.TrimSpace(o.Keyword)
 	o.CategoryIds = normalizeCatalogTorrentCategoryIds(o.CategoryIds)
+	o.TagGroups = normalizeCatalogTorrentTagGroups(o.TagGroups)
 	o.Metadata = o.Metadata.Normalized()
 	if o.Page <= 0 {
 		o.Page = 1
@@ -174,6 +176,32 @@ func (o CatalogTorrentListOptions) Normalized() CatalogTorrentListOptions {
 		o.Sort = consts.CatalogTorrentSortNewest
 	}
 	return o
+}
+
+func normalizeCatalogTorrentTagGroups(groups [][]uint) [][]uint {
+	if len(groups) == 0 {
+		return nil
+	}
+
+	normalized := make([][]uint, 0, len(groups))
+	for _, group := range groups {
+		seen := make(map[uint]struct{}, len(group))
+		ids := make([]uint, 0, len(group))
+		for _, id := range group {
+			if id == 0 {
+				continue
+			}
+			if _, ok := seen[id]; ok {
+				continue
+			}
+			seen[id] = struct{}{}
+			ids = append(ids, id)
+		}
+		if len(ids) > 0 {
+			normalized = append(normalized, ids)
+		}
+	}
+	return normalized
 }
 
 func (o CatalogTorrentListOptions) HasInvalidSizeRange() bool {

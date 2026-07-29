@@ -10,6 +10,7 @@ type TorrentUploadInp struct {
 	Description   string            `json:"description" description:"种子详情描述"`
 	ReleaseFields string            `json:"releaseFields" description:"发布结构化字段 JSON"`
 	Metadata      string            `json:"metadata" description:"外部资源元数据绑定 JSON"`
+	TagIds        []uint            `json:"tagIds" description:"标签 ID 列表"`
 	Anonymous     bool              `json:"anonymous" description:"是否匿名上传"`
 }
 
@@ -27,6 +28,7 @@ type TorrentListInp struct {
 	Size            int    `json:"size" d:"50" v:"min:1|max:100" description:"每页数量"`
 	Keyword         string `json:"keyword" v:"max-length:100" description:"标题关键词"`
 	CategoryIds     []uint `json:"categoryIds" description:"分类ID列表(可选)"`
+	TagIds          []uint `json:"tagIds" description:"标签ID列表(同组或、跨组且)"`
 	Promotion       string `json:"promotion" d:"all" v:"in:all,promoted,normal,free,2x,2x_free,50_percent,2x_50_percent,30_percent" description:"优惠状态"`
 	SeedStatus      string `json:"seedStatus" d:"all" v:"in:all,seeded,unseeded" description:"做种状态"`
 	FeaturedOnly    bool   `json:"featuredOnly" description:"仅推荐种子"`
@@ -41,6 +43,7 @@ type TorrentRssInp struct {
 	Size            int    `json:"size" d:"50" v:"min:1|max:100" description:"返回数量"`
 	Keyword         string `json:"keyword" v:"max-length:100" description:"标题关键词"`
 	CategoryIds     []uint `json:"categoryIds" description:"分类ID列表(可选)"`
+	TagIds          []uint `json:"tagIds" description:"标签ID列表(同组或、跨组且)"`
 	Promotion       string `json:"promotion" d:"all" v:"in:all,promoted,normal,free,2x,2x_free,50_percent,2x_50_percent,30_percent" description:"优惠状态"`
 	PromotionOnly   bool   `json:"promotionOnly" description:"仅返回优惠种子"`
 	SeedStatus      string `json:"seedStatus" d:"all" v:"in:all,seeded,unseeded" description:"做种状态"`
@@ -110,6 +113,7 @@ type TorrentUpdateInp struct {
 	Description   string  `json:"description" description:"详情描述"`
 	ReleaseFields string  `json:"releaseFields" description:"发布结构化字段 JSON"`
 	Metadata      *string `json:"metadata" description:"外部资源元数据绑定 JSON"`
+	TagIds        *[]uint `json:"tagIds" description:"标签 ID 列表"`
 	Anonymous     *bool   `json:"anonymous" description:"匿名上传"`
 }
 

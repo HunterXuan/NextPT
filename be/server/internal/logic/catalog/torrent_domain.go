@@ -494,6 +494,7 @@ func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *mo
 	if len(options.CategoryIds) > 0 {
 		m = m.WhereIn(columns.CategoryId, options.CategoryIds)
 	}
+	m = s.applyTorrentTagFilter(m, options.TagGroups)
 	m = s.applyTorrentMetadataFilter(m, options.Metadata)
 
 	if options.Keyword != "" {
@@ -521,6 +522,27 @@ func (s *sCatalogTorrentDomain) buildTorrentQuery(ctx context.Context, actor *mo
 	}
 
 	return s.applyTorrentPromotionFilter(ctx, m, options.Promotion)
+}
+
+func (s *sCatalogTorrentDomain) applyTorrentTagFilter(m *gdb.Model, groups [][]uint) *gdb.Model {
+	torrentTable := dao.CatalogTorrent.Table()
+	torrentColumns := dao.CatalogTorrent.Columns()
+	relationTable := dao.CatalogTorrentTag.Table()
+	relationColumns := dao.CatalogTorrentTag.Columns()
+	for _, tagIds := range groups {
+		if len(tagIds) == 0 {
+			continue
+		}
+		query := fmt.Sprintf(
+			"EXISTS (SELECT 1 FROM %s WHERE %s.%s = %s.%s AND %s.%s IN (?))",
+			relationTable,
+			relationTable, relationColumns.TorrentId,
+			torrentTable, torrentColumns.Id,
+			relationTable, relationColumns.TagId,
+		)
+		m = m.Where(query, tagIds)
+	}
+	return m
 }
 
 func (s *sCatalogTorrentDomain) applyTorrentMetadataFilter(m *gdb.Model, filter model.CatalogTorrentMetadataFilter) *gdb.Model {

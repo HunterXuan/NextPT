@@ -25,11 +25,9 @@ type (
 		AdminUpdateCategory(ctx context.Context, id uint, nameI18N []byte, slug *string, sortOrder *int, enabled *bool, uploadConfig *[]byte) error
 		AdminDeleteCategory(ctx context.Context, id uint) error
 		AdminListCategories(ctx context.Context) ([]entity.CatalogCategory, error)
-		ListTagGroups(ctx context.Context) ([]entity.CatalogTagGroup, []entity.CatalogTag, error)
 	}
 	ICatalogCategoryUsecase interface {
 		ListCategories(ctx context.Context, actor *model.Actor, in catalogin.CategoryListInp) (*catalogout.CategoryListOut, error)
-		ListTagGroups(ctx context.Context, actor *model.Actor, in catalogin.TagGroupListInp) (*catalogout.TagGroupListOut, error)
 	}
 	ICatalogCommentDomain interface {
 		CreateComment(ctx context.Context, targetType string, targetId uint64, userId uint64, content string) (uint64, error)
@@ -114,6 +112,25 @@ type (
 		Update(ctx context.Context, actor *model.Actor, in catalogin.SubtitleUpdateInp) error
 		Report(ctx context.Context, actor *model.Actor, in catalogin.SubtitleReportInp) error
 	}
+	ICatalogTagDomain interface {
+		ListTagGroups(ctx context.Context) ([]entity.CatalogTagGroup, []entity.CatalogTag, error)
+		GetTagsByIds(ctx context.Context, ids []uint) ([]entity.CatalogTag, error)
+		ReplaceTorrentTags(ctx context.Context, torrentId uint64, tagIds []uint) error
+		QueryTorrentTagsByTorrentIds(ctx context.Context, torrentIds []uint64) ([]entity.CatalogTorrentTag, []entity.CatalogTag, error)
+		AdminGetTagGroupById(ctx context.Context, id uint) (*entity.CatalogTagGroup, error)
+		AdminGetTagById(ctx context.Context, id uint) (*entity.CatalogTag, error)
+		AdminCreateTagGroup(ctx context.Context, nameI18N []byte, slug string, categoryIds []byte, sortOrder int) (uint, error)
+		AdminUpdateTagGroup(ctx context.Context, id uint, nameI18N []byte, categoryIds []byte, sortOrder int) error
+		AdminDeleteTagGroup(ctx context.Context, id uint) error
+		AdminCreateTag(ctx context.Context, groupId uint, nameI18N []byte, value string, sortOrder int) (uint, error)
+		AdminUpdateTag(ctx context.Context, id uint, nameI18N []byte, sortOrder int) error
+		AdminDeleteTag(ctx context.Context, id uint) error
+		CountTagsByGroup(ctx context.Context, groupId uint) (int, error)
+		CountTorrentTagsByTag(ctx context.Context, tagId uint) (int, error)
+	}
+	ICatalogTagUsecase interface {
+		ListTagGroups(ctx context.Context, actor *model.Actor, in catalogin.TagGroupListInp) (*catalogout.TagGroupListOut, error)
+	}
 	ICatalogTorrentDomain interface {
 		GetTorrentById(ctx context.Context, id uint64) (*entity.CatalogTorrent, error)
 		GetTorrentByIdForUpdate(ctx context.Context, id uint64) (*entity.CatalogTorrent, error)
@@ -194,6 +211,8 @@ var (
 	localCatalogRequestUsecase  ICatalogRequestUsecase
 	localCatalogSubtitleDomain  ICatalogSubtitleDomain
 	localCatalogSubtitleUsecase ICatalogSubtitleUsecase
+	localCatalogTagDomain       ICatalogTagDomain
+	localCatalogTagUsecase      ICatalogTagUsecase
 	localCatalogTorrentDomain   ICatalogTorrentDomain
 	localCatalogTorrentUsecase  ICatalogTorrentUsecase
 )
@@ -306,6 +325,28 @@ func CatalogSubtitleUsecase() ICatalogSubtitleUsecase {
 
 func RegisterCatalogSubtitleUsecase(i ICatalogSubtitleUsecase) {
 	localCatalogSubtitleUsecase = i
+}
+
+func CatalogTagDomain() ICatalogTagDomain {
+	if localCatalogTagDomain == nil {
+		panic("implement not found for interface ICatalogTagDomain, forgot register?")
+	}
+	return localCatalogTagDomain
+}
+
+func RegisterCatalogTagDomain(i ICatalogTagDomain) {
+	localCatalogTagDomain = i
+}
+
+func CatalogTagUsecase() ICatalogTagUsecase {
+	if localCatalogTagUsecase == nil {
+		panic("implement not found for interface ICatalogTagUsecase, forgot register?")
+	}
+	return localCatalogTagUsecase
+}
+
+func RegisterCatalogTagUsecase(i ICatalogTagUsecase) {
+	localCatalogTagUsecase = i
 }
 
 func CatalogTorrentDomain() ICatalogTorrentDomain {

@@ -21,6 +21,9 @@ catalog.reward.amount_req: Reward amount is required
 catalog.reward.insufficient_balance: Insufficient bonus balance
 catalog.reward.self_denied: You cannot reward your own torrent
 
+catalog.tag.category_invalid: The tag is not available for this category
+catalog.tag.invalid: The tag does not exist or is no longer available
+
 catalog.request.abandon_denied: Only the current claimant can abandon this request
 catalog.request.cancel_denied: This request cannot be cancelled
 catalog.request.cancel_reason_invalid: Cancellation reason cannot exceed 500 characters

@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"server/internal/consts"
+	"server/internal/library/releasefield"
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/catalogin"
@@ -65,6 +66,11 @@ func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, i
 		Page:                in.Page,
 		Size:                in.Size,
 	}.Normalized()
+	tagGroups, err := s.resolveTorrentTagGroups(ctx, in.TagIds)
+	if err != nil {
+		return nil, err
+	}
+	options.TagGroups = tagGroups
 	if options.HasInvalidSizeRange() {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.size_range_invalid"))
 	}
@@ -122,6 +128,11 @@ func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor
 		Page:                1,
 		Size:                size,
 	}.Normalized()
+	tagGroups, err := s.resolveTorrentTagGroups(ctx, in.TagIds)
+	if err != nil {
+		return nil, err
+	}
+	options.TagGroups = tagGroups
 	if options.HasInvalidSizeRange() {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.torrent.size_range_invalid"))
 	}
@@ -340,7 +351,11 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 	}
 
 	totalSize, fileCount := s.extractTorrentMetadata(info)
-	releaseData, err := s.prepareUploadReleaseData(ctx, category, info.Name, in)
+	releaseData, tagIds, err := s.resolveTorrentRelease(ctx, category, releasefield.Input{
+		ManualName:    in.Name,
+		FallbackName:  info.Name,
+		ReleaseFields: in.ReleaseFields,
+	}, in.TagIds)
 	if err != nil {
 		return nil, err
 	}
@@ -361,7 +376,7 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 			return err
 		}
 		torrentId = tid
-		return nil
+		return service.CatalogTagDomain().ReplaceTorrentTags(ctx, torrentId, tagIds)
 	})
 
 	if err != nil {
@@ -555,11 +570,7 @@ func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (ui
 	return totalSize, fileCount
 }
 
-func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData *uploadReleaseData, totalSize uint64, fileCount uint, info *metainfo.Info, metadataBinding *model.CatalogTorrentMetadataBinding) (uint64, error) {
-	if releaseData == nil {
-		releaseData = &uploadReleaseData{Name: s.resolveUploadName(strings.TrimSpace(in.Name), info.Name)}
-	}
-
+func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData releasefield.Result, totalSize uint64, fileCount uint, info *metainfo.Info, metadataBinding *model.CatalogTorrentMetadataBinding) (uint64, error) {
 	torrentInsert := &entity.CatalogTorrent{
 		InfoHash:    infoHashBytes,
 		Name:        releaseData.Name,
@@ -578,7 +589,7 @@ func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *mod
 		torrentInsert.SpState = promotion.SpState
 		torrentInsert.SpExpireAt = promotion.SpExpireAt
 	}
-	if releaseData != nil && len(releaseData.Fields) > 0 {
+	if len(releaseData.Fields) > 0 {
 		torrentInsert.ReleaseFields = gjson.New(releaseData.Fields)
 	}
 
@@ -742,13 +753,16 @@ func (s *sCatalogTorrentUsecase) ListBookmarkedTorrents(ctx context.Context, act
 
 func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, actor *model.Actor, entities []entity.CatalogTorrent) []catalogout.TorrentListItem {
 	var ownerIds []uint64
+	torrentIds := make([]uint64, 0, len(entities))
 	for _, e := range entities {
+		torrentIds = append(torrentIds, e.Id)
 		if !s.shouldHideTorrentOwner(actor, e) && e.OwnerId > 0 {
 			ownerIds = append(ownerIds, e.OwnerId)
 		}
 	}
 
 	ownerMap := s.loadUserSummaryMap(ctx, ownerIds)
+	tagMap := s.torrentTagItemMap(ctx, torrentIds)
 	var list []catalogout.TorrentListItem
 	for _, e := range entities {
 		owner := ownerMap[e.OwnerId]
@@ -761,6 +775,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			Name:       e.Name,
 			SubTitle:   e.SubTitle,
 			CategoryId: e.CategoryId,
+			Tags:       tagMap[e.Id],
 			Size:       e.Size,
 			FileCount:  e.FileCount,
 			SpState:    promotion.SpState,
@@ -991,7 +1006,21 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 		return nil, gerror.New(gi18n.T(ctx, "catalog.category.invalid"))
 	}
 
-	releaseData, err := s.prepareUpdateReleaseData(ctx, category, torrent, in)
+	selectedTagIds := []uint(nil)
+	if in.TagIds != nil {
+		selectedTagIds = *in.TagIds
+	} else {
+		selectedTagIds, err = s.currentTorrentTagIds(ctx, in.Id)
+		if err != nil {
+			return nil, err
+		}
+	}
+	releaseData, tagIds, err := s.resolveTorrentRelease(ctx, category, releasefield.Input{
+		ManualName:    in.Name,
+		FallbackName:  torrent.Name,
+		ReleaseFields: in.ReleaseFields,
+		StoredFields:  torrent.ReleaseFields,
+	}, selectedTagIds)
 	if err != nil {
 		return nil, err
 	}
@@ -1006,7 +1035,7 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 		Description: description,
 		Anonymous:   in.Anonymous,
 	}
-	if releaseData != nil && len(releaseData.Fields) > 0 {
+	if len(releaseData.Fields) > 0 {
 		updateData.ReleaseFields = gjson.New(releaseData.Fields)
 	}
 
@@ -1022,9 +1051,11 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 			return err
 		}
 		if metadataBinding != nil {
-			return service.CatalogMetadataDomain().UpsertTorrentBinding(ctx, in.Id, *metadataBinding)
+			if err := service.CatalogMetadataDomain().UpsertTorrentBinding(ctx, in.Id, *metadataBinding); err != nil {
+				return err
+			}
 		}
-		return nil
+		return service.CatalogTagDomain().ReplaceTorrentTags(ctx, in.Id, tagIds)
 	})
 	if err != nil {
 		return nil, err
@@ -1141,4 +1172,127 @@ func (s *sCatalogTorrentUsecase) getCatalogConfigCache(ctx context.Context, key 
 		return service.SiteConfigDomain().GetByPath(ctx, key)
 	}
 	return gvar.New(val.Val())
+}
+
+func (s *sCatalogTorrentUsecase) resolveTorrentRelease(
+	ctx context.Context,
+	category *entity.CatalogCategory,
+	in releasefield.Input,
+	selectedTagIds []uint,
+) (releasefield.Result, []uint, error) {
+	resolver, err := releasefield.NewResolver(ctx, category.UploadConfig)
+	if err != nil {
+		return releasefield.Result{}, nil, err
+	}
+
+	if resolver.UsesTagGroups() || len(selectedTagIds) > 0 {
+		groups, tags, err := service.CatalogTagDomain().ListTagGroups(ctx)
+		if err != nil {
+			return releasefield.Result{}, nil, err
+		}
+
+		releaseGroups := make([]releasefield.TagGroup, 0, len(groups))
+		for _, group := range groups {
+			releaseGroups = append(releaseGroups, releasefield.TagGroup{
+				Id:          group.Id,
+				Slug:        group.Slug,
+				CategoryIds: group.CategoryIds,
+			})
+		}
+		releaseTags := make([]releasefield.Tag, 0, len(tags))
+		for _, tag := range tags {
+			releaseTags = append(releaseTags, releasefield.Tag{
+				Id:      tag.Id,
+				GroupId: tag.GroupId,
+				Value:   tag.Value,
+			})
+		}
+		resolver.SetTagCatalog(category.Id, releaseGroups, releaseTags)
+	}
+
+	result, err := resolver.Resolve(ctx, in)
+	if err != nil {
+		return releasefield.Result{}, nil, err
+	}
+	tagIds, err := resolver.ResolveTagIds(ctx, selectedTagIds, result)
+	if err != nil {
+		return releasefield.Result{}, nil, err
+	}
+	return result, tagIds, nil
+}
+
+func (s *sCatalogTorrentUsecase) resolveTorrentTagGroups(ctx context.Context, tagIds []uint) ([][]uint, error) {
+	ids := s.normalizeTorrentTagIds(tagIds)
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	tags, err := service.CatalogTagDomain().GetTagsByIds(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+	if len(tags) != len(ids) {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.tag.invalid"))
+	}
+
+	groupOrder := make([]uint, 0)
+	groupIds := make(map[uint][]uint)
+	for _, tag := range tags {
+		if _, ok := groupIds[tag.GroupId]; !ok {
+			groupOrder = append(groupOrder, tag.GroupId)
+		}
+		groupIds[tag.GroupId] = append(groupIds[tag.GroupId], tag.Id)
+	}
+	groups := make([][]uint, 0, len(groupOrder))
+	for _, groupId := range groupOrder {
+		groups = append(groups, groupIds[groupId])
+	}
+	return groups, nil
+}
+
+func (s *sCatalogTorrentUsecase) currentTorrentTagIds(ctx context.Context, torrentId uint64) ([]uint, error) {
+	relations, _, err := service.CatalogTagDomain().QueryTorrentTagsByTorrentIds(ctx, []uint64{torrentId})
+	if err != nil {
+		return nil, err
+	}
+	ids := make([]uint, 0, len(relations))
+	for _, relation := range relations {
+		ids = append(ids, relation.TagId)
+	}
+	return ids, nil
+}
+
+func (s *sCatalogTorrentUsecase) normalizeTorrentTagIds(ids []uint) []uint {
+	seen := make(map[uint]struct{}, len(ids))
+	result := make([]uint, 0, len(ids))
+	for _, id := range ids {
+		if id == 0 {
+			continue
+		}
+		if _, ok := seen[id]; ok {
+			continue
+		}
+		seen[id] = struct{}{}
+		result = append(result, id)
+	}
+	return result
+}
+
+func (s *sCatalogTorrentUsecase) torrentTagItemMap(ctx context.Context, torrentIds []uint64) map[uint64][]catalogout.TagItem {
+	result := make(map[uint64][]catalogout.TagItem)
+	relations, tags, err := service.CatalogTagDomain().QueryTorrentTagsByTorrentIds(ctx, torrentIds)
+	if err != nil {
+		return result
+	}
+	tagMap := make(map[uint]catalogout.TagItem, len(tags))
+	for _, tag := range tags {
+		item := catalogout.TagItem{Id: tag.Id, GroupId: tag.GroupId, Value: tag.Value}
+		_ = tag.NameI18N.Scan(&item.Name)
+		tagMap[tag.Id] = item
+	}
+	for _, relation := range relations {
+		if tag, ok := tagMap[relation.TagId]; ok {
+			result[relation.TorrentId] = append(result[relation.TorrentId], tag)
+		}
+	}
+	return result
 }

@@ -41,42 +41,6 @@ func (s *sCatalogCategoryUsecase) ListCategories(ctx context.Context, actor *mod
 	return &catalogout.CategoryListOut{List: list}, nil
 }
 
-func (s *sCatalogCategoryUsecase) ListTagGroups(ctx context.Context, actor *model.Actor, in catalogin.TagGroupListInp) (*catalogout.TagGroupListOut, error) {
-	groups, tags, err := service.CatalogCategoryDomain().ListTagGroups(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	tagMap := make(map[uint][]catalogout.TagItem)
-	for _, t := range tags {
-		var name map[string]any
-		_ = t.NameI18N.Scan(&name)
-		tagMap[t.GroupId] = append(tagMap[t.GroupId], catalogout.TagItem{
-			Id:    t.Id,
-			Name:  name,
-			Value: t.Value,
-		})
-	}
-
-	var list []catalogout.TagGroupItem
-	for _, g := range groups {
-		var name map[string]any
-		var categories []uint
-		_ = g.NameI18N.Scan(&name)
-		_ = g.CategoryIds.Scan(&categories)
-
-		list = append(list, catalogout.TagGroupItem{
-			Id:         g.Id,
-			Name:       name,
-			Slug:       g.Slug,
-			Categories: categories,
-			Tags:       tagMap[g.Id],
-		})
-	}
-
-	return &catalogout.TagGroupListOut{List: list}, nil
-}
-
 func (s *sCatalogCategoryUsecase) scanUploadConfig(value *gjson.Json) *model.CatalogUploadConfig {
 	if value == nil {
 		return nil

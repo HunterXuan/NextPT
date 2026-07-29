@@ -102,7 +102,9 @@ SET @iam_permissions_admin = JSON_ARRAY_APPEND(
     '$',
     'admin:forum/node:*',
     '$',
-    'admin:catalog/category:*'
+    'admin:catalog/category:*',
+    '$',
+    'admin:catalog/tag:*'
 );
 
 SET @iam_permissions_sysop = JSON_ARRAY_APPEND(

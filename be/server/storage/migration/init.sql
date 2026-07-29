@@ -226,6 +226,7 @@ CREATE TABLE `catalog_tag` (
     `created_at`      DATETIME        NULL,
     `updated_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_group_value` (`group_id`, `value`),
     KEY `idx_group_sort` (`group_id`, `sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='标签项表';
 

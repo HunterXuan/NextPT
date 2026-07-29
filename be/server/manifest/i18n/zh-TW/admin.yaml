@@ -3,6 +3,10 @@ admin.config.key_req: 配置項鍵名不能為空
 admin.config.value_req: 配置項值不能為空
 
 admin.catalog.category_has_torrents: 無法刪除：該分類下仍有種子
+admin.catalog.tag_group_has_tags: 無法刪除：請先刪除組內標籤
+admin.catalog.tag_group_not_found: 標籤組不存在
+admin.catalog.tag_in_use: 無法刪除：該標籤仍被種子使用
+admin.catalog.tag_not_found: 標籤不存在
 
 admin.forum.category_has_nodes: 無法刪除：該分類下仍有板塊
 admin.forum.new_node_not_found: 目標板塊不存在

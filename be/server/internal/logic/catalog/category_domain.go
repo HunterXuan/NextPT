@@ -91,14 +91,3 @@ func (s *sCatalogCategoryDomain) AdminListCategories(ctx context.Context) ([]ent
 		Scan(&categories)
 	return categories, err
 }
-
-func (s *sCatalogCategoryDomain) ListTagGroups(ctx context.Context) ([]entity.CatalogTagGroup, []entity.CatalogTag, error) {
-	var groups []entity.CatalogTagGroup
-	err := dao.CatalogTagGroup.Ctx(ctx).OrderAsc(dao.CatalogTagGroup.Columns().SortOrder).Scan(&groups)
-	if err != nil {
-		return nil, nil, err
-	}
-	var tags []entity.CatalogTag
-	err = dao.CatalogTag.Ctx(ctx).OrderAsc(dao.CatalogTag.Columns().SortOrder).Scan(&tags)
-	return groups, tags, err
-}
