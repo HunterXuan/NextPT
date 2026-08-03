@@ -266,6 +266,8 @@
       "username": "使用者名稱",
       "email": "信箱",
       "password": "密碼",
+      "newPassword": "新密碼",
+      "confirmPassword": "確認新密碼",
       "inviteHash": "邀請碼"
     },
     "login": {
@@ -279,6 +281,7 @@
       "submit": "登入",
       "success": "登入成功",
       "noAccount": "還沒有帳號？",
+      "forgotPassword": "忘記密碼？",
       "benefits": {
         "passkey": {
           "title": "接著找資源",
@@ -293,6 +296,35 @@
           "description": "收藏資源、補充字幕、回饋問題，或者在論壇裡和其他使用者交流使用體驗。"
         }
       }
+    },
+    "forgotPassword": {
+      "eyebrow": "找回帳號",
+      "metaTitle": "忘記密碼",
+      "title": "重設帳號密碼",
+      "subtitle": "輸入註冊信箱，我們會傳送一封包含重設連結的郵件。",
+      "heroTitle": "透過註冊信箱找回存取權限",
+      "heroDescription": "重設連結僅能使用一次，並會在 30 分鐘後失效。完成重設後，帳號已有登入工作階段將全部退出。",
+      "submit": "傳送重設郵件",
+      "successTitle": "請檢查你的信箱",
+      "successDescription": "如果該信箱已註冊，你會收到一封密碼重設郵件。郵件可能需要幾分鐘才能送達。",
+      "backToLogin": "返回登入"
+    },
+    "resetPassword": {
+      "eyebrow": "帳號安全",
+      "metaTitle": "設定新密碼",
+      "title": "設定新密碼",
+      "subtitle": "為帳號設定一個新的密碼，完成後使用新密碼重新登入。",
+      "heroTitle": "重新保護你的 NextPT 帳號",
+      "heroDescription": "重設連結只能使用一次。密碼更新後，目前帳號在其他裝置上的登入狀態也會失效。",
+      "submit": "確認重設密碼",
+      "passwordMismatch": "兩次輸入的密碼不一致",
+      "successTitle": "密碼已更新",
+      "successDescription": "舊的登入工作階段已失效，現在可以使用新密碼登入。",
+      "invalidTitle": "重設連結無效",
+      "invalidDescription": "該連結缺少必要令牌，請重新申請密碼重設郵件。",
+      "requestAgain": "重新申請",
+      "backToLogin": "返回登入",
+      "login": "使用新密碼登入"
     },
     "register": {
       "action": "註冊",

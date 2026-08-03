@@ -35,6 +35,14 @@
 * **修改密码 (ChangePassword)**
   * **Method/Path**: `POST /users/me:changePassword`
   * **参数概述**: `old_password`, `new_password`
+* **申请重置密码 (CreatePasswordResetRequest)**
+  * **Method/Path**: `POST /password-reset-requests`
+  * **参数概述**: `email`
+  * **核心逻辑**: 按 IP 和邮箱限流；无论邮箱是否存在都返回相同结果。命中用户时生成一次性令牌，仅在 Redis 保存令牌摘要和用户映射，有效期 30 分钟，并使用站点默认语言异步发送重置邮件。新申请会使该用户此前的令牌失效。
+* **确认重置密码 (CreatePasswordReset)**
+  * **Method/Path**: `POST /password-resets`
+  * **参数概述**: `token`, `newPassword`
+  * **核心逻辑**: 原子校验并消费一次性令牌 -> 更新密码哈希 -> 删除该用户全部登录会话 -> 清理用户鉴权缓存。无效、已使用和过期令牌统一返回相同错误。
 
 ### 3. InviteUsecase (邀请应用服务)
 * **发送/生成邀请 (CreateInvite)**

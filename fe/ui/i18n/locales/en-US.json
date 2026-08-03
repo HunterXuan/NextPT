@@ -266,6 +266,8 @@
       "username": "Username",
       "email": "Email",
       "password": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
       "inviteHash": "Invite code"
     },
     "login": {
@@ -279,6 +281,7 @@
       "submit": "Log in",
       "success": "Logged in",
       "noAccount": "No account yet?",
+      "forgotPassword": "Forgot password?",
       "benefits": {
         "passkey": {
           "title": "Keep finding resources",
@@ -293,6 +296,35 @@
           "description": "Bookmark releases, add subtitles, report issues, or talk with other members in the forum."
         }
       }
+    },
+    "forgotPassword": {
+      "eyebrow": "Account recovery",
+      "metaTitle": "Forgot password",
+      "title": "Reset your password",
+      "subtitle": "Enter your registered email and we will send you a reset link.",
+      "heroTitle": "Recover access through your registered email",
+      "heroDescription": "The reset link can only be used once and expires after 30 minutes. All existing sessions will be signed out after the password is changed.",
+      "submit": "Send reset email",
+      "successTitle": "Check your inbox",
+      "successDescription": "If the email is registered, a password reset message will arrive shortly. Delivery may take a few minutes.",
+      "backToLogin": "Back to log in"
+    },
+    "resetPassword": {
+      "eyebrow": "Account security",
+      "metaTitle": "Set a new password",
+      "title": "Set a new password",
+      "subtitle": "Choose a new password, then log in again when the reset is complete.",
+      "heroTitle": "Secure your NextPT account again",
+      "heroDescription": "A reset link can only be used once. Changing the password also ends existing sessions on other devices.",
+      "submit": "Reset password",
+      "passwordMismatch": "The passwords do not match",
+      "successTitle": "Password updated",
+      "successDescription": "Existing sessions have ended. You can now log in with the new password.",
+      "invalidTitle": "Invalid reset link",
+      "invalidDescription": "This link is missing its reset token. Request a new password reset email.",
+      "requestAgain": "Request another link",
+      "backToLogin": "Back to log in",
+      "login": "Log in with new password"
     },
     "register": {
       "action": "Register",

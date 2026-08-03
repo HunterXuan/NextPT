@@ -75,6 +75,11 @@
                 @click="showPassword = !showPassword"
               />
             </div>
+            <div class="mt-2 text-right">
+              <NuxtLink :to="localePath('/forgot-password')" class="text-xs font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300">
+                {{ $t('auth.login.forgotPassword') }}
+              </NuxtLink>
+            </div>
           </UFormField>
 
           <UAlert

@@ -55,6 +55,11 @@ export interface PasswordInput {
   newPassword: string
 }
 
+export interface PasswordResetInput {
+  token: string
+  newPassword: string
+}
+
 export interface PasskeyResetOut {
   passkey: string
 }
@@ -303,6 +308,20 @@ export function useAuth() {
     clearLocalSession()
   }
 
+  async function requestPasswordReset(email: string) {
+    await fetchApi('/api/iam/password-reset-requests', {
+      method: 'POST',
+      body: { email }
+    })
+  }
+
+  async function resetPassword(input: PasswordResetInput) {
+    await fetchApi('/api/iam/password-resets', {
+      method: 'POST',
+      body: input
+    })
+  }
+
   async function resetPasskey() {
     const data = await fetchApi<PasskeyResetOut>('/api/iam/users/me:resetPasskey', {
       method: 'POST'
@@ -340,6 +359,8 @@ export function useAuth() {
     hasAnyPermission,
     updateProfile,
     changePassword,
+    requestPasswordReset,
+    resetPassword,
     resetPasskey,
     logout,
     clearLocalSession
