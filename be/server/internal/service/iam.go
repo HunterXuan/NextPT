@@ -117,6 +117,7 @@ type (
 		LoginLogs(ctx context.Context, actor *model.Actor, in iamin.UserLoginLogListInp) (*iamout.UserLoginLogListOut, error)
 		Create(ctx context.Context, in iamin.UserCreateInp) (uint64, error)
 		Me(ctx context.Context, actor *model.Actor) (*iamout.UserMeOut, error)
+		Get(ctx context.Context, actor *model.Actor, in iamin.UserGetInp) (*iamout.UserGetOut, error)
 		UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error
 		ChangePassword(ctx context.Context, actor *model.Actor, in iamin.UserPasswordChangeInp) error
 		ResetPasskey(ctx context.Context, actor *model.Actor) (string, error)

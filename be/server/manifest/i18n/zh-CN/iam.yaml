@@ -31,9 +31,11 @@ iam.user.avatar_len: 头像地址不能超过500个字符
 iam.user.email_exists: 邮箱已被注册
 iam.user.email_fmt: 邮箱格式不正确
 iam.user.email_req: 请输入邮箱
+iam.user.id_req: 请指定用户ID
 iam.user.info_len: 个人简介不能超过5000个字符
 iam.user.new_password_req: 请输入新密码
 iam.user.new_password_same: 新密码不能与旧密码相同
+iam.user.not_found: 用户不存在
 iam.user.old_password_invalid: 旧密码不正确
 iam.user.old_password_req: 请输入旧密码
 iam.user.password_len: 密码长度至少6位

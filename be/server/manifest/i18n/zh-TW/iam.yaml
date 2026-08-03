@@ -31,9 +31,11 @@ iam.user.avatar_len: 頭像地址不能超過500個字元
 iam.user.email_exists: 信箱已被註冊
 iam.user.email_fmt: 信箱格式不正確
 iam.user.email_req: 請輸入信箱
+iam.user.id_req: 請指定使用者 ID
 iam.user.info_len: 個人簡介不能超過5000個字元
 iam.user.new_password_req: 請輸入新密碼
 iam.user.new_password_same: 新密碼不能與舊密碼相同
+iam.user.not_found: 使用者不存在
 iam.user.old_password_invalid: 舊密碼不正確
 iam.user.old_password_req: 請輸入舊密碼
 iam.user.password_len: 密碼長度至少6位

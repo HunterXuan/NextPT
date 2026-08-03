@@ -31,9 +31,11 @@ iam.user.avatar_len: Avatar URL cannot exceed 500 characters
 iam.user.email_exists: Email is already registered
 iam.user.email_fmt: Invalid email format
 iam.user.email_req: Please enter your email
+iam.user.id_req: Please specify a user ID
 iam.user.info_len: Profile bio cannot exceed 5000 characters
 iam.user.new_password_req: Please enter your new password
 iam.user.new_password_same: New password cannot be the same as old password
+iam.user.not_found: User not found
 iam.user.old_password_invalid: Old password is incorrect
 iam.user.old_password_req: Please enter your old password
 iam.user.password_len: Password length must be between 6 and 30 characters

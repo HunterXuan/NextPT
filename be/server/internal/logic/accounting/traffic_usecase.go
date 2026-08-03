@@ -34,26 +34,29 @@ func (s *sAccountingTrafficUsecase) GetMyTraffic(ctx context.Context, actor *mod
 		return nil, err
 	}
 
-	var ratio float64
 	if stat != nil {
-		if stat.Downloaded == 0 && stat.Uploaded > 0 {
-			ratio = 9999.9 // Infinity representation
-		} else if stat.Downloaded > 0 {
-			ratio = float64(stat.Uploaded) / float64(stat.Downloaded)
-		}
-
 		return &accountingout.TrafficGetMeOut{
 			Uploaded:      stat.Uploaded,
 			Downloaded:    stat.Downloaded,
 			RawUploaded:   stat.RawUploaded,
 			RawDownloaded: stat.RawDownloaded,
-			ShareRatio:    ratio,
+			ShareRatio:    s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
 			SeedTime:      stat.SeedTime,
 			LeechTime:     stat.LeechTime,
 		}, nil
 	}
 
 	return &accountingout.TrafficGetMeOut{}, nil
+}
+
+func (s *sAccountingTrafficUsecase) calculateShareRatio(uploaded, downloaded uint64) float64 {
+	if downloaded == 0 && uploaded > 0 {
+		return 9999.9
+	}
+	if downloaded > 0 {
+		return float64(uploaded) / float64(downloaded)
+	}
+	return 0
 }
 
 func (s *sAccountingTrafficUsecase) ListMyTrafficHistory(ctx context.Context, actor *model.Actor, in accountingin.TrafficHistoryListInp) (*accountingout.TrafficHistoryListOut, error) {

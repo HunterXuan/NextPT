@@ -447,6 +447,88 @@ func (s *sIamUserUsecase) Me(ctx context.Context, actor *model.Actor) (*iamout.U
 	}, nil
 }
 
+func (s *sIamUserUsecase) Get(ctx context.Context, actor *model.Actor, in iamin.UserGetInp) (*iamout.UserGetOut, error) {
+	if actor == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
+	}
+
+	language := gi18n.LanguageFromCtx(ctx)
+	if language == "" {
+		language = g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String()
+	}
+	cacheKey := service.SysCache().KeyIamUserPublic(ctx, in.Id, language)
+	value, err := gcache.GetOrSetFunc(ctx, cacheKey, func(ctx context.Context) (any, error) {
+		return s.buildPublicUser(ctx, in.Id)
+	}, 5*time.Minute)
+	if err != nil {
+		return nil, err
+	}
+	if out, ok := value.Val().(*iamout.UserGetOut); ok {
+		return out, nil
+	}
+
+	var out iamout.UserGetOut
+	if err := value.Scan(&out); err != nil {
+		return s.buildPublicUser(ctx, in.Id)
+	}
+	return &out, nil
+}
+
+func (s *sIamUserUsecase) buildPublicUser(ctx context.Context, userId uint64) (*iamout.UserGetOut, error) {
+	user, err := service.IamUserDomain().GetUserById(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.user.not_found"))
+	}
+
+	profile, err := service.IamUserDomain().GetUserProfile(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+	if profile == nil {
+		profile = &entity.IamUserProfile{}
+	}
+
+	role, err := service.IamRoleDomain().GetRoleById(ctx, user.Role)
+	if err != nil || role == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
+	}
+
+	stat, err := service.AccountingTrafficDomain().GetUserStat(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+	if stat == nil {
+		stat = &entity.IamUserStat{}
+	}
+
+	return &iamout.UserGetOut{
+		User: iamout.UserGetAccountOut{
+			Id:        user.Id,
+			Username:  user.Username,
+			CreatedAt: user.CreatedAt,
+		},
+		Role: iamout.UserGetRoleOut{
+			Id:      user.Role,
+			Name:    s.localizeRoleName(ctx, role),
+			IsStaff: role.IsStaff,
+		},
+		Profile: iamout.UserGetProfileOut{
+			Avatar:    profile.Avatar,
+			Info:      profile.Info,
+			Signature: profile.Signature,
+		},
+		Stat: iamout.UserGetStatOut{
+			Uploaded:   stat.Uploaded,
+			Downloaded: stat.Downloaded,
+			ShareRatio: s.calculateShareRatio(stat.Uploaded, stat.Downloaded),
+			SeedTime:   stat.SeedTime,
+		},
+	}, nil
+}
+
 func (s *sIamUserUsecase) localizeRoleName(ctx context.Context, role *entity.IamRole) string {
 	if role == nil || role.NameI18N == nil {
 		return ""

@@ -7,6 +7,10 @@ type UserCreateInp struct {
 	InviteHash string `json:"inviteHash"`
 }
 
+type UserGetInp struct {
+	Id uint64 `json:"id" in:"path" v:"required|min:1#{#iam.user.id_req}|{#iam.user.id_req}" description:"用户ID"`
+}
+
 type UserProfileUpdateInp struct {
 	Avatar    string `json:"avatar" v:"max-length:500#{#iam.user.avatar_len}"`
 	Info      string `json:"info" v:"max-length:5000#{#iam.user.info_len}"`

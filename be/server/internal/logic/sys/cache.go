@@ -158,6 +158,10 @@ func (s *sSysCache) KeyIamUserAcls(ctx context.Context, userId uint64) string {
 	return fmt.Sprintf("%suser:%d:acls", s.prefixIam, userId)
 }
 
+func (s *sSysCache) KeyIamUserPublic(ctx context.Context, userId uint64, language string) string {
+	return fmt.Sprintf("%suser:%d:public:%s", s.prefixIam, userId, language)
+}
+
 func (s *sSysCache) KeyIamRolePerms(ctx context.Context, roleId uint) string {
 	return fmt.Sprintf("%srole:%d:perms", s.prefixIam, roleId)
 }

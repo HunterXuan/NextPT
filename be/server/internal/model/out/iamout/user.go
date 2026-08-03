@@ -13,6 +13,38 @@ type UserMeOut struct {
 	Stat    UserMeStatOut    `json:"stat"`
 }
 
+type UserGetOut struct {
+	User    UserGetAccountOut `json:"user"`
+	Role    UserGetRoleOut    `json:"role"`
+	Profile UserGetProfileOut `json:"profile"`
+	Stat    UserGetStatOut    `json:"stat"`
+}
+
+type UserGetAccountOut struct {
+	Id        uint64      `json:"id"`
+	Username  string      `json:"username"`
+	CreatedAt *gtime.Time `json:"createdAt"`
+}
+
+type UserGetRoleOut struct {
+	Id      uint   `json:"id"`
+	Name    string `json:"name"`
+	IsStaff bool   `json:"isStaff"`
+}
+
+type UserGetProfileOut struct {
+	Avatar    string `json:"avatar"`
+	Info      string `json:"info"`
+	Signature string `json:"signature"`
+}
+
+type UserGetStatOut struct {
+	Uploaded   uint64  `json:"uploaded"`
+	Downloaded uint64  `json:"downloaded"`
+	ShareRatio float64 `json:"shareRatio"`
+	SeedTime   uint64  `json:"seedTime"`
+}
+
 type UserMeAccountOut struct {
 	Id        uint64      `json:"id"`
 	Username  string      `json:"username"`

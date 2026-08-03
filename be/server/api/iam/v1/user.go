@@ -16,6 +16,15 @@ type IamUserCreateRes struct {
 	Id uint64 `json:"id"`
 }
 
+type IamUserGetReq struct {
+	g.Meta `path:"/users/{id}" method:"get" tags:"IamUser" summary:"获取用户公开资料"`
+	iamin.UserGetInp
+}
+
+type IamUserGetRes struct {
+	iamout.UserGetOut
+}
+
 type IamUserMeReq struct {
 	g.Meta `path:"/users/me" method:"get" tags:"IamUser" summary:"获取当前登录用户基础信息"`
 }

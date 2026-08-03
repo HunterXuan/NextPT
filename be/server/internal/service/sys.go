@@ -23,6 +23,7 @@ type (
 		KeyTrackerTorrentSeeders(ctx context.Context, torrentId uint64) string
 		KeyTrackerTorrentLeechers(ctx context.Context, torrentId uint64) string
 		KeyIamUserAcls(ctx context.Context, userId uint64) string
+		KeyIamUserPublic(ctx context.Context, userId uint64, language string) string
 		KeyIamRolePerms(ctx context.Context, roleId uint) string
 		KeyIamRoleActorVersion(ctx context.Context, roleId uint) string
 		KeyIamActor(ctx context.Context, userId uint64) string

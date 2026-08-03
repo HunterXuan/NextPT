@@ -18,6 +18,7 @@ type IIamV1 interface {
 	IamSessionCreate(ctx context.Context, req *v1.IamSessionCreateReq) (res *v1.IamSessionCreateRes, err error)
 	IamSessionDelete(ctx context.Context, req *v1.IamSessionDeleteReq) (res *v1.IamSessionDeleteRes, err error)
 	IamUserCreate(ctx context.Context, req *v1.IamUserCreateReq) (res *v1.IamUserCreateRes, err error)
+	IamUserGet(ctx context.Context, req *v1.IamUserGetReq) (res *v1.IamUserGetRes, err error)
 	IamUserMe(ctx context.Context, req *v1.IamUserMeReq) (res *v1.IamUserMeRes, err error)
 	IamUserPermissionList(ctx context.Context, req *v1.IamUserPermissionListReq) (res *v1.IamUserPermissionListRes, err error)
 	IamUserLoginLogList(ctx context.Context, req *v1.IamUserLoginLogListReq) (res *v1.IamUserLoginLogListRes, err error)
