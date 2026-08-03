@@ -2,6 +2,13 @@ package iam
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/hex"
+	"fmt"
+	"html"
+	"net/url"
 	"strings"
 	"time"
 
@@ -19,7 +26,10 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcache"
+	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
@@ -27,6 +37,31 @@ import (
 )
 
 type sIamUserUsecase struct{}
+
+const passwordResetRateLimitScript = `
+local current = redis.call("INCR", KEYS[1])
+if current == 1 then
+    redis.call("EXPIRE", KEYS[1], tonumber(ARGV[1]))
+end
+return current
+`
+
+const passwordResetStoreScript = `
+redis.call("SET", KEYS[1], ARGV[1], "EX", tonumber(ARGV[3]))
+redis.call("SET", KEYS[2], ARGV[2], "EX", tonumber(ARGV[3]))
+return 1
+`
+
+const passwordResetConsumeScript = `
+if redis.call("GET", KEYS[1]) ~= ARGV[1] then
+    return 0
+end
+if redis.call("GET", KEYS[2]) ~= ARGV[2] then
+    return 0
+end
+redis.call("DEL", KEYS[1], KEYS[2])
+return 1
+`
 
 func init() {
 	service.RegisterIamUserUsecase(NewIamUserUsecase())
@@ -593,6 +628,208 @@ func (s *sIamUserUsecase) ChangePassword(ctx context.Context, actor *model.Actor
 		return err
 	}
 	return service.IamSessionDomain().RemoveToken(ctx, gconv.String(actor.Id))
+}
+
+func (s *sIamUserUsecase) CreatePasswordResetRequest(ctx context.Context, in iamin.PasswordResetRequestCreateInp) error {
+	email := strings.ToLower(strings.TrimSpace(in.Email))
+
+	ipAllowed, err := s.passwordResetRateAllowed(
+		ctx,
+		service.SysCache().KeyIamPasswordResetRateIp(ctx, s.passwordResetDigest(s.passwordResetRequestIp(ctx))),
+		consts.IamPasswordResetRateLimitByIp,
+	)
+	if err != nil {
+		return err
+	}
+	emailAllowed, err := s.passwordResetRateAllowed(
+		ctx,
+		service.SysCache().KeyIamPasswordResetRateEmail(ctx, s.passwordResetDigest(email)),
+		consts.IamPasswordResetRateLimitEmail,
+	)
+	if err != nil {
+		return err
+	}
+	if !ipAllowed || !emailAllowed {
+		return nil
+	}
+
+	user, err := service.IamUserDomain().GetUserByLogin(ctx, email)
+	if err != nil {
+		return err
+	}
+	if user == nil {
+		return nil
+	}
+
+	token, err := s.newPasswordResetToken()
+	if err != nil {
+		return err
+	}
+	tokenHash := s.passwordResetDigest(token)
+	if err := s.storePasswordResetToken(ctx, user.Id, tokenHash); err != nil {
+		return err
+	}
+
+	s.sendPasswordResetMail(user.Username, user.Email, token)
+	return nil
+}
+
+func (s *sIamUserUsecase) CreatePasswordReset(ctx context.Context, in iamin.PasswordResetCreateInp) error {
+	tokenHash := s.passwordResetDigest(strings.TrimSpace(in.Token))
+	tokenKey := service.SysCache().KeyIamPasswordResetToken(ctx, tokenHash)
+	userIdValue, err := g.Redis().Do(ctx, "GET", tokenKey)
+	if err != nil {
+		return err
+	}
+	if userIdValue == nil || userIdValue.IsNil() || userIdValue.Uint64() == 0 {
+		return s.passwordResetTokenError(ctx)
+	}
+	userId := userIdValue.Uint64()
+
+	passwordHash, err := service.IamUserDomain().GetUserPasswordHash(ctx, userId)
+	if err != nil {
+		return err
+	}
+	if passwordHash == "" {
+		return s.passwordResetTokenError(ctx)
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(in.NewPassword)); err == nil {
+		return gerror.New(gi18n.T(ctx, "iam.user.new_password_same"))
+	}
+
+	newPasswordHash, err := bcrypt.GenerateFromPassword([]byte(in.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	consumed, err := s.consumePasswordResetToken(ctx, userId, tokenHash)
+	if err != nil {
+		return err
+	}
+	if !consumed {
+		return s.passwordResetTokenError(ctx)
+	}
+
+	if err := service.IamUserDomain().UpdatePasswordHash(ctx, userId, string(newPasswordHash)); err != nil {
+		return err
+	}
+	if err := service.IamSessionDomain().RemoveToken(ctx, gconv.String(userId)); err != nil {
+		return err
+	}
+	s.InvalidateUserCache(ctx, userId)
+	return nil
+}
+
+func (s *sIamUserUsecase) passwordResetRateAllowed(ctx context.Context, key string, limit int) (bool, error) {
+	value, err := g.Redis().Do(
+		ctx,
+		"EVAL",
+		passwordResetRateLimitScript,
+		1,
+		key,
+		int(consts.IamPasswordResetRateWindow.Seconds()),
+	)
+	if err != nil {
+		return false, err
+	}
+	return value.Int() <= limit, nil
+}
+
+func (s *sIamUserUsecase) storePasswordResetToken(ctx context.Context, userId uint64, tokenHash string) error {
+	_, err := g.Redis().Do(
+		ctx,
+		"EVAL",
+		passwordResetStoreScript,
+		2,
+		service.SysCache().KeyIamPasswordResetToken(ctx, tokenHash),
+		service.SysCache().KeyIamPasswordResetUser(ctx, userId),
+		gconv.String(userId),
+		tokenHash,
+		int(consts.IamPasswordResetTokenTTL.Seconds()),
+	)
+	return err
+}
+
+func (s *sIamUserUsecase) consumePasswordResetToken(ctx context.Context, userId uint64, tokenHash string) (bool, error) {
+	value, err := g.Redis().Do(
+		ctx,
+		"EVAL",
+		passwordResetConsumeScript,
+		2,
+		service.SysCache().KeyIamPasswordResetToken(ctx, tokenHash),
+		service.SysCache().KeyIamPasswordResetUser(ctx, userId),
+		gconv.String(userId),
+		tokenHash,
+	)
+	if err != nil {
+		return false, err
+	}
+	return value.Int() == 1, nil
+}
+
+func (s *sIamUserUsecase) newPasswordResetToken() (string, error) {
+	data := make([]byte, 32)
+	if _, err := rand.Read(data); err != nil {
+		return "", err
+	}
+	return base64.RawURLEncoding.EncodeToString(data), nil
+}
+
+func (s *sIamUserUsecase) passwordResetDigest(value string) string {
+	digest := sha256.Sum256([]byte(value))
+	return hex.EncodeToString(digest[:])
+}
+
+func (s *sIamUserUsecase) passwordResetRequestIp(ctx context.Context) string {
+	r := ghttp.RequestFromCtx(ctx)
+	if r == nil || strings.TrimSpace(r.GetClientIp()) == "" {
+		return "unknown"
+	}
+	return strings.TrimSpace(r.GetClientIp())
+}
+
+func (s *sIamUserUsecase) passwordResetTokenError(ctx context.Context) error {
+	return gerror.New(gi18n.T(ctx, "iam.user.password_reset_token_invalid"))
+}
+
+func (s *sIamUserUsecase) sendPasswordResetMail(username, recipient, token string) {
+	mailCtx := gctx.New()
+	defaultLang := g.Cfg().MustGet(mailCtx, "i18n.default", "zh-CN").String()
+	i18nCtx := gi18n.WithLanguage(mailCtx, defaultLang)
+	siteName := strings.TrimSpace(g.Cfg().MustGet(mailCtx, "site.name", "NextPT").String())
+	siteUrl := strings.TrimRight(strings.TrimSpace(g.Cfg().MustGet(mailCtx, "site.url", "http://localhost:3000").String()), "/")
+	if siteName == "" {
+		siteName = "NextPT"
+	}
+	if siteUrl == "" {
+		siteUrl = "http://localhost:3000"
+	}
+	resetUrl := siteUrl + "/reset-password?token=" + url.QueryEscape(token)
+	expireMinutes := int(consts.IamPasswordResetTokenTTL.Minutes())
+
+	subject := fmt.Sprintf(gi18n.T(i18nCtx, "iam.user.password_reset_mail_subject"), siteName)
+	greeting := fmt.Sprintf(gi18n.T(i18nCtx, "iam.user.password_reset_mail_greeting"), username)
+	intro := fmt.Sprintf(gi18n.T(i18nCtx, "iam.user.password_reset_mail_intro"), siteName)
+	action := gi18n.T(i18nCtx, "iam.user.password_reset_mail_action")
+	expiry := fmt.Sprintf(gi18n.T(i18nCtx, "iam.user.password_reset_mail_expiry"), expireMinutes)
+	ignore := gi18n.T(i18nCtx, "iam.user.password_reset_mail_ignore")
+	textBody := strings.Join([]string{greeting, intro, action, resetUrl, expiry, ignore}, "\n\n")
+	htmlBody := fmt.Sprintf(
+		`<!doctype html><html><body style="margin:0;background:#f8fafc;font-family:Arial,sans-serif;color:#0f172a"><div style="max-width:560px;margin:0 auto;padding:32px 20px"><div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:28px"><h1 style="margin:0 0 20px;font-size:20px">%s</h1><p style="margin:0 0 12px;line-height:1.7">%s</p><p style="margin:0 0 20px;line-height:1.7">%s</p><p style="margin:0 0 20px"><a href="%s" style="display:inline-block;border-radius:6px;background:#0284c7;padding:11px 18px;color:#fff;text-decoration:none;font-weight:600">%s</a></p><p style="margin:0 0 8px;color:#475569;line-height:1.7">%s</p><p style="margin:0;color:#64748b;line-height:1.7">%s</p></div></div></body></html>`,
+		html.EscapeString(subject),
+		html.EscapeString(greeting),
+		html.EscapeString(intro),
+		html.EscapeString(resetUrl),
+		html.EscapeString(action),
+		html.EscapeString(expiry),
+		html.EscapeString(ignore),
+	)
+
+	go func() {
+		if err := service.SysMailgun().SendHtmlMail(mailCtx, subject, textBody, htmlBody, recipient); err != nil {
+			glog.Warningf(mailCtx, "send password reset mail failed: error=%v", err)
+		}
+	}()
 }
 
 func (s *sIamUserUsecase) ResetPasskey(ctx context.Context, actor *model.Actor) (string, error) {

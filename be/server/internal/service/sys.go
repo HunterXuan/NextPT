@@ -24,6 +24,10 @@ type (
 		KeyTrackerTorrentLeechers(ctx context.Context, torrentId uint64) string
 		KeyIamUserAcls(ctx context.Context, userId uint64) string
 		KeyIamUserPublic(ctx context.Context, userId uint64, language string) string
+		KeyIamPasswordResetToken(ctx context.Context, tokenHash string) string
+		KeyIamPasswordResetUser(ctx context.Context, userId uint64) string
+		KeyIamPasswordResetRateIp(ctx context.Context, ipHash string) string
+		KeyIamPasswordResetRateEmail(ctx context.Context, emailHash string) string
 		KeyIamRolePerms(ctx context.Context, roleId uint) string
 		KeyIamRoleActorVersion(ctx context.Context, roleId uint) string
 		KeyIamActor(ctx context.Context, userId uint64) string
@@ -50,6 +54,10 @@ type (
 		Start(ctx context.Context)
 		AdminListCronLogs(ctx context.Context, jobName string, status int, page int, size int) ([]*entity.SysCronLog, int, error)
 	}
+	ISysMailgun interface {
+		SendTextMail(ctx context.Context, subject string, body string, recipient string) error
+		SendHtmlMail(ctx context.Context, subject string, textBody string, htmlBody string, recipient string) error
+	}
 	ISysStorage interface {
 		// Upload 将数据上传到存储引擎
 		Upload(ctx context.Context, key string, data []byte, contentType string) error
@@ -67,6 +75,7 @@ type (
 var (
 	localSysCache   ISysCache
 	localSysCron    ISysCron
+	localSysMailgun ISysMailgun
 	localSysStorage ISysStorage
 )
 
@@ -90,6 +99,17 @@ func SysCron() ISysCron {
 
 func RegisterSysCron(i ISysCron) {
 	localSysCron = i
+}
+
+func SysMailgun() ISysMailgun {
+	if localSysMailgun == nil {
+		panic("implement not found for interface ISysMailgun, forgot register?")
+	}
+	return localSysMailgun
+}
+
+func RegisterSysMailgun(i ISysMailgun) {
+	localSysMailgun = i
 }
 
 func SysStorage() ISysStorage {

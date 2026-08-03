@@ -40,6 +40,14 @@ iam.user.old_password_invalid: 旧密码不正确
 iam.user.old_password_req: 请输入旧密码
 iam.user.password_len: 密码长度至少6位
 iam.user.password_req: 请输入密码
+iam.user.password_reset_token_req: 请提供密码重置令牌
+iam.user.password_reset_token_invalid: 密码重置链接无效或已过期
+iam.user.password_reset_mail_subject: 重置你的 %s 密码
+iam.user.password_reset_mail_greeting: 你好，%s：
+iam.user.password_reset_mail_intro: 我们收到了重置你的 %s 账号密码的请求。
+iam.user.password_reset_mail_action: 点击下方按钮设置新密码
+iam.user.password_reset_mail_expiry: 该链接将在 %d 分钟后失效，且只能使用一次。
+iam.user.password_reset_mail_ignore: 如果不是你本人操作，可以忽略这封邮件。
 iam.user.signature_len: 签名不能超过500个字符
 iam.user.username_exists: 用户名已存在
 iam.user.username_len: 用户名长度应为3到20位

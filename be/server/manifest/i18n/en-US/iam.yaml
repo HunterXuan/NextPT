@@ -40,6 +40,14 @@ iam.user.old_password_invalid: Old password is incorrect
 iam.user.old_password_req: Please enter your old password
 iam.user.password_len: Password length must be between 6 and 30 characters
 iam.user.password_req: Please enter a password
+iam.user.password_reset_token_req: Please provide a password reset token
+iam.user.password_reset_token_invalid: This password reset link is invalid or has expired
+iam.user.password_reset_mail_subject: Reset your %s password
+iam.user.password_reset_mail_greeting: "Hello %s,"
+iam.user.password_reset_mail_intro: We received a request to reset the password for your %s account.
+iam.user.password_reset_mail_action: Set a new password
+iam.user.password_reset_mail_expiry: This link expires in %d minutes and can only be used once.
+iam.user.password_reset_mail_ignore: If you did not make this request, you can safely ignore this email.
 iam.user.signature_len: Signature cannot exceed 500 characters
 iam.user.username_exists: Username already exists
 iam.user.username_len: Username length must be between 3 and 20 characters

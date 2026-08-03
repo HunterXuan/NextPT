@@ -162,6 +162,22 @@ func (s *sSysCache) KeyIamUserPublic(ctx context.Context, userId uint64, languag
 	return fmt.Sprintf("%suser:%d:public:%s", s.prefixIam, userId, language)
 }
 
+func (s *sSysCache) KeyIamPasswordResetToken(ctx context.Context, tokenHash string) string {
+	return fmt.Sprintf("%spassword_reset:token:%s", s.prefixIam, tokenHash)
+}
+
+func (s *sSysCache) KeyIamPasswordResetUser(ctx context.Context, userId uint64) string {
+	return fmt.Sprintf("%spassword_reset:user:%d", s.prefixIam, userId)
+}
+
+func (s *sSysCache) KeyIamPasswordResetRateIp(ctx context.Context, ipHash string) string {
+	return fmt.Sprintf("%spassword_reset:rate:ip:%s", s.prefixIam, ipHash)
+}
+
+func (s *sSysCache) KeyIamPasswordResetRateEmail(ctx context.Context, emailHash string) string {
+	return fmt.Sprintf("%spassword_reset:rate:email:%s", s.prefixIam, emailHash)
+}
+
 func (s *sSysCache) KeyIamRolePerms(ctx context.Context, roleId uint) string {
 	return fmt.Sprintf("%srole:%d:perms", s.prefixIam, roleId)
 }

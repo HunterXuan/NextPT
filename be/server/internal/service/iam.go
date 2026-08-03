@@ -120,6 +120,8 @@ type (
 		Get(ctx context.Context, actor *model.Actor, in iamin.UserGetInp) (*iamout.UserGetOut, error)
 		UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error
 		ChangePassword(ctx context.Context, actor *model.Actor, in iamin.UserPasswordChangeInp) error
+		CreatePasswordResetRequest(ctx context.Context, in iamin.PasswordResetRequestCreateInp) error
+		CreatePasswordReset(ctx context.Context, in iamin.PasswordResetCreateInp) error
 		ResetPasskey(ctx context.Context, actor *model.Actor) (string, error)
 	}
 )

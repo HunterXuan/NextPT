@@ -40,6 +40,14 @@ iam.user.old_password_invalid: 舊密碼不正確
 iam.user.old_password_req: 請輸入舊密碼
 iam.user.password_len: 密碼長度至少6位
 iam.user.password_req: 請輸入密碼
+iam.user.password_reset_token_req: 請提供密碼重設令牌
+iam.user.password_reset_token_invalid: 密碼重設連結無效或已過期
+iam.user.password_reset_mail_subject: 重設你的 %s 密碼
+iam.user.password_reset_mail_greeting: 你好，%s：
+iam.user.password_reset_mail_intro: 我們收到了重設你的 %s 帳號密碼的請求。
+iam.user.password_reset_mail_action: 點擊下方按鈕設定新密碼
+iam.user.password_reset_mail_expiry: 該連結將在 %d 分鐘後失效，且只能使用一次。
+iam.user.password_reset_mail_ignore: 如果不是你本人操作，可以忽略這封郵件。
 iam.user.signature_len: 簽名不能超過500個字元
 iam.user.username_exists: 用戶名已存在
 iam.user.username_len: 用戶名長度應為3到20位
