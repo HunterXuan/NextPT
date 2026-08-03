@@ -3,6 +3,7 @@
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="space-y-4">
         <IamUserTrafficTrend />
+        <IamUserTorrents />
         <IamUserPeers />
         <IamUserSnatches />
       </div>

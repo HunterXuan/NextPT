@@ -47,6 +47,16 @@
   * **Method/Path**: `POST /mod/users/{id}:removeMod`
 
 ### 4. AdminCatalogTorrentUsecase 和 AdminCatalogTagUsecase (资源管理后台)
+* **查询审核队列 (ListTorrentReviews)**
+  * **Method/Path**: `GET /catalog/torrents?status=0`
+* **编辑种子 (UpdateTorrent)**
+  * **Method/Path**: `PATCH /catalog/torrents/{id}`
+  * Staff 使用 `admin:catalog/torrent:*`，与上传者的资源级 `update:catalog/torrent:{id}` 权限分离。
+* **通过种子审核 (ApproveTorrent)**
+  * **Method/Path**: `POST /catalog/torrents/{id}:approve`
+* **拒绝种子审核 (RejectTorrent)**
+  * **Method/Path**: `POST /catalog/torrents/{id}:reject`
+  * 拒绝原因必填；通过和拒绝都使用条件更新防止重复处理，并写入审计日志、发送站内通知。
 * **强制删除种子 (DeleteTorrent)**
   * **Method/Path**: `DELETE /catalog/torrents/{id}`
 * **管理标签组 (TagGroups)**

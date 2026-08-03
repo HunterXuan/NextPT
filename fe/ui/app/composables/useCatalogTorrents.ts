@@ -1,6 +1,12 @@
 import type { I18nName } from '~/types/i18n'
 import type { UserSummary } from '~/types/iam'
 
+export const TorrentStatus = {
+  Pending: 0,
+  Published: 1,
+  Rejected: 2
+} as const
+
 export interface CatalogCategory {
   id: number
   name: I18nName
@@ -94,6 +100,30 @@ export interface TorrentListItem {
   createdAt: string
 }
 
+export type TorrentMineStatusFilter = -1 | 0 | 1 | 2
+
+export interface TorrentMineItem {
+  id: number
+  name: string
+  subTitle: string
+  size: number
+  fileCount: number
+  status: number
+  banned: boolean
+  seeders: number
+  leechers: number
+  reviewComment: string
+  submittedAt: string
+  publishedAt: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface TorrentMineListOut {
+  list: TorrentMineItem[]
+  total: number
+}
+
 export type TorrentHotItem = Omit<TorrentListItem, 'owner' | 'anonymous' | 'tags'> & {
   category?: CatalogCategory | null
 }
@@ -102,6 +132,10 @@ export interface TorrentDetail extends TorrentListItem {
   description: string
   releaseFields?: Record<string, unknown> | null
   metadata?: TorrentMetadataOut | null
+  status: number
+  submittedAt: string
+  publishedAt: string
+  reviewComment: string
   isBookmarked: boolean
   isLiked: boolean
 }
@@ -296,6 +330,7 @@ export interface SubtitleListOut {
 export interface TorrentUploadOut {
   torrentId: number
   infoHash: string
+  status: number
 }
 
 export interface TorrentToggleLikeOut {
@@ -347,6 +382,12 @@ export function useCatalogTorrents() {
     }
 
     return await fetchApi<TorrentListOut>('/api/catalog/torrents', { query })
+  }
+
+  async function listMine(status: TorrentMineStatusFilter = -1, page = 1, size = 10) {
+    return await fetchApi<TorrentMineListOut>('/api/catalog/torrents:getMine', {
+      query: { status, page, size }
+    })
   }
 
   async function listHotTorrents(size = 5) {
@@ -499,6 +540,12 @@ export function useCatalogTorrents() {
     })
   }
 
+  async function resubmitTorrent(id: number) {
+    return await fetchApi<{ status: number }>(`/api/catalog/torrents/${id}:resubmit`, {
+      method: 'POST'
+    })
+  }
+
   async function reportTorrent(id: number, reason: string) {
     await fetchApi(`/api/catalog/torrents/${id}:report`, {
       method: 'POST',
@@ -527,6 +574,7 @@ export function useCatalogTorrents() {
   return {
     listCategories,
     listTorrents,
+    listMine,
     listHotTorrents,
     searchMetadata,
     listBookmarks,
@@ -547,6 +595,7 @@ export function useCatalogTorrents() {
     downloadSubtitle,
     reportSubtitle,
     uploadTorrent,
+    resubmitTorrent,
     downloadTorrent,
     updateTorrent,
     reportTorrent,

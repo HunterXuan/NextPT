@@ -11,6 +11,7 @@
     "previous": "上一頁",
     "refresh": "重新整理",
     "retry": "重試",
+    "search": "搜尋",
     "save": "儲存",
     "requestFailed": "請求失敗，請稍後再試",
     "noPermission": "目前帳號沒有權限執行此操作",
@@ -457,6 +458,15 @@
         "back": "返回種子列表",
         "titleFallback": "種子 #{id}",
         "invalidId": "無效的種子 ID",
+        "review": {
+          "pending": "種子正在等待審核",
+          "pendingHint": "目前僅你和管理組可以查看、下載並透過 Tracker 存取。",
+          "rejected": "種子未通過審核",
+          "noComment": "管理組沒有填寫審核說明。",
+          "resubmit": "重新提交",
+          "resubmitted": "種子已重新提交審核",
+          "published": "種子已直接發布"
+        },
         "navigation": {
           "title": "頁面目錄",
           "top": "頂部",
@@ -591,6 +601,7 @@
         "back": "返回種子列表",
         "submit": "發布",
         "success": "種子 #{id} 已發布",
+        "pendingSuccess": "種子 #{id} 已提交審核",
         "sections": {
           "file": "種子檔案",
           "info": "基本資訊",
@@ -1085,6 +1096,23 @@
     "catalog": {
       "eyebrow": "管理後台 / 資源庫",
       "title": "資源庫管理",
+      "entryDescription": "管理種子審核、分類與標籤",
+      "reviews": {
+        "title": "種子審核",
+        "list": "審核列表",
+        "empty": "暫無符合條件的種子",
+        "backToList": "返回審核列表",
+        "approve": "通過",
+        "reject": "拒絕",
+        "approveSuccess": "種子已通過審核",
+        "rejectSuccess": "種子已拒絕",
+        "commentPlaceholder": "通過意見可選；拒絕時請說明原因",
+        "commentRequired": "拒絕時需要填寫原因",
+        "status": { "all": "全部狀態", "pending": "待審核", "published": "已發布", "rejected": "已拒絕" },
+        "filters": { "keyword": "搜尋標題", "allCategories": "全部分類" },
+        "table": { "torrent": "種子", "status": "狀態", "uploader": "發布者", "submittedAt": "提交時間" },
+        "fields": { "comment": "審核意見" }
+      },
       "categories": {
         "title": "種子分類",
         "list": "分類列表",
@@ -1669,6 +1697,7 @@
           },
           "catalog": {
             "torrent_source": "種子 Source 標識",
+            "torrent_direct_publish_level": "種子免審等級",
             "global_promotion": "全站優惠",
             "new_torrent_promotion": "新種自動優惠"
           },
@@ -1693,6 +1722,7 @@
           },
           "catalog": {
             "torrent_source": "寫入私有種子 source 欄位的站點標識。",
+            "torrent_direct_publish_level": "達到所選角色等級及以上的使用者發布種子時無需審核。",
             "global_promotion": "全站範圍內優先級最高的種子優惠配置，可設定優惠類型和結束時間。",
             "new_torrent_promotion": "新發布種子的自動優惠規則，支援按體積匹配並按權重隨機抽取。"
           },
@@ -2276,6 +2306,37 @@
           "seeders": "N：目前做種人數，至少按 1 計算。",
           "params": "C、T0、N0、B0、L、base 由站點規則決定。"
         }
+      }
+    },
+    "torrents": {
+      "title": "我的發佈",
+      "summary": "共 {total} 個種子",
+      "empty": "暫無發佈記錄",
+      "files": "{count} 個檔案",
+      "edit": "編輯種子",
+      "resubmit": "重新提交審核",
+      "resubmitSuccess": "種子已重新提交",
+      "publishedAt": "發佈時間",
+      "submittedAt": "提交時間",
+      "filters": {
+        "all": "全部",
+        "pending": "待審核",
+        "published": "已發佈",
+        "rejected": "已拒絕"
+      },
+      "status": {
+        "pending": "待審核",
+        "published": "已發佈",
+        "rejected": "已拒絕",
+        "banned": "已封禁",
+        "unknown": "未知狀態"
+      },
+      "columns": {
+        "torrent": "種子",
+        "status": "狀態",
+        "size": "體積",
+        "time": "時間",
+        "actions": "操作"
       }
     },
     "peers": {

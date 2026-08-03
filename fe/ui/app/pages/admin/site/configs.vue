@@ -178,7 +178,7 @@
               </button>
             </label>
 
-            <label v-else-if="selectedUsesRoleSelect" class="block">
+            <label v-else-if="selectedUsesRoleIdSelect" class="block">
               <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
               <USelect
                 v-model="selectedRoleId"
@@ -188,6 +188,16 @@
                 :items="selectedRoleOptions"
                 value-key="value"
                 :disabled="saving || rolesPending || roleOptions.length === 0"
+              />
+              <p v-if="rolesError" class="mt-1 text-xs text-red-600 dark:text-red-300">{{ rolesError }}</p>
+            </label>
+
+            <label v-else-if="selectedUsesRoleLevelSelect" class="block">
+              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <AdminIamRoleLevelSelect
+                v-model="selectedRoleLevel"
+                :roles="roles"
+                :disabled="saving || rolesPending"
               />
               <p v-if="rolesError" class="mt-1 text-xs text-red-600 dark:text-red-300">{{ rolesError }}</p>
             </label>
@@ -313,9 +323,17 @@ const selectedUpdatedAtLabel = computed(() => {
 })
 const isFormDirty = computed(() => Boolean(selectedConfig.value && formSnapshot() !== originalFormSnapshot.value))
 const canSave = computed(() => Boolean(selectedConfig.value && isFormDirty.value && !saving.value))
-const selectedUsesRoleSelect = computed(() => selectedConfigPath.value === 'iam.default_register_role')
+const selectedUsesRoleIdSelect = computed(() => selectedConfigPath.value === 'iam.default_register_role')
+const selectedUsesRoleLevelSelect = computed(() => selectedConfigPath.value === 'catalog.torrent_direct_publish_level')
+const selectedUsesRoleConfig = computed(() => selectedUsesRoleIdSelect.value || selectedUsesRoleLevelSelect.value)
 const { roleOptions, roleNameWithLevel } = useAdminIamRoleLevels(roles)
 const selectedRoleId = computed({
+  get: () => Number.parseInt(getTextFormValue(), 10) || 0,
+  set: (value) => {
+    form.textValue = String(Number(value || 0))
+  }
+})
+const selectedRoleLevel = computed({
   get: () => Number.parseInt(getTextFormValue(), 10) || 0,
   set: (value) => {
     form.textValue = String(Number(value || 0))
@@ -373,7 +391,7 @@ function selectConfig(config: AdminSiteConfig | null) {
   selectedConfig.value = config
   formError.value = ''
   resetFormFromSelected(true)
-  if (selectedUsesRoleSelect.value) {
+  if (selectedUsesRoleConfig.value) {
     loadRoles()
   }
 }

@@ -11,6 +11,7 @@
     "previous": "上一页",
     "refresh": "刷新",
     "retry": "重试",
+    "search": "搜索",
     "save": "保存",
     "requestFailed": "请求失败，请稍后再试",
     "noPermission": "当前账号没有权限执行此操作",
@@ -457,6 +458,15 @@
         "back": "返回种子列表",
         "titleFallback": "种子 #{id}",
         "invalidId": "无效的种子 ID",
+        "review": {
+          "pending": "种子正在等待审核",
+          "pendingHint": "当前仅你和管理组可以查看、下载并通过 Tracker 访问。",
+          "rejected": "种子未通过审核",
+          "noComment": "管理组没有填写审核说明。",
+          "resubmit": "重新提交",
+          "resubmitted": "种子已重新提交审核",
+          "published": "种子已直接发布"
+        },
         "navigation": {
           "title": "页面目录",
           "top": "顶部",
@@ -591,6 +601,7 @@
         "back": "返回种子列表",
         "submit": "发布",
         "success": "种子 #{id} 已发布",
+        "pendingSuccess": "种子 #{id} 已提交审核",
         "sections": {
           "file": "种子文件",
           "info": "基础信息",
@@ -1085,6 +1096,23 @@
     "catalog": {
       "eyebrow": "管理后台 / 资源库",
       "title": "资源库管理",
+      "entryDescription": "管理种子审核、分类与标签",
+      "reviews": {
+        "title": "种子审核",
+        "list": "审核列表",
+        "empty": "暂无符合条件的种子",
+        "backToList": "返回审核列表",
+        "approve": "通过",
+        "reject": "拒绝",
+        "approveSuccess": "种子已通过审核",
+        "rejectSuccess": "种子已拒绝",
+        "commentPlaceholder": "通过意见可选；拒绝时请说明原因",
+        "commentRequired": "拒绝时需要填写原因",
+        "status": { "all": "全部状态", "pending": "待审核", "published": "已发布", "rejected": "已拒绝" },
+        "filters": { "keyword": "搜索标题", "allCategories": "全部分类" },
+        "table": { "torrent": "种子", "status": "状态", "uploader": "发布者", "submittedAt": "提交时间" },
+        "fields": { "comment": "审核意见" }
+      },
       "categories": {
         "title": "种子分类",
         "list": "分类列表",
@@ -1669,6 +1697,7 @@
           },
           "catalog": {
             "torrent_source": "种子 Source 标识",
+            "torrent_direct_publish_level": "种子免审等级",
             "global_promotion": "全站优惠",
             "new_torrent_promotion": "新种自动优惠"
           },
@@ -1693,6 +1722,7 @@
           },
           "catalog": {
             "torrent_source": "写入私有种子 source 字段的站点标识。",
+            "torrent_direct_publish_level": "达到所选角色等级及以上的用户发布种子时无需审核。",
             "global_promotion": "全站范围内优先级最高的种子优惠配置，可设置优惠类型和结束时间。",
             "new_torrent_promotion": "新发布种子的自动优惠规则，支持按体积匹配并按权重随机抽取。"
           },
@@ -2276,6 +2306,37 @@
           "seeders": "N：当前做种人数，至少按 1 计算。",
           "params": "C、T0、N0、B0、L、base 由站点规则决定。"
         }
+      }
+    },
+    "torrents": {
+      "title": "我的发布",
+      "summary": "共 {total} 个种子",
+      "empty": "暂无发布记录",
+      "files": "{count} 个文件",
+      "edit": "编辑种子",
+      "resubmit": "重新提交审核",
+      "resubmitSuccess": "种子已重新提交",
+      "publishedAt": "发布时间",
+      "submittedAt": "提交时间",
+      "filters": {
+        "all": "全部",
+        "pending": "待审核",
+        "published": "已发布",
+        "rejected": "已拒绝"
+      },
+      "status": {
+        "pending": "待审核",
+        "published": "已发布",
+        "rejected": "已拒绝",
+        "banned": "已封禁",
+        "unknown": "未知状态"
+      },
+      "columns": {
+        "torrent": "种子",
+        "status": "状态",
+        "size": "体积",
+        "time": "时间",
+        "actions": "操作"
       }
     },
     "peers": {

@@ -35,7 +35,6 @@
             />
             <UContextMenu
               :items="tabContextMenuItems(tab)"
-              :content="{ sideOffset: 6 }"
               :modal="false"
             >
               <div

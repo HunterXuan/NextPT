@@ -11,6 +11,7 @@
     "previous": "Previous",
     "refresh": "Refresh",
     "retry": "Retry",
+    "search": "Search",
     "save": "Save",
     "requestFailed": "Request failed. Please try again later.",
     "noPermission": "Your account does not have permission for this action.",
@@ -457,6 +458,15 @@
         "back": "Back to torrents",
         "titleFallback": "Torrent #{id}",
         "invalidId": "Invalid torrent ID",
+        "review": {
+          "pending": "Torrent awaiting review",
+          "pendingHint": "Only you and staff can currently view, download, and announce this torrent.",
+          "rejected": "Torrent review rejected",
+          "noComment": "No review note was provided.",
+          "resubmit": "Resubmit",
+          "resubmitted": "Torrent resubmitted for review",
+          "published": "Torrent published directly"
+        },
         "navigation": {
           "title": "On this page",
           "top": "Top",
@@ -591,6 +601,7 @@
         "back": "Back to torrents",
         "submit": "Publish",
         "success": "Torrent #{id} published",
+        "pendingSuccess": "Torrent #{id} submitted for review",
         "sections": {
           "file": "Torrent file",
           "info": "Basic info",
@@ -1085,6 +1096,23 @@
     "catalog": {
       "eyebrow": "Admin / Catalog",
       "title": "Catalog Admin",
+      "entryDescription": "Manage torrent reviews, categories, and tags",
+      "reviews": {
+        "title": "Torrent Reviews",
+        "list": "Review queue",
+        "empty": "No matching torrents",
+        "backToList": "Back to review queue",
+        "approve": "Approve",
+        "reject": "Reject",
+        "approveSuccess": "Torrent approved",
+        "rejectSuccess": "Torrent rejected",
+        "commentPlaceholder": "Approval note is optional; rejection reason is required",
+        "commentRequired": "Enter a rejection reason",
+        "status": { "all": "All statuses", "pending": "Pending", "published": "Published", "rejected": "Rejected" },
+        "filters": { "keyword": "Search title", "allCategories": "All categories" },
+        "table": { "torrent": "Torrent", "status": "Status", "uploader": "Uploader", "submittedAt": "Submitted" },
+        "fields": { "comment": "Review note" }
+      },
       "categories": {
         "title": "Torrent Categories",
         "list": "Category list",
@@ -1669,6 +1697,7 @@
           },
           "catalog": {
             "torrent_source": "Torrent source identifier",
+            "torrent_direct_publish_level": "Direct publish level",
             "global_promotion": "Global promotion",
             "new_torrent_promotion": "New torrent auto promotion"
           },
@@ -1693,6 +1722,7 @@
           },
           "catalog": {
             "torrent_source": "Site identifier written into the private torrent source field.",
+            "torrent_direct_publish_level": "Users at or above the selected role level can publish torrents without review.",
             "global_promotion": "Highest-priority site-wide torrent promotion, including promotion state and optional expiration time.",
             "new_torrent_promotion": "Automatic promotion rules for newly uploaded torrents, with size-based matching and weighted random options."
           },
@@ -2276,6 +2306,37 @@
           "seeders": "N: current seeder count, with a minimum of 1.",
           "params": "C, T0, N0, B0, L, and base are controlled by site rules."
         }
+      }
+    },
+    "torrents": {
+      "title": "My uploads",
+      "summary": "{total} torrents",
+      "empty": "No uploads yet",
+      "files": "{count} files",
+      "edit": "Edit torrent",
+      "resubmit": "Resubmit for review",
+      "resubmitSuccess": "Torrent resubmitted",
+      "publishedAt": "Published",
+      "submittedAt": "Submitted",
+      "filters": {
+        "all": "All",
+        "pending": "Pending",
+        "published": "Published",
+        "rejected": "Rejected"
+      },
+      "status": {
+        "pending": "Pending",
+        "published": "Published",
+        "rejected": "Rejected",
+        "banned": "Banned",
+        "unknown": "Unknown"
+      },
+      "columns": {
+        "torrent": "Torrent",
+        "status": "Status",
+        "size": "Size",
+        "time": "Time",
+        "actions": "Actions"
       }
     },
     "peers": {

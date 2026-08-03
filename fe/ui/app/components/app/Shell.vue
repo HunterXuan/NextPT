@@ -269,6 +269,7 @@ const adminNavSections = computed<ShellNavSection[]>(() => compactNavSections([
     key: 'catalog',
     label: t('admin.nav.catalog'),
     items: compactNavItems([
+      permissionNavItem(Permission.AdminCatalogTorrentManage, { label: t('admin.catalog.reviews.title'), to: '/admin/catalog/reviews', icon: 'i-lucide-clipboard-check', active: isActive('/admin/catalog/reviews') }),
       permissionNavItem(Permission.AdminCatalogCategoryManage, { label: t('admin.catalog.categories.title'), to: '/admin/catalog/categories', icon: 'i-lucide-tags', active: isActive('/admin/catalog/categories') }),
       permissionNavItem(Permission.AdminCatalogTagManage, { label: t('admin.catalog.tags.title'), to: '/admin/catalog/tags', icon: 'i-lucide-tag', active: isActive('/admin/catalog/tags') })
     ])

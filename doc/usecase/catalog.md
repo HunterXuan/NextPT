@@ -18,11 +18,17 @@
 * **发布种子 (CreateTorrent)**
   * **Method/Path**: `POST /torrents`
   * **参数概述**: `file` (Torrent 文件), `name`, `subTitle`, `categoryId`, `description`, `releaseFields`, `metadata`, `tagIds`, `anonymous`
-  * **核心逻辑**: Bencode 解析 -> 校验分类发布字段和标签 -> 在事务内写种子、文件、元数据绑定和标签关系 -> 事务外写对象存储。
+  * **核心逻辑**: Bencode 解析 -> 校验分类发布字段和标签 -> 根据 `catalog.torrent_direct_publish_level` 与当前用户角色等级判断待审核或直接发布 -> 在事务内写种子、文件、元数据绑定和标签关系 -> 事务外写对象存储。
+  * `status` 只描述审核生命周期：`pending`、`published`、`rejected`；发布后的违规处置继续使用独立的 `banned` 字段。
+  * 待审核种子仅上传者和 Staff 可查看、下载并通过 Tracker 组成隐藏审核 swarm；拒绝后的种子可编辑并重新提交。
+  * 新种优惠在实际进入 `published` 时生成，公开列表的发布时间使用 `published_at`。
 * **局部更新种子信息 (UpdateTorrent)**
   * **Method/Path**: `PATCH /torrents/{id}`
 * **删除种子 (DeleteTorrent)**
   * **Method/Path**: `DELETE /torrents/{id}`
+* **重新提交审核 (ResubmitTorrent)**
+  * **Method/Path**: `POST /torrents/{id}:resubmit`
+  * 仅上传者可以重新提交被拒绝的种子；重新按当前用户等级判断待审核或直接发布。
 
 ### 2. TorrentQueryUsecase (种子查阅)
 * **获取种子列表 (ListTorrents)**
@@ -36,6 +42,9 @@
     * 外部资源 ID 使用 `catalog_torrent_meta` 精确匹配；多个 ID 同时传入时按交集查询。`tmdbType` 是 `tmdbId` 的可选附加条件，用于区分电影和剧集。
     * `tagIds` 先按标签组归类；同组多个标签按 OR，跨组按 AND。列表和详情批量返回已关联标签，不逐条查询。
   * RSS 查询复用同一个筛选对象，保证页面筛选与 BT 客户端订阅条件一致。
+* **获取我的发布 (GetMineTorrents)**
+  * **Method/Path**: `GET /torrents:getMine`
+  * 仅查询当前登录用户发布的种子，支持按待审核、已发布和已拒绝状态筛选，并返回审核意见。
 * **获取种子详情 (GetTorrent)**
   * **Method/Path**: `GET /torrents/{id}`
   * 详情中的 `metadata` 包含外部身份绑定、固定优先级合并后的媒体资料和各来源资料。完整资料按 provider 缓存在 Redis，不在每个种子行中复制。

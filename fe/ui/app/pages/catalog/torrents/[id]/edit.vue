@@ -133,6 +133,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 const toast = useToast()
 const catalogTorrents = useCatalogTorrents()
+const adminApi = useAdmin()
 const { user, hasPermission, fetchUser } = useAuth()
 
 const torrent = ref<TorrentDetail | null>(null)
@@ -311,7 +312,7 @@ async function handleSubmit() {
 
   savePending.value = true
   try {
-    await catalogTorrents.updateTorrent(torrentId.value, {
+    const input = {
       categoryId: Number(form.categoryId),
       name: submitTitleValue(),
       subTitle: form.subTitle.trim(),
@@ -320,7 +321,12 @@ async function handleSubmit() {
       metadata: metadataBinding.value,
       tagIds: selectedTagIds.value,
       anonymous: form.anonymous
-    })
+    }
+    if (hasPermission(Permission.AdminCatalogTorrentManage)) {
+      await adminApi.updateCatalogTorrent(torrentId.value, input)
+    } else {
+      await catalogTorrents.updateTorrent(torrentId.value, input)
+    }
     toast.add({
       title: t('catalog.torrents.edit.saved'),
       color: 'success',

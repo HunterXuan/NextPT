@@ -73,12 +73,13 @@ const dashboardStats = computed(() => compactDashboardItems([
   hasPermission(Permission.AdminSysCronManage) ? { key: 'crons', label: t('admin.dashboard.stats.crons'), icon: 'i-lucide-clock-3', value: dashboard.crons } : null
 ]))
 const adminEntryCards = computed(() => compactDashboardItems([
-  hasAnyPermission(Permission.AdminCatalogCategoryManage, Permission.AdminCatalogTagManage)
+  hasAnyPermission(Permission.AdminCatalogTorrentManage, Permission.AdminCatalogCategoryManage, Permission.AdminCatalogTagManage)
     ? {
         key: 'catalog',
-        title: t('admin.catalog.categories.title'),
-        description: t('admin.catalog.title'),
+        title: t('admin.catalog.title'),
+        description: t('admin.catalog.entryDescription'),
         to: firstAllowedRoute([
+          [Permission.AdminCatalogTorrentManage, '/admin/catalog/reviews'],
           [Permission.AdminCatalogCategoryManage, '/admin/catalog/categories'],
           [Permission.AdminCatalogTagManage, '/admin/catalog/tags']
         ]),

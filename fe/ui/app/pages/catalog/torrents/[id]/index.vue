@@ -16,6 +16,23 @@
 
       <div v-else-if="torrent" class="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_44px_340px] lg:items-start">
         <main class="min-w-0 space-y-6">
+          <section
+            v-if="torrent.status !== TorrentStatus.Published"
+            class="flex flex-col gap-3 rounded-lg border px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+            :class="torrent.status === TorrentStatus.Rejected ? 'border-red-200 bg-red-50 text-red-950 dark:border-red-900/70 dark:bg-red-950/25 dark:text-red-100' : 'border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-900/70 dark:bg-amber-950/25 dark:text-amber-100'"
+          >
+            <div class="flex min-w-0 items-start gap-3">
+              <UIcon :name="torrent.status === TorrentStatus.Rejected ? 'i-lucide-circle-x' : 'i-lucide-clock-3'" class="mt-0.5 size-4 shrink-0" />
+              <div class="min-w-0">
+                <p class="text-sm font-semibold">{{ torrent.status === TorrentStatus.Rejected ? $t('catalog.torrents.detail.review.rejected') : $t('catalog.torrents.detail.review.pending') }}</p>
+                <p class="mt-1 text-sm leading-6 opacity-80">{{ torrent.status === TorrentStatus.Rejected ? (torrent.reviewComment || $t('catalog.torrents.detail.review.noComment')) : $t('catalog.torrents.detail.review.pendingHint') }}</p>
+              </div>
+            </div>
+            <div v-if="canOwnerEditTorrent" class="flex shrink-0 items-center gap-2 sm:justify-end">
+              <UButton v-if="canOwnerEditTorrent" color="neutral" variant="outline" size="sm" icon="i-lucide-pencil" :to="localePath(`/catalog/torrents/${torrent.id}/edit`)">{{ $t('catalog.torrents.detail.actions.edit') }}</UButton>
+              <UButton v-if="canResubmitTorrent" color="primary" size="sm" icon="i-lucide-send" :loading="resubmitPending" :disabled="resubmitPending" @click="handleResubmit">{{ $t('catalog.torrents.detail.review.resubmit') }}</UButton>
+            </div>
+          </section>
           <section id="torrent-top" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="p-4 sm:p-5">
               <div class="space-y-4">
@@ -493,6 +510,12 @@
         </nav>
 
         <aside class="app-sticky-offset min-w-0 space-y-3 lg:sticky">
+          <CatalogTorrentReviewPanel
+            v-if="canReviewCatalogTorrent"
+            :torrent-id="torrent.id"
+            @reviewed="handleTorrentReviewed"
+          />
+
           <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center justify-between gap-3">
               <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
@@ -500,16 +523,6 @@
                 <span class="rounded border border-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500 dark:border-slate-700 dark:text-slate-400">
                   #{{ torrent.id }}
                 </span>
-                <UTooltip v-if="canOwnerEditTorrent" :text="$t('catalog.torrents.detail.actions.edit')">
-                  <UButton
-                    color="neutral"
-                    variant="ghost"
-                    size="xs"
-                    icon="i-lucide-pen-line"
-                    :aria-label="$t('catalog.torrents.detail.actions.edit')"
-                    :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
-                  />
-                </UTooltip>
               </div>
             </div>
             <dl class="mt-3 divide-y divide-slate-100 text-sm dark:divide-slate-800">
@@ -527,7 +540,21 @@
               </div>
             </dl>
 
-            <div class="mt-3 grid grid-cols-2 gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+            <div
+              class="mt-3 grid gap-2 border-t border-slate-100 pt-3 dark:border-slate-800"
+              :class="canOwnerEditTorrent ? 'grid-cols-3' : 'grid-cols-2'"
+            >
+              <UButton
+                v-if="canOwnerEditTorrent"
+                color="neutral"
+                variant="outline"
+                size="sm"
+                icon="i-lucide-pen-line"
+                block
+                :to="localePath(`/catalog/torrents/${torrent.id}/edit`)"
+              >
+                {{ $t('catalog.torrents.detail.actions.edit') }}
+              </UButton>
               <AppPermissionButton
                 :permission="Permission.CatalogRequestCreate"
                 color="warning"
@@ -780,8 +807,9 @@
 </template>
 
 <script setup lang="ts">
+import CatalogTorrentReviewPanel from '~/components/catalog/TorrentReviewPanel.vue'
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CatalogTagItem, CommentItem, SubtitleItem, TorrentDetail, TorrentFileItem, TorrentPeerItem } from '~/composables/useCatalogTorrents'
+import { TorrentStatus, type CatalogCategory, type CatalogTagItem, type CommentItem, type SubtitleItem, type TorrentDetail, type TorrentFileItem, type TorrentPeerItem } from '~/composables/useCatalogTorrents'
 import { renderUserMarkdown } from '~/utils/richText'
 
 interface FileTreeNode {
@@ -838,6 +866,7 @@ const pending = ref(false)
 const downloadPending = ref(false)
 const likePending = ref(false)
 const bookmarkPending = ref(false)
+const resubmitPending = ref(false)
 const peersPending = ref(false)
 const commentsPending = ref(false)
 const subtitlesPending = ref(false)
@@ -934,8 +963,10 @@ const canCreateSubtitle = computed(() => hasPermission(Permission.CatalogSubtitl
 const canDownloadSubtitle = computed(() => hasPermission(Permission.CatalogSubtitleDownload))
 const canCreateCatalogComment = computed(() => hasPermission(Permission.CatalogCommentCreate))
 const canManageCatalogTorrent = computed(() => hasPermission(Permission.AdminCatalogTorrentManage))
+const canReviewCatalogTorrent = computed(() => Boolean(canManageCatalogTorrent.value && torrent.value?.status === TorrentStatus.Pending))
 const canUploadSubtitle = computed(() => Boolean(canCreateSubtitle.value && selectedSubtitleFile.value && subtitleForm.language && !subtitleUploadPending.value))
 const canOwnerEditTorrent = computed(() => Boolean(torrent.value && !canManageCatalogTorrent.value && user.value?.user.id === torrent.value.owner?.id))
+const canResubmitTorrent = computed(() => Boolean(canOwnerEditTorrent.value && torrent.value?.status === TorrentStatus.Rejected))
 const adminPromotionOptions = computed(() => [1, 2, 3, 4, 5, 6].map((value) => ({
   value,
   label: t(`catalog.torrents.status.promotion.${value}`)
@@ -1290,6 +1321,32 @@ async function confirmAdminDeleteTorrent(close?: () => void) {
   } finally {
     adminActionPending.value = ''
   }
+}
+
+async function handleResubmit() {
+  if (!torrent.value || resubmitPending.value) return
+  resubmitPending.value = true
+  try {
+    const out = await catalogTorrents.resubmitTorrent(torrent.value.id)
+    toast.add({
+      title: out.status === TorrentStatus.Published ? t('catalog.torrents.detail.review.published') : t('catalog.torrents.detail.review.resubmitted'),
+      color: 'success',
+      icon: 'i-lucide-check-circle'
+    })
+    await loadPage()
+  } catch (error) {
+    toast.add({
+      title: error instanceof ApiError ? error.message : t('common.requestFailed'),
+      color: 'error',
+      icon: 'i-lucide-circle-alert'
+    })
+  } finally {
+    resubmitPending.value = false
+  }
+}
+
+async function handleTorrentReviewed() {
+  await navigateTo(localePath('/admin/catalog/reviews'))
 }
 
 onMounted(loadPage)

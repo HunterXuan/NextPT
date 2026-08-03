@@ -191,7 +191,7 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
-import type { CatalogCategory, CatalogTagGroup, ReleaseFieldsState, ReleaseFieldValue, TorrentMetadataBinding } from '~/composables/useCatalogTorrents'
+import { TorrentStatus, type CatalogCategory, type CatalogTagGroup, type ReleaseFieldsState, type ReleaseFieldValue, type TorrentMetadataBinding } from '~/composables/useCatalogTorrents'
 import { localizeI18nName } from '~/utils/format'
 
 definePageMeta({
@@ -432,7 +432,7 @@ async function handleSubmit() {
     })
 
     toast.add({
-      title: t('catalog.torrents.upload.success', { id: out.torrentId }),
+      title: t(out.status === TorrentStatus.Pending ? 'catalog.torrents.upload.pendingSuccess' : 'catalog.torrents.upload.success', { id: out.torrentId }),
       color: 'success',
       icon: 'i-lucide-check-circle'
     })

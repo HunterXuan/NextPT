@@ -1,5 +1,6 @@
-import type { UploadConfig } from '~/composables/useCatalogTorrents'
+import type { TorrentUpdateInput, UploadConfig } from '~/composables/useCatalogTorrents'
 import type { I18nName } from '~/types/i18n'
+import type { UserSummary } from '~/types/iam'
 
 export interface AdminCatalogCategory {
   id: number
@@ -69,6 +70,38 @@ export interface AdminCatalogTorrentPinInput {
 export interface AdminCatalogTorrentPromotionInput {
   spState: number
   spExpireAt?: string | null
+}
+
+export interface AdminCatalogTorrentReviewItem {
+  id: number
+  name: string
+  subTitle: string
+  categoryId: number
+  owner: UserSummary
+  size: number
+  fileCount: number
+  status: number
+  submittedAt?: string | null
+  publishedAt?: string | null
+  reviewedBy: number
+  reviewedAt?: string | null
+  comment: string
+  createdAt?: string | null
+}
+
+export interface AdminCatalogTorrentReviewListParams {
+  keyword?: string
+  categoryId?: number
+  status?: number
+  page?: number
+  size?: number
+}
+
+export interface AdminCatalogTorrentReviewListOut {
+  list: AdminCatalogTorrentReviewItem[]
+  total: number
+  page: number
+  size: number
 }
 
 export interface AdminForumCategory {
@@ -901,6 +934,38 @@ export function useAdmin() {
     })
   }
 
+  async function listCatalogTorrentReviews(params: AdminCatalogTorrentReviewListParams = {}) {
+    return await fetchApi<AdminCatalogTorrentReviewListOut>('/api/admin/catalog/torrents', {
+      query: params
+    })
+  }
+
+  async function updateCatalogTorrent(id: number, input: TorrentUpdateInput) {
+    const body = {
+      ...input,
+      releaseFields: input.releaseFields === undefined ? undefined : JSON.stringify(input.releaseFields),
+      metadata: input.metadata === undefined ? undefined : JSON.stringify(input.metadata)
+    }
+    await fetchApi(`/api/admin/catalog/torrents/${id}`, {
+      method: 'PATCH',
+      body
+    })
+  }
+
+  async function approveCatalogTorrent(id: number, comment = '') {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:approve`, {
+      method: 'POST',
+      body: { comment }
+    })
+  }
+
+  async function rejectCatalogTorrent(id: number, comment: string) {
+    await fetchApi(`/api/admin/catalog/torrents/${id}:reject`, {
+      method: 'POST',
+      body: { comment }
+    })
+  }
+
   async function pinCatalogTorrent(id: number, input: AdminCatalogTorrentPinInput) {
     await fetchApi(`/api/admin/catalog/torrents/${id}:pin`, {
       method: 'POST',
@@ -1024,6 +1089,10 @@ export function useAdmin() {
     applyUserMod,
     removeUserMod,
     deleteCatalogTorrent,
+    listCatalogTorrentReviews,
+    updateCatalogTorrent,
+    approveCatalogTorrent,
+    rejectCatalogTorrent,
     pinCatalogTorrent,
     unpinCatalogTorrent,
     featureCatalogTorrent,
