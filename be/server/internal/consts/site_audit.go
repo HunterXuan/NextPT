@@ -33,6 +33,9 @@ const (
 	SiteAuditOperationResolve          = "resolve"
 	SiteAuditOperationApply            = "apply"
 	SiteAuditOperationRemove           = "remove"
+	SiteAuditOperationApprove          = "approve"
+	SiteAuditOperationReject           = "reject"
+	SiteAuditOperationEdit             = "edit"
 )
 
 const (

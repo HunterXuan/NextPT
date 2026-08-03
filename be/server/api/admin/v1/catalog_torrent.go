@@ -2,9 +2,41 @@ package v1
 
 import (
 	"server/internal/model/in/adminin"
+	"server/internal/model/in/catalogin"
+	"server/internal/model/out/adminout"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
+
+type CatalogTorrentReviewListReq struct {
+	g.Meta `path:"/catalog/torrents" method:"get" tags:"AdminCatalog" summary:"查询种子审核列表" perm:"admin:catalog/torrent:*"`
+	adminin.CatalogTorrentReviewListInp
+}
+
+type CatalogTorrentReviewListRes struct {
+	adminout.CatalogTorrentReviewListOut
+}
+
+type CatalogTorrentUpdateReq struct {
+	g.Meta `path:"/catalog/torrents/{id}" method:"patch" tags:"AdminCatalog" summary:"编辑种子" perm:"admin:catalog/torrent:*"`
+	catalogin.TorrentUpdateInp
+}
+
+type CatalogTorrentUpdateRes struct{}
+
+type CatalogTorrentApproveReq struct {
+	g.Meta `path:"/catalog/torrents/{id}:approve" method:"post" tags:"AdminCatalog" summary:"通过种子审核" perm:"admin:catalog/torrent:*"`
+	adminin.CatalogTorrentApproveInp
+}
+
+type CatalogTorrentApproveRes struct{}
+
+type CatalogTorrentRejectReq struct {
+	g.Meta `path:"/catalog/torrents/{id}:reject" method:"post" tags:"AdminCatalog" summary:"拒绝种子审核" perm:"admin:catalog/torrent:*"`
+	adminin.CatalogTorrentRejectInp
+}
+
+type CatalogTorrentRejectRes struct{}
 
 type CatalogTorrentPinReq struct {
 	g.Meta `path:"/catalog/torrents/{id}:pin" method:"post" tags:"AdminCatalog" summary:"置顶种子" perm:"admin:catalog/torrent:*"`

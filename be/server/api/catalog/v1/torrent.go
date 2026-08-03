@@ -25,6 +25,15 @@ type TorrentListRes struct {
 	catalogout.TorrentListOut
 }
 
+type TorrentGetMineReq struct {
+	g.Meta `path:"/torrents:getMine" method:"get" tags:"Catalog" summary:"获取我的种子发布记录" perm:"read:catalog/torrent:*"`
+	catalogin.TorrentGetMineInp
+}
+
+type TorrentGetMineRes struct {
+	catalogout.TorrentMineListOut
+}
+
 type TorrentGetHotReq struct {
 	g.Meta `path:"/torrents:getHot" method:"get" tags:"Catalog" summary:"获取热门种子" perm:"read:catalog/torrent:*"`
 	catalogin.TorrentGetHotInp
@@ -116,12 +125,21 @@ type TorrentLikeListRes struct {
 }
 
 type TorrentUpdateReq struct {
-	g.Meta `path:"/torrents/{id}" method:"patch" tags:"Catalog" summary:"局部更新种子信息"`
+	g.Meta `path:"/torrents/{id}" method:"patch" tags:"Catalog" summary:"局部更新种子信息" perm:"update:catalog/torrent:{id}"`
 	catalogin.TorrentUpdateInp
 }
 
 type TorrentUpdateRes struct {
 	catalogout.TorrentUpdateOut
+}
+
+type TorrentResubmitReq struct {
+	g.Meta `path:"/torrents/{id}:resubmit" method:"post" tags:"Catalog" summary:"重新提交种子审核" perm:"update:catalog/torrent:{id}"`
+	catalogin.TorrentResubmitInp
+}
+
+type TorrentResubmitRes struct {
+	catalogout.TorrentResubmitOut
 }
 
 type TorrentFileListReq struct {

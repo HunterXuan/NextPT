@@ -22,7 +22,7 @@ CREATE TABLE `iam_role` (
 CREATE TABLE `iam_user_permission` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `user_id`         BIGINT UNSIGNED NOT NULL,
-    `perm_key`        VARCHAR(100)    NOT NULL COMMENT '权限标识符，如 update:torrent:123 或 update:torrent:*',
+    `perm_key`        VARCHAR(100)    NOT NULL COMMENT '权限标识符，如 update:catalog/torrent:123 或 update:catalog/torrent:*',
     `source_type`     TINYINT         NOT NULL DEFAULT 1 COMMENT '来源类型: 1=manual 2=user_mod',
     `source_id`       BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '来源记录ID，manual=0，user_mod=mod_user_log.id',
     `expire_at`       DATETIME        NULL     COMMENT '权限过期时间，NULL=永久',
@@ -243,7 +243,13 @@ CREATE TABLE `catalog_torrent` (
     `size`            BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '总大小 (bytes)',
     `file_count`      INT UNSIGNED    NOT NULL DEFAULT 0  COMMENT '文件数量',
     `owner_id`        BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '上传者',
-    `anonymous`       BIT(1)      NOT NULL DEFAULT 0  COMMENT '匿名上传',
+    `anonymous`       BIT(1)          NOT NULL DEFAULT 0  COMMENT '匿名上传',
+    `status`          TINYINT         NOT NULL DEFAULT 1  COMMENT '0=待审核 1=已发布 2=已拒绝',
+    `submitted_at`    DATETIME        NULL     COMMENT '最近提交审核时间',
+    `published_at`    DATETIME        NULL     COMMENT '实际发布时间',
+    `reviewed_by`     BIGINT UNSIGNED NOT NULL DEFAULT 0  COMMENT '最后审核人',
+    `reviewed_at`     DATETIME        NULL     COMMENT '最后审核时间',
+    `review_comment`  VARCHAR(1000)   NOT NULL DEFAULT '' COMMENT '最后审核意见',
 
     -- 促销
     `sp_state`        TINYINT         NOT NULL DEFAULT 0  COMMENT '0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off',
@@ -262,8 +268,7 @@ CREATE TABLE `catalog_torrent` (
     `rewards_count`   INT UNSIGNED    NOT NULL DEFAULT 0  COMMENT '收到的赞赏次数',
     `rewards_amount`  DOUBLE          NOT NULL DEFAULT 0  COMMENT '收到的赞赏总金额(Bonus)',
 
-    `visible`         BIT(1)      NOT NULL DEFAULT 1,
-    `banned`          BIT(1)      NOT NULL DEFAULT 0,
+    `banned`          BIT(1)          NOT NULL DEFAULT 0,
     `last_action`     DATETIME        NULL     COMMENT 'Tracker 最后活动时间',
     `last_reseed`     DATETIME        NULL,
 
@@ -272,8 +277,9 @@ CREATE TABLE `catalog_torrent` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_info_hash` (`info_hash`),
     KEY `idx_owner` (`owner_id`),
-    KEY `idx_category_visible` (`category_id`, `visible`, `banned`),
-    KEY `idx_pinned_created` (`visible`, `banned`, `is_pinned`, `pin_weight`, `created_at`),
+    KEY `idx_category_status` (`category_id`, `status`, `banned`, `published_at`),
+    KEY `idx_published` (`status`, `banned`, `is_pinned`, `pin_weight`, `published_at`),
+    KEY `idx_review_queue` (`status`, `submitted_at`),
     FULLTEXT KEY `ft_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='种子核心表';
 

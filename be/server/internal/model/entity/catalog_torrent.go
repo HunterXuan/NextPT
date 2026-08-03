@@ -23,6 +23,12 @@ type CatalogTorrent struct {
 	FileCount      uint        `json:"fileCount"      orm:"file_count"      description:"文件数量"`
 	OwnerId        uint64      `json:"ownerId"        orm:"owner_id"        description:"上传者"`
 	Anonymous      bool        `json:"anonymous"      orm:"anonymous"       description:"匿名上传"`
+	Status         int         `json:"status"         orm:"status"          description:"0=待审核 1=已发布 2=已拒绝"`
+	SubmittedAt    *gtime.Time `json:"submittedAt"    orm:"submitted_at"    description:"最近提交审核时间"`
+	PublishedAt    *gtime.Time `json:"publishedAt"    orm:"published_at"    description:"实际发布时间"`
+	ReviewedBy     uint64      `json:"reviewedBy"     orm:"reviewed_by"     description:"最后审核人"`
+	ReviewedAt     *gtime.Time `json:"reviewedAt"     orm:"reviewed_at"     description:"最后审核时间"`
+	ReviewComment  string      `json:"reviewComment"  orm:"review_comment"  description:"最后审核意见"`
 	SpState        int         `json:"spState"        orm:"sp_state"        description:"0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off"`
 	SpExpireAt     *gtime.Time `json:"spExpireAt"     orm:"sp_expire_at"    description:"促销到期时间"`
 	IsFeatured     bool        `json:"isFeatured"     orm:"is_featured"     description:"是否推荐"`
@@ -36,7 +42,6 @@ type CatalogTorrent struct {
 	LikeCount      uint        `json:"likeCount"      orm:"like_count"      description:""`
 	RewardsCount   uint        `json:"rewardsCount"   orm:"rewards_count"   description:"收到的赞赏次数"`
 	RewardsAmount  float64     `json:"rewardsAmount"  orm:"rewards_amount"  description:"收到的赞赏总金额(Bonus)"`
-	Visible        bool        `json:"visible"        orm:"visible"         description:""`
 	Banned         bool        `json:"banned"         orm:"banned"          description:""`
 	LastAction     *gtime.Time `json:"lastAction"     orm:"last_action"     description:"Tracker 最后活动时间"`
 	LastReseed     *gtime.Time `json:"lastReseed"     orm:"last_reseed"     description:""`

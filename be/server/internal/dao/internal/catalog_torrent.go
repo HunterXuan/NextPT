@@ -33,6 +33,12 @@ type CatalogTorrentColumns struct {
 	FileCount      string // 文件数量
 	OwnerId        string // 上传者
 	Anonymous      string // 匿名上传
+	Status         string // 0=待审核 1=已发布 2=已拒绝
+	SubmittedAt    string // 最近提交审核时间
+	PublishedAt    string // 实际发布时间
+	ReviewedBy     string // 最后审核人
+	ReviewedAt     string // 最后审核时间
+	ReviewComment  string // 最后审核意见
 	SpState        string // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off
 	SpExpireAt     string // 促销到期时间
 	IsFeatured     string // 是否推荐
@@ -46,7 +52,6 @@ type CatalogTorrentColumns struct {
 	LikeCount      string //
 	RewardsCount   string // 收到的赞赏次数
 	RewardsAmount  string // 收到的赞赏总金额(Bonus)
-	Visible        string //
 	Banned         string //
 	LastAction     string // Tracker 最后活动时间
 	LastReseed     string //
@@ -68,6 +73,12 @@ var catalogTorrentColumns = CatalogTorrentColumns{
 	FileCount:      "file_count",
 	OwnerId:        "owner_id",
 	Anonymous:      "anonymous",
+	Status:         "status",
+	SubmittedAt:    "submitted_at",
+	PublishedAt:    "published_at",
+	ReviewedBy:     "reviewed_by",
+	ReviewedAt:     "reviewed_at",
+	ReviewComment:  "review_comment",
 	SpState:        "sp_state",
 	SpExpireAt:     "sp_expire_at",
 	IsFeatured:     "is_featured",
@@ -81,7 +92,6 @@ var catalogTorrentColumns = CatalogTorrentColumns{
 	LikeCount:      "like_count",
 	RewardsCount:   "rewards_count",
 	RewardsAmount:  "rewards_amount",
-	Visible:        "visible",
 	Banned:         "banned",
 	LastAction:     "last_action",
 	LastReseed:     "last_reseed",

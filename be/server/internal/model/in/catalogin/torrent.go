@@ -38,6 +38,12 @@ type TorrentListInp struct {
 	Sort            string `json:"sort" d:"newest" v:"in:newest,oldest,seeders,leechers,completed,size_asc,size_desc" description:"排序方式"`
 }
 
+type TorrentGetMineInp struct {
+	Status int `json:"status" d:"-1" v:"in:-1,0,1,2" description:"审核状态，-1=全部"`
+	Page   int `json:"page" d:"1" v:"min:1" description:"页码"`
+	Size   int `json:"size" d:"10" v:"min:1|max:100" description:"每页数量"`
+}
+
 type TorrentRssInp struct {
 	TorrentMetadataFilterInp
 	Size            int    `json:"size" d:"50" v:"min:1|max:100" description:"返回数量"`
@@ -115,6 +121,10 @@ type TorrentUpdateInp struct {
 	Metadata      *string `json:"metadata" description:"外部资源元数据绑定 JSON"`
 	TagIds        *[]uint `json:"tagIds" description:"标签 ID 列表"`
 	Anonymous     *bool   `json:"anonymous" description:"匿名上传"`
+}
+
+type TorrentResubmitInp struct {
+	Id uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
 }
 
 type TorrentFileListInp struct {

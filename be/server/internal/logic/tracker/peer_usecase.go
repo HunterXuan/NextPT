@@ -73,7 +73,7 @@ func (s *sTrackerPeerUsecase) Announce(ctx context.Context, actor *model.Actor, 
 	}
 
 	// 统一 Tracker 级别的可见性与封禁拦截
-	if err := service.CatalogTorrentDomain().CheckTorrentVisiblePolicy(ctx, user, torrent); err != nil {
+	if err := service.CatalogTorrentDomain().CheckTorrentAnnouncePolicy(ctx, user, torrent); err != nil {
 		// 返回标准的 tracker 失败文本，最终会被外层包装成 bencode 的 failure reason
 		return nil, errors.New("torrent not found or banned")
 	}
@@ -442,7 +442,7 @@ func (s *sTrackerPeerUsecase) Scrape(ctx context.Context, actor *model.Actor, in
 			continue
 		}
 
-		if err := service.CatalogTorrentDomain().CheckTorrentVisiblePolicy(ctx, actor, t); err != nil {
+		if err := service.CatalogTorrentDomain().CheckTorrentAnnouncePolicy(ctx, actor, t); err != nil {
 			continue
 		}
 

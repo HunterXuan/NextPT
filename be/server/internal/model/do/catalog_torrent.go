@@ -25,6 +25,12 @@ type CatalogTorrent struct {
 	FileCount      any         // 文件数量
 	OwnerId        any         // 上传者
 	Anonymous      any         // 匿名上传
+	Status         any         // 0=待审核 1=已发布 2=已拒绝
+	SubmittedAt    *gtime.Time // 最近提交审核时间
+	PublishedAt    *gtime.Time // 实际发布时间
+	ReviewedBy     any         // 最后审核人
+	ReviewedAt     *gtime.Time // 最后审核时间
+	ReviewComment  any         // 最后审核意见
 	SpState        any         // 0=normal 1=free 2=2x 3=2xfree 4=50%off 5=2x50% 6=30%off
 	SpExpireAt     *gtime.Time // 促销到期时间
 	IsFeatured     any         // 是否推荐
@@ -38,7 +44,6 @@ type CatalogTorrent struct {
 	LikeCount      any         //
 	RewardsCount   any         // 收到的赞赏次数
 	RewardsAmount  any         // 收到的赞赏总金额(Bonus)
-	Visible        any         //
 	Banned         any         //
 	LastAction     *gtime.Time // Tracker 最后活动时间
 	LastReseed     *gtime.Time //

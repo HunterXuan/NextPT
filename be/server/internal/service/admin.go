@@ -35,6 +35,10 @@ type (
 		DeleteTag(ctx context.Context, actor *model.Actor, in adminin.CatalogTagDeleteInp) error
 	}
 	IAdminCatalogTorrentUsecase interface {
+		ReviewList(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentReviewListInp) (*adminout.CatalogTorrentReviewListOut, error)
+		Update(ctx context.Context, actor *model.Actor, in catalogin.TorrentUpdateInp) error
+		Approve(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentApproveInp) error
+		Reject(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentRejectInp) error
 		Pin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentPinInp) error
 		Unpin(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentUnpinInp) error
 		Feature(ctx context.Context, actor *model.Actor, in adminin.CatalogTorrentFeatureInp) error

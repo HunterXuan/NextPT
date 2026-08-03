@@ -10,6 +10,7 @@ import (
 type TorrentUploadOut struct {
 	TorrentId uint64 `json:"torrentId" description:"新种子的ID"`
 	InfoHash  string `json:"infoHash" description:"新种子的InfoHash(Hex)"`
+	Status    int    `json:"status" description:"审核状态"`
 }
 
 type TorrentListItem struct {
@@ -37,6 +38,28 @@ type TorrentListItem struct {
 type TorrentListOut struct {
 	List  []TorrentListItem `json:"list" description:"种子列表"`
 	Total int               `json:"total" description:"总记录数"`
+}
+
+type TorrentMineItem struct {
+	Id            uint64 `json:"id"`
+	Name          string `json:"name"`
+	SubTitle      string `json:"subTitle"`
+	Size          uint64 `json:"size"`
+	FileCount     uint   `json:"fileCount"`
+	Status        int    `json:"status"`
+	Banned        bool   `json:"banned"`
+	Seeders       uint   `json:"seeders"`
+	Leechers      uint   `json:"leechers"`
+	ReviewComment string `json:"reviewComment"`
+	SubmittedAt   string `json:"submittedAt"`
+	PublishedAt   string `json:"publishedAt"`
+	CreatedAt     string `json:"createdAt"`
+	UpdatedAt     string `json:"updatedAt"`
+}
+
+type TorrentMineListOut struct {
+	List  []TorrentMineItem `json:"list"`
+	Total int               `json:"total"`
 }
 
 type TorrentRssItem struct {
@@ -88,8 +111,16 @@ type TorrentDetailOut struct {
 	Description   string              `json:"description" description:"详细描述"`
 	ReleaseFields map[string]any      `json:"releaseFields" description:"发布结构化字段值"`
 	Metadata      *TorrentMetadataOut `json:"metadata,omitempty" description:"外部资源元数据"`
+	Status        int                 `json:"status" description:"审核状态"`
+	SubmittedAt   string              `json:"submittedAt" description:"提交审核时间"`
+	PublishedAt   string              `json:"publishedAt" description:"实际发布时间"`
+	ReviewComment string              `json:"reviewComment" description:"审核意见"`
 	IsBookmarked  bool                `json:"isBookmarked" description:"是否收藏"`
 	IsLiked       bool                `json:"isLiked" description:"是否已感谢(点赞)"`
+}
+
+type TorrentResubmitOut struct {
+	Status int `json:"status" description:"重新提交后的审核状态"`
 }
 
 type TorrentMetadataBinding struct {

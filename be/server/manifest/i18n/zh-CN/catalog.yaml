@@ -62,6 +62,7 @@ catalog.torrent.category_req: 请选择分类
 catalog.torrent.count_failed: 获取种子总数失败
 catalog.torrent.duplicate: 系统中已存在完全相同的种子
 catalog.torrent.file_req: 上传的种子文件不能为空
+catalog.torrent.banned: 种子已被封禁
 catalog.torrent.generate_final_failed: 生成最终种子文件失败
 catalog.torrent.generate_specific_failed: 生成用户专属种子失败
 catalog.torrent.get_reward_count_failed: 获取赞赏总数失败
@@ -71,6 +72,7 @@ catalog.torrent.invalid_cache: 无效的本地种子缓存文件
 catalog.torrent.invalid_format: 无效的种子文件格式
 catalog.torrent.load_failed: 加载种子文件失败
 catalog.torrent.not_found: 种子不存在
+catalog.torrent.not_visible: 种子当前不可访问
 catalog.torrent.open_upload_failed: 打开上传文件失败
 catalog.torrent.passkey_not_found: 未找到用户密钥
 catalog.torrent.query_failed: 获取种子列表失败
@@ -85,6 +87,8 @@ catalog.torrent.reencode_info_failed: 重新编码种子 Info 字典失败
 catalog.torrent.release_field_option_invalid: 发布字段选项无效
 catalog.torrent.release_field_required: 请填写必填发布字段
 catalog.torrent.release_fields_invalid: 发布字段格式无效
+catalog.torrent.review_resubmit_invalid: 只有已拒绝的种子可以重新提交审核
+catalog.torrent.review_state_changed: 种子审核状态已发生变化，请刷新后重试
 catalog.torrent.transaction_failed: 数据库事务或存储上传失败
 catalog.torrent.unmarshal_info_failed: 解析种子 Info 字典失败
 catalog.torrent.upload_config_invalid: 分类发布配置无效

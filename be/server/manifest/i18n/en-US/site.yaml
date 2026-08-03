@@ -1,4 +1,8 @@
 site.message.catalog_comment.title: New comment on torrent "%s"
+site.message.catalog_torrent_review.approved.content: Torrent "%s" was approved and published
+site.message.catalog_torrent_review.approved.title: Torrent approved
+site.message.catalog_torrent_review.rejected.content: "Torrent \"%s\" was rejected\n\nReason: %s"
+site.message.catalog_torrent_review.rejected.title: Torrent rejected
 site.message.catalog_request.abandoned.content: The claimant abandoned your request "%s"
 site.message.catalog_request.abandoned.title: Request claim abandoned
 site.message.catalog_request.cancelled.content: Request "%s" was cancelled

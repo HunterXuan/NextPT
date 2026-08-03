@@ -91,6 +91,42 @@ func (s *sCatalogTorrentUsecase) List(ctx context.Context, actor *model.Actor, i
 	}, nil
 }
 
+func (s *sCatalogTorrentUsecase) ListMine(ctx context.Context, actor *model.Actor, in catalogin.TorrentGetMineInp) (*catalogout.TorrentMineListOut, error) {
+	if actor == nil {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
+	}
+
+	torrents, total, err := service.CatalogTorrentDomain().QueryUserTorrents(ctx, actor.Id, model.CatalogUserTorrentListOptions{
+		Status: in.Status,
+		Page:   in.Page,
+		Size:   in.Size,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	list := make([]catalogout.TorrentMineItem, 0, len(torrents))
+	for _, torrent := range torrents {
+		list = append(list, catalogout.TorrentMineItem{
+			Id:            torrent.Id,
+			Name:          torrent.Name,
+			SubTitle:      torrent.SubTitle,
+			Size:          torrent.Size,
+			FileCount:     torrent.FileCount,
+			Status:        torrent.Status,
+			Banned:        torrent.Banned,
+			Seeders:       torrent.Seeders,
+			Leechers:      torrent.Leechers,
+			ReviewComment: torrent.ReviewComment,
+			SubmittedAt:   s.formatTime(torrent.SubmittedAt),
+			PublishedAt:   s.formatTime(torrent.PublishedAt),
+			CreatedAt:     s.formatTime(torrent.CreatedAt),
+			UpdatedAt:     s.formatTime(torrent.UpdatedAt),
+		})
+	}
+	return &catalogout.TorrentMineListOut{List: list, Total: total}, nil
+}
+
 func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor, in catalogin.TorrentRssInp) (*catalogout.TorrentRssOut, error) {
 	if actor == nil {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
@@ -165,7 +201,7 @@ func (s *sCatalogTorrentUsecase) ListRss(ctx context.Context, actor *model.Actor
 			Seeders:   torrent.Seeders,
 			Leechers:  torrent.Leechers,
 			Snatched:  torrent.TimesCompleted,
-			CreatedAt: torrent.CreatedAt,
+			CreatedAt: s.torrentPublishedAt(&torrent),
 		})
 	}
 
@@ -261,7 +297,7 @@ func (s *sCatalogTorrentUsecase) Download(ctx context.Context, actor *model.Acto
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
 	}
 	// 获取种子记录并校验可见性
-	torrent, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	torrent, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -363,6 +399,10 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 	if err != nil {
 		return nil, err
 	}
+	status := consts.CatalogTorrentStatusPending
+	if s.canPublishTorrentDirectly(ctx, actor) {
+		status = consts.CatalogTorrentStatusPublished
+	}
 
 	var finalTorrentBuf bytes.Buffer
 	if err := mi.Write(&finalTorrentBuf); err != nil {
@@ -371,12 +411,15 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 
 	var torrentId uint64
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, releaseData, totalSize, fileCount, info, metadataBinding)
+		tid, err := s.saveTorrentToDB(ctx, actor, in, infoHashBytes, releaseData, totalSize, fileCount, info, metadataBinding, status)
 		if err != nil {
 			return err
 		}
 		torrentId = tid
-		return service.CatalogTagDomain().ReplaceTorrentTags(ctx, torrentId, tagIds)
+		if err := service.CatalogTagDomain().ReplaceTorrentTags(ctx, torrentId, tagIds); err != nil {
+			return err
+		}
+		return service.IamPermissionDomain().GrantUserPermission(ctx, actor.Id, s.torrentUpdatePermission(torrentId), false)
 	})
 
 	if err != nil {
@@ -390,12 +433,19 @@ func (s *sCatalogTorrentUsecase) Upload(ctx context.Context, actor *model.Actor,
 			return service.CatalogTorrentDomain().DeleteTorrent(ctx, torrentId)
 		})
 		s.invalidateTorrentInfoHashCache(ctx, infoHashBytes)
+		_ = service.IamPermissionDomain().RevokeUserPermission(ctx, actor.Id, s.torrentUpdatePermission(torrentId), false)
+		service.IamUserUsecase().InvalidateUserCache(ctx, actor.Id)
 		return nil, gerror.Wrap(err, gi18n.T(ctx, "catalog.torrent.upload_storage_failed"))
+	}
+	service.IamUserUsecase().InvalidateUserCache(ctx, actor.Id)
+	if status == consts.CatalogTorrentStatusPublished {
+		s.invalidateHotTorrentCache(ctx)
 	}
 
 	return &catalogout.TorrentUploadOut{
 		TorrentId: torrentId,
 		InfoHash:  infoHashHex,
+		Status:    status,
 	}, nil
 }
 
@@ -456,7 +506,7 @@ func (s *sCatalogTorrentUsecase) HardDeleteTorrent(ctx context.Context, torrentI
 		if err := service.ModReportDomain().DeleteReportsByTargets(ctx, consts.ModReportTargetTypeCatalogSubtitle, subtitleIds); err != nil {
 			return err
 		}
-		return nil
+		return service.IamPermissionDomain().RevokeUserPermission(ctx, torrent.OwnerId, s.torrentUpdatePermission(torrentId), false)
 	})
 
 	if err != nil {
@@ -464,6 +514,10 @@ func (s *sCatalogTorrentUsecase) HardDeleteTorrent(ctx context.Context, torrentI
 	}
 
 	s.invalidateTorrentInfoHashCache(ctx, torrent.InfoHash)
+	service.IamUserUsecase().InvalidateUserCache(ctx, torrent.OwnerId)
+	if torrent.Status == consts.CatalogTorrentStatusPublished {
+		s.invalidateHotTorrentCache(ctx)
+	}
 
 	// 3. 数据库删除成功后，清理 S3 和本地的文件
 	// 删种子文件
@@ -484,6 +538,12 @@ func (s *sCatalogTorrentUsecase) invalidateTorrentInfoHashCache(ctx context.Cont
 	}
 
 	cacheKey := service.SysCache().KeyCatalogTorrentInfoHash(ctx, hex.EncodeToString(infoHash))
+	_, _ = gcache.Remove(ctx, cacheKey)
+	_ = service.SysCache().PublishInvalidate(ctx, cacheKey)
+}
+
+func (s *sCatalogTorrentUsecase) invalidateHotTorrentCache(ctx context.Context) {
+	cacheKey := service.SysCache().KeyCatalogHotTorrents(ctx)
 	_, _ = gcache.Remove(ctx, cacheKey)
 	_ = service.SysCache().PublishInvalidate(ctx, cacheKey)
 }
@@ -570,7 +630,8 @@ func (s *sCatalogTorrentUsecase) extractTorrentMetadata(info *metainfo.Info) (ui
 	return totalSize, fileCount
 }
 
-func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData releasefield.Result, totalSize uint64, fileCount uint, info *metainfo.Info, metadataBinding *model.CatalogTorrentMetadataBinding) (uint64, error) {
+func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *model.Actor, in catalogin.TorrentUploadInp, infoHashBytes []byte, releaseData releasefield.Result, totalSize uint64, fileCount uint, info *metainfo.Info, metadataBinding *model.CatalogTorrentMetadataBinding, status int) (uint64, error) {
+	now := gtime.Now()
 	torrentInsert := &entity.CatalogTorrent{
 		InfoHash:    infoHashBytes,
 		Name:        releaseData.Name,
@@ -582,12 +643,17 @@ func (s *sCatalogTorrentUsecase) saveTorrentToDB(ctx context.Context, actor *mod
 		FileCount:   fileCount,
 		OwnerId:     actor.Id,
 		Anonymous:   in.Anonymous,
-		Visible:     true,
+		Status:      status,
 	}
-	promotion := service.CatalogTorrentDomain().PickNewTorrentPromotion(ctx, totalSize, gtime.Now())
-	if promotion.SpState != consts.ResourceTorrentSpNormal {
-		torrentInsert.SpState = promotion.SpState
-		torrentInsert.SpExpireAt = promotion.SpExpireAt
+	if status == consts.CatalogTorrentStatusPublished {
+		torrentInsert.PublishedAt = now
+		promotion := service.CatalogTorrentDomain().PickNewTorrentPromotion(ctx, totalSize, now)
+		if promotion.SpState != consts.ResourceTorrentSpNormal {
+			torrentInsert.SpState = promotion.SpState
+			torrentInsert.SpExpireAt = promotion.SpExpireAt
+		}
+	} else {
+		torrentInsert.SubmittedAt = now
 	}
 	if len(releaseData.Fields) > 0 {
 		torrentInsert.ReleaseFields = gjson.New(releaseData.Fields)
@@ -630,7 +696,7 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 
 	err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		var err error
-		torrent, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+		torrent, err = service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 		if err != nil {
 			return err
 		}
@@ -681,7 +747,7 @@ func (s *sCatalogTorrentUsecase) Reward(ctx context.Context, actor *model.Actor,
 
 // RewardList 获取种子赞赏列表
 func (s *sCatalogTorrentUsecase) RewardList(ctx context.Context, actor *model.Actor, in catalogin.TorrentRewardListInp) (*catalogout.TorrentRewardListOut, error) {
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -718,7 +784,7 @@ func (s *sCatalogTorrentUsecase) Bookmark(ctx context.Context, actor *model.Acto
 		return gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
 	}
 	userId := actor.Id
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return err
 	}
@@ -789,7 +855,7 @@ func (s *sCatalogTorrentUsecase) formatTorrentListItems(ctx context.Context, act
 			LikeCount:  e.LikeCount,
 			Owner:      owner,
 			Anonymous:  e.Anonymous,
-			CreatedAt:  e.CreatedAt.String(),
+			CreatedAt:  s.formatTime(s.torrentPublishedAt(&e)),
 		})
 	}
 	return list
@@ -821,7 +887,7 @@ func (s *sCatalogTorrentUsecase) formatHotTorrentListItems(ctx context.Context, 
 			Leechers:   e.Leechers,
 			Snatched:   e.TimesCompleted,
 			LikeCount:  e.LikeCount,
-			CreatedAt:  e.CreatedAt.String(),
+			CreatedAt:  s.formatTime(s.torrentPublishedAt(&e)),
 		})
 	}
 	return list
@@ -845,6 +911,26 @@ func (s *sCatalogTorrentUsecase) formatTime(value *gtime.Time) string {
 		return ""
 	}
 	return value.String()
+}
+
+func (s *sCatalogTorrentUsecase) torrentPublishedAt(torrent *entity.CatalogTorrent) *gtime.Time {
+	if torrent == nil {
+		return nil
+	}
+	if torrent.PublishedAt != nil {
+		return torrent.PublishedAt
+	}
+	return torrent.CreatedAt
+}
+
+func (s *sCatalogTorrentUsecase) visibleReviewComment(actor *model.Actor, torrent *entity.CatalogTorrent) string {
+	if actor == nil || torrent == nil {
+		return ""
+	}
+	if actor.IsStaff || actor.Id == torrent.OwnerId {
+		return torrent.ReviewComment
+	}
+	return ""
 }
 
 func (s *sCatalogTorrentUsecase) shouldHideTorrentOwner(actor *model.Actor, torrent entity.CatalogTorrent) bool {
@@ -891,7 +977,7 @@ func (s *sCatalogTorrentUsecase) loadUserSummaryMap(ctx context.Context, userIds
 }
 
 func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Actor, in catalogin.TorrentGetInp) (*catalogout.TorrentDetailOut, error) {
-	torrent, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	torrent, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -923,6 +1009,10 @@ func (s *sCatalogTorrentUsecase) GetTorrent(ctx context.Context, actor *model.Ac
 		Description:     torrent.Description,
 		ReleaseFields:   releaseFields,
 		Metadata:        metadata,
+		Status:          torrent.Status,
+		SubmittedAt:     s.formatTime(torrent.SubmittedAt),
+		PublishedAt:     s.formatTime(torrent.PublishedAt),
+		ReviewComment:   s.visibleReviewComment(actor, torrent),
 		IsBookmarked:    isBookmarked,
 		IsLiked:         isLiked,
 	}, nil
@@ -932,7 +1022,7 @@ func (s *sCatalogTorrentUsecase) ToggleLike(ctx context.Context, actor *model.Ac
 	if actor == nil {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
 	}
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -945,7 +1035,7 @@ func (s *sCatalogTorrentUsecase) ToggleLike(ctx context.Context, actor *model.Ac
 }
 
 func (s *sCatalogTorrentUsecase) ListLikes(ctx context.Context, actor *model.Actor, in catalogin.TorrentLikeListInp) (*catalogout.TorrentLikeListOut, error) {
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -1064,6 +1154,61 @@ func (s *sCatalogTorrentUsecase) Update(ctx context.Context, actor *model.Actor,
 	return &catalogout.TorrentUpdateOut{Success: true}, nil
 }
 
+func (s *sCatalogTorrentUsecase) Resubmit(ctx context.Context, actor *model.Actor, in catalogin.TorrentResubmitInp) (*catalogout.TorrentResubmitOut, error) {
+	if actor == nil {
+		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
+	}
+
+	status := consts.CatalogTorrentStatusPending
+	if s.canPublishTorrentDirectly(ctx, actor) {
+		status = consts.CatalogTorrentStatusPublished
+	}
+	now := gtime.Now()
+	var submittedAt *gtime.Time
+	var publishedAt *gtime.Time
+	spState := consts.ResourceTorrentSpNormal
+	var spExpireAt *gtime.Time
+	var torrent *entity.CatalogTorrent
+
+	err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		current, err := service.CatalogTorrentDomain().GetTorrentByIdForUpdate(ctx, in.Id)
+		if err != nil {
+			return err
+		}
+		if current.OwnerId != actor.Id {
+			return gerror.New(gi18n.T(ctx, "catalog.general.forbidden"))
+		}
+		if current.Status != consts.CatalogTorrentStatusRejected {
+			return gerror.New(gi18n.T(ctx, "catalog.torrent.review_resubmit_invalid"))
+		}
+		torrent = current
+		if status == consts.CatalogTorrentStatusPublished {
+			publishedAt = now
+			promotion := service.CatalogTorrentDomain().PickNewTorrentPromotion(ctx, current.Size, now)
+			spState = promotion.SpState
+			spExpireAt = promotion.SpExpireAt
+		} else {
+			submittedAt = now
+		}
+		updated, err := service.CatalogTorrentDomain().ResubmitTorrent(ctx, in.Id, status, submittedAt, publishedAt, spState, spExpireAt)
+		if err != nil {
+			return err
+		}
+		if !updated {
+			return gerror.New(gi18n.T(ctx, "catalog.torrent.review_state_changed"))
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	s.invalidateTorrentInfoHashCache(ctx, torrent.InfoHash)
+	if status == consts.CatalogTorrentStatusPublished {
+		s.invalidateHotTorrentCache(ctx)
+	}
+	return &catalogout.TorrentResubmitOut{Status: status}, nil
+}
+
 func (s *sCatalogTorrentUsecase) prepareMetadataBinding(ctx context.Context, raw string) (*model.CatalogTorrentMetadataBinding, error) {
 	if strings.TrimSpace(raw) == "" {
 		return nil, nil
@@ -1084,7 +1229,7 @@ func (s *sCatalogTorrentUsecase) canEditTorrent(actor *model.Actor, torrent *ent
 }
 
 func (s *sCatalogTorrentUsecase) ListFiles(ctx context.Context, actor *model.Actor, in catalogin.TorrentFileListInp) (*catalogout.TorrentFileListOut, error) {
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -1106,7 +1251,7 @@ func (s *sCatalogTorrentUsecase) ListFiles(ctx context.Context, actor *model.Act
 }
 
 func (s *sCatalogTorrentUsecase) ListPeers(ctx context.Context, actor *model.Actor, in catalogin.TorrentPeerListInp) (*catalogout.TorrentPeerListOut, error) {
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -1146,7 +1291,7 @@ func (s *sCatalogTorrentUsecase) Report(ctx context.Context, actor *model.Actor,
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
 	}
 
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -1172,6 +1317,21 @@ func (s *sCatalogTorrentUsecase) getCatalogConfigCache(ctx context.Context, key 
 		return service.SiteConfigDomain().GetByPath(ctx, key)
 	}
 	return gvar.New(val.Val())
+}
+
+func (s *sCatalogTorrentUsecase) canPublishTorrentDirectly(ctx context.Context, actor *model.Actor) bool {
+	if actor == nil {
+		return false
+	}
+	if actor.IsStaff {
+		return true
+	}
+	directPublishLevel := s.getCatalogConfigCache(ctx, consts.SiteConfigCatalogTorrentDirectPublishLevel).Int()
+	return actor.RoleLevel >= directPublishLevel
+}
+
+func (s *sCatalogTorrentUsecase) torrentUpdatePermission(torrentId uint64) string {
+	return fmt.Sprintf("update:catalog/torrent:%d", torrentId)
 }
 
 func (s *sCatalogTorrentUsecase) resolveTorrentRelease(

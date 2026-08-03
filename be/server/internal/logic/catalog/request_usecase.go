@@ -109,7 +109,7 @@ func (s *sCatalogRequestUsecase) Create(ctx context.Context, actor *model.Actor,
 		request.CategoryId = in.CategoryId
 		request.Title = title
 	case consts.CatalogRequestTypeReseed:
-		torrent, loadErr := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.TargetTorrentId)
+		torrent, loadErr := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.TargetTorrentId)
 		if loadErr != nil {
 			return nil, loadErr
 		}
@@ -251,7 +251,7 @@ func (s *sCatalogRequestUsecase) Submit(ctx context.Context, actor *model.Actor,
 		if in.ResultTorrentId == 0 {
 			return gerror.New(gi18n.T(ctx, "catalog.request.result_torrent_req"))
 		}
-		if _, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.ResultTorrentId); err != nil {
+		if _, err = service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.ResultTorrentId); err != nil {
 			return err
 		}
 		resultTorrentId = in.ResultTorrentId

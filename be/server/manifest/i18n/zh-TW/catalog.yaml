@@ -62,6 +62,7 @@ catalog.torrent.category_req: 请选择分类
 catalog.torrent.count_failed: 獲取種子總數失敗
 catalog.torrent.duplicate: 系统中已存在完全相同的种子
 catalog.torrent.file_req: 上传的种子文件不能为空
+catalog.torrent.banned: 種子已被封禁
 catalog.torrent.generate_final_failed: 生成最終種子文件失敗
 catalog.torrent.generate_specific_failed: 生成用戶專屬種子失敗
 catalog.torrent.get_reward_count_failed: 獲取讚賞總數失敗
@@ -71,6 +72,7 @@ catalog.torrent.invalid_cache: 無效的本地種子緩存文件
 catalog.torrent.invalid_format: 無效的種子文件格式
 catalog.torrent.load_failed: 加載種子文件失敗
 catalog.torrent.not_found: 种子不存在
+catalog.torrent.not_visible: 種子目前無法存取
 catalog.torrent.open_upload_failed: 打開上傳文件失敗
 catalog.torrent.passkey_not_found: 未找到用户密钥
 catalog.torrent.query_failed: 獲取種子列表失敗
@@ -85,6 +87,8 @@ catalog.torrent.reencode_info_failed: 重新編碼種子 Info 字典失敗
 catalog.torrent.release_field_option_invalid: 發布欄位選項無效
 catalog.torrent.release_field_required: 請填寫必填發布欄位
 catalog.torrent.release_fields_invalid: 發布欄位格式無效
+catalog.torrent.review_resubmit_invalid: 只有已拒絕的種子可以重新提交審核
+catalog.torrent.review_state_changed: 種子審核狀態已變更，請重新整理後再試
 catalog.torrent.transaction_failed: 數據庫事務或存儲上傳失敗
 catalog.torrent.unmarshal_info_failed: 解析種子 Info 字典失敗
 catalog.torrent.upload_config_invalid: 分類發布配置無效

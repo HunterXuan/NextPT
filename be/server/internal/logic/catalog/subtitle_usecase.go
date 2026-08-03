@@ -91,7 +91,7 @@ func (s *sCatalogSubtitleUsecase) List(ctx context.Context, actor *model.Actor, 
 }
 
 func (s *sCatalogSubtitleUsecase) ListByTorrent(ctx context.Context, actor *model.Actor, in catalogin.TorrentSubtitleListInp) (*catalogout.SubtitleListOut, error) {
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -112,8 +112,8 @@ func (s *sCatalogSubtitleUsecase) Upload(ctx context.Context, actor *model.Actor
 		return 0, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))
 	}
 
-	// Verify target torrent is visible to the actor
-	_, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, in.Id)
+	// Verify the actor can view the target torrent.
+	_, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id)
 	if err != nil {
 		return 0, err
 	}
@@ -181,8 +181,8 @@ func (s *sCatalogSubtitleUsecase) Download(ctx context.Context, actor *model.Act
 		return nil, err
 	}
 
-	// Verify target torrent is visible to the actor
-	_, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, sub.TorrentId)
+	// Verify the actor can view the target torrent.
+	_, err = service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, sub.TorrentId)
 	if err != nil {
 		return nil, err
 	}
@@ -224,8 +224,8 @@ func (s *sCatalogSubtitleUsecase) Update(ctx context.Context, actor *model.Actor
 		return err
 	}
 
-	// Verify target torrent is visible to the actor
-	_, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, sub.TorrentId)
+	// Verify the actor can view the target torrent.
+	_, err = service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, sub.TorrentId)
 	if err != nil {
 		return err
 	}
@@ -243,8 +243,8 @@ func (s *sCatalogSubtitleUsecase) Report(ctx context.Context, actor *model.Actor
 		return err
 	}
 
-	// Verify target torrent is visible to the actor
-	_, err = service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, sub.TorrentId)
+	// Verify the actor can view the target torrent.
+	_, err = service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, sub.TorrentId)
 	if err != nil {
 		return err
 	}

@@ -7,6 +7,8 @@ admin.catalog.tag_group_has_tags: "cannot delete tag group: remove its tags firs
 admin.catalog.tag_group_not_found: Tag group not found
 admin.catalog.tag_in_use: "cannot delete tag: it is still used by torrents"
 admin.catalog.tag_not_found: Tag not found
+admin.catalog.torrent.review_comment_required: Rejection reason is required
+admin.catalog.torrent.review_state_changed: Torrent review status changed; refresh and try again
 
 admin.forum.category_has_nodes: "cannot delete category: it still contains nodes"
 admin.forum.new_node_not_found: new node not found

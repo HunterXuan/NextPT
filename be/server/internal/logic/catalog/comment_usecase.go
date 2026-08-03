@@ -231,7 +231,7 @@ func (s *sCatalogCommentUsecase) loadTargetComment(ctx context.Context, actor *m
 func (s *sCatalogCommentUsecase) loadTarget(ctx context.Context, actor *model.Actor, targetType string, targetId uint64) (*catalogCommentTarget, error) {
 	switch targetType {
 	case consts.CatalogCommentTargetTypeCatalogTorrent:
-		torrent, err := service.CatalogTorrentDomain().LoadVisibleTorrent(ctx, actor, targetId)
+		torrent, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, targetId)
 		if err != nil {
 			return nil, err
 		}

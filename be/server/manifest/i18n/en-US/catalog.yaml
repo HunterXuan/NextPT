@@ -62,6 +62,7 @@ catalog.torrent.category_req: Category is required
 catalog.torrent.count_failed: failed to count torrents
 catalog.torrent.duplicate: The exact same torrent already exists in the system
 catalog.torrent.file_req: Uploaded file cannot be empty
+catalog.torrent.banned: Torrent is banned
 catalog.torrent.generate_final_failed: failed to generate final torrent file
 catalog.torrent.generate_specific_failed: failed to generate user specific torrent
 catalog.torrent.get_reward_count_failed: Failed to get reward count
@@ -71,6 +72,7 @@ catalog.torrent.invalid_cache: invalid cached torrent file
 catalog.torrent.invalid_format: invalid torrent file format
 catalog.torrent.load_failed: failed to load torrent file
 catalog.torrent.not_found: Torrent not found
+catalog.torrent.not_visible: Torrent is not currently accessible
 catalog.torrent.open_upload_failed: failed to open uploaded file
 catalog.torrent.passkey_not_found: User passkey not found
 catalog.torrent.query_failed: failed to query torrents
@@ -85,6 +87,8 @@ catalog.torrent.reencode_info_failed: failed to re-encode torrent info dictionar
 catalog.torrent.release_field_option_invalid: Invalid release field option
 catalog.torrent.release_field_required: Required release field is missing
 catalog.torrent.release_fields_invalid: Invalid release field format
+catalog.torrent.review_resubmit_invalid: Only rejected torrents can be resubmitted
+catalog.torrent.review_state_changed: Torrent review status changed; refresh and try again
 catalog.torrent.transaction_failed: database transaction or s3 upload failed
 catalog.torrent.unmarshal_info_failed: failed to unmarshal torrent info dictionary
 catalog.torrent.upload_config_invalid: Invalid category upload config

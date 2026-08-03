@@ -148,6 +148,11 @@ type (
 		ToggleLike(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		QueryTorrentLikes(ctx context.Context, torrentId uint64, page int, size int) ([]entity.CatalogTorrentLike, int, error)
 		UpdateTorrent(ctx context.Context, id uint64, data model.CatalogTorrentUpdate) error
+		AdminQueryReviewTorrents(ctx context.Context, options model.CatalogTorrentReviewListOptions) ([]entity.CatalogTorrent, int, error)
+		QueryUserTorrents(ctx context.Context, userId uint64, options model.CatalogUserTorrentListOptions) ([]entity.CatalogTorrent, int, error)
+		AdminApproveTorrent(ctx context.Context, id uint64, reviewedBy uint64, comment string, publishedAt *gtime.Time, spState int, spExpireAt *gtime.Time) (bool, error)
+		AdminRejectTorrent(ctx context.Context, id uint64, reviewedBy uint64, comment string, reviewedAt *gtime.Time) (bool, error)
+		ResubmitTorrent(ctx context.Context, id uint64, status int, submittedAt *gtime.Time, publishedAt *gtime.Time, spState int, spExpireAt *gtime.Time) (bool, error)
 		AdminSetTorrentPinned(ctx context.Context, id uint64, pinned bool, pinWeight int) error
 		AdminSetTorrentFeatured(ctx context.Context, id uint64, featured bool) error
 		AdminSetTorrentPromotion(ctx context.Context, id uint64, spState int, spExpireAt *gtime.Time) error
@@ -167,14 +172,16 @@ type (
 		CheckTorrentLiked(ctx context.Context, torrentId uint64, userId uint64) (bool, error)
 		IncrementTorrentRewardStats(ctx context.Context, torrentId uint64, amount float64) error
 		QueryActiveTorrentIds(ctx context.Context) ([]entity.CatalogTorrent, error)
-		ApplyTorrentVisibleScope(m *gdb.Model, actor *model.Actor) *gdb.Model
-		CheckTorrentVisiblePolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error
+		ApplyTorrentPublishedScope(m *gdb.Model) *gdb.Model
+		CheckTorrentViewPolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error
 		CheckTorrentDownloadPolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error
-		LoadVisibleTorrent(ctx context.Context, actor *model.Actor, id uint64) (*entity.CatalogTorrent, error)
+		CheckTorrentAnnouncePolicy(ctx context.Context, actor *model.Actor, torrent *entity.CatalogTorrent) error
+		LoadViewableTorrent(ctx context.Context, actor *model.Actor, id uint64) (*entity.CatalogTorrent, error)
 	}
 	ICatalogTorrentUsecase interface {
 		// List 获取种子分页列表
 		List(ctx context.Context, actor *model.Actor, in catalogin.TorrentListInp) (*catalogout.TorrentListOut, error)
+		ListMine(ctx context.Context, actor *model.Actor, in catalogin.TorrentGetMineInp) (*catalogout.TorrentMineListOut, error)
 		ListRss(ctx context.Context, actor *model.Actor, in catalogin.TorrentRssInp) (*catalogout.TorrentRssOut, error)
 		ListHot(ctx context.Context, actor *model.Actor, size int) (*catalogout.TorrentHotListOut, error)
 		// Download 获取用户专属的种子文件内容
@@ -194,6 +201,7 @@ type (
 		ToggleLike(ctx context.Context, actor *model.Actor, in catalogin.TorrentToggleLikeInp) (*catalogout.TorrentToggleLikeOut, error)
 		ListLikes(ctx context.Context, actor *model.Actor, in catalogin.TorrentLikeListInp) (*catalogout.TorrentLikeListOut, error)
 		Update(ctx context.Context, actor *model.Actor, in catalogin.TorrentUpdateInp) (*catalogout.TorrentUpdateOut, error)
+		Resubmit(ctx context.Context, actor *model.Actor, in catalogin.TorrentResubmitInp) (*catalogout.TorrentResubmitOut, error)
 		ListFiles(ctx context.Context, actor *model.Actor, in catalogin.TorrentFileListInp) (*catalogout.TorrentFileListOut, error)
 		ListPeers(ctx context.Context, actor *model.Actor, in catalogin.TorrentPeerListInp) (*catalogout.TorrentPeerListOut, error)
 		Report(ctx context.Context, actor *model.Actor, in catalogin.TorrentReportInp) (*catalogout.TorrentReportOut, error)

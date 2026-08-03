@@ -1,0 +1,17 @@
+package catalog
+
+import (
+	"context"
+
+	v1 "server/api/catalog/v1"
+	"server/internal/library/contexts"
+	"server/internal/service"
+)
+
+func (c *ControllerV1) TorrentResubmit(ctx context.Context, req *v1.TorrentResubmitReq) (res *v1.TorrentResubmitRes, err error) {
+	out, err := service.CatalogTorrentUsecase().Resubmit(ctx, contexts.GetActor(ctx), req.TorrentResubmitInp)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.TorrentResubmitRes{TorrentResubmitOut: *out}, nil
+}

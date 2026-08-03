@@ -247,6 +247,7 @@ VALUES
         )
     )), NOW(), NOW()),
     ('catalog', 'torrent_source', '{"val":"NextPT"}', NOW(), NOW()),
+    ('catalog', 'torrent_direct_publish_level', '{"val":20}', NOW(), NOW()),
     ('catalog', 'global_promotion', JSON_OBJECT('val', JSON_OBJECT(
         'enabled', false,
         'state', 'free',

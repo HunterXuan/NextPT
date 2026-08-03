@@ -105,6 +105,20 @@ type CatalogTorrentUpdate struct {
 	ReleaseFields any
 }
 
+type CatalogTorrentReviewListOptions struct {
+	Keyword    string
+	CategoryId uint
+	Status     int
+	Page       int
+	Size       int
+}
+
+type CatalogUserTorrentListOptions struct {
+	Status int
+	Page   int
+	Size   int
+}
+
 type CatalogTorrentSummary struct {
 	Id    uint64 `json:"id"`
 	Name  string `json:"name"`

@@ -1,4 +1,8 @@
 site.message.catalog_comment.title: 種子《%s》收到了新評論
+site.message.catalog_torrent_review.approved.content: 種子《%s》已通過審核並發布
+site.message.catalog_torrent_review.approved.title: 種子審核已通過
+site.message.catalog_torrent_review.rejected.content: "種子《%s》未通過審核\n\n原因：%s"
+site.message.catalog_torrent_review.rejected.title: 種子審核未通過
 site.message.catalog_request.abandoned.content: 你的請求《%s》的認領人已放棄認領
 site.message.catalog_request.abandoned.title: 請求認領已被放棄
 site.message.catalog_request.cancelled.content: 請求《%s》已被取消

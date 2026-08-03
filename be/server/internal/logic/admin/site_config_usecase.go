@@ -9,6 +9,10 @@ import (
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/adminout"
 	"server/internal/service"
+
+	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 type sAdminSiteConfigUsecase struct{}
@@ -30,6 +34,15 @@ func (s *sAdminSiteConfigUsecase) List(ctx context.Context, actor *model.Actor, 
 }
 
 func (s *sAdminSiteConfigUsecase) Update(ctx context.Context, actor *model.Actor, in adminin.SiteConfigUpdateInp) error {
+	if s.isRoleIdConfig(in.Group, in.Key) {
+		role, err := service.IamRoleDomain().GetRoleById(ctx, gconv.Uint(in.Value))
+		if err != nil {
+			return err
+		}
+		if role == nil {
+			return gerror.New(gi18n.T(ctx, "admin.role.not_found"))
+		}
+	}
 	if err := service.SiteConfigDomain().AdminUpdateConfig(ctx, sitein.SiteConfigUpdateInp{
 		Group: in.Group,
 		Key:   in.Key,
@@ -47,4 +60,9 @@ func (s *sAdminSiteConfigUsecase) Update(ctx context.Context, actor *model.Actor
 		},
 	})
 	return nil
+}
+
+func (s *sAdminSiteConfigUsecase) isRoleIdConfig(group string, key string) bool {
+	path := group + "." + key
+	return path == consts.SiteConfigIamDefaultRegisterRole
 }

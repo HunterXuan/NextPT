@@ -1,4 +1,8 @@
 site.message.catalog_comment.title: 种子《%s》收到了新评论
+site.message.catalog_torrent_review.approved.content: 种子《%s》已通过审核并发布
+site.message.catalog_torrent_review.approved.title: 种子审核已通过
+site.message.catalog_torrent_review.rejected.content: "种子《%s》未通过审核\n\n原因：%s"
+site.message.catalog_torrent_review.rejected.title: 种子审核未通过
 site.message.catalog_request.abandoned.content: 你的请求《%s》的认领人已放弃认领
 site.message.catalog_request.abandoned.title: 请求认领已被放弃
 site.message.catalog_request.cancelled.content: 请求《%s》已被取消
