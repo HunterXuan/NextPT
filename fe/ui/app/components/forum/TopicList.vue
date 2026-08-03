@@ -74,15 +74,14 @@
             </h2>
 
             <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-              <span class="font-medium text-slate-600 dark:text-slate-300">{{ topicAuthor(topic) }}</span>
+              <IamUserPopover :user="topic.author" :fallback="topicAuthor(topic)" class="font-medium text-slate-600 dark:text-slate-300" />
               <span class="text-slate-300 dark:text-slate-700">/</span>
               <span :title="formatDateTime(lastActivityAt(topic), locale)">
                 {{ relativeDateTime(lastActivityAt(topic)) }}
               </span>
               <span v-if="hasReplies(topic)" class="text-slate-300 dark:text-slate-700">/</span>
-              <span v-if="hasReplies(topic)">
-                {{ $t('forum.topicList.meta.lastReplyBy', { user: lastReplyUser(topic) }) }}
-              </span>
+              <span v-if="hasReplies(topic)">{{ $t('forum.topicList.meta.lastReplyBy') }}</span>
+              <IamUserPopover v-if="hasReplies(topic)" :user="topic.lastReplyUser" :fallback="lastReplyUser(topic)" class="font-medium text-slate-600 dark:text-slate-300" />
               <span v-if="showViews" class="text-slate-300 dark:text-slate-700">/</span>
               <span v-if="showViews">{{ $t('forum.topicList.meta.views', { count: numberFormatter.format(topic.views) }) }}</span>
             </div>

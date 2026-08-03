@@ -876,7 +876,7 @@
       "meta": {
         "created": "发布",
         "lastReply": "最后回复",
-        "lastReplyBy": "最后回复来自 {user}",
+        "lastReplyBy": "最后回复",
         "views": "{count} 浏览"
       },
       "table": {
@@ -2106,6 +2106,16 @@
     "eyebrow": "用户中心",
     "staff": "Staff",
     "member": "Member",
+    "publicCard": {
+      "loadFailed": "无法加载用户主页",
+      "joined": "{date} 加入",
+      "stats": {
+        "uploaded": "入账上传",
+        "downloaded": "入账下载",
+        "ratio": "分享率",
+        "seedTime": "做种时长"
+      }
+    },
     "nav": {
       "overview": "账号概览",
       "activity": "分享数据",

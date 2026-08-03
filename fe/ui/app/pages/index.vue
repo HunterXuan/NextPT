@@ -230,7 +230,13 @@
                   <NuxtLink v-for="topic in dashboardTopics" :key="topic.id" :to="localePath(`/forum/topics/${topic.id}`)" class="grid gap-3 border-t border-slate-100 px-4 py-3 outline-none transition-colors first:border-t-0 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-slate-800 dark:hover:bg-slate-950/60 dark:focus-visible:ring-sky-700">
                     <div class="min-w-0">
                       <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ topic.subject || `#${topic.id}` }}</p>
-                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ topicNodeName(topic) }} / {{ topic.author?.username || '-' }} / {{ formatRelativeDateTime(topicLastActivityAt(topic), locale) }}</p>
+                      <div class="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                        <span class="truncate">{{ topicNodeName(topic) }}</span>
+                        <span>/</span>
+                        <IamUserPopover :user="topic.author" class="min-w-0 truncate" />
+                        <span>/</span>
+                        <span class="shrink-0">{{ formatRelativeDateTime(topicLastActivityAt(topic), locale) }}</span>
+                      </div>
                     </div>
                     <div class="flex items-center gap-3 text-xs sm:justify-end">
                       <UTooltip :text="$t('home.member.metrics.views')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">

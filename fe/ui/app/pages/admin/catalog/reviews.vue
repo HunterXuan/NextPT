@@ -57,10 +57,7 @@
                 </td>
                 <td class="px-4 py-3"><UBadge :color="statusColor(review.status)" variant="soft">{{ statusLabel(review.status) }}</UBadge></td>
                 <td class="px-4 py-3">
-                  <div class="flex min-w-0 items-center gap-2">
-                    <IamUserAvatar :user="review.owner" size="xs" />
-                    <span class="truncate text-sm text-slate-700 dark:text-slate-200">{{ ownerName(review) }}</span>
-                  </div>
+                  <IamUserPopover :user="review.owner" :fallback="ownerName(review)" show-avatar avatar-size="xs" class="truncate text-sm text-slate-700 dark:text-slate-200" />
                 </td>
                 <td class="px-4 py-3 text-right text-sm text-slate-600 dark:text-slate-300">
                   <UTooltip :text="formatDateTime(review.submittedAt || review.createdAt, locale)" :delay-duration="600">

@@ -109,7 +109,13 @@
                 </div>
               </div>
               <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-                <span class="lg:hidden">{{ torrentOwnerName(torrent) }}</span>
+                <IamUserPopover
+                  v-if="!torrent.anonymous && torrent.owner?.id"
+                  :user="torrent.owner"
+                  :fallback="torrentOwnerName(torrent)"
+                  class="lg:hidden"
+                />
+                <span v-else class="lg:hidden">{{ torrentOwnerName(torrent) }}</span>
                 <span class="lg:hidden" :title="formatDateTime(torrent.createdAt, locale)">{{ relativeDateTime(torrent.createdAt) }}</span>
               </div>
             </div>
@@ -131,9 +137,13 @@
               {{ relativeDateTime(torrent.createdAt) }}
             </p>
             <div class="hidden min-w-0 text-center lg:block" :title="torrentOwnerName(torrent)">
-              <p class="truncate text-sm leading-5 text-slate-600 dark:text-slate-300">
-                {{ torrentOwnerPrimary(torrent) }}
-              </p>
+              <IamUserPopover
+                v-if="!torrent.anonymous && torrent.owner?.id"
+                :user="torrent.owner"
+                :fallback="torrentOwnerPrimary(torrent)"
+                class="truncate text-sm leading-5 text-slate-600 dark:text-slate-300"
+              />
+              <p v-else class="truncate text-sm leading-5 text-slate-600 dark:text-slate-300">{{ torrentOwnerPrimary(torrent) }}</p>
               <p v-if="torrentOwnerSecondary(torrent)" class="truncate text-xs leading-4 text-slate-400 dark:text-slate-500">
                 {{ torrentOwnerSecondary(torrent) }}
               </p>

@@ -72,8 +72,7 @@
                     <p class="line-clamp-2 font-medium text-slate-800 dark:text-slate-100">{{ report.reason || '-' }}</p>
                     <div class="mt-2 flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                       <span>{{ $t('admin.mod.reports.reporterLabel') }}</span>
-                      <IamUserAvatar :user="reportReporter(report)" size="xs" />
-                      <span class="truncate">{{ userDisplayName(reportReporter(report), report.reporterId) }}</span>
+                      <IamUserPopover :id="report.reporterId" :user="reportReporter(report)" :fallback="userDisplayName(reportReporter(report), report.reporterId)" show-avatar avatar-size="xs" class="truncate" />
                     </div>
                   </td>
                   <td class="px-4 py-3 align-middle">
@@ -141,8 +140,8 @@
                         {{ targetTypeLabel(reportTargetType(selectedReport)) }} #{{ reportTargetId(selectedReport) }}
                       </p>
                       <div v-if="reportTarget(selectedReport).author?.id" class="mt-2 flex min-w-0 items-center gap-2">
-                        <IamUserAvatar :user="reportTarget(selectedReport).author" size="xs" />
-                        <span class="truncate text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.authorLabel') }} {{ userDisplayName(reportTarget(selectedReport).author, reportTarget(selectedReport).author.id) }}</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.authorLabel') }}</span>
+                        <IamUserPopover :user="reportTarget(selectedReport).author" :fallback="userDisplayName(reportTarget(selectedReport).author, reportTarget(selectedReport).author.id)" show-avatar avatar-size="xs" class="truncate text-xs text-slate-500 dark:text-slate-400" />
                       </div>
                     </div>
                   </div>
@@ -157,8 +156,7 @@
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.reporterLabel') }}</dt>
                     <dd class="mt-1 flex min-w-0 items-center gap-2 font-medium text-slate-950 dark:text-white">
-                      <IamUserAvatar :user="reportReporter(selectedReport)" size="xs" />
-                      <span class="truncate">{{ userDisplayName(reportReporter(selectedReport), selectedReport.reporterId) }}</span>
+                      <IamUserPopover :id="selectedReport.reporterId" :user="reportReporter(selectedReport)" :fallback="userDisplayName(reportReporter(selectedReport), selectedReport.reporterId)" show-avatar avatar-size="xs" class="truncate" />
                     </dd>
                   </div>
                   <div>
@@ -218,8 +216,16 @@
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.handledBy') }}</dt>
                     <dd class="mt-1 flex min-w-0 items-center gap-2 font-medium text-slate-950 dark:text-white">
-                      <IamUserAvatar v-if="selectedReport.dealtBy" :user="reportDealtUser(selectedReport)" size="xs" />
-                      <span class="truncate">{{ selectedReport.dealtBy ? userDisplayName(reportDealtUser(selectedReport), selectedReport.dealtBy) : '-' }}</span>
+                      <IamUserPopover
+                        v-if="selectedReport.dealtBy"
+                        :id="selectedReport.dealtBy"
+                        :user="reportDealtUser(selectedReport)"
+                        :fallback="userDisplayName(reportDealtUser(selectedReport), selectedReport.dealtBy)"
+                        show-avatar
+                        avatar-size="xs"
+                        class="truncate"
+                      />
+                      <span v-else>-</span>
                     </dd>
                   </div>
                   <div class="col-span-2">

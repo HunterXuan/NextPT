@@ -26,6 +26,9 @@
   * **核心逻辑**: 校验邀请码 -> 创建用户记录 -> 分配默认角色 -> 调用 Economy 初始化基础魔力值 -> 标记 invite 已使用。
 * **获取当前用户资料 (GetMyProfile)**
   * **Method/Path**: `GET /users/me`
+* **获取用户公开资料 (GetPublicProfile)**
+  * **Method/Path**: `GET /users/{id}`
+  * **核心逻辑**: 聚合头像、用户名、签名、简介、角色、注册时间与公开分享统计，最终结果按用户和语言缓存 5 分钟；不返回邮箱、Passkey、真实流量、权限、登录记录或账号限制等敏感信息。
 * **更新当前用户资料 (UpdateMyProfile)**
   * **Method/Path**: `PATCH /users/me`
   * **参数概述**: `avatar`, `signature` (支持局部更新)

@@ -126,18 +126,12 @@
 
                 <div class="flex min-w-0 items-center justify-between gap-2 xl:justify-start">
                   <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.publisher') }}</span>
-                  <div class="flex min-w-0 items-center gap-2">
-                    <IamUserAvatar :user="item.requester" size="xs" />
-                    <span class="truncate text-sm text-slate-700 dark:text-slate-200">{{ item.requester.username || `#${item.requester.id}` }}</span>
-                  </div>
+                  <IamUserPopover :user="item.requester" show-avatar avatar-size="xs" class="truncate text-sm text-slate-700 dark:text-slate-200" />
                 </div>
 
                 <div class="col-span-2 flex min-w-0 items-center justify-between gap-2 xl:col-span-1 xl:justify-end">
                   <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</span>
-                  <div v-if="item.claimer" class="flex min-w-0 items-center gap-2">
-                    <IamUserAvatar :user="item.claimer" size="xs" />
-                    <span class="truncate text-sm text-slate-700 dark:text-slate-200">{{ item.claimer.username || `#${item.claimer.id}` }}</span>
-                  </div>
+                  <IamUserPopover v-if="item.claimer" :user="item.claimer" show-avatar avatar-size="xs" class="truncate text-sm text-slate-700 dark:text-slate-200" />
                   <span v-else class="text-sm text-slate-400">{{ $t('catalog.requests.list.unclaimed') }}</span>
                 </div>
               </div>

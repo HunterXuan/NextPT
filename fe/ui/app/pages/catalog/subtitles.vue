@@ -54,7 +54,8 @@
                 </span>
                 <span>{{ formatBytes(subtitle.size) }}</span>
                 <span :title="formatDateTime(subtitle.createdAt, locale)">{{ formatDateOnly(subtitle.createdAt, locale) }}</span>
-                <span>{{ uploaderName(subtitle) }}</span>
+                <IamUserPopover v-if="!subtitle.anonymous && subtitle.uploader?.id" :user="subtitle.uploader" :fallback="uploaderName(subtitle)" />
+                <span v-else>{{ uploaderName(subtitle) }}</span>
               </div>
             </div>
 
@@ -71,9 +72,13 @@
               #{{ subtitle.torrentId }}
             </NuxtLink>
 
-            <p class="hidden truncate text-sm text-slate-600 lg:block dark:text-slate-300" :title="uploaderName(subtitle)">
-              {{ uploaderName(subtitle) }}
-            </p>
+            <IamUserPopover
+              v-if="!subtitle.anonymous && subtitle.uploader?.id"
+              :user="subtitle.uploader"
+              :fallback="uploaderName(subtitle)"
+              class="hidden truncate text-sm text-slate-600 lg:block dark:text-slate-300"
+            />
+            <p v-else class="hidden truncate text-sm text-slate-600 lg:block dark:text-slate-300" :title="uploaderName(subtitle)">{{ uploaderName(subtitle) }}</p>
             <p class="hidden text-right text-sm font-medium tabular-nums text-slate-950 lg:block dark:text-white">{{ formatBytes(subtitle.size) }}</p>
             <p class="hidden text-right text-sm text-slate-500 lg:block dark:text-slate-400" :title="formatDateTime(subtitle.createdAt, locale)">
               {{ formatDateOnly(subtitle.createdAt, locale) }}

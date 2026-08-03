@@ -51,7 +51,11 @@
           <div class="min-w-0 flex-1">
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ loginResultLabel(item.result) }}</span>
-              <span v-if="admin" class="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">#{{ item.userId }}</span>
+              <IamUserPopover
+                v-if="admin && item.userId > 0"
+                :id="item.userId"
+                class="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+              />
               <span class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ item.ip || '-' }}</span>
               <span v-if="item.result !== 1" class="text-xs font-medium text-red-600 dark:text-red-300">
                 {{ failReasonLabel(item.failReason) }}

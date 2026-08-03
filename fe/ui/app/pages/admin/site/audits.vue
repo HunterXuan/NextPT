@@ -73,7 +73,7 @@
                   <div v-if="item.userId" class="flex min-w-0 items-center gap-2.5">
                     <IamUserAvatar :user="auditActor(item)" size="sm" />
                     <div class="min-w-0">
-                      <p class="truncate font-medium text-slate-950 dark:text-white">{{ actorDisplayName(item) }}</p>
+                      <IamUserPopover :id="item.userId" :user="auditActor(item)" :fallback="actorDisplayName(item)" class="truncate font-medium text-slate-950 dark:text-white" />
                       <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.ip || '-' }}</p>
                     </div>
                   </div>

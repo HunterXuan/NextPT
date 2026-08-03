@@ -96,9 +96,7 @@
                     <div class="flex min-w-0 items-center gap-3">
                       <IamUserAvatar :id="item.id" :username="item.username" :avatar="item.avatar" size="sm" />
                       <div class="block min-w-0 text-left">
-                        <span class="block truncate text-sm font-semibold text-slate-950 hover:text-sky-700 dark:text-white dark:hover:text-sky-300">
-                          {{ item.username }}
-                        </span>
+                        <IamUserPopover :id="item.id" :username="item.username" :avatar="item.avatar" class="block truncate text-sm font-semibold text-slate-950 dark:text-white" />
                         <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">#{{ item.id }} · {{ item.email }}</span>
                       </div>
                     </div>
@@ -143,7 +141,7 @@
                 <IamUserAvatar :id="selectedUser.id" :username="selectedUser.username" :avatar="selectedUser.avatar" size="lg" />
                 <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2">
-                    <p class="truncate text-base font-semibold text-slate-950 dark:text-white">{{ selectedUser.username }}</p>
+                    <IamUserPopover :id="selectedUser.id" :username="selectedUser.username" :avatar="selectedUser.avatar" class="truncate text-base font-semibold text-slate-950 dark:text-white" />
                     <UBadge :color="statusColor(selectedUser.status)" variant="soft">{{ statusLabel(selectedUser.status) }}</UBadge>
                   </div>
                   <p class="mt-1 truncate text-sm text-slate-500 dark:text-slate-400">#{{ selectedUser.id }} · {{ selectedUser.email }}</p>

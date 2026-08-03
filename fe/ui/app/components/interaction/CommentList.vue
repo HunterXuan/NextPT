@@ -26,7 +26,7 @@
           <div class="flex min-w-0 items-start justify-between gap-3">
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ displayName(item) }}</p>
+                <IamUserPopover :user="item.author" :fallback="displayName(item)" class="truncate text-sm font-semibold text-slate-950 dark:text-white" />
                 <span class="text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(item.createdAt, locale) }}</span>
               </div>
             </div>

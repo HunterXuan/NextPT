@@ -293,7 +293,7 @@
                 <div v-for="peer in visiblePeers" :key="`${peer.user?.id || 0}-${peer.startedAt}-${peer.isSeeder}`" class="grid gap-3 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
                   <div class="min-w-0">
                     <div class="flex min-w-0 items-center gap-2">
-                      <p class="truncate font-medium text-slate-950 dark:text-white">{{ peerUserName(peer) }}</p>
+                      <IamUserPopover :user="peer.user" :fallback="peerUserName(peer)" class="truncate font-medium text-slate-950 dark:text-white" />
                       <UBadge :color="peer.isSeeder ? 'success' : 'primary'" variant="soft">
                         {{ peer.isSeeder ? $t('catalog.torrents.detail.peers.seeder') : $t('catalog.torrents.detail.peers.leecher') }}
                       </UBadge>
@@ -389,9 +389,18 @@
                       <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ subtitle.fileName }}</p>
                       <UBadge color="neutral" variant="soft">{{ subtitleLanguageLabel(subtitle.language) }}</UBadge>
                     </div>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                      {{ subtitleUploaderName(subtitle) }} · {{ formatBytes(subtitle.size) }} · {{ formatDateTime(subtitle.createdAt, locale) }}
-                    </p>
+                    <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      <IamUserPopover
+                        v-if="!subtitle.anonymous && subtitle.uploader?.id"
+                        :user="subtitle.uploader"
+                        :fallback="subtitleUploaderName(subtitle)"
+                      />
+                      <span v-else>{{ subtitleUploaderName(subtitle) }}</span>
+                      <span>·</span>
+                      <span>{{ formatBytes(subtitle.size) }}</span>
+                      <span>·</span>
+                      <span>{{ formatDateTime(subtitle.createdAt, locale) }}</span>
+                    </div>
                   </div>
                   <div class="flex items-center gap-2">
                     <AppPermissionButton
@@ -532,7 +541,15 @@
               </div>
               <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
                 <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publisher') }}</dt>
-                <dd class="min-w-0 truncate text-right font-medium text-slate-950 dark:text-white">{{ publisherName }}</dd>
+                <dd class="min-w-0 truncate text-right font-medium">
+                  <IamUserPopover
+                    v-if="publisherUser"
+                    :user="publisherUser"
+                    :fallback="publisherName"
+                    class="text-slate-950 dark:text-white"
+                  />
+                  <span v-else class="text-slate-950 dark:text-white">{{ publisherName }}</span>
+                </dd>
               </div>
               <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
                 <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publishedAt') }}</dt>
@@ -1018,6 +1035,7 @@ const publisherName = computed(() => {
   if (!torrent.value) return '-'
   return torrentOwnerName(torrent.value)
 })
+const publisherUser = computed(() => torrent.value?.anonymous ? null : torrent.value?.owner || null)
 
 function torrentOwnerName(torrent: TorrentDetail) {
   const ownerName = rawTorrentOwnerName(torrent)

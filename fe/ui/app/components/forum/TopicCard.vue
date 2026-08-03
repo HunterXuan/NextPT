@@ -11,7 +11,7 @@
             {{ topic.subject || t('forum.detail.titleFallback', { id: topic.id }) }}
           </h1>
           <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
-            <span class="font-medium text-slate-600 dark:text-slate-300">{{ userDisplayName(topic.author) }}</span>
+            <IamUserPopover :user="topic.author" :fallback="userDisplayName(topic.author)" class="font-medium text-slate-600 dark:text-slate-300" />
             <span class="text-slate-300 dark:text-slate-700">/</span>
             <UTooltip
               :text="formatDateTime(topic.createdAt, locale)"

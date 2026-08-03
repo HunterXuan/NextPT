@@ -22,7 +22,7 @@
               </div>
               <h1 class="mt-3 break-words text-xl font-semibold leading-8 text-slate-950 dark:text-white">{{ request.title }}</h1>
               <div class="mt-2 flex flex-wrap items-center gap-x-2 text-xs text-slate-500 dark:text-slate-400">
-                <span>{{ request.requester.username || `#${request.requester.id}` }}</span>
+                <IamUserPopover :user="request.requester" class="font-medium text-slate-600 dark:text-slate-300" />
                 <span>/</span>
                 <UTooltip :text="formatDateTime(request.createdAt, locale)" :delay-duration="600"><span>{{ formatRelativeDateTime(request.createdAt, locale) }}</span></UTooltip>
               </div>
@@ -70,7 +70,17 @@
             <div class="p-4">
               <dl class="divide-y divide-slate-100 text-sm dark:divide-slate-800">
                 <div class="flex items-center justify-between gap-3 pb-2.5"><dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.reward') }}</dt><dd class="inline-flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400"><UIcon name="i-lucide-coins" class="size-4" />{{ numberFormatter.format(request.rewardAmount) }}</dd></div>
-                <div class="grid grid-cols-[80px_minmax(0,1fr)] gap-3 py-2.5"><dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</dt><dd class="truncate text-right font-medium text-slate-950 dark:text-white">{{ request.claimer?.username || '-' }}</dd></div>
+                <div class="grid grid-cols-[80px_minmax(0,1fr)] gap-3 py-2.5">
+                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</dt>
+                  <dd class="truncate text-right font-medium">
+                    <IamUserPopover
+                      v-if="request.claimer?.id"
+                      :user="request.claimer"
+                      class="text-slate-950 transition-colors hover:text-sky-700 dark:text-white dark:hover:text-sky-300"
+                    />
+                    <span v-else class="text-slate-400">-</span>
+                  </dd>
+                </div>
                 <div v-if="request.claimExpiresAt" class="grid grid-cols-[80px_minmax(0,1fr)] gap-3 pt-2.5"><dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.claimExpiresAt') }}</dt><dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(request.claimExpiresAt, locale) }}</dd></div>
               </dl>
 

@@ -71,7 +71,7 @@
           <div class="flex min-w-0 items-center gap-2">
             <IamUserAvatar :user="reward.user" :alt="rewardDisplayName(reward)" size="xs" />
             <div class="min-w-0">
-              <p class="truncate font-medium text-slate-950 dark:text-white">{{ rewardDisplayName(reward) }}</p>
+              <IamUserPopover :user="reward.user" :fallback="rewardDisplayName(reward)" class="truncate font-medium text-slate-950 dark:text-white" />
               <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ rewardMetaText(reward) }}</p>
             </div>
           </div>
@@ -114,7 +114,7 @@
             <div class="flex min-w-0 items-center gap-2">
               <IamUserAvatar :user="reward.user" :alt="rewardDisplayName(reward)" size="xs" />
               <div class="min-w-0">
-                <p class="truncate font-medium text-slate-950 dark:text-white">{{ rewardDisplayName(reward) }}</p>
+                <IamUserPopover :user="reward.user" :fallback="rewardDisplayName(reward)" class="truncate font-medium text-slate-950 dark:text-white" />
                 <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ rewardMetaText(reward) }}</p>
               </div>
             </div>

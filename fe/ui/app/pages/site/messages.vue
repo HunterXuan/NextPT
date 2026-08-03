@@ -86,7 +86,17 @@
                   </span>
                   <div class="min-w-0">
                     <h2 class="break-words text-base font-semibold text-slate-950 dark:text-white">{{ selectedMessage.title }}</h2>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ messageSender(selectedMessage) }} / {{ formatDateTime(selectedMessage.createdAt, locale) }}</p>
+                    <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      <IamUserPopover
+                        v-if="selectedMessage.senderId"
+                        :id="selectedMessage.senderId"
+                        :user="selectedMessage.sender"
+                        :fallback="messageSender(selectedMessage)"
+                      />
+                      <span v-else>{{ messageSender(selectedMessage) }}</span>
+                      <span>/</span>
+                      <span>{{ formatDateTime(selectedMessage.createdAt, locale) }}</span>
+                    </div>
                   </div>
                 </div>
               </div>

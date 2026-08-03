@@ -207,8 +207,8 @@
         "title": "Forum activity"
       },
       "stats": {
-        "uploaded": "Uploaded",
-        "downloaded": "Downloaded",
+        "uploaded": "Credited upload",
+        "downloaded": "Credited download",
         "ratio": "Ratio",
         "bonus": "Bonus"
       },
@@ -876,7 +876,7 @@
       "meta": {
         "created": "Posted",
         "lastReply": "Last reply",
-        "lastReplyBy": "last reply by {user}",
+        "lastReplyBy": "last reply by",
         "views": "{count} views"
       },
       "table": {
@@ -2106,6 +2106,16 @@
     "eyebrow": "User Center",
     "staff": "Staff",
     "member": "Member",
+    "publicCard": {
+      "loadFailed": "Unable to load this profile",
+      "joined": "Joined {date}",
+      "stats": {
+        "uploaded": "Uploaded",
+        "downloaded": "Downloaded",
+        "ratio": "Share ratio",
+        "seedTime": "Seed time"
+      }
+    },
     "nav": {
       "overview": "Account Overview",
       "activity": "Sharing Activity",

@@ -876,7 +876,7 @@
       "meta": {
         "created": "發布",
         "lastReply": "最後回覆",
-        "lastReplyBy": "最後回覆來自 {user}",
+        "lastReplyBy": "最後回覆",
         "views": "{count} 瀏覽"
       },
       "table": {
@@ -2106,6 +2106,16 @@
     "eyebrow": "使用者中心",
     "staff": "Staff",
     "member": "Member",
+    "publicCard": {
+      "loadFailed": "無法載入使用者頁面",
+      "joined": "{date} 加入",
+      "stats": {
+        "uploaded": "入帳上傳",
+        "downloaded": "入帳下載",
+        "ratio": "分享率",
+        "seedTime": "做種時長"
+      }
+    },
     "nav": {
       "overview": "帳號概覽",
       "activity": "分享資料",

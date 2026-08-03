@@ -51,7 +51,7 @@
                     <div class="flex min-w-0 items-center gap-3">
                       <IamUserAvatar :user="cheaterUser(item)" size="sm" />
                       <div class="min-w-0">
-                        <p class="truncate font-semibold text-slate-950 dark:text-white">{{ userDisplayName(cheaterUser(item), item.userId) }}</p>
+                        <IamUserPopover :id="item.userId" :user="cheaterUser(item)" :fallback="userDisplayName(cheaterUser(item), item.userId)" class="truncate font-semibold text-slate-950 dark:text-white" />
                         <div class="mt-1 flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                           <UIcon name="i-lucide-database" class="size-3.5 shrink-0" />
                           <span class="truncate">{{ torrentDisplayName(item) }}</span>
@@ -128,7 +128,7 @@
                     <div class="flex min-w-0 items-center gap-3">
                       <IamUserAvatar :user="cheaterUser(selectedCheater)" size="md" />
                       <div class="min-w-0">
-                        <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ userDisplayName(cheaterUser(selectedCheater), selectedCheater.userId) }}</p>
+                        <IamUserPopover :id="selectedCheater.userId" :user="cheaterUser(selectedCheater)" :fallback="userDisplayName(cheaterUser(selectedCheater), selectedCheater.userId)" class="truncate text-sm font-semibold text-slate-950 dark:text-white" />
                         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.cheaters.userId', { id: selectedCheater.userId }) }}</p>
                       </div>
                     </div>
@@ -204,8 +204,16 @@
                   <div>
                     <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.mod.reports.handledBy') }}</dt>
                     <dd class="mt-1 flex min-w-0 items-center gap-2 font-medium text-slate-950 dark:text-white">
-                      <IamUserAvatar v-if="selectedCheater.dealtBy" :user="cheaterDealtUser(selectedCheater)" size="xs" />
-                      <span class="truncate">{{ selectedCheater.dealtBy ? userDisplayName(cheaterDealtUser(selectedCheater), selectedCheater.dealtBy) : '-' }}</span>
+                      <IamUserPopover
+                        v-if="selectedCheater.dealtBy"
+                        :id="selectedCheater.dealtBy"
+                        :user="cheaterDealtUser(selectedCheater)"
+                        :fallback="userDisplayName(cheaterDealtUser(selectedCheater), selectedCheater.dealtBy)"
+                        show-avatar
+                        avatar-size="xs"
+                        class="truncate"
+                      />
+                      <span v-else>-</span>
                     </dd>
                   </div>
                   <div>
