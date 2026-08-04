@@ -282,6 +282,7 @@
       "success": "登入成功",
       "noAccount": "還沒有帳號？",
       "forgotPassword": "忘記密碼？",
+      "verifyEmail": "驗證信箱",
       "benefits": {
         "passkey": {
           "title": "接著找資源",
@@ -325,6 +326,26 @@
       "requestAgain": "重新申請",
       "backToLogin": "返回登入",
       "login": "使用新密碼登入"
+    },
+    "verifyEmail": {
+      "eyebrow": "信箱驗證",
+      "invalidEyebrow": "驗證失敗",
+      "metaTitle": "驗證信箱",
+      "title": "檢查你的信箱",
+      "subtitle": "我們已向註冊信箱傳送驗證連結。沒有收到時，可以在這裡重新傳送。",
+      "heroTitle": "驗證信箱後開始使用 NextPT",
+      "heroDescription": "信箱驗證用於確認帳號歸屬。驗證連結只能使用一次，並會在 24 小時後失效。",
+      "verifyingTitle": "正在驗證信箱",
+      "verifyingDescription": "正在確認驗證連結，請稍候。",
+      "successTitle": "信箱驗證成功",
+      "successDescription": "帳號已經啟用，現在可以使用使用者名稱或信箱登入。",
+      "invalidTitle": "驗證連結無效",
+      "invalidDescription": "該連結可能已過期或已被使用，請重新傳送驗證郵件。",
+      "sentTitle": "驗證郵件已傳送",
+      "sentDescription": "如果該信箱對應待驗證帳號，新的驗證郵件會在幾分鐘內送達。",
+      "resend": "重新傳送驗證郵件",
+      "backToLogin": "返回登入",
+      "login": "前往登入"
     },
     "register": {
       "action": "註冊",

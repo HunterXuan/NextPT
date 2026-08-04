@@ -75,7 +75,10 @@
                 @click="showPassword = !showPassword"
               />
             </div>
-            <div class="mt-2 text-right">
+            <div class="mt-2 flex items-center justify-between gap-3">
+              <NuxtLink :to="localePath('/verify-email')" class="text-xs font-medium text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white">
+                {{ $t('auth.login.verifyEmail') }}
+              </NuxtLink>
               <NuxtLink :to="localePath('/forgot-password')" class="text-xs font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300">
                 {{ $t('auth.login.forgotPassword') }}
               </NuxtLink>

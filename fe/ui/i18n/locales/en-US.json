@@ -282,6 +282,7 @@
       "success": "Logged in",
       "noAccount": "No account yet?",
       "forgotPassword": "Forgot password?",
+      "verifyEmail": "Verify email",
       "benefits": {
         "passkey": {
           "title": "Keep finding resources",
@@ -325,6 +326,26 @@
       "requestAgain": "Request another link",
       "backToLogin": "Back to log in",
       "login": "Log in with new password"
+    },
+    "verifyEmail": {
+      "eyebrow": "Email verification",
+      "invalidEyebrow": "Verification failed",
+      "metaTitle": "Verify email",
+      "title": "Check your inbox",
+      "subtitle": "We sent a verification link to your registered email. You can request another message here.",
+      "heroTitle": "Verify your email to start using NextPT",
+      "heroDescription": "Email verification confirms account ownership. The link can only be used once and expires after 24 hours.",
+      "verifyingTitle": "Verifying your email",
+      "verifyingDescription": "We are checking this verification link.",
+      "successTitle": "Email verified",
+      "successDescription": "Your account is active. You can now log in with your username or email.",
+      "invalidTitle": "Invalid verification link",
+      "invalidDescription": "This link may have expired or already been used. Request another verification email.",
+      "sentTitle": "Verification email sent",
+      "sentDescription": "If this email belongs to a pending account, a new message will arrive shortly.",
+      "resend": "Resend verification email",
+      "backToLogin": "Back to log in",
+      "login": "Continue to log in"
     },
     "register": {
       "action": "Register",

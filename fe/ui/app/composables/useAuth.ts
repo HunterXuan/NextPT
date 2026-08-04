@@ -60,6 +60,10 @@ export interface PasswordResetInput {
   newPassword: string
 }
 
+export interface EmailVerificationInput {
+  token: string
+}
+
 export interface PasskeyResetOut {
   passkey: string
 }
@@ -308,6 +312,20 @@ export function useAuth() {
     clearLocalSession()
   }
 
+  async function requestEmailVerification(email: string) {
+    await fetchApi('/api/iam/email-verification-requests', {
+      method: 'POST',
+      body: { email }
+    })
+  }
+
+  async function verifyEmail(input: EmailVerificationInput) {
+    await fetchApi('/api/iam/email-verifications', {
+      method: 'POST',
+      body: input
+    })
+  }
+
   async function requestPasswordReset(email: string) {
     await fetchApi('/api/iam/password-reset-requests', {
       method: 'POST',
@@ -359,6 +377,8 @@ export function useAuth() {
     hasAnyPermission,
     updateProfile,
     changePassword,
+    requestEmailVerification,
+    verifyEmail,
     requestPasswordReset,
     resetPassword,
     resetPasskey,

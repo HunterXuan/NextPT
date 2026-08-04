@@ -23,7 +23,15 @@
 * **注册 (Register)**
   * **Method/Path**: `POST /users`
   * **参数概述**: `username`, `password`, `email`, `invite_token`
-  * **核心逻辑**: 校验邀请码 -> 创建用户记录 -> 分配默认角色 -> 调用 Economy 初始化基础魔力值 -> 标记 invite 已使用。
+  * **核心逻辑**: 校验邀请码 -> 创建待验证用户 -> 分配默认角色 -> 初始化用户资料和统计 -> 标记 invite 已使用 -> 异步发送邮箱验证邮件。
+* **申请邮箱验证 (CreateEmailVerificationRequest)**
+  * **Method/Path**: `POST /email-verification-requests`
+  * **参数概述**: `email`
+  * **核心逻辑**: 按 IP 和邮箱限流；未知邮箱、已验证邮箱和限流请求返回相同结果。待验证用户会获得新的 24 小时一次性令牌，Redis 只保存令牌摘要，新申请会使旧令牌失效。
+* **确认邮箱验证 (CreateEmailVerification)**
+  * **Method/Path**: `POST /email-verifications`
+  * **参数概述**: `token`
+  * **核心逻辑**: 原子校验并消费令牌 -> 仅将待验证用户更新为正常状态 -> 清理用户鉴权缓存。无效、已使用和过期令牌统一返回相同错误。
 * **获取当前用户资料 (GetMyProfile)**
   * **Method/Path**: `GET /users/me`
 * **获取用户公开资料 (GetPublicProfile)**
@@ -43,6 +51,8 @@
   * **Method/Path**: `POST /password-resets`
   * **参数概述**: `token`, `newPassword`
   * **核心逻辑**: 原子校验并消费一次性令牌 -> 更新密码哈希 -> 删除该用户全部登录会话 -> 清理用户鉴权缓存。无效、已使用和过期令牌统一返回相同错误。
+
+> 待验证用户不能创建登录会话；登录接口会返回独立的邮箱未验证错误，不与封禁或停用状态混用。
 
 ### 3. InviteUsecase (邀请应用服务)
 * **发送/生成邀请 (CreateInvite)**

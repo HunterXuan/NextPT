@@ -282,6 +282,7 @@
       "success": "登录成功",
       "noAccount": "还没有账号？",
       "forgotPassword": "忘记密码？",
+      "verifyEmail": "验证邮箱",
       "benefits": {
         "passkey": {
           "title": "接着找资源",
@@ -325,6 +326,26 @@
       "requestAgain": "重新申请",
       "backToLogin": "返回登录",
       "login": "使用新密码登录"
+    },
+    "verifyEmail": {
+      "eyebrow": "邮箱验证",
+      "invalidEyebrow": "验证失败",
+      "metaTitle": "验证邮箱",
+      "title": "检查你的邮箱",
+      "subtitle": "我们已向注册邮箱发送验证链接。没有收到时，可以在这里重新发送。",
+      "heroTitle": "验证邮箱后开始使用 NextPT",
+      "heroDescription": "邮箱验证用于确认账号归属。验证链接只能使用一次，并会在 24 小时后失效。",
+      "verifyingTitle": "正在验证邮箱",
+      "verifyingDescription": "正在确认验证链接，请稍候。",
+      "successTitle": "邮箱验证成功",
+      "successDescription": "账号已经激活，现在可以使用用户名或邮箱登录。",
+      "invalidTitle": "验证链接无效",
+      "invalidDescription": "该链接可能已过期或已被使用，请重新发送验证邮件。",
+      "sentTitle": "验证邮件已发送",
+      "sentDescription": "如果该邮箱对应待验证账号，新的验证邮件会在几分钟内送达。",
+      "resend": "重新发送验证邮件",
+      "backToLogin": "返回登录",
+      "login": "前往登录"
     },
     "register": {
       "action": "注册",

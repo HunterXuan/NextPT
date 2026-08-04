@@ -138,8 +138,8 @@ definePageMeta({
 const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
-const toast = useToast()
-const { register, login } = useAuth()
+const { register } = useAuth()
+const verificationEmail = useState<string>('auth:verificationEmail', () => '')
 
 const form = reactive({
   username: '',
@@ -193,13 +193,8 @@ async function handleSubmit() {
       password: form.password,
       inviteHash: form.inviteHash.trim()
     })
-    await login(form.username.trim(), form.password)
-    toast.add({
-      title: t('auth.register.success'),
-      color: 'success',
-      icon: 'i-lucide-check-circle'
-    })
-    await navigateTo(localePath('/iam/users/me'))
+    verificationEmail.value = form.email.trim()
+    await navigateTo(localePath('/verify-email'))
   } catch (error) {
     errorMessage.value = error instanceof ApiError ? error.message : t('common.requestFailed')
   } finally {
