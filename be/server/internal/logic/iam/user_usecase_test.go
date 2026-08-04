@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"server/internal/consts"
 	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/iamin"
@@ -111,6 +112,37 @@ func TestChangePasswordValidationAndTokenRemoval(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestEnsureCanAuthenticateRejectsPendingUser(t *testing.T) {
+	err := NewIamUserUsecase().EnsureCanAuthenticate(context.Background(), &entity.IamUser{
+		Id:     42,
+		Status: consts.IamUserStatusPending,
+	})
+	if err == nil {
+		t.Fatal("EnsureCanAuthenticate() error = nil, want pending user rejection")
+	}
+}
+
+func TestTemporaryTokenIsRandomAndDigestible(t *testing.T) {
+	usecase := NewIamUserUsecase()
+	first, err := usecase.newTemporaryToken()
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := usecase.newTemporaryToken()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if first == second {
+		t.Fatal("newTemporaryToken() returned duplicate tokens")
+	}
+	if len(first) != 43 {
+		t.Fatalf("newTemporaryToken() length = %d, want 43", len(first))
+	}
+	if digest := usecase.temporaryTokenDigest(first); len(digest) != 64 {
+		t.Fatalf("temporaryTokenDigest() length = %d, want 64", len(digest))
 	}
 }
 

@@ -40,6 +40,18 @@ type IamUserSummary struct {
 	Avatar   string `json:"avatar"`
 }
 
+type AccountActionMail struct {
+	Kind      string
+	Recipient string
+	Subject   string
+	Greeting  string
+	Intro     string
+	ActionURL string
+	Action    string
+	Expiry    string
+	Note      string
+}
+
 type IamUserPermissionListOptions struct {
 	SourceType   *int
 	WildcardOnly bool

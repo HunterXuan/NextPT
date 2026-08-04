@@ -21,6 +21,7 @@ iam.invite.status_max: 邀請碼狀態無效
 iam.invite.user_id_req: 請指定用戶ID
 
 iam.session.account_banned: 賬號已被禁用或封禁
+iam.session.email_unverified: 信箱尚未驗證，請檢查驗證郵件或重新傳送
 iam.session.invalid_credentials: 帳號或密碼錯誤
 iam.session.invalid_passkey: Passkey無效或賬號被禁用
 iam.session.password_req: 請輸入密碼
@@ -31,6 +32,14 @@ iam.user.avatar_len: 頭像地址不能超過500個字元
 iam.user.email_exists: 信箱已被註冊
 iam.user.email_fmt: 信箱格式不正確
 iam.user.email_req: 請輸入信箱
+iam.user.email_verification_mail_action: 驗證信箱
+iam.user.email_verification_mail_expiry: 該連結將在 %d 小時後失效，且只能使用一次。
+iam.user.email_verification_mail_greeting: 你好，%s：
+iam.user.email_verification_mail_ignore: 如果不是你本人註冊，可以忽略這封郵件。
+iam.user.email_verification_mail_intro: 請驗證此信箱地址，以完成你的 %s 帳號註冊。
+iam.user.email_verification_mail_subject: 驗證你的 %s 信箱
+iam.user.email_verification_token_invalid: 信箱驗證連結無效或已過期
+iam.user.email_verification_token_req: 請提供信箱驗證令牌
 iam.user.id_req: 請指定使用者 ID
 iam.user.info_len: 個人簡介不能超過5000個字元
 iam.user.new_password_req: 請輸入新密碼

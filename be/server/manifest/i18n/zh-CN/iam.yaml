@@ -21,6 +21,7 @@ iam.invite.status_max: 邀请码状态无效
 iam.invite.user_id_req: 请指定用户ID
 
 iam.session.account_banned: 账号已被禁用或封禁
+iam.session.email_unverified: 邮箱尚未验证，请检查验证邮件或重新发送
 iam.session.invalid_credentials: 账号或密码错误
 iam.session.invalid_passkey: Passkey无效或账号被禁用
 iam.session.password_req: 请输入密码
@@ -31,6 +32,14 @@ iam.user.avatar_len: 头像地址不能超过500个字符
 iam.user.email_exists: 邮箱已被注册
 iam.user.email_fmt: 邮箱格式不正确
 iam.user.email_req: 请输入邮箱
+iam.user.email_verification_mail_action: 验证邮箱
+iam.user.email_verification_mail_expiry: 该链接将在 %d 小时后失效，且只能使用一次。
+iam.user.email_verification_mail_greeting: 你好，%s：
+iam.user.email_verification_mail_ignore: 如果不是你本人注册，可以忽略这封邮件。
+iam.user.email_verification_mail_intro: 请验证此邮箱地址，以完成你的 %s 账号注册。
+iam.user.email_verification_mail_subject: 验证你的 %s 邮箱
+iam.user.email_verification_token_invalid: 邮箱验证链接无效或已过期
+iam.user.email_verification_token_req: 请提供邮箱验证令牌
 iam.user.id_req: 请指定用户ID
 iam.user.info_len: 个人简介不能超过5000个字符
 iam.user.new_password_req: 请输入新密码

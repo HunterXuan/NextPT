@@ -9,6 +9,11 @@ const (
 )
 
 const (
+	IamEmailVerificationTokenTTL       = 24 * time.Hour
+	IamEmailVerificationRateWindow     = 15 * time.Minute
+	IamEmailVerificationRateLimitByIp  = 10
+	IamEmailVerificationRateLimitEmail = 3
+
 	IamPasswordResetTokenTTL       = 30 * time.Minute
 	IamPasswordResetRateWindow     = 15 * time.Minute
 	IamPasswordResetRateLimitByIp  = 10

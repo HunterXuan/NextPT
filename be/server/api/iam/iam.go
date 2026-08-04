@@ -11,14 +11,16 @@ import (
 )
 
 type IIamV1 interface {
+	EmailVerificationRequestCreate(ctx context.Context, req *v1.EmailVerificationRequestCreateReq) (res *v1.EmailVerificationRequestCreateRes, err error)
+	EmailVerificationCreate(ctx context.Context, req *v1.EmailVerificationCreateReq) (res *v1.EmailVerificationCreateRes, err error)
 	InviteList(ctx context.Context, req *v1.InviteListReq) (res *v1.InviteListRes, err error)
 	InviteSend(ctx context.Context, req *v1.InviteSendReq) (res *v1.InviteSendRes, err error)
 	InviteCheck(ctx context.Context, req *v1.InviteCheckReq) (res *v1.InviteCheckRes, err error)
+	PasswordResetRequestCreate(ctx context.Context, req *v1.PasswordResetRequestCreateReq) (res *v1.PasswordResetRequestCreateRes, err error)
+	PasswordResetCreate(ctx context.Context, req *v1.PasswordResetCreateReq) (res *v1.PasswordResetCreateRes, err error)
 	RoleList(ctx context.Context, req *v1.RoleListReq) (res *v1.RoleListRes, err error)
 	IamSessionCreate(ctx context.Context, req *v1.IamSessionCreateReq) (res *v1.IamSessionCreateRes, err error)
 	IamSessionDelete(ctx context.Context, req *v1.IamSessionDeleteReq) (res *v1.IamSessionDeleteRes, err error)
-	PasswordResetRequestCreate(ctx context.Context, req *v1.PasswordResetRequestCreateReq) (res *v1.PasswordResetRequestCreateRes, err error)
-	PasswordResetCreate(ctx context.Context, req *v1.PasswordResetCreateReq) (res *v1.PasswordResetCreateRes, err error)
 	IamUserCreate(ctx context.Context, req *v1.IamUserCreateReq) (res *v1.IamUserCreateRes, err error)
 	IamUserGet(ctx context.Context, req *v1.IamUserGetReq) (res *v1.IamUserGetRes, err error)
 	IamUserMe(ctx context.Context, req *v1.IamUserMeReq) (res *v1.IamUserMeRes, err error)

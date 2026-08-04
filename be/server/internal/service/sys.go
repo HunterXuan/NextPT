@@ -24,6 +24,10 @@ type (
 		KeyTrackerTorrentLeechers(ctx context.Context, torrentId uint64) string
 		KeyIamUserAcls(ctx context.Context, userId uint64) string
 		KeyIamUserPublic(ctx context.Context, userId uint64, language string) string
+		KeyIamEmailVerificationToken(ctx context.Context, tokenHash string) string
+		KeyIamEmailVerificationUser(ctx context.Context, userId uint64) string
+		KeyIamEmailVerificationRateIp(ctx context.Context, ipHash string) string
+		KeyIamEmailVerificationRateEmail(ctx context.Context, emailHash string) string
 		KeyIamPasswordResetToken(ctx context.Context, tokenHash string) string
 		KeyIamPasswordResetUser(ctx context.Context, userId uint64) string
 		KeyIamPasswordResetRateIp(ctx context.Context, ipHash string) string

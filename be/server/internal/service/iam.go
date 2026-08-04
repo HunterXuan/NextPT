@@ -79,6 +79,7 @@ type (
 	}
 	IIamUserDomain interface {
 		GetUserByLogin(ctx context.Context, login string) (*entity.IamUser, error)
+		GetUserByEmail(ctx context.Context, email string) (*entity.IamUser, error)
 		GetUserById(ctx context.Context, id uint64) (*entity.IamUser, error)
 		GetUserPasswordHash(ctx context.Context, userId uint64) (string, error)
 		GetUserProfile(ctx context.Context, userId uint64) (*entity.IamUserProfile, error)
@@ -89,6 +90,7 @@ type (
 		InsertUserProfile(ctx context.Context, data do.IamUserProfile) error
 		InsertUserStat(ctx context.Context, data do.IamUserStat) error
 		UpdateUserProfile(ctx context.Context, userId uint64, avatar string, info string, signature string) error
+		ConfirmUserEmail(ctx context.Context, userId uint64) (bool, error)
 		UpdatePasswordHash(ctx context.Context, userId uint64, passwordHash string) error
 		UpdatePasskey(ctx context.Context, userId uint64, passkey string) error
 		UpdateLoginTrace(ctx context.Context, userId uint64, loginAt *gtime.Time, ip string) error
@@ -120,6 +122,8 @@ type (
 		Get(ctx context.Context, actor *model.Actor, in iamin.UserGetInp) (*iamout.UserGetOut, error)
 		UpdateProfile(ctx context.Context, actor *model.Actor, in iamin.UserProfileUpdateInp) error
 		ChangePassword(ctx context.Context, actor *model.Actor, in iamin.UserPasswordChangeInp) error
+		CreateEmailVerificationRequest(ctx context.Context, in iamin.EmailVerificationRequestCreateInp) error
+		CreateEmailVerification(ctx context.Context, in iamin.EmailVerificationCreateInp) error
 		CreatePasswordResetRequest(ctx context.Context, in iamin.PasswordResetRequestCreateInp) error
 		CreatePasswordReset(ctx context.Context, in iamin.PasswordResetCreateInp) error
 		ResetPasskey(ctx context.Context, actor *model.Actor) (string, error)

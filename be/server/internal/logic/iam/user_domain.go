@@ -42,6 +42,12 @@ func (s *sIamUserDomain) GetUserByLogin(ctx context.Context, login string) (*ent
 	return user, nil
 }
 
+func (s *sIamUserDomain) GetUserByEmail(ctx context.Context, email string) (*entity.IamUser, error) {
+	var user *entity.IamUser
+	err := dao.IamUser.Ctx(ctx).Where(dao.IamUser.Columns().Email, email).Scan(&user)
+	return user, err
+}
+
 func (s *sIamUserDomain) GetUserById(ctx context.Context, id uint64) (*entity.IamUser, error) {
 	var user *entity.IamUser
 	err := dao.IamUser.Ctx(ctx).Where(dao.IamUser.Columns().Id, id).Scan(&user)
@@ -103,6 +109,22 @@ func (s *sIamUserDomain) UpdateUserProfile(ctx context.Context, userId uint64, a
 		columns.Signature: signature,
 	}).Save()
 	return err
+}
+
+func (s *sIamUserDomain) ConfirmUserEmail(ctx context.Context, userId uint64) (bool, error) {
+	columns := dao.IamUser.Columns()
+	result, err := dao.IamUser.Ctx(ctx).
+		Where(columns.Id, userId).
+		Where(columns.Status, consts.IamUserStatusPending).
+		Data(g.Map{
+			columns.Status: consts.IamUserStatusConfirmed,
+		}).
+		Update()
+	if err != nil {
+		return false, err
+	}
+	affected, err := result.RowsAffected()
+	return affected == 1, err
 }
 
 func (s *sIamUserDomain) UpdatePasswordHash(ctx context.Context, userId uint64, passwordHash string) error {

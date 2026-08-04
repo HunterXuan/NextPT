@@ -21,6 +21,7 @@ iam.invite.status_max: Invalid invite code status
 iam.invite.user_id_req: Please specify user ID
 
 iam.session.account_banned: Account disabled or banned
+iam.session.email_unverified: Your email address has not been verified. Check your inbox or request another verification email
 iam.session.invalid_credentials: Invalid username or password
 iam.session.invalid_passkey: Invalid passkey or account disabled
 iam.session.password_req: Please enter your password
@@ -31,6 +32,14 @@ iam.user.avatar_len: Avatar URL cannot exceed 500 characters
 iam.user.email_exists: Email is already registered
 iam.user.email_fmt: Invalid email format
 iam.user.email_req: Please enter your email
+iam.user.email_verification_mail_action: Verify email
+iam.user.email_verification_mail_expiry: This link expires in %d hours and can only be used once.
+iam.user.email_verification_mail_greeting: "Hello %s,"
+iam.user.email_verification_mail_ignore: If you did not create this account, you can safely ignore this email.
+iam.user.email_verification_mail_intro: Verify this email address to finish creating your %s account.
+iam.user.email_verification_mail_subject: Verify your %s email
+iam.user.email_verification_token_invalid: This email verification link is invalid or has expired
+iam.user.email_verification_token_req: Please provide an email verification token
 iam.user.id_req: Please specify a user ID
 iam.user.info_len: Profile bio cannot exceed 5000 characters
 iam.user.new_password_req: Please enter your new password
