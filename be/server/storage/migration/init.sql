@@ -48,7 +48,7 @@ CREATE TABLE `iam_user` (
     `vip_until`       DATETIME        NULL     COMMENT 'VIP 过期时间',
     `vip_remark`      VARCHAR(100)    NOT NULL DEFAULT '' COMMENT 'VIP 身份获取备注/来源',
     `two_step_type`   TINYINT         NOT NULL DEFAULT 0  COMMENT '两步验证方式: 0=关闭 1=TOTP(Authenticator) 2=邮件验证码',
-    `two_step_secret` VARCHAR(64)     NOT NULL DEFAULT '' COMMENT 'TOTP 密钥 (two_step_type=1 时使用；邮件验证码走 Redis 临时存储)',
+    `two_step_secret` VARCHAR(255)    NOT NULL DEFAULT '' COMMENT '加密后的 TOTP 密钥 (two_step_type=1 时使用)',
     `invited_by`      BIGINT UNSIGNED NOT NULL DEFAULT 0,
     `last_login`      DATETIME        NULL     COMMENT '最后登录时间',
     `last_ip`         VARCHAR(64)     NOT NULL DEFAULT '' COMMENT '最后登录 IP',
@@ -63,6 +63,18 @@ CREATE TABLE `iam_user` (
     KEY `idx_role` (`role`),
     KEY `idx_invited_by` (`invited_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户核心表';
+
+-- 用户两步验证恢复码（仅保存哈希，明文仅在生成时返回一次）
+CREATE TABLE `iam_user_recovery_code` (
+    `id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id`    BIGINT UNSIGNED NOT NULL,
+    `code_hash`  CHAR(64)        NOT NULL,
+    `used_at`    DATETIME        NULL,
+    `created_at` DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_code_hash` (`user_id`, `code_hash`),
+    KEY `idx_user_unused` (`user_id`, `used_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户两步验证恢复码';
 
 -- 用户档案表（精简：只保留核心展示信息）
 CREATE TABLE `iam_user_profile` (

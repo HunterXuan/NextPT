@@ -31,7 +31,7 @@ type IamUserColumns struct {
 	VipUntil      string // VIP 过期时间
 	VipRemark     string // VIP 身份获取备注/来源
 	TwoStepType   string // 两步验证方式: 0=关闭 1=TOTP(Authenticator) 2=邮件验证码
-	TwoStepSecret string // TOTP 密钥 (two_step_type=1 时使用；邮件验证码走 Redis 临时存储)
+	TwoStepSecret string // 加密后的 TOTP 密钥 (two_step_type=1 时使用)
 	InvitedBy     string //
 	LastLogin     string // 最后登录时间
 	LastIp        string // 最后登录 IP

@@ -20,7 +20,7 @@ type IamUser struct {
 	VipUntil      *gtime.Time `json:"vipUntil"      orm:"vip_until"       description:"VIP 过期时间"`
 	VipRemark     string      `json:"vipRemark"     orm:"vip_remark"      description:"VIP 身份获取备注/来源"`
 	TwoStepType   int         `json:"twoStepType"   orm:"two_step_type"   description:"两步验证方式: 0=关闭 1=TOTP(Authenticator) 2=邮件验证码"`
-	TwoStepSecret string      `json:"twoStepSecret" orm:"two_step_secret" description:"TOTP 密钥 (two_step_type=1 时使用；邮件验证码走 Redis 临时存储)"`
+	TwoStepSecret string      `json:"twoStepSecret" orm:"two_step_secret" description:"加密后的 TOTP 密钥 (two_step_type=1 时使用)"`
 	InvitedBy     uint64      `json:"invitedBy"     orm:"invited_by"      description:""`
 	LastLogin     *gtime.Time `json:"lastLogin"     orm:"last_login"      description:"最后登录时间"`
 	LastIp        string      `json:"lastIp"        orm:"last_ip"         description:"最后登录 IP"`

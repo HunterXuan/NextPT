@@ -4,5 +4,7 @@ type RegisterOut struct {
 }
 
 type SessionCreateOut struct {
-	Token string `json:"token" dc:"认证凭证 JWT"`
+	Token            string `json:"token"`
+	TwoStepRequired  bool   `json:"twoStepRequired"`
+	TwoStepChallenge string `json:"twoStepChallenge"`
 }

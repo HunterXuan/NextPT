@@ -46,13 +46,24 @@ type UserGetStatOut struct {
 }
 
 type UserMeAccountOut struct {
-	Id        uint64      `json:"id"`
-	Username  string      `json:"username"`
-	Email     string      `json:"email"`
-	Passkey   string      `json:"passkey"`
-	Status    int         `json:"status"`
-	VipUntil  *gtime.Time `json:"vipUntil"`
-	CreatedAt *gtime.Time `json:"createdAt"`
+	Id             uint64      `json:"id"`
+	Username       string      `json:"username"`
+	Email          string      `json:"email"`
+	Passkey        string      `json:"passkey"`
+	Status         int         `json:"status"`
+	TwoStepEnabled bool        `json:"twoStepEnabled"`
+	VipUntil       *gtime.Time `json:"vipUntil"`
+	CreatedAt      *gtime.Time `json:"createdAt"`
+}
+
+type UserTwoStepSetupOut struct {
+	Challenge     string `json:"challenge"`
+	QRCodeDataURL string `json:"qrCodeDataUrl"`
+	Secret        string `json:"secret"`
+}
+
+type UserTwoStepRecoveryCodesOut struct {
+	RecoveryCodes []string `json:"recoveryCodes"`
 }
 
 type UserMeRoleOut struct {

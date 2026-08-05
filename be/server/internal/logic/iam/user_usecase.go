@@ -462,13 +462,14 @@ func (s *sIamUserUsecase) Me(ctx context.Context, actor *model.Actor) (*iamout.U
 
 	return &iamout.UserMeOut{
 		User: iamout.UserMeAccountOut{
-			Id:        user.Id,
-			Username:  user.Username,
-			Email:     user.Email,
-			Passkey:   user.Passkey,
-			Status:    user.Status,
-			VipUntil:  user.VipUntil,
-			CreatedAt: user.CreatedAt,
+			Id:             user.Id,
+			Username:       user.Username,
+			Email:          user.Email,
+			Passkey:        user.Passkey,
+			Status:         user.Status,
+			TwoStepEnabled: user.TwoStepType == consts.IamTwoStepTypeTOTP,
+			VipUntil:       user.VipUntil,
+			CreatedAt:      user.CreatedAt,
 		},
 		Role: iamout.UserMeRoleOut{
 			Id:      user.Role,

@@ -5,3 +5,4 @@ iam:
   maxRefresh: "5d"
   multiLogin: true
   tokenDelimiter: "_"
+  twoStepEncryptionKey: "replace-this-test-two-step-encryption-key"

@@ -149,6 +149,18 @@ func (s *sIamUserDomain) UpdatePasskey(ctx context.Context, userId uint64, passk
 	return err
 }
 
+func (s *sIamUserDomain) UpdateTwoStep(ctx context.Context, userId uint64, twoStepType int, encryptedSecret string) error {
+	columns := dao.IamUser.Columns()
+	_, err := dao.IamUser.Ctx(ctx).
+		Where(columns.Id, userId).
+		Data(g.Map{
+			columns.TwoStepType:   twoStepType,
+			columns.TwoStepSecret: encryptedSecret,
+		}).
+		Update()
+	return err
+}
+
 func (s *sIamUserDomain) UpdateLoginTrace(ctx context.Context, userId uint64, loginAt *gtime.Time, ip string) error {
 	columns := dao.IamUser.Columns()
 	_, err := dao.IamUser.Ctx(ctx).

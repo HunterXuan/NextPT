@@ -22,6 +22,24 @@ type UserPasswordChangeInp struct {
 	NewPassword string `json:"newPassword" v:"required|length:6,30#{#iam.user.new_password_req}|{#iam.user.password_len}"`
 }
 
+type UserTwoStepSetupInp struct {
+	Password string `json:"password" v:"required#{#iam.user.old_password_req}"`
+}
+
+type UserTwoStepConfirmInp struct {
+	Challenge string `json:"challenge" v:"required|max-length:128#{#iam.two_step.challenge_req}|{#iam.two_step.challenge_invalid}"`
+	Code      string `json:"code" v:"required|max-length:16#{#iam.two_step.code_req}|{#iam.two_step.code_invalid}"`
+}
+
+type UserTwoStepRecoveryCodesCreateInp struct {
+	Code string `json:"code" v:"required|max-length:64#{#iam.two_step.code_req}|{#iam.two_step.code_invalid}"`
+}
+
+type UserTwoStepDisableInp struct {
+	Password string `json:"password" v:"required#{#iam.user.old_password_req}"`
+	Code     string `json:"code" v:"required|max-length:64#{#iam.two_step.code_req}|{#iam.two_step.code_invalid}"`
+}
+
 type UserLoginLogListInp struct {
 	Result *int `json:"result" in:"query"`
 	Page   int  `json:"page" d:"1"`

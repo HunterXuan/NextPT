@@ -74,8 +74,23 @@ type (
 	}
 	IIamSessionUsecase interface {
 		Create(ctx context.Context, in iamin.SessionCreateInp) (*iamout.SessionCreateOut, error)
+		VerifyTwoStep(ctx context.Context, in iamin.SessionTwoStepVerifyInp) (*iamout.SessionCreateOut, error)
 		Delete(ctx context.Context, actor *model.Actor) error
 		VerifyPasskey(ctx context.Context, passkey string) (*model.Actor, error)
+	}
+	IIamTwoStepDomain interface {
+		ReplaceRecoveryCodeHashes(ctx context.Context, userId uint64, hashes []string) error
+		HasUnusedRecoveryCode(ctx context.Context, userId uint64, codeHash string) (bool, error)
+		ConsumeRecoveryCode(ctx context.Context, userId uint64, codeHash string) (bool, error)
+		DeleteRecoveryCodes(ctx context.Context, userId uint64) error
+	}
+	IIamTwoStepUsecase interface {
+		Setup(ctx context.Context, actor *model.Actor, in iamin.UserTwoStepSetupInp) (*iamout.UserTwoStepSetupOut, error)
+		Confirm(ctx context.Context, actor *model.Actor, in iamin.UserTwoStepConfirmInp) (*iamout.UserTwoStepRecoveryCodesOut, error)
+		CreateRecoveryCodes(ctx context.Context, actor *model.Actor, in iamin.UserTwoStepRecoveryCodesCreateInp) (*iamout.UserTwoStepRecoveryCodesOut, error)
+		Disable(ctx context.Context, actor *model.Actor, in iamin.UserTwoStepDisableInp) error
+		CreateLoginChallenge(ctx context.Context, userId uint64) (string, error)
+		VerifyLogin(ctx context.Context, in iamin.SessionTwoStepVerifyInp) (uint64, error)
 	}
 	IIamUserDomain interface {
 		GetUserByLogin(ctx context.Context, login string) (*entity.IamUser, error)
@@ -93,6 +108,7 @@ type (
 		ConfirmUserEmail(ctx context.Context, userId uint64) (bool, error)
 		UpdatePasswordHash(ctx context.Context, userId uint64, passwordHash string) error
 		UpdatePasskey(ctx context.Context, userId uint64, passkey string) error
+		UpdateTwoStep(ctx context.Context, userId uint64, twoStepType int, encryptedSecret string) error
 		UpdateLoginTrace(ctx context.Context, userId uint64, loginAt *gtime.Time, ip string) error
 		// GetUserByPasskey 通过 Passkey 获取用户（无缓存，纯领域逻辑）
 		GetUserByPasskey(ctx context.Context, passkey string) (*entity.IamUser, error)
@@ -139,6 +155,8 @@ var (
 	localIamRoleUsecase      IIamRoleUsecase
 	localIamSessionDomain    IIamSessionDomain
 	localIamSessionUsecase   IIamSessionUsecase
+	localIamTwoStepDomain    IIamTwoStepDomain
+	localIamTwoStepUsecase   IIamTwoStepUsecase
 	localIamUserDomain       IIamUserDomain
 	localIamUserUsecase      IIamUserUsecase
 )
@@ -229,6 +247,28 @@ func IamSessionUsecase() IIamSessionUsecase {
 
 func RegisterIamSessionUsecase(i IIamSessionUsecase) {
 	localIamSessionUsecase = i
+}
+
+func IamTwoStepDomain() IIamTwoStepDomain {
+	if localIamTwoStepDomain == nil {
+		panic("implement not found for interface IIamTwoStepDomain, forgot register?")
+	}
+	return localIamTwoStepDomain
+}
+
+func RegisterIamTwoStepDomain(i IIamTwoStepDomain) {
+	localIamTwoStepDomain = i
+}
+
+func IamTwoStepUsecase() IIamTwoStepUsecase {
+	if localIamTwoStepUsecase == nil {
+		panic("implement not found for interface IIamTwoStepUsecase, forgot register?")
+	}
+	return localIamTwoStepUsecase
+}
+
+func RegisterIamTwoStepUsecase(i IIamTwoStepUsecase) {
+	localIamTwoStepUsecase = i
 }
 
 func IamUserDomain() IIamUserDomain {

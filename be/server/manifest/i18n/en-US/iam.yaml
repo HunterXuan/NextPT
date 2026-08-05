@@ -28,6 +28,17 @@ iam.session.password_req: Please enter your password
 iam.session.role_missing: failed to get user role
 iam.session.username_req: Please enter your username or email
 
+iam.two_step.already_enabled: Two-step verification is already enabled
+iam.two_step.challenge_invalid: The two-step verification request is invalid or expired
+iam.two_step.challenge_req: Please provide the two-step verification request
+iam.two_step.code_invalid: The verification code or recovery code is incorrect
+iam.two_step.code_req: Please enter your authenticator code or recovery code
+iam.two_step.encryption_key_missing: Two-step verification is not configured
+iam.two_step.not_enabled: Two-step verification is not enabled
+iam.two_step.rate_limited: Too many verification attempts. Please try again later
+iam.two_step.secret_invalid: The two-step verification configuration is invalid. Please contact an administrator
+iam.two_step.unsupported_type: This two-step verification method is not supported
+
 iam.user.avatar_len: Avatar URL cannot exceed 500 characters
 iam.user.email_exists: Email is already registered
 iam.user.email_fmt: Invalid email format

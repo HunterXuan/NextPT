@@ -16,6 +16,15 @@ type IamSessionCreateRes struct {
 	iamout.SessionCreateOut
 }
 
+type IamSessionTwoStepVerifyReq struct {
+	g.Meta `path:"/sessions:verifyTwoStep" method:"post" tags:"IamSession" summary:"完成两步验证登录" noAuth:"true"`
+	iamin.SessionTwoStepVerifyInp
+}
+
+type IamSessionTwoStepVerifyRes struct {
+	iamout.SessionCreateOut
+}
+
 type IamSessionDeleteReq struct {
 	g.Meta `path:"/sessions" method:"delete" tags:"IamSession" summary:"销毁会话 (登出)"`
 }

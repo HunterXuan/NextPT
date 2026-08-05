@@ -28,6 +28,17 @@ iam.session.password_req: 请输入密码
 iam.session.role_missing: 获取用户角色失败
 iam.session.username_req: 请输入用户名或邮箱
 
+iam.two_step.already_enabled: 两步验证已启用
+iam.two_step.challenge_invalid: 两步验证请求无效或已过期
+iam.two_step.challenge_req: 请提供两步验证请求
+iam.two_step.code_invalid: 验证码或恢复码不正确
+iam.two_step.code_req: 请输入认证器验证码或恢复码
+iam.two_step.encryption_key_missing: 两步验证服务尚未配置
+iam.two_step.not_enabled: 两步验证尚未启用
+iam.two_step.rate_limited: 验证尝试过于频繁，请稍后再试
+iam.two_step.secret_invalid: 两步验证配置无效，请联系管理员
+iam.two_step.unsupported_type: 当前两步验证方式暂不支持
+
 iam.user.avatar_len: 头像地址不能超过500个字符
 iam.user.email_exists: 邮箱已被注册
 iam.user.email_fmt: 邮箱格式不正确

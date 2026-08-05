@@ -22,7 +22,7 @@ type IamUser struct {
 	VipUntil      *gtime.Time // VIP 过期时间
 	VipRemark     any         // VIP 身份获取备注/来源
 	TwoStepType   any         // 两步验证方式: 0=关闭 1=TOTP(Authenticator) 2=邮件验证码
-	TwoStepSecret any         // TOTP 密钥 (two_step_type=1 时使用；邮件验证码走 Redis 临时存储)
+	TwoStepSecret any         // 加密后的 TOTP 密钥 (two_step_type=1 时使用)
 	InvitedBy     any         //
 	LastLogin     *gtime.Time // 最后登录时间
 	LastIp        any         // 最后登录 IP

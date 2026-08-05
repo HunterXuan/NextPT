@@ -20,6 +20,7 @@ type IIamV1 interface {
 	PasswordResetCreate(ctx context.Context, req *v1.PasswordResetCreateReq) (res *v1.PasswordResetCreateRes, err error)
 	RoleList(ctx context.Context, req *v1.RoleListReq) (res *v1.RoleListRes, err error)
 	IamSessionCreate(ctx context.Context, req *v1.IamSessionCreateReq) (res *v1.IamSessionCreateRes, err error)
+	IamSessionTwoStepVerify(ctx context.Context, req *v1.IamSessionTwoStepVerifyReq) (res *v1.IamSessionTwoStepVerifyRes, err error)
 	IamSessionDelete(ctx context.Context, req *v1.IamSessionDeleteReq) (res *v1.IamSessionDeleteRes, err error)
 	IamUserCreate(ctx context.Context, req *v1.IamUserCreateReq) (res *v1.IamUserCreateRes, err error)
 	IamUserGet(ctx context.Context, req *v1.IamUserGetReq) (res *v1.IamUserGetRes, err error)
@@ -28,5 +29,9 @@ type IIamV1 interface {
 	IamUserLoginLogList(ctx context.Context, req *v1.IamUserLoginLogListReq) (res *v1.IamUserLoginLogListRes, err error)
 	IamUserProfileUpdate(ctx context.Context, req *v1.IamUserProfileUpdateReq) (res *v1.IamUserProfileUpdateRes, err error)
 	IamUserPasswordChange(ctx context.Context, req *v1.IamUserPasswordChangeReq) (res *v1.IamUserPasswordChangeRes, err error)
+	IamUserTwoStepSetup(ctx context.Context, req *v1.IamUserTwoStepSetupReq) (res *v1.IamUserTwoStepSetupRes, err error)
+	IamUserTwoStepConfirm(ctx context.Context, req *v1.IamUserTwoStepConfirmReq) (res *v1.IamUserTwoStepConfirmRes, err error)
+	IamUserTwoStepRecoveryCodesCreate(ctx context.Context, req *v1.IamUserTwoStepRecoveryCodesCreateReq) (res *v1.IamUserTwoStepRecoveryCodesCreateRes, err error)
+	IamUserTwoStepDelete(ctx context.Context, req *v1.IamUserTwoStepDeleteReq) (res *v1.IamUserTwoStepDeleteRes, err error)
 	IamUserPasskeyReset(ctx context.Context, req *v1.IamUserPasskeyResetReq) (res *v1.IamUserPasskeyResetRes, err error)
 }

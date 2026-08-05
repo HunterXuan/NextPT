@@ -56,12 +56,20 @@ func (s *sIamSessionUsecase) Create(ctx context.Context, in iamin.SessionCreateI
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonRoleMissing)
 		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
 	}
+	if user.TwoStepType != consts.IamTwoStepTypeDisabled {
+		if user.TwoStepType != consts.IamTwoStepTypeTOTP {
+			s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTwoStepInvalid)
+			return nil, gerror.New(gi18n.T(ctx, "iam.two_step.unsupported_type"))
+		}
+		challenge, err := service.IamTwoStepUsecase().CreateLoginChallenge(ctx, user.Id)
+		if err != nil {
+			s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
+			return nil, err
+		}
+		return &iamout.SessionCreateOut{TwoStepRequired: true, TwoStepChallenge: challenge}, nil
+	}
 
-	token, err := service.IamSessionDomain().GenerateToken(ctx, gconv.String(user.Id), g.Map{
-		"roleId":    user.Role,
-		"roleLevel": role.Level,
-		"isStaff":   role.IsStaff,
-	})
+	token, err := s.generateToken(ctx, user, role.Level, role.IsStaff)
 	if err != nil {
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
 		return nil, err
@@ -71,6 +79,47 @@ func (s *sIamSessionUsecase) Create(ctx context.Context, in iamin.SessionCreateI
 	return &iamout.SessionCreateOut{
 		Token: token,
 	}, nil
+}
+
+func (s *sIamSessionUsecase) VerifyTwoStep(ctx context.Context, in iamin.SessionTwoStepVerifyInp) (*iamout.SessionCreateOut, error) {
+	userId, err := service.IamTwoStepUsecase().VerifyLogin(ctx, in)
+	if err != nil {
+		if userId != 0 {
+			s.recordLogin(ctx, userId, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTwoStepInvalid)
+		}
+		return nil, err
+	}
+	user, err := service.IamUserDomain().GetUserById(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, gerror.New(gi18n.T(ctx, "iam.user.not_found"))
+	}
+	if err := service.IamUserUsecase().EnsureCanAuthenticate(ctx, user); err != nil {
+		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonAccountUnavailable)
+		return nil, err
+	}
+	role, err := service.IamRoleDomain().GetRoleById(ctx, user.Role)
+	if err != nil || role == nil {
+		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonRoleMissing)
+		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
+	}
+	token, err := s.generateToken(ctx, user, role.Level, role.IsStaff)
+	if err != nil {
+		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
+		return nil, err
+	}
+	s.recordSuccessfulLogin(ctx, user)
+	return &iamout.SessionCreateOut{Token: token}, nil
+}
+
+func (s *sIamSessionUsecase) generateToken(ctx context.Context, user *entity.IamUser, roleLevel int, isStaff bool) (string, error) {
+	return service.IamSessionDomain().GenerateToken(ctx, gconv.String(user.Id), g.Map{
+		"roleId":    user.Role,
+		"roleLevel": roleLevel,
+		"isStaff":   isStaff,
+	})
 }
 
 func (s *sIamSessionUsecase) recordSuccessfulLogin(ctx context.Context, user *entity.IamUser) {

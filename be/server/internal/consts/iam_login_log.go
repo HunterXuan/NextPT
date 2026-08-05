@@ -11,4 +11,5 @@ const (
 	IamLoginLogFailReasonAccountUnavailable = "account_unavailable"
 	IamLoginLogFailReasonRoleMissing        = "role_missing"
 	IamLoginLogFailReasonTokenCreateFailed  = "token_create_failed"
+	IamLoginLogFailReasonTwoStepInvalid     = "two_step_invalid"
 )

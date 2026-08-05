@@ -64,6 +64,40 @@ type IamUserPasswordChangeReq struct {
 
 type IamUserPasswordChangeRes struct{}
 
+type IamUserTwoStepSetupReq struct {
+	g.Meta `path:"/users/me/two-step:setup" method:"post" tags:"IamUser" summary:"开始绑定认证器"`
+	iamin.UserTwoStepSetupInp
+}
+
+type IamUserTwoStepSetupRes struct {
+	iamout.UserTwoStepSetupOut
+}
+
+type IamUserTwoStepConfirmReq struct {
+	g.Meta `path:"/users/me/two-step:confirm" method:"post" tags:"IamUser" summary:"确认绑定认证器"`
+	iamin.UserTwoStepConfirmInp
+}
+
+type IamUserTwoStepConfirmRes struct {
+	iamout.UserTwoStepRecoveryCodesOut
+}
+
+type IamUserTwoStepRecoveryCodesCreateReq struct {
+	g.Meta `path:"/users/me/two-step:recoveryCodes" method:"post" tags:"IamUser" summary:"重新生成两步验证恢复码"`
+	iamin.UserTwoStepRecoveryCodesCreateInp
+}
+
+type IamUserTwoStepRecoveryCodesCreateRes struct {
+	iamout.UserTwoStepRecoveryCodesOut
+}
+
+type IamUserTwoStepDeleteReq struct {
+	g.Meta `path:"/users/me/two-step" method:"delete" tags:"IamUser" summary:"关闭两步验证"`
+	iamin.UserTwoStepDisableInp
+}
+
+type IamUserTwoStepDeleteRes struct{}
+
 type IamUserPasskeyResetReq struct {
 	g.Meta `path:"/users/me:resetPasskey" method:"post" tags:"IamUser" summary:"重置当前用户 Passkey"`
 }

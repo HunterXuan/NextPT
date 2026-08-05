@@ -194,6 +194,18 @@ func (s *sSysCache) KeyIamPasswordResetRateEmail(ctx context.Context, emailHash 
 	return fmt.Sprintf("%spassword_reset:rate:email:%s", s.prefixIam, emailHash)
 }
 
+func (s *sSysCache) KeyIamTwoStepSetup(ctx context.Context, userId uint64) string {
+	return fmt.Sprintf("%stwo_step:setup:user:%d", s.prefixIam, userId)
+}
+
+func (s *sSysCache) KeyIamTwoStepLoginChallenge(ctx context.Context, challengeHash string) string {
+	return fmt.Sprintf("%stwo_step:login:challenge:%s", s.prefixIam, challengeHash)
+}
+
+func (s *sSysCache) KeyIamTwoStepLoginRate(ctx context.Context, userId uint64) string {
+	return fmt.Sprintf("%stwo_step:login:rate:user:%d", s.prefixIam, userId)
+}
+
 func (s *sSysCache) KeyIamRolePerms(ctx context.Context, roleId uint) string {
 	return fmt.Sprintf("%srole:%d:perms", s.prefixIam, roleId)
 }
