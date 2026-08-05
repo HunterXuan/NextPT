@@ -283,6 +283,9 @@
       "noAccount": "No account yet?",
       "forgotPassword": "Forgot password?",
       "verifyEmail": "Verify email",
+      "twoStepCode": "Authenticator or recovery code",
+      "verifyTwoStep": "Verify and log in",
+      "backToCredentials": "Back to username and password",
       "benefits": {
         "passkey": {
           "title": "Keep finding resources",
@@ -2502,6 +2505,29 @@
       "submit": "Change password",
       "changed": "Password changed. Please log in again."
     },
+    "twoStep": {
+      "title": "Two-step verification",
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "enable": "Enable",
+      "enableTitle": "Enable two-step verification",
+      "setupTitle": "Set up authenticator",
+      "password": "Current password",
+      "continue": "Continue",
+      "qrCode": "Authenticator QR code",
+      "manualKey": "Manual entry key",
+      "authenticatorCode": "Authenticator code",
+      "code": "Authenticator or recovery code",
+      "confirm": "Confirm setup",
+      "regenerate": "Regenerate recovery codes",
+      "disable": "Disable",
+      "disableTitle": "Disable two-step verification",
+      "recoveryTitle": "Recovery codes",
+      "copyCodes": "Copy all recovery codes",
+      "done": "Done"
+    },
     "loginLogs": {
       "title": "Login history",
       "subtitle": "Review recent sign-in results, IPs, and clients.",
@@ -2520,7 +2546,8 @@
         "invalidPassword": "Invalid password",
         "accountUnavailable": "Account unavailable",
         "roleMissing": "Role missing",
-        "tokenCreateFailed": "Session creation failed"
+        "tokenCreateFailed": "Session creation failed",
+        "twoStepInvalid": "Two-step verification failed"
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <UCard
-    class="h-full rounded-lg"
+    class="rounded-lg"
     :ui="{
       header: 'px-4 py-3 sm:px-5',
       body: 'p-4 sm:p-5'

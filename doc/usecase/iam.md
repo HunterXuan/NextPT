@@ -15,7 +15,11 @@
 * **登录 (Login)**
   * **Method/Path**: `POST /sessions`
   * **参数概述**: `username`, `password`
-  * **核心逻辑**: 密码验证 -> 签发 JWT/创建 Session 记录。
+  * **核心逻辑**: 密码验证；未启用两步验证时直接签发 Session，启用 TOTP 时只返回一次性 `twoStepChallenge`。
+* **完成两步验证登录 (VerifyTwoStep)**
+  * **Method/Path**: `POST /sessions:verifyTwoStep`
+  * **参数概述**: `challenge`, `code`
+  * **核心逻辑**: 校验短时、单次 challenge 及 TOTP 或恢复码；成功后才签发 Session、更新登录记录和最后登录信息。恢复码只可使用一次。
 * **登出 (Logout)**
   * **Method/Path**: `DELETE /sessions`
 
@@ -51,6 +55,22 @@
   * **Method/Path**: `POST /password-resets`
   * **参数概述**: `token`, `newPassword`
   * **核心逻辑**: 原子校验并消费一次性令牌 -> 更新密码哈希 -> 删除该用户全部登录会话 -> 清理用户鉴权缓存。无效、已使用和过期令牌统一返回相同错误。
+* **开始绑定两步验证 (SetupTwoStep)**
+  * **Method/Path**: `POST /users/me/two-step:setup`
+  * **参数概述**: `password`
+  * **核心逻辑**: 验证当前密码，生成 RFC 6238 TOTP 密钥和仅短时保存在 Redis 的绑定 challenge，返回二维码与手动密钥。
+* **确认两步验证绑定 (ConfirmTwoStep)**
+  * **Method/Path**: `POST /users/me/two-step:confirm`
+  * **参数概述**: `challenge`, `code`
+  * **核心逻辑**: 验证认证器验证码后加密保存 TOTP 密钥，并原子生成恢复码哈希；恢复码明文仅在本次响应中返回。当前已验证会话保持有效，后续新登录必须完成两步验证。
+* **重新生成恢复码 (CreateTwoStepRecoveryCodes)**
+  * **Method/Path**: `POST /users/me/two-step:recoveryCodes`
+  * **参数概述**: `code`
+  * **核心逻辑**: 使用当前认证器验证码或一个有效恢复码重新生成整组恢复码，旧恢复码立即失效。
+* **关闭两步验证 (DeleteTwoStep)**
+  * **Method/Path**: `DELETE /users/me/two-step`
+  * **参数概述**: `password`, `code`
+  * **核心逻辑**: 同时验证当前密码和认证器验证码/恢复码，清除加密密钥与恢复码；当前会话保持有效。
 
 > 待验证用户不能创建登录会话；登录接口会返回独立的邮箱未验证错误，不与封禁或停用状态混用。
 

@@ -283,6 +283,9 @@
       "noAccount": "還沒有帳號？",
       "forgotPassword": "忘記密碼？",
       "verifyEmail": "驗證信箱",
+      "twoStepCode": "認證器驗證碼或恢復碼",
+      "verifyTwoStep": "驗證並登入",
+      "backToCredentials": "返回帳號密碼登入",
       "benefits": {
         "passkey": {
           "title": "接著找資源",
@@ -2502,6 +2505,29 @@
       "submit": "修改密碼",
       "changed": "密碼已修改，請重新登入"
     },
+    "twoStep": {
+      "title": "兩步驗證",
+      "status": {
+        "enabled": "已啟用",
+        "disabled": "未啟用"
+      },
+      "enable": "啟用",
+      "enableTitle": "啟用兩步驗證",
+      "setupTitle": "綁定認證器",
+      "password": "目前密碼",
+      "continue": "繼續",
+      "qrCode": "認證器 QR Code",
+      "manualKey": "手動輸入密鑰",
+      "authenticatorCode": "認證器驗證碼",
+      "code": "認證器驗證碼或恢復碼",
+      "confirm": "確認綁定",
+      "regenerate": "重新產生恢復碼",
+      "disable": "關閉",
+      "disableTitle": "關閉兩步驗證",
+      "recoveryTitle": "恢復碼",
+      "copyCodes": "複製全部恢復碼",
+      "done": "完成"
+    },
     "loginLogs": {
       "title": "登入記錄",
       "subtitle": "查看最近登入結果、IP 和客戶端資訊。",
@@ -2520,7 +2546,8 @@
         "invalidPassword": "密碼錯誤",
         "accountUnavailable": "帳號不可登入",
         "roleMissing": "角色缺失",
-        "tokenCreateFailed": "會話建立失敗"
+        "tokenCreateFailed": "會話建立失敗",
+        "twoStepInvalid": "兩步驗證失敗"
       }
     }
   }

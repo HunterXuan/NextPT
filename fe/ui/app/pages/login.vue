@@ -45,45 +45,65 @@
         </div>
 
         <form class="mt-8 space-y-4" @submit.prevent="handleSubmit">
-          <UFormField :label="$t('auth.fields.username')" required :error="fieldError">
-            <UInput
-              v-model="form.username"
-              class="w-full"
-              icon="i-lucide-user-round"
-              autocomplete="username"
-              :disabled="pending"
-            />
-          </UFormField>
-
-          <UFormField :label="$t('auth.fields.password')" required>
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+          <template v-if="!twoStepChallenge">
+            <UFormField :label="$t('auth.fields.username')" required :error="fieldError">
               <UInput
-                v-model="form.password"
+                v-model="form.username"
                 class="w-full"
-                icon="i-lucide-lock-keyhole"
-                autocomplete="current-password"
-                :type="showPassword ? 'text' : 'password'"
+                icon="i-lucide-user-round"
+                autocomplete="username"
                 :disabled="pending"
               />
-              <UButton
-                type="button"
-                color="neutral"
-                variant="outline"
-                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                :aria-label="showPassword ? $t('common.hidePassword') : $t('common.showPassword')"
+            </UFormField>
+
+            <UFormField :label="$t('auth.fields.password')" required>
+              <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                <UInput
+                  v-model="form.password"
+                  class="w-full"
+                  icon="i-lucide-lock-keyhole"
+                  autocomplete="current-password"
+                  :type="showPassword ? 'text' : 'password'"
+                  :disabled="pending"
+                />
+                <UButton
+                  type="button"
+                  color="neutral"
+                  variant="outline"
+                  :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="showPassword ? $t('common.hidePassword') : $t('common.showPassword')"
+                  :disabled="pending"
+                  @click="showPassword = !showPassword"
+                />
+              </div>
+              <div class="mt-2 flex items-center justify-between gap-3">
+                <NuxtLink :to="localePath('/verify-email')" class="text-xs font-medium text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white">
+                  {{ $t('auth.login.verifyEmail') }}
+                </NuxtLink>
+                <NuxtLink :to="localePath('/forgot-password')" class="text-xs font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300">
+                  {{ $t('auth.login.forgotPassword') }}
+                </NuxtLink>
+              </div>
+            </UFormField>
+          </template>
+
+          <template v-else>
+            <UFormField :label="$t('auth.login.twoStepCode')" required :error="fieldError">
+              <UInput
+                v-model="twoStepCode"
+                class="w-full"
+                icon="i-lucide-shield-check"
+                inputmode="numeric"
+                autocomplete="one-time-code"
                 :disabled="pending"
-                @click="showPassword = !showPassword"
               />
+            </UFormField>
+            <div class="flex justify-start">
+              <UTooltip :text="$t('auth.login.backToCredentials')">
+                <UButton type="button" color="neutral" variant="ghost" icon="i-lucide-arrow-left" :aria-label="$t('auth.login.backToCredentials')" :disabled="pending" @click="resetTwoStep" />
+              </UTooltip>
             </div>
-            <div class="mt-2 flex items-center justify-between gap-3">
-              <NuxtLink :to="localePath('/verify-email')" class="text-xs font-medium text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white">
-                {{ $t('auth.login.verifyEmail') }}
-              </NuxtLink>
-              <NuxtLink :to="localePath('/forgot-password')" class="text-xs font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300">
-                {{ $t('auth.login.forgotPassword') }}
-              </NuxtLink>
-            </div>
-          </UFormField>
+          </template>
 
           <UAlert
             v-if="errorMessage"
@@ -94,7 +114,7 @@
           />
 
           <UButton type="submit" color="primary" block :loading="pending" :disabled="!canSubmit">
-            {{ $t('auth.login.submit') }}
+            {{ twoStepChallenge ? $t('auth.login.verifyTwoStep') : $t('auth.login.submit') }}
           </UButton>
         </form>
 
@@ -130,7 +150,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const toast = useToast()
-const { login } = useAuth()
+const { login, verifyTwoStepLogin } = useAuth()
 
 const form = reactive({
   username: '',
@@ -139,6 +159,8 @@ const form = reactive({
 const pending = ref(false)
 const showPassword = ref(false)
 const errorMessage = ref('')
+const twoStepChallenge = ref('')
+const twoStepCode = ref('')
 
 const benefits = computed(() => [
   {
@@ -158,7 +180,9 @@ const benefits = computed(() => [
   }
 ])
 
-const canSubmit = computed(() => form.username.trim().length > 0 && form.password.length > 0)
+const canSubmit = computed(() => twoStepChallenge.value
+  ? twoStepCode.value.trim().length > 0
+  : form.username.trim().length > 0 && form.password.length > 0)
 const fieldError = computed(() => errorMessage.value || undefined)
 
 async function handleSubmit() {
@@ -168,7 +192,15 @@ async function handleSubmit() {
   errorMessage.value = ''
 
   try {
-    await login(form.username.trim(), form.password)
+    if (twoStepChallenge.value) {
+      await verifyTwoStepLogin(twoStepChallenge.value, twoStepCode.value.trim())
+    } else {
+      const session = await login(form.username.trim(), form.password)
+      if (session.twoStepRequired) {
+        twoStepChallenge.value = session.twoStepChallenge
+        return
+      }
+    }
     toast.add({
       title: t('auth.login.success'),
       color: 'success',
@@ -182,6 +214,12 @@ async function handleSubmit() {
   } finally {
     pending.value = false
   }
+}
+
+function resetTwoStep() {
+  twoStepChallenge.value = ''
+  twoStepCode.value = ''
+  errorMessage.value = ''
 }
 
 useSeoMeta({

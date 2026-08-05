@@ -11,6 +11,7 @@ export interface AuthUserAccount {
   email: string
   passkey: string
   status: number
+  twoStepEnabled: boolean
   vipUntil?: string | null
   createdAt?: string | null
 }
@@ -70,6 +71,22 @@ export interface PasskeyResetOut {
 
 export interface AuthPermissionListOut {
   permissions: string[]
+}
+
+export interface AuthLoginOut {
+  token: string
+  twoStepRequired: boolean
+  twoStepChallenge: string
+}
+
+export interface AuthTwoStepSetupOut {
+  challenge: string
+  qrCodeDataUrl: string
+  secret: string
+}
+
+export interface AuthTwoStepRecoveryCodesOut {
+  recoveryCodes: string[]
 }
 
 export interface AuthLoginLog {
@@ -224,14 +241,26 @@ export function useAuth() {
   }
 
   async function login(username: string, password: string) {
-    const session = await fetchApi<{ token: string }>('/api/iam/sessions', {
+    const session = await fetchApi<AuthLoginOut>('/api/iam/sessions', {
       method: 'POST',
       body: { username, password }
     })
 
+    if (session.twoStepRequired) return session
+
     setToken(session.token)
     await fetchUser()
-    return user.value
+    return session
+  }
+
+  async function verifyTwoStepLogin(challenge: string, code: string) {
+    const session = await fetchApi<AuthLoginOut>('/api/iam/sessions:verifyTwoStep', {
+      method: 'POST',
+      body: { challenge, code }
+    })
+    setToken(session.token)
+    await fetchUser()
+    return session
   }
 
   async function register(input: RegisterInput) {
@@ -348,6 +377,37 @@ export function useAuth() {
     return data
   }
 
+  async function setupTwoStep(password: string) {
+    return await fetchApi<AuthTwoStepSetupOut>('/api/iam/users/me/two-step:setup', {
+      method: 'POST',
+      body: { password }
+    })
+  }
+
+  async function confirmTwoStep(challenge: string, code: string) {
+    const data = await fetchApi<AuthTwoStepRecoveryCodesOut>('/api/iam/users/me/two-step:confirm', {
+      method: 'POST',
+      body: { challenge, code }
+    })
+    await fetchUser()
+    return data
+  }
+
+  async function createTwoStepRecoveryCodes(code: string) {
+    return await fetchApi<AuthTwoStepRecoveryCodesOut>('/api/iam/users/me/two-step:recoveryCodes', {
+      method: 'POST',
+      body: { code }
+    })
+  }
+
+  async function disableTwoStep(password: string, code: string) {
+    await fetchApi('/api/iam/users/me/two-step', {
+      method: 'DELETE',
+      body: { password, code }
+    })
+    await fetchUser()
+  }
+
   async function logout(remote = true) {
     if (remote && token.value) {
       try {
@@ -368,6 +428,7 @@ export function useAuth() {
     isLoggedIn,
     isStaff,
     login,
+    verifyTwoStepLogin,
     register,
     fetchUser,
     fetchPermissions,
@@ -382,6 +443,10 @@ export function useAuth() {
     requestPasswordReset,
     resetPassword,
     resetPasskey,
+    setupTwoStep,
+    confirmTwoStep,
+    createTwoStepRecoveryCodes,
+    disableTwoStep,
     logout,
     clearLocalSession
   }

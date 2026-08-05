@@ -1,10 +1,10 @@
 <template>
   <UCard
-    class="h-full rounded-lg"
+    class="rounded-lg"
     :ui="{
-      root: 'flex flex-col',
+      root: '',
       header: 'px-4 py-3 sm:px-5',
-      body: 'flex flex-1 flex-col p-4 sm:p-5'
+      body: 'p-4 sm:p-5'
     }"
   >
     <template #header>
@@ -17,7 +17,7 @@
     <div class="flex min-h-10 items-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950">
       <p class="break-all font-mono text-xs text-slate-700 dark:text-slate-300">{{ displayPasskey }}</p>
     </div>
-    <div class="mt-auto grid grid-cols-2 gap-2 pt-3 sm:grid-cols-3">
+    <div class="grid grid-cols-2 gap-2 pt-3 sm:grid-cols-3">
       <UButton
         type="button"
         color="neutral"
