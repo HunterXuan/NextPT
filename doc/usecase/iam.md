@@ -16,6 +16,7 @@
   * **Method/Path**: `POST /sessions`
   * **参数概述**: `username`, `password`
   * **核心逻辑**: 密码验证；未启用两步验证时直接签发 Session，启用 TOTP 时只返回一次性 `twoStepChallenge`。
+  * 前端初始化长期 `deviceId` 并通过 `X-Device-Id` 请求头随浏览器请求发送；服务端仅保存摘要，将其绑定到新建 Session，并在后续鉴权时要求摘要一致。首次出现时发送新设备登录通知。
 * **完成两步验证登录 (VerifyTwoStep)**
   * **Method/Path**: `POST /sessions:verifyTwoStep`
   * **参数概述**: `challenge`, `code`
@@ -30,7 +31,7 @@
   * **Method/Path**: `DELETE /sessions/{id}`
   * **核心逻辑**: 仅允许用户销毁属于自己的 Session；修改密码、重置 Passkey、密码找回和管理员踢出仍销毁该用户全部 Session。
 
-> Web Token 使用随机 `sessionId` 作为 `gtoken` user key，不再直接使用用户 ID。Redis 保存 Session 元数据和 `userId -> sessionId` 集合；会话列表会清理已过期的索引，最近活跃时间按 5 分钟节流更新。该结构不需要新增数据库表。
+> Web Token 使用随机 `sessionId` 作为 `gtoken` user key，不再直接使用用户 ID。Redis 保存 Session 元数据、`userId -> sessionId` 集合和一年期已知设备摘要集合；会话列表会清理已过期的索引，最近活跃时间按 5 分钟节流更新。设备 ID 不单独代表用户身份，但作为绑定条件参与 Session 鉴权。该结构不需要新增数据库表。
 
 ### 2. UserUsecase (用户应用服务)
 * **注册 (Register)**

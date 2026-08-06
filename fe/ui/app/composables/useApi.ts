@@ -26,10 +26,44 @@ export interface ApiBlobResponse {
 }
 
 const supportedLocales = new Set(['zh-CN', 'zh-TW', 'en-US'])
+const deviceIdStorageKey = 'nextpt_device_id'
+const deviceIdHeader = 'X-Device-Id'
 let currentAuthToken: string | null = null
+let currentDeviceId = ''
 
 export function setApiAuthToken(token: string | null | undefined) {
   currentAuthToken = token || null
+}
+
+export function initializeApiDeviceId() {
+  if (!import.meta.client) return ''
+  if (currentDeviceId) return currentDeviceId
+
+  try {
+    const stored = localStorage.getItem(deviceIdStorageKey)?.trim() || ''
+    currentDeviceId = isDeviceId(stored) ? stored : createDeviceId()
+    if (currentDeviceId !== stored) {
+      localStorage.setItem(deviceIdStorageKey, currentDeviceId)
+    }
+  } catch {
+    currentDeviceId = createDeviceId()
+  }
+
+  return currentDeviceId
+}
+
+function isDeviceId(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+}
+
+function createDeviceId() {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
+
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
 }
 
 function readCookie(name: string) {
@@ -65,6 +99,11 @@ function useApiHeaders(extra?: HeadersInit) {
 
   if (token) {
     headers.set('Authorization', `Bearer ${token}`)
+  }
+
+  const deviceId = initializeApiDeviceId()
+  if (deviceId) {
+    headers.set(deviceIdHeader, deviceId)
   }
 
   headers.set('Accept-Language', currentLocale())

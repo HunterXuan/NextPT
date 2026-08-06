@@ -233,6 +233,7 @@ function messageSender(item: SiteMessage) {
 }
 
 function messageTargetPath(item: SiteMessage) {
+  if (item.targetType === 'iam_session') return '/iam/users/me/settings?section=security'
   if (!item.targetType || !item.targetId) return ''
   switch (item.targetType) {
     case 'catalog_torrent':
