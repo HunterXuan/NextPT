@@ -2,12 +2,16 @@ package iam
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"server/internal/consts"
+	"server/internal/library/httpx"
 	"server/internal/model"
 	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/iamin"
+	"server/internal/model/in/sitein"
 	"server/internal/model/out/iamout"
 	"server/internal/service"
 
@@ -30,6 +34,10 @@ func NewIamSessionUsecase() *sIamSessionUsecase {
 }
 
 func (s *sIamSessionUsecase) Create(ctx context.Context, in iamin.SessionCreateInp) (*iamout.SessionCreateOut, error) {
+	deviceHash, err := s.requireRequestDeviceHash(ctx)
+	if err != nil {
+		return nil, err
+	}
 	user, err := service.IamUserDomain().GetUserByLogin(ctx, in.Username)
 	if err != nil {
 		return nil, err
@@ -68,19 +76,23 @@ func (s *sIamSessionUsecase) Create(ctx context.Context, in iamin.SessionCreateI
 		return &iamout.SessionCreateOut{TwoStepRequired: true, TwoStepChallenge: challenge}, nil
 	}
 
-	token, err := s.generateToken(ctx, user)
+	token, err := s.generateToken(ctx, user, deviceHash)
 	if err != nil {
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
 		return nil, err
 	}
 
-	s.recordSuccessfulLogin(ctx, user)
+	s.recordSuccessfulLogin(ctx, user, deviceHash)
 	return &iamout.SessionCreateOut{
 		Token: token,
 	}, nil
 }
 
 func (s *sIamSessionUsecase) VerifyTwoStep(ctx context.Context, in iamin.SessionTwoStepVerifyInp) (*iamout.SessionCreateOut, error) {
+	deviceHash, err := s.requireRequestDeviceHash(ctx)
+	if err != nil {
+		return nil, err
+	}
 	userId, err := service.IamTwoStepUsecase().VerifyLogin(ctx, in)
 	if err != nil {
 		if userId != 0 {
@@ -104,21 +116,21 @@ func (s *sIamSessionUsecase) VerifyTwoStep(ctx context.Context, in iamin.Session
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonRoleMissing)
 		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
 	}
-	token, err := s.generateToken(ctx, user)
+	token, err := s.generateToken(ctx, user, deviceHash)
 	if err != nil {
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
 		return nil, err
 	}
-	s.recordSuccessfulLogin(ctx, user)
+	s.recordSuccessfulLogin(ctx, user, deviceHash)
 	return &iamout.SessionCreateOut{Token: token}, nil
 }
 
-func (s *sIamSessionUsecase) generateToken(ctx context.Context, user *entity.IamUser) (string, error) {
-	token, _, err := service.IamSessionDomain().Create(ctx, user.Id, s.requestIp(ctx), s.requestUserAgent(ctx))
+func (s *sIamSessionUsecase) generateToken(ctx context.Context, user *entity.IamUser, deviceHash string) (string, error) {
+	token, _, err := service.IamSessionDomain().Create(ctx, user.Id, deviceHash, s.requestIp(ctx), s.requestUserAgent(ctx))
 	return token, err
 }
 
-func (s *sIamSessionUsecase) recordSuccessfulLogin(ctx context.Context, user *entity.IamUser) {
+func (s *sIamSessionUsecase) recordSuccessfulLogin(ctx context.Context, user *entity.IamUser, deviceHash string) {
 	if user == nil {
 		return
 	}
@@ -128,6 +140,30 @@ func (s *sIamSessionUsecase) recordSuccessfulLogin(ctx context.Context, user *en
 	if err := service.IamUserDomain().UpdateLoginTrace(ctx, user.Id, now, ip); err != nil {
 		g.Log().Warningf(ctx, "iam session: update login trace failed: %v", err)
 	}
+	s.notifyNewDevice(ctx, user.Id, deviceHash, ip, s.requestUserAgent(ctx), now)
+}
+
+func (s *sIamSessionUsecase) notifyNewDevice(ctx context.Context, userId uint64, deviceHash string, ip string, userAgent string, createdAt *gtime.Time) {
+	added, err := service.IamSessionDomain().RegisterDevice(ctx, userId, deviceHash)
+	if err != nil {
+		g.Log().Warningf(ctx, "iam session: register device failed: userId=%d error=%v", userId, err)
+		return
+	}
+	if !added {
+		return
+	}
+
+	service.SiteMessageUsecase().Notify(ctx, sitein.MessageNotifyInp{
+		ReceiverId: userId,
+		TitleKey:   "site.message.iam_session.new_device.title",
+		ContentKey: "site.message.iam_session.new_device.content",
+		ContentArgs: []any{
+			s.clientName(userAgent),
+			s.displayValue(ip),
+			createdAt.Format("Y-m-d H:i:s"),
+		},
+		TargetType: consts.SiteMessageTargetTypeIamSession,
+	})
 }
 
 func (s *sIamSessionUsecase) recordLogin(ctx context.Context, userId uint64, result int, failReason string) {
@@ -161,6 +197,60 @@ func (s *sIamSessionUsecase) requestUserAgent(ctx context.Context) string {
 		return ""
 	}
 	return r.Header.Get("User-Agent")
+}
+
+func (s *sIamSessionUsecase) requestDeviceHash(ctx context.Context) string {
+	r := ghttp.RequestFromCtx(ctx)
+	if r == nil {
+		return ""
+	}
+	return httpx.HeaderDeviceIdHash(r.Header.Get(consts.IamDeviceIdHeader))
+}
+
+func (s *sIamSessionUsecase) requireRequestDeviceHash(ctx context.Context) (string, error) {
+	deviceHash := s.requestDeviceHash(ctx)
+	if deviceHash == "" {
+		return "", gerror.New(gi18n.T(ctx, "iam.session.device_required"))
+	}
+	return deviceHash, nil
+}
+
+func (s *sIamSessionUsecase) clientName(userAgent string) string {
+	browser := ""
+	system := ""
+	switch {
+	case strings.Contains(userAgent, "Edg/"):
+		browser = "Edge"
+	case strings.Contains(userAgent, "Firefox/"):
+		browser = "Firefox"
+	case strings.Contains(userAgent, "Chrome/"):
+		browser = "Chrome"
+	case strings.Contains(userAgent, "Safari/"):
+		browser = "Safari"
+	}
+	switch {
+	case strings.Contains(userAgent, "Android"):
+		system = "Android"
+	case strings.Contains(userAgent, "iPhone"), strings.Contains(userAgent, "iPad"), strings.Contains(userAgent, "iPod"):
+		system = "iOS"
+	case strings.Contains(userAgent, "Windows"):
+		system = "Windows"
+	case strings.Contains(userAgent, "Macintosh"), strings.Contains(userAgent, "Mac OS X"):
+		system = "macOS"
+	case strings.Contains(userAgent, "Linux"):
+		system = "Linux"
+	}
+	if browser != "" && system != "" {
+		return fmt.Sprintf("%s / %s", browser, system)
+	}
+	return s.displayValue(strings.TrimSpace(browser + system))
+}
+
+func (s *sIamSessionUsecase) displayValue(value string) string {
+	if strings.TrimSpace(value) == "" {
+		return "-"
+	}
+	return strings.TrimSpace(value)
 }
 
 func (s *sIamSessionUsecase) List(ctx context.Context, actor *model.Actor, currentSessionId string) (*iamout.SessionListOut, error) {

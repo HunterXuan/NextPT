@@ -4,7 +4,9 @@ import (
 	"regexp"
 	"strings"
 
+	"server/internal/consts"
 	"server/internal/library/contexts"
+	"server/internal/library/httpx"
 	"server/internal/model"
 	"server/internal/service"
 
@@ -142,7 +144,7 @@ func (s *sMiddleware) CheckAuth(r *ghttp.Request) {
 		return
 	}
 
-	session, err := service.IamSessionDomain().Validate(r.Context(), token)
+	session, err := service.IamSessionDomain().Validate(r.Context(), token, httpx.HeaderDeviceIdHash(r.Header.Get(consts.IamDeviceIdHeader)))
 	if err != nil {
 		service.IamSessionDomain().GetGFMiddleware().ResFun(r, err)
 		return

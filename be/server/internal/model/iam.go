@@ -15,6 +15,7 @@ import (
 type IamSession struct {
 	Id         string `json:"id"`
 	UserId     uint64 `json:"userId"`
+	DeviceHash string `json:"deviceHash,omitempty"`
 	Ip         string `json:"ip"`
 	UserAgent  string `json:"userAgent"`
 	CreatedAt  int64  `json:"createdAt"`

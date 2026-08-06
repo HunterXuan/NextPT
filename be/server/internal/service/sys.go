@@ -37,6 +37,7 @@ type (
 		KeyIamTwoStepLoginRate(ctx context.Context, userId uint64) string
 		KeyIamSession(ctx context.Context, sessionId string) string
 		KeyIamUserSessions(ctx context.Context, userId uint64) string
+		KeyIamUserDevices(ctx context.Context, userId uint64) string
 		KeyIamRolePerms(ctx context.Context, roleId uint) string
 		KeyIamRoleActorVersion(ctx context.Context, roleId uint) string
 		KeyIamActor(ctx context.Context, userId uint64) string

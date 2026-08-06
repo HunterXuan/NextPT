@@ -21,6 +21,7 @@ iam.invite.status_max: 邀請碼狀態無效
 iam.invite.user_id_req: 請指定用戶ID
 
 iam.session.account_banned: 賬號已被禁用或封禁
+iam.session.device_required: 請使用受支援的瀏覽器登入
 iam.session.email_unverified: 信箱尚未驗證，請檢查驗證郵件或重新傳送
 iam.session.invalid_credentials: 帳號或密碼錯誤
 iam.session.invalid_passkey: Passkey無效或賬號被禁用

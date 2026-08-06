@@ -21,6 +21,7 @@ iam.invite.status_max: 邀请码状态无效
 iam.invite.user_id_req: 请指定用户ID
 
 iam.session.account_banned: 账号已被禁用或封禁
+iam.session.device_required: 请使用受支持的浏览器登录
 iam.session.email_unverified: 邮箱尚未验证，请检查验证邮件或重新发送
 iam.session.invalid_credentials: 账号或密码错误
 iam.session.invalid_passkey: Passkey无效或账号被禁用

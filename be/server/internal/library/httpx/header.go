@@ -1,10 +1,22 @@
 package httpx
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"mime"
 	"path"
 	"strings"
 )
+
+// HeaderDeviceIdHash returns a stable, non-reversible hash for a device ID header.
+func HeaderDeviceIdHash(value string) string {
+	value = strings.ToLower(strings.TrimSpace(value))
+	if value == "" {
+		return ""
+	}
+	digest := sha256.Sum256([]byte(value))
+	return hex.EncodeToString(digest[:])
+}
 
 // HeaderContentDispositionAttachment formats a safe Content-Disposition value for downloads.
 func HeaderContentDispositionAttachment(filename string) string {

@@ -58,3 +58,5 @@ site.message.rank.demoted.title: Your rank was demoted
 site.message.rank.changed.content: "%s → %s"
 site.message.rank.auto_banned.title: Account banned automatically
 site.message.rank.auto_banned.content: Your account was banned because it no longer meets the minimum rank requirements
+site.message.iam_session.new_device.title: New device sign-in
+site.message.iam_session.new_device.content: "A new device signed in to your account.\n\nDevice: %s\nIP: %s\nTime: %s\n\nIf this was not you, open Account Security to sign out the device and change your password."

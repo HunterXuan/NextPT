@@ -68,8 +68,9 @@ type (
 	}
 	IIamSessionDomain interface {
 		GetGFMiddleware() gtoken.Middleware
-		Create(ctx context.Context, userId uint64, ip string, userAgent string) (string, *model.IamSession, error)
-		Validate(ctx context.Context, token string) (*model.IamSession, error)
+		Create(ctx context.Context, userId uint64, deviceHash string, ip string, userAgent string) (string, *model.IamSession, error)
+		RegisterDevice(ctx context.Context, userId uint64, deviceHash string) (bool, error)
+		Validate(ctx context.Context, token string, deviceHash string) (*model.IamSession, error)
 		Get(ctx context.Context, sessionId string) (*model.IamSession, error)
 		ListByUser(ctx context.Context, userId uint64) ([]model.IamSession, error)
 		Remove(ctx context.Context, sessionId string) error

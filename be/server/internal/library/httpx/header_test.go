@@ -58,3 +58,16 @@ func TestHeaderContentDispositionAttachmentSanitizesFilename(t *testing.T) {
 		})
 	}
 }
+
+func TestHeaderDeviceIdHash(t *testing.T) {
+	hash := HeaderDeviceIdHash("  Browser-Device-001  ")
+	if hash == "" {
+		t.Fatal("HeaderDeviceIdHash() returned an empty hash")
+	}
+	if hash != HeaderDeviceIdHash("browser-device-001") {
+		t.Fatal("HeaderDeviceIdHash() must normalize casing and whitespace")
+	}
+	if HeaderDeviceIdHash(" \t\n") != "" {
+		t.Fatal("HeaderDeviceIdHash() must return an empty hash for an empty value")
+	}
+}

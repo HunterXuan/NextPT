@@ -21,6 +21,7 @@ iam.invite.status_max: Invalid invite code status
 iam.invite.user_id_req: Please specify user ID
 
 iam.session.account_banned: Account disabled or banned
+iam.session.device_required: Please sign in with a supported browser
 iam.session.email_unverified: Your email address has not been verified. Check your inbox or request another verification email
 iam.session.invalid_credentials: Invalid username or password
 iam.session.invalid_passkey: Invalid passkey or account disabled

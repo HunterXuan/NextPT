@@ -3,6 +3,7 @@ package iam
 import (
 	"context"
 	"crypto/rand"
+	"crypto/subtle"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -20,6 +21,13 @@ import (
 )
 
 const iamSessionLastSeenInterval = 5 * time.Minute
+const iamKnownDeviceTTL = 365 * 24 * time.Hour
+
+const iamRegisterDeviceScript = `
+local added = redis.call("SADD", KEYS[1], ARGV[1])
+redis.call("EXPIRE", KEYS[1], tonumber(ARGV[2]))
+return added
+`
 
 type sIamSessionDomain struct {
 	gfToken    gtoken.Token
@@ -71,7 +79,10 @@ func (s *sIamSessionDomain) GetGFMiddleware() gtoken.Middleware {
 	return s.middleware
 }
 
-func (s *sIamSessionDomain) Create(ctx context.Context, userId uint64, ip string, userAgent string) (string, *model.IamSession, error) {
+func (s *sIamSessionDomain) Create(ctx context.Context, userId uint64, deviceHash string, ip string, userAgent string) (string, *model.IamSession, error) {
+	if userId == 0 || deviceHash == "" {
+		return "", nil, errors.New("device identifier required")
+	}
 	sessionId, err := s.newSessionId()
 	if err != nil {
 		return "", nil, err
@@ -80,6 +91,7 @@ func (s *sIamSessionDomain) Create(ctx context.Context, userId uint64, ip string
 	session := &model.IamSession{
 		Id:         sessionId,
 		UserId:     userId,
+		DeviceHash: deviceHash,
 		Ip:         s.limitString(ip, 64),
 		UserAgent:  s.limitString(userAgent, 500),
 		CreatedAt:  now,
@@ -104,7 +116,26 @@ func (s *sIamSessionDomain) Create(ctx context.Context, userId uint64, ip string
 	return token, session, nil
 }
 
-func (s *sIamSessionDomain) Validate(ctx context.Context, token string) (*model.IamSession, error) {
+func (s *sIamSessionDomain) RegisterDevice(ctx context.Context, userId uint64, deviceHash string) (bool, error) {
+	if userId == 0 || deviceHash == "" {
+		return false, nil
+	}
+	value, err := g.Redis().Do(
+		ctx,
+		"EVAL",
+		iamRegisterDeviceScript,
+		1,
+		service.SysCache().KeyIamUserDevices(ctx, userId),
+		deviceHash,
+		int(iamKnownDeviceTTL.Seconds()),
+	)
+	if err != nil {
+		return false, err
+	}
+	return value.Int() == 1, nil
+}
+
+func (s *sIamSessionDomain) Validate(ctx context.Context, token string, deviceHash string) (*model.IamSession, error) {
 	sessionId, err := s.gfToken.Validate(ctx, token)
 	if err != nil {
 		return nil, err
@@ -116,6 +147,9 @@ func (s *sIamSessionDomain) Validate(ctx context.Context, token string) (*model.
 	if session == nil || session.UserId == 0 {
 		_ = s.gfToken.Destroy(ctx, sessionId)
 		return nil, errors.New("session invalid")
+	}
+	if deviceHash == "" || session.DeviceHash == "" || subtle.ConstantTimeCompare([]byte(session.DeviceHash), []byte(deviceHash)) != 1 {
+		return nil, errors.New("session device mismatch")
 	}
 
 	now := time.Now().UnixMilli()

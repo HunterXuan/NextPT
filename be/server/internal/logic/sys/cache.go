@@ -214,6 +214,10 @@ func (s *sSysCache) KeyIamUserSessions(ctx context.Context, userId uint64) strin
 	return fmt.Sprintf("%suser:%d:sessions", s.prefixIam, userId)
 }
 
+func (s *sSysCache) KeyIamUserDevices(ctx context.Context, userId uint64) string {
+	return fmt.Sprintf("%suser:%d:devices", s.prefixIam, userId)
+}
+
 func (s *sSysCache) KeyIamRolePerms(ctx context.Context, roleId uint) string {
 	return fmt.Sprintf("%srole:%d:perms", s.prefixIam, roleId)
 }
