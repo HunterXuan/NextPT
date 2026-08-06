@@ -3,6 +3,7 @@ package model
 import (
 	"math"
 	"sort"
+	"time"
 
 	"server/internal/model/entity"
 
@@ -10,6 +11,35 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 )
+
+type IamSession struct {
+	Id         string `json:"id"`
+	UserId     uint64 `json:"userId"`
+	Ip         string `json:"ip"`
+	UserAgent  string `json:"userAgent"`
+	CreatedAt  int64  `json:"createdAt"`
+	LastSeenAt int64  `json:"lastSeenAt"`
+}
+
+type IamSessionItem struct {
+	Id         string      `json:"id"`
+	Ip         string      `json:"ip"`
+	UserAgent  string      `json:"userAgent"`
+	CreatedAt  *gtime.Time `json:"createdAt"`
+	LastSeenAt *gtime.Time `json:"lastSeenAt"`
+	Current    bool        `json:"current"`
+}
+
+func (s IamSession) Item(currentSessionId string) IamSessionItem {
+	return IamSessionItem{
+		Id:         s.Id,
+		Ip:         s.Ip,
+		UserAgent:  s.UserAgent,
+		CreatedAt:  gtime.NewFromTime(time.UnixMilli(s.CreatedAt)),
+		LastSeenAt: gtime.NewFromTime(time.UnixMilli(s.LastSeenAt)),
+		Current:    s.Id == currentSessionId,
+	}
+}
 
 const (
 	iamRankBytesPerGiB = 1024 * 1024 * 1024

@@ -67,15 +67,20 @@ type (
 		SyncRanks(ctx context.Context) (*model.IamRankSyncResult, error)
 	}
 	IIamSessionDomain interface {
-		GetGFToken() gtoken.Token
 		GetGFMiddleware() gtoken.Middleware
-		GenerateToken(ctx context.Context, userKey string, data any) (string, error)
-		RemoveToken(ctx context.Context, userKey string) error
+		Create(ctx context.Context, userId uint64, ip string, userAgent string) (string, *model.IamSession, error)
+		Validate(ctx context.Context, token string) (*model.IamSession, error)
+		Get(ctx context.Context, sessionId string) (*model.IamSession, error)
+		ListByUser(ctx context.Context, userId uint64) ([]model.IamSession, error)
+		Remove(ctx context.Context, sessionId string) error
+		RemoveByUser(ctx context.Context, userId uint64) error
 	}
 	IIamSessionUsecase interface {
 		Create(ctx context.Context, in iamin.SessionCreateInp) (*iamout.SessionCreateOut, error)
 		VerifyTwoStep(ctx context.Context, in iamin.SessionTwoStepVerifyInp) (*iamout.SessionCreateOut, error)
-		Delete(ctx context.Context, actor *model.Actor) error
+		List(ctx context.Context, actor *model.Actor, currentSessionId string) (*iamout.SessionListOut, error)
+		Delete(ctx context.Context, actor *model.Actor, sessionId string) error
+		DeleteById(ctx context.Context, actor *model.Actor, sessionId string) error
 		VerifyPasskey(ctx context.Context, passkey string) (*model.Actor, error)
 	}
 	IIamTwoStepDomain interface {

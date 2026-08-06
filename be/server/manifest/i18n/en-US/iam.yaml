@@ -24,6 +24,9 @@ iam.session.account_banned: Account disabled or banned
 iam.session.email_unverified: Your email address has not been verified. Check your inbox or request another verification email
 iam.session.invalid_credentials: Invalid username or password
 iam.session.invalid_passkey: Invalid passkey or account disabled
+iam.session.id_invalid: Invalid session ID
+iam.session.id_req: Please specify a session
+iam.session.not_found: Session not found or expired
 iam.session.password_req: Please enter your password
 iam.session.role_missing: failed to get user role
 iam.session.username_req: Please enter your username or email

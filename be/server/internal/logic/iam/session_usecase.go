@@ -16,7 +16,6 @@ import (
 	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/gogf/gf/v2/util/gconv"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -69,7 +68,7 @@ func (s *sIamSessionUsecase) Create(ctx context.Context, in iamin.SessionCreateI
 		return &iamout.SessionCreateOut{TwoStepRequired: true, TwoStepChallenge: challenge}, nil
 	}
 
-	token, err := s.generateToken(ctx, user, role.Level, role.IsStaff)
+	token, err := s.generateToken(ctx, user)
 	if err != nil {
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
 		return nil, err
@@ -105,7 +104,7 @@ func (s *sIamSessionUsecase) VerifyTwoStep(ctx context.Context, in iamin.Session
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonRoleMissing)
 		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
 	}
-	token, err := s.generateToken(ctx, user, role.Level, role.IsStaff)
+	token, err := s.generateToken(ctx, user)
 	if err != nil {
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTokenCreateFailed)
 		return nil, err
@@ -114,12 +113,9 @@ func (s *sIamSessionUsecase) VerifyTwoStep(ctx context.Context, in iamin.Session
 	return &iamout.SessionCreateOut{Token: token}, nil
 }
 
-func (s *sIamSessionUsecase) generateToken(ctx context.Context, user *entity.IamUser, roleLevel int, isStaff bool) (string, error) {
-	return service.IamSessionDomain().GenerateToken(ctx, gconv.String(user.Id), g.Map{
-		"roleId":    user.Role,
-		"roleLevel": roleLevel,
-		"isStaff":   isStaff,
-	})
+func (s *sIamSessionUsecase) generateToken(ctx context.Context, user *entity.IamUser) (string, error) {
+	token, _, err := service.IamSessionDomain().Create(ctx, user.Id, s.requestIp(ctx), s.requestUserAgent(ctx))
+	return token, err
 }
 
 func (s *sIamSessionUsecase) recordSuccessfulLogin(ctx context.Context, user *entity.IamUser) {
@@ -167,11 +163,41 @@ func (s *sIamSessionUsecase) requestUserAgent(ctx context.Context) string {
 	return r.Header.Get("User-Agent")
 }
 
-func (s *sIamSessionUsecase) Delete(ctx context.Context, actor *model.Actor) error {
-	if actor != nil && actor.Id > 0 {
-		return service.IamSessionDomain().RemoveToken(ctx, gconv.String(actor.Id))
+func (s *sIamSessionUsecase) List(ctx context.Context, actor *model.Actor, currentSessionId string) (*iamout.SessionListOut, error) {
+	if actor == nil || actor.Id == 0 {
+		return nil, gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
 	}
-	return nil
+	sessions, err := service.IamSessionDomain().ListByUser(ctx, actor.Id)
+	if err != nil {
+		return nil, err
+	}
+	items := make([]model.IamSessionItem, 0, len(sessions))
+	for _, session := range sessions {
+		items = append(items, session.Item(currentSessionId))
+	}
+	return &iamout.SessionListOut{List: items}, nil
+}
+
+func (s *sIamSessionUsecase) Delete(ctx context.Context, actor *model.Actor, sessionId string) error {
+	return s.deleteSession(ctx, actor, sessionId)
+}
+
+func (s *sIamSessionUsecase) DeleteById(ctx context.Context, actor *model.Actor, sessionId string) error {
+	return s.deleteSession(ctx, actor, sessionId)
+}
+
+func (s *sIamSessionUsecase) deleteSession(ctx context.Context, actor *model.Actor, sessionId string) error {
+	if actor == nil || actor.Id == 0 {
+		return gerror.New(gi18n.T(ctx, "iam.general.unauthorized"))
+	}
+	session, err := service.IamSessionDomain().Get(ctx, sessionId)
+	if err != nil {
+		return err
+	}
+	if session == nil || session.UserId != actor.Id {
+		return gerror.New(gi18n.T(ctx, "iam.session.not_found"))
+	}
+	return service.IamSessionDomain().Remove(ctx, sessionId)
 }
 
 func (s *sIamSessionUsecase) VerifyPasskey(ctx context.Context, passkey string) (*model.Actor, error) {

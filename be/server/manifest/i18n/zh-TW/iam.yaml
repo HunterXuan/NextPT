@@ -24,6 +24,9 @@ iam.session.account_banned: 賬號已被禁用或封禁
 iam.session.email_unverified: 信箱尚未驗證，請檢查驗證郵件或重新傳送
 iam.session.invalid_credentials: 帳號或密碼錯誤
 iam.session.invalid_passkey: Passkey無效或賬號被禁用
+iam.session.id_invalid: 工作階段 ID 無效
+iam.session.id_req: 請指定工作階段
+iam.session.not_found: 工作階段不存在或已失效
 iam.session.password_req: 請輸入密碼
 iam.session.role_missing: 獲取用戶角色失敗
 iam.session.username_req: 請輸入用戶名或信箱

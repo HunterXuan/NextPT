@@ -9,7 +9,7 @@ import (
 )
 
 func (c *ControllerV1) IamSessionDelete(ctx context.Context, req *v1.IamSessionDeleteReq) (res *v1.IamSessionDeleteRes, err error) {
-	err = service.IamSessionUsecase().Delete(ctx, contexts.GetActor(ctx))
+	err = service.IamSessionUsecase().Delete(ctx, contexts.GetActor(ctx), contexts.GetSessionId(ctx))
 	if err == nil {
 		res = &v1.IamSessionDeleteRes{}
 	}

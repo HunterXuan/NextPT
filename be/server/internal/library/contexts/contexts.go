@@ -37,6 +37,15 @@ func SetActor(ctx context.Context, actor *model.Actor) {
 	c.Actor = actor
 }
 
+func SetSessionId(ctx context.Context, sessionId string) {
+	c := Get(ctx)
+	if c == nil {
+		g.Log().Warning(ctx, "contexts.SetSessionId, c == nil ")
+		return
+	}
+	c.SessionId = sessionId
+}
+
 func SetResponseType(ctx context.Context, responseType model.ResponseType) {
 	c := Get(ctx)
 	if c == nil {
@@ -64,6 +73,14 @@ func GetActor(ctx context.Context) *model.Actor {
 		return nil
 	}
 	return c.Actor
+}
+
+func GetSessionId(ctx context.Context) string {
+	c := Get(ctx)
+	if c == nil {
+		return ""
+	}
+	return c.SessionId
 }
 
 // GetUserId 获取用户ID

@@ -638,7 +638,7 @@ func (s *sIamUserUsecase) ChangePassword(ctx context.Context, actor *model.Actor
 	if err := service.IamUserDomain().UpdatePasswordHash(ctx, actor.Id, string(hash)); err != nil {
 		return err
 	}
-	return service.IamSessionDomain().RemoveToken(ctx, gconv.String(actor.Id))
+	return service.IamSessionDomain().RemoveByUser(ctx, actor.Id)
 }
 
 func (s *sIamUserUsecase) CreateEmailVerificationRequest(ctx context.Context, in iamin.EmailVerificationRequestCreateInp) error {
@@ -835,7 +835,7 @@ func (s *sIamUserUsecase) CreatePasswordReset(ctx context.Context, in iamin.Pass
 	if err := service.IamUserDomain().UpdatePasswordHash(ctx, userId, string(newPasswordHash)); err != nil {
 		return err
 	}
-	if err := service.IamSessionDomain().RemoveToken(ctx, gconv.String(userId)); err != nil {
+	if err := service.IamSessionDomain().RemoveByUser(ctx, userId); err != nil {
 		return err
 	}
 	s.InvalidateUserCache(ctx, userId)

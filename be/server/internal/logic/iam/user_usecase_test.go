@@ -10,7 +10,7 @@ import (
 	"server/internal/model/in/iamin"
 	"server/internal/service"
 
-	"github.com/goflyfox/gtoken/v2/gtoken"
+	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -100,15 +100,15 @@ func TestChangePasswordValidationAndTokenRemoval(t *testing.T) {
 			if got := fakeUserDomain.updatePasswordHashCalls > 0; got != tt.wantUpdate {
 				t.Fatalf("UpdatePasswordHash called = %v, want %v", got, tt.wantUpdate)
 			}
-			if got := fakeSessionDomain.removeTokenCalls > 0; got != tt.wantTokenClear {
-				t.Fatalf("RemoveToken called = %v, want %v", got, tt.wantTokenClear)
+			if got := fakeSessionDomain.removeByUserCalls > 0; got != tt.wantTokenClear {
+				t.Fatalf("RemoveByUser called = %v, want %v", got, tt.wantTokenClear)
 			}
 			if tt.wantUpdate {
 				if err := bcrypt.CompareHashAndPassword([]byte(fakeUserDomain.updatedPasswordHash), []byte(tt.newPassword)); err != nil {
 					t.Fatalf("updated password hash does not match new password: %v", err)
 				}
-				if fakeSessionDomain.removedUserKey != "42" {
-					t.Fatalf("RemoveToken userKey = %q, want 42", fakeSessionDomain.removedUserKey)
+				if fakeSessionDomain.removedUserId != 42 {
+					t.Fatalf("RemoveByUser userId = %d, want 42", fakeSessionDomain.removedUserId)
 				}
 			}
 		})
@@ -181,24 +181,12 @@ func (f *fakeIamUserDomain) UpdatePasswordHash(ctx context.Context, userId uint6
 type fakeIamSessionDomain struct {
 	service.IIamSessionDomain
 
-	removeTokenCalls int
-	removedUserKey   string
+	removeByUserCalls int
+	removedUserId     uint64
 }
 
-func (f *fakeIamSessionDomain) GetGFToken() gtoken.Token {
-	return nil
-}
-
-func (f *fakeIamSessionDomain) GetGFMiddleware() gtoken.Middleware {
-	return gtoken.Middleware{}
-}
-
-func (f *fakeIamSessionDomain) GenerateToken(ctx context.Context, userKey string, data any) (string, error) {
-	return "", nil
-}
-
-func (f *fakeIamSessionDomain) RemoveToken(ctx context.Context, userKey string) error {
-	f.removeTokenCalls++
-	f.removedUserKey = userKey
+func (f *fakeIamSessionDomain) RemoveByUser(ctx context.Context, userId uint64) error {
+	f.removeByUserCalls++
+	f.removedUserId = userId
 	return nil
 }

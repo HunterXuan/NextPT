@@ -206,6 +206,14 @@ func (s *sSysCache) KeyIamTwoStepLoginRate(ctx context.Context, userId uint64) s
 	return fmt.Sprintf("%stwo_step:login:rate:user:%d", s.prefixIam, userId)
 }
 
+func (s *sSysCache) KeyIamSession(ctx context.Context, sessionId string) string {
+	return fmt.Sprintf("%ssession:%s", s.prefixIam, sessionId)
+}
+
+func (s *sSysCache) KeyIamUserSessions(ctx context.Context, userId uint64) string {
+	return fmt.Sprintf("%suser:%d:sessions", s.prefixIam, userId)
+}
+
 func (s *sSysCache) KeyIamRolePerms(ctx context.Context, roleId uint) string {
 	return fmt.Sprintf("%srole:%d:perms", s.prefixIam, roleId)
 }

@@ -4,8 +4,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gogf/gf/v2/util/gconv"
-
 	"server/internal/library/contexts"
 	"server/internal/model"
 	"server/internal/service"
@@ -144,16 +142,16 @@ func (s *sMiddleware) CheckAuth(r *ghttp.Request) {
 		return
 	}
 
-	userKey, err := service.IamSessionDomain().GetGFToken().Validate(r.Context(), token)
+	session, err := service.IamSessionDomain().Validate(r.Context(), token)
 	if err != nil {
 		service.IamSessionDomain().GetGFMiddleware().ResFun(r, err)
 		return
 	}
-	r.SetCtxVar(gtoken.KeyUserKey, userKey)
+	contexts.SetSessionId(r.Context(), session.Id)
 
-	actor, err := service.IamUserUsecase().LoadActor(r.Context(), gconv.Uint64(userKey))
+	actor, err := service.IamUserUsecase().LoadActor(r.Context(), session.UserId)
 	if err != nil || actor == nil {
-		_ = service.IamSessionDomain().RemoveToken(r.Context(), userKey)
+		_ = service.IamSessionDomain().Remove(r.Context(), session.Id)
 		r.Response.WriteJson(ghttp.DefaultHandlerResponse{
 			Code:    401,
 			Message: gi18n.T(r.Context(), "iam.general.unauthorized"),

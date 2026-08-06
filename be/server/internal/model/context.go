@@ -10,6 +10,7 @@ const (
 // Context 请求上下文结构
 type Context struct {
 	Actor        *Actor       // 上下文操作者信息
+	SessionId    string       // 当前 Web 会话 ID
 	ResponseType ResponseType // 响应格式
 }
 

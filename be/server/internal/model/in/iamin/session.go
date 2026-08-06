@@ -9,3 +9,7 @@ type SessionTwoStepVerifyInp struct {
 	Challenge string `json:"challenge" v:"required|max-length:128#{#iam.two_step.challenge_req}|{#iam.two_step.challenge_invalid}"`
 	Code      string `json:"code" v:"required|max-length:64#{#iam.two_step.code_req}|{#iam.two_step.code_invalid}"`
 }
+
+type SessionDeleteInp struct {
+	Id string `json:"id" in:"path" v:"required|length:32,32#{#iam.session.id_req}|{#iam.session.id_invalid}"`
+}

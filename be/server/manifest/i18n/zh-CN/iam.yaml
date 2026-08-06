@@ -24,6 +24,9 @@ iam.session.account_banned: 账号已被禁用或封禁
 iam.session.email_unverified: 邮箱尚未验证，请检查验证邮件或重新发送
 iam.session.invalid_credentials: 账号或密码错误
 iam.session.invalid_passkey: Passkey无效或账号被禁用
+iam.session.id_invalid: 会话 ID 无效
+iam.session.id_req: 请指定会话
+iam.session.not_found: 会话不存在或已失效
 iam.session.password_req: 请输入密码
 iam.session.role_missing: 获取用户角色失败
 iam.session.username_req: 请输入用户名或邮箱
