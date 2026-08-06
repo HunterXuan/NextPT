@@ -25,6 +25,8 @@ var (
 			}
 			s.AddStaticPath("/api/public", "resource/public")
 
+			router.Health(ctx, s)
+
 			s.Group("/api", func(group *ghttp.RouterGroup) {
 				group.Middleware(
 					service.Middleware().Ctx,

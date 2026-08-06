@@ -7,6 +7,7 @@ package service
 
 import (
 	"context"
+	"server/internal/model"
 	"server/internal/model/entity"
 )
 
@@ -64,6 +65,9 @@ type (
 		Start(ctx context.Context)
 		AdminListCronLogs(ctx context.Context, jobName string, status int, page int, size int) ([]*entity.SysCronLog, int, error)
 	}
+	ISysHealth interface {
+		Readiness(ctx context.Context) model.SysHealthReadiness
+	}
 	ISysMailgun interface {
 		SendTextMail(ctx context.Context, subject string, body string, recipient string) error
 		SendHtmlMail(ctx context.Context, subject string, textBody string, htmlBody string, recipient string) error
@@ -85,6 +89,7 @@ type (
 var (
 	localSysCache   ISysCache
 	localSysCron    ISysCron
+	localSysHealth  ISysHealth
 	localSysMailgun ISysMailgun
 	localSysStorage ISysStorage
 )
@@ -109,6 +114,17 @@ func SysCron() ISysCron {
 
 func RegisterSysCron(i ISysCron) {
 	localSysCron = i
+}
+
+func SysHealth() ISysHealth {
+	if localSysHealth == nil {
+		panic("implement not found for interface ISysHealth, forgot register?")
+	}
+	return localSysHealth
+}
+
+func RegisterSysHealth(i ISysHealth) {
+	localSysHealth = i
 }
 
 func SysMailgun() ISysMailgun {
