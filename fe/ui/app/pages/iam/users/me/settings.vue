@@ -48,6 +48,7 @@
               </div>
               <IamUserSecurityForm />
             </div>
+            <IamUserSessions />
             <IamLoginLogs />
           </div>
 

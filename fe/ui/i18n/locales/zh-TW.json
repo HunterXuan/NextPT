@@ -2528,6 +2528,18 @@
       "copyCodes": "複製全部恢復碼",
       "done": "完成"
     },
+    "sessions": {
+      "title": "登入裝置",
+      "subtitle": "查看並管理目前有效的登入工作階段。",
+      "current": "目前裝置",
+      "lastSeen": "最近使用",
+      "unknownDevice": "未知裝置",
+      "empty": "暫無有效登入裝置",
+      "logoutCurrent": "登出目前裝置",
+      "revoke": "登出此裝置",
+      "logoutCurrentConfirm": "確認登出目前裝置？",
+      "revokeConfirm": "確認登出此裝置？"
+    },
     "loginLogs": {
       "title": "登入記錄",
       "subtitle": "查看最近登入結果、IP 和客戶端資訊。",

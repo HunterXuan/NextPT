@@ -112,6 +112,19 @@ export interface AuthLoginLogListOut {
   size: number
 }
 
+export interface AuthSessionItem {
+  id: string
+  ip: string
+  userAgent: string
+  createdAt?: string | null
+  lastSeenAt?: string | null
+  current: boolean
+}
+
+export interface AuthSessionListOut {
+  list: AuthSessionItem[]
+}
+
 export interface AuthRoleRuleCondition {
   accountAgeDaysGte?: number
   downloadedGiBGte?: number
@@ -408,6 +421,14 @@ export function useAuth() {
     await fetchUser()
   }
 
+  async function listSessions() {
+    return await fetchApi<AuthSessionListOut>('/api/iam/sessions')
+  }
+
+  async function deleteSession(id: string) {
+    await fetchApi(`/api/iam/sessions/${encodeURIComponent(id)}`, { method: 'DELETE' })
+  }
+
   async function logout(remote = true) {
     if (remote && token.value) {
       try {
@@ -447,6 +468,8 @@ export function useAuth() {
     confirmTwoStep,
     createTwoStepRecoveryCodes,
     disableTwoStep,
+    listSessions,
+    deleteSession,
     logout,
     clearLocalSession
   }

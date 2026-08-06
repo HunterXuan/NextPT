@@ -2528,6 +2528,18 @@
       "copyCodes": "Copy all recovery codes",
       "done": "Done"
     },
+    "sessions": {
+      "title": "Signed-in devices",
+      "subtitle": "Review and manage your active sessions.",
+      "current": "Current device",
+      "lastSeen": "Last active",
+      "unknownDevice": "Unknown device",
+      "empty": "No active sessions",
+      "logoutCurrent": "Sign out this device",
+      "revoke": "Sign out device",
+      "logoutCurrentConfirm": "Sign out this device?",
+      "revokeConfirm": "Sign out this device?"
+    },
     "loginLogs": {
       "title": "Login history",
       "subtitle": "Review recent sign-in results, IPs, and clients.",

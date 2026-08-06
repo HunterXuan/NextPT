@@ -2528,6 +2528,18 @@
       "copyCodes": "复制全部恢复码",
       "done": "完成"
     },
+    "sessions": {
+      "title": "登录设备",
+      "subtitle": "查看并管理当前有效的登录会话。",
+      "current": "当前设备",
+      "lastSeen": "最近活跃",
+      "unknownDevice": "未知设备",
+      "empty": "暂无有效登录设备",
+      "logoutCurrent": "退出当前设备",
+      "revoke": "退出此设备",
+      "logoutCurrentConfirm": "确认退出当前设备？",
+      "revokeConfirm": "确认退出此设备？"
+    },
     "loginLogs": {
       "title": "登录记录",
       "subtitle": "查看最近登录结果、IP 和客户端信息。",

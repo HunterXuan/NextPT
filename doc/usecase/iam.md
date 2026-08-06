@@ -5,7 +5,7 @@
 - `Role` (角色)
 - `Permission` (权限)
 - `Invite` (邀请码)
-- `Session` / `LoginLog` (会话与登录记录)
+- `Session` / `LoginLog` (有效会话与登录记录)
 
 ## Usecase 划分及 RESTful 接口设计
 
@@ -22,6 +22,15 @@
   * **核心逻辑**: 校验短时、单次 challenge 及 TOTP 或恢复码；成功后才签发 Session、更新登录记录和最后登录信息。恢复码只可使用一次。
 * **登出 (Logout)**
   * **Method/Path**: `DELETE /sessions`
+  * **核心逻辑**: 只销毁当前请求对应的 Session，不影响同一用户的其它设备。
+* **获取有效会话 (ListSessions)**
+  * **Method/Path**: `GET /sessions`
+  * **核心逻辑**: 返回当前用户尚未过期的设备会话，包含 IP、User-Agent、创建时间、最近活跃时间和当前设备标识。
+* **销毁指定会话 (DeleteSession)**
+  * **Method/Path**: `DELETE /sessions/{id}`
+  * **核心逻辑**: 仅允许用户销毁属于自己的 Session；修改密码、重置 Passkey、密码找回和管理员踢出仍销毁该用户全部 Session。
+
+> Web Token 使用随机 `sessionId` 作为 `gtoken` user key，不再直接使用用户 ID。Redis 保存 Session 元数据和 `userId -> sessionId` 集合；会话列表会清理已过期的索引，最近活跃时间按 5 分钟节流更新。该结构不需要新增数据库表。
 
 ### 2. UserUsecase (用户应用服务)
 * **注册 (Register)**
