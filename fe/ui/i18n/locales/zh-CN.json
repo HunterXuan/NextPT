@@ -77,6 +77,12 @@
     "tagline": "面向私有资源社区的 tracker 与协作系统。"
   },
   "site": {
+    "maintenance": {
+      "title": "站点维护中",
+      "defaultMessage": "站点正在维护，请稍后再试。",
+      "retry": "重新尝试",
+      "backHome": "返回首页"
+    },
     "announcements": {
       "title": "站点公告",
       "empty": "暂无公告",
@@ -1607,6 +1613,7 @@
         "saved": "配置已保存",
         "noChanges": "没有需要保存的改动",
         "groups": {
+          "site": "站点",
           "tracker": "Tracker",
           "iam": "用户",
           "catalog": "资源库",
@@ -1759,6 +1766,10 @@
           },
           "economy": {
             "shop_products": "商城商品"
+          },
+          "site": {
+            "maintenance_enabled": "维护模式",
+            "maintenance_message": "维护提示"
           }
         },
         "descriptions": {
@@ -1784,6 +1795,10 @@
           },
           "economy": {
             "shop_products": "魔力商城的商品、价格、排序和履约选项配置。"
+          },
+          "site": {
+            "maintenance_enabled": "启用后，普通用户暂时无法访问站点 API；工作人员和 Tracker 服务不受影响。",
+            "maintenance_message": "维护期间向用户展示的提示内容；留空时使用系统默认提示。"
           }
         }
       },

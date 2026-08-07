@@ -280,6 +280,7 @@ const adminApi = useAdmin()
 useHead({ title: t('admin.site.configs.title') })
 
 const groups = computed(() => [
+  { value: 'site', label: t('admin.site.configs.groups.site') },
   { value: 'tracker', label: t('admin.site.configs.groups.tracker') },
   { value: 'iam', label: t('admin.site.configs.groups.iam') },
   { value: 'catalog', label: t('admin.site.configs.groups.catalog') },

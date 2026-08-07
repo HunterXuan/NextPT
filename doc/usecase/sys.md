@@ -35,3 +35,9 @@
 * **存活检查**：`GET /healthz` 仅确认 HTTP 服务存活，返回 `204`，不依赖 MySQL 或 Redis。
 * **就绪检查**：`GET /readyz` 检查 MySQL 与 Redis，全部可用时返回 `200`；任一不可用时返回 `503`。响应仅包含依赖状态与耗时，不暴露连接错误详情。
 * **探针保护**：检查结果在当前进程缓存 3 秒；每项依赖使用 2 秒超时，避免监控请求异常频繁时放大依赖压力。
+
+### 5. SiteMaintenance (站点维护模式)
+* **配置**：通过 `site.maintenance_enabled` 和 `site.maintenance_message` 控制。配置更新沿用站点配置缓存失效广播，所有进程即时读取新值。
+* **请求范围**：开启后，普通用户的非 Tracker `/api` 请求返回 `503` 与 `Retry-After: 300`；前端收到标准维护响应后跳转至 `/maintenance`。`/healthz`、`/readyz` 和 `/api/tracker/**` 保持可用。
+* **Staff 连续操作**：已登录 Staff 不受限制，确保管理后台及其依赖的非 `/admin` API 能完成维护操作。
+* **登录限制**：登录与两步验证入口会继续进入 IAM 校验；只有 Staff 可以建立新会话，普通用户得到统一维护响应。

@@ -140,6 +140,8 @@ function unwrapEnvelope<T>(payload: ApiEnvelope<T> | T): T {
         clearSession()
       }
 
+      redirectToMaintenance(envelope.code, envelope.data)
+
       throw new ApiError(envelope.message || 'Request failed', envelope.code, envelope.data)
     }
 
@@ -189,6 +191,7 @@ async function normalizeFetchError(error: any): Promise<ApiError> {
 
   if (data && typeof data === 'object') {
     const envelope = data as ApiEnvelope<unknown>
+    redirectToMaintenance(Number(envelope.code || status || -1), envelope.data)
     return new ApiError(
       envelope.message || error.message || 'Request failed',
       Number(envelope.code || status || -1),
@@ -202,6 +205,19 @@ async function normalizeFetchError(error: any): Promise<ApiError> {
   }
 
   return new ApiError(error?.message || 'Request failed', Number(status || -1), undefined, status)
+}
+
+function redirectToMaintenance(code: number, data: unknown) {
+  if (code !== 503 || !isMaintenanceData(data) || !import.meta.client || window.location.pathname === '/maintenance') return
+
+  const target = new URL('/maintenance', window.location.origin)
+  if (data.message) target.searchParams.set('message', data.message)
+  target.searchParams.set('returnTo', `${window.location.pathname}${window.location.search}${window.location.hash}`)
+  window.location.replace(target)
+}
+
+function isMaintenanceData(data: unknown): data is { reason: string, message?: string } {
+  return Boolean(data && typeof data === 'object' && (data as { reason?: unknown }).reason === 'site_maintenance')
 }
 
 export function useApi<T = unknown>(

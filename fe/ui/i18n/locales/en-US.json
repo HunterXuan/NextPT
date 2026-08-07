@@ -77,6 +77,12 @@
     "tagline": "Tracker and collaboration system for a private resource community."
   },
   "site": {
+    "maintenance": {
+      "title": "Site under maintenance",
+      "defaultMessage": "The site is under maintenance. Please try again later.",
+      "retry": "Try again",
+      "backHome": "Back to home"
+    },
     "announcements": {
       "title": "Announcements",
       "empty": "No announcements",
@@ -1607,6 +1613,7 @@
         "saved": "Config saved",
         "noChanges": "No changes to save",
         "groups": {
+          "site": "Site",
           "tracker": "Tracker",
           "iam": "Users",
           "catalog": "Catalog",
@@ -1759,6 +1766,10 @@
           },
           "economy": {
             "shop_products": "Shop products"
+          },
+          "site": {
+            "maintenance_enabled": "Maintenance mode",
+            "maintenance_message": "Maintenance message"
           }
         },
         "descriptions": {
@@ -1784,6 +1795,10 @@
           },
           "economy": {
             "shop_products": "Products, prices, ordering, and fulfillment options for the bonus shop."
+          },
+          "site": {
+            "maintenance_enabled": "When enabled, regular users cannot access site APIs. Staff and Tracker services remain available.",
+            "maintenance_message": "Message displayed to users during maintenance. The system default is used when empty."
           }
         }
       },
