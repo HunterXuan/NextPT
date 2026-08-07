@@ -57,6 +57,8 @@
             </div>
           </section>
 
+          <SiteAdvertisement placement="forum_list" />
+
           <ForumTopicList
             v-if="selectedNodeSlug"
             :topics="topics"

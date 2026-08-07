@@ -129,6 +129,8 @@
         </div>
       </section>
 
+      <SiteAdvertisement placement="catalog_list" class="mb-3" />
+
       <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         <div class="hidden grid-cols-[86px_minmax(0,1fr)_88px_48px_48px_56px_96px_110px_34px] items-center gap-2 border-b border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
           <span>{{ $t('catalog.torrents.table.category') }}</span>

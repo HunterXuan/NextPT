@@ -171,6 +171,8 @@
                 </div>
               </section>
 
+              <SiteAdvertisement placement="home" />
+
               <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
                   <div>

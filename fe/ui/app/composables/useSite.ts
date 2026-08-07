@@ -11,6 +11,19 @@ export interface SiteAnnouncement {
   updatedAt?: string | null
 }
 
+export type SiteAdvertisementPlacement = 'home' | 'catalog_list' | 'forum_list'
+
+export interface SiteAdvertisement {
+  enabled: boolean
+  title: string
+  image: string
+  url: string
+}
+
+export interface SiteAdvertisementListOut {
+  placements: Partial<Record<SiteAdvertisementPlacement, SiteAdvertisement>>
+}
+
 export interface SiteAnnouncementListOut {
   list: SiteAnnouncement[]
   total: number
@@ -61,6 +74,10 @@ export interface SiteMessageListOut {
 }
 
 export function useSite() {
+  async function listAdvertisements() {
+    return await fetchApi<SiteAdvertisementListOut>('/api/site/advertisements')
+  }
+
   async function listAnnouncements(params: SiteAnnouncementListParams = {}) {
     return await fetchApi<SiteAnnouncementListOut>('/api/site/announcements', {
       query: params
@@ -97,6 +114,7 @@ export function useSite() {
   }
 
   return {
+    listAdvertisements,
     listAnnouncements,
     markAnnouncementRead,
     listMessages,

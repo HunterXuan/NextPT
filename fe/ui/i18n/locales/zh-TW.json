@@ -1697,6 +1697,36 @@
             "number": "第 {index} 項的 {field} 必須是不小於 {min} 的有效數字"
           }
         },
+        "advertisements": {
+          "hint": "每個廣告位只展示一張橫幅；關閉後前台不會保留空白區域。",
+          "title": "廣告標題",
+          "image": "圖片地址",
+          "url": "跳轉地址",
+          "preview": "展示預覽",
+          "imagePlaceholder": "輸入圖片地址後在此預覽",
+          "placements": {
+            "home": {
+              "label": "首頁橫幅",
+              "hint": "公告區之後，種子和論壇動態之前。",
+              "aspect": "建議比例 4:1"
+            },
+            "catalog_list": {
+              "label": "種子列表橫幅",
+              "hint": "篩選區之後，種子列表之前。",
+              "aspect": "建議比例 8:1"
+            },
+            "forum_list": {
+              "label": "論壇列表橫幅",
+              "hint": "節點切換區之後，主題列表之前。",
+              "aspect": "建議比例 8:1"
+            }
+          },
+          "errors": {
+            "title": "{placement}需要填寫不超過 120 字的廣告標題",
+            "image": "{placement}需要填寫站內路徑或 http(s) 圖片地址",
+            "url": "{placement}需要填寫站內路徑或 http(s) 跳轉地址"
+          }
+        },
         "shop": {
           "editMode": "編輯方式",
           "editModeHint": "表單用於日常調整，JSON 用於修改商品結構。",
@@ -1769,7 +1799,8 @@
           },
           "site": {
             "maintenance_enabled": "維護模式",
-            "maintenance_message": "維護提示"
+            "maintenance_message": "維護提示",
+            "advertisements": "廣告橫幅"
           }
         },
         "descriptions": {
@@ -1798,7 +1829,8 @@
           },
           "site": {
             "maintenance_enabled": "啟用後，一般使用者暫時無法存取站點 API；工作人員和 Tracker 服務不受影響。",
-            "maintenance_message": "維護期間向使用者展示的提示內容；留空時使用系統預設提示。"
+            "maintenance_message": "維護期間向使用者展示的提示內容；留空時使用系統預設提示。",
+            "advertisements": "配置首頁、種子列表和論壇列表的橫幅廣告。"
           }
         }
       },

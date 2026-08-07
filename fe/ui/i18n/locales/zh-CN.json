@@ -1697,6 +1697,36 @@
             "number": "第 {index} 项的 {field} 必须是不小于 {min} 的有效数字"
           }
         },
+        "advertisements": {
+          "hint": "每个广告位只展示一张横幅；关闭后前台不会保留空白区域。",
+          "title": "广告标题",
+          "image": "图片地址",
+          "url": "跳转地址",
+          "preview": "展示预览",
+          "imagePlaceholder": "输入图片地址后在此预览",
+          "placements": {
+            "home": {
+              "label": "首页横幅",
+              "hint": "公告区之后，种子和论坛动态之前。",
+              "aspect": "推荐比例 4:1"
+            },
+            "catalog_list": {
+              "label": "种子列表横幅",
+              "hint": "筛选区之后，种子列表之前。",
+              "aspect": "推荐比例 8:1"
+            },
+            "forum_list": {
+              "label": "论坛列表横幅",
+              "hint": "节点切换区之后，主题列表之前。",
+              "aspect": "推荐比例 8:1"
+            }
+          },
+          "errors": {
+            "title": "{placement}需要填写不超过 120 字的广告标题",
+            "image": "{placement}需要填写站内路径或 http(s) 图片地址",
+            "url": "{placement}需要填写站内路径或 http(s) 跳转地址"
+          }
+        },
         "shop": {
           "editMode": "编辑方式",
           "editModeHint": "表单用于日常调整，JSON 用于修改商品结构。",
@@ -1769,7 +1799,8 @@
           },
           "site": {
             "maintenance_enabled": "维护模式",
-            "maintenance_message": "维护提示"
+            "maintenance_message": "维护提示",
+            "advertisements": "广告横幅"
           }
         },
         "descriptions": {
@@ -1798,7 +1829,8 @@
           },
           "site": {
             "maintenance_enabled": "启用后，普通用户暂时无法访问站点 API；工作人员和 Tracker 服务不受影响。",
-            "maintenance_message": "维护期间向用户展示的提示内容；留空时使用系统默认提示。"
+            "maintenance_message": "维护期间向用户展示的提示内容；留空时使用系统默认提示。",
+            "advertisements": "配置首页、种子列表和论坛列表的横幅广告。"
           }
         }
       },

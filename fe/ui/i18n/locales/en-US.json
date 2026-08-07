@@ -1697,6 +1697,36 @@
             "number": "{field} in item {index} must be a valid number not less than {min}"
           }
         },
+        "advertisements": {
+          "hint": "Each placement shows one banner. Disabled placements leave no empty space on the site.",
+          "title": "Advertisement title",
+          "image": "Image URL",
+          "url": "Destination URL",
+          "preview": "Preview",
+          "imagePlaceholder": "Enter an image URL to preview it here",
+          "placements": {
+            "home": {
+              "label": "Home banner",
+              "hint": "After announcements and before torrent and forum activity.",
+              "aspect": "Recommended 4:1"
+            },
+            "catalog_list": {
+              "label": "Torrent list banner",
+              "hint": "After filters and before the torrent list.",
+              "aspect": "Recommended 8:1"
+            },
+            "forum_list": {
+              "label": "Forum list banner",
+              "hint": "After node selection and before the topic list.",
+              "aspect": "Recommended 8:1"
+            }
+          },
+          "errors": {
+            "title": "{placement} needs a title of no more than 120 characters",
+            "image": "{placement} needs an internal path or an http(s) image URL",
+            "url": "{placement} needs an internal path or an http(s) destination URL"
+          }
+        },
         "shop": {
           "editMode": "Edit mode",
           "editModeHint": "Use the form for routine changes and JSON for structural changes.",
@@ -1769,7 +1799,8 @@
           },
           "site": {
             "maintenance_enabled": "Maintenance mode",
-            "maintenance_message": "Maintenance message"
+            "maintenance_message": "Maintenance message",
+            "advertisements": "Advertisement banners"
           }
         },
         "descriptions": {
@@ -1798,7 +1829,8 @@
           },
           "site": {
             "maintenance_enabled": "When enabled, regular users cannot access site APIs. Staff and Tracker services remain available.",
-            "maintenance_message": "Message displayed to users during maintenance. The system default is used when empty."
+            "maintenance_message": "Message displayed to users during maintenance. The system default is used when empty.",
+            "advertisements": "Configure banner advertisements for the home, torrent list, and forum list."
           }
         }
       },

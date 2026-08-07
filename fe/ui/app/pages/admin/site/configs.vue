@@ -142,8 +142,15 @@
               </div>
             </dl>
 
+            <AdminSiteAdvertisementsConfigEditor
+              v-if="selectedUsesAdvertisementEditor"
+              ref="advertisementsEditorRef"
+              v-model="advertisementsFormValue"
+              :disabled="saving"
+            />
+
             <AdminSitePromotionConfigEditor
-              v-if="selectedUsesPromotionEditor"
+              v-else-if="selectedUsesPromotionEditor"
               ref="promotionEditorRef"
               v-model="promotionFormValue"
               :config-path="selectedConfigPath"
@@ -271,6 +278,10 @@ interface ShopProductsConfigEditorExpose {
   validate: () => PromotionValidationResult
 }
 
+interface AdvertisementsConfigEditorExpose {
+  validate: () => PromotionValidationResult
+}
+
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t, locale } = useI18n()
@@ -302,6 +313,8 @@ const promotionFormValue = ref<unknown>(null)
 const promotionEditorRef = ref<PromotionConfigEditorExpose | null>(null)
 const shopFormValue = ref<unknown>(null)
 const shopEditorRef = ref<ShopProductsConfigEditorExpose | null>(null)
+const advertisementsFormValue = ref<unknown>(null)
+const advertisementsEditorRef = ref<AdvertisementsConfigEditorExpose | null>(null)
 
 const form = reactive({
   textValue: '',
@@ -316,6 +329,7 @@ const selectedKindLabel = computed(() => t(`admin.site.configs.types.${selectedK
 const selectedConfigLabel = computed(() => selectedConfig.value ? displayConfigLabel(selectedConfig.value) : '')
 const selectedConfigPath = computed(() => selectedConfig.value ? `${selectedConfig.value.group}.${selectedConfig.value.key}` : '')
 const selectedDescription = computed(() => selectedConfig.value ? displayConfigDescription(selectedConfig.value) : '')
+const selectedUsesAdvertisementEditor = computed(() => selectedConfigPath.value === 'site.advertisements')
 const selectedUsesPromotionEditor = computed(() => selectedConfigPath.value === 'catalog.global_promotion' || selectedConfigPath.value === 'catalog.new_torrent_promotion')
 const selectedUsesShopEditor = computed(() => selectedConfigPath.value === 'economy.shop_products')
 const selectedUpdatedAtLabel = computed(() => {
@@ -413,7 +427,11 @@ async function loadRoles() {
 
 function resetFormFromSelected(updateSnapshot = false) {
   const value = selectedRawValue.value
-  if (selectedUsesPromotionEditor.value) {
+  if (selectedUsesAdvertisementEditor.value) {
+    advertisementsFormValue.value = cloneConfigValue(value)
+    form.textValue = ''
+    form.booleanValue = false
+  } else if (selectedUsesPromotionEditor.value) {
     promotionFormValue.value = cloneConfigValue(value)
     form.textValue = ''
     form.booleanValue = false
@@ -484,6 +502,12 @@ function getTextFormValue() {
 }
 
 function formSnapshot() {
+  if (selectedUsesAdvertisementEditor.value) {
+    return JSON.stringify({
+      kind: 'advertisements',
+      value: advertisementsFormValue.value
+    })
+  }
   if (selectedUsesPromotionEditor.value) {
     return JSON.stringify({
       kind: 'promotion',
@@ -505,6 +529,9 @@ function formSnapshot() {
 
 function buildSubmitValue() {
   if (!selectedConfig.value) return ''
+  if (selectedUsesAdvertisementEditor.value) {
+    return getAdvertisementsSubmitValue()
+  }
   if (selectedUsesPromotionEditor.value) {
     return getPromotionSubmitValue()
   }
@@ -519,6 +546,15 @@ function buildSubmitValue() {
 }
 
 function validateFormValue() {
+  if (selectedUsesAdvertisementEditor.value) {
+    try {
+      getAdvertisementsSubmitValue()
+      return true
+    } catch (error: unknown) {
+      formError.value = error instanceof Error ? error.message : t('admin.site.configs.form.jsonInvalid')
+      return false
+    }
+  }
   if (selectedUsesPromotionEditor.value) {
     try {
       getPromotionSubmitValue()
@@ -563,6 +599,14 @@ function validateFormValue() {
 
 function getPromotionSubmitValue() {
   const result = promotionEditorRef.value?.validate()
+  if (!result?.valid) {
+    throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
+  }
+  return result.value
+}
+
+function getAdvertisementsSubmitValue() {
+  const result = advertisementsEditorRef.value?.validate()
   if (!result?.valid) {
     throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
   }
