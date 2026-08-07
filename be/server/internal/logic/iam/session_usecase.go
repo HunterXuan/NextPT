@@ -63,6 +63,9 @@ func (s *sIamSessionUsecase) Create(ctx context.Context, in iamin.SessionCreateI
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonRoleMissing)
 		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
 	}
+	if err := s.checkMaintenance(ctx, role.IsStaff); err != nil {
+		return nil, err
+	}
 	if user.TwoStepType != consts.IamTwoStepTypeDisabled {
 		if user.TwoStepType != consts.IamTwoStepTypeTOTP {
 			s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonTwoStepInvalid)
@@ -115,6 +118,9 @@ func (s *sIamSessionUsecase) VerifyTwoStep(ctx context.Context, in iamin.Session
 	if err != nil || role == nil {
 		s.recordLogin(ctx, user.Id, consts.IamLoginLogResultFail, consts.IamLoginLogFailReasonRoleMissing)
 		return nil, gerror.New(gi18n.T(ctx, "iam.session.role_missing"))
+	}
+	if err := s.checkMaintenance(ctx, role.IsStaff); err != nil {
+		return nil, err
 	}
 	token, err := s.generateToken(ctx, user, deviceHash)
 	if err != nil {
@@ -213,6 +219,17 @@ func (s *sIamSessionUsecase) requireRequestDeviceHash(ctx context.Context) (stri
 		return "", gerror.New(gi18n.T(ctx, "iam.session.device_required"))
 	}
 	return deviceHash, nil
+}
+
+func (s *sIamSessionUsecase) checkMaintenance(ctx context.Context, isStaff bool) error {
+	if isStaff || !service.SiteConfigDomain().GetByPath(ctx, consts.SiteConfigSiteMaintenanceEnabled).Bool() {
+		return nil
+	}
+	maintenance := model.SiteMaintenance{
+		Enabled: true,
+		Message: service.SiteConfigDomain().GetByPath(ctx, consts.SiteConfigSiteMaintenanceMessage).String(),
+	}
+	return &model.SiteMaintenanceError{Message: maintenance.DisplayMessage(gi18n.T(ctx, "site.maintenance.default_message"))}
 }
 
 func (s *sIamSessionUsecase) clientName(userAgent string) string {

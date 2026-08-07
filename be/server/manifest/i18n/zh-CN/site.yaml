@@ -60,3 +60,4 @@ site.message.rank.auto_banned.title: 账号已被自动封禁
 site.message.rank.auto_banned.content: 你的账号因不再满足最低等级要求而被自动封禁
 site.message.iam_session.new_device.title: 新设备登录提醒
 site.message.iam_session.new_device.content: "检测到新的登录设备。\n\n设备：%s\nIP：%s\n时间：%s\n\n如果这不是你的操作，请前往账号安全退出该设备并修改密码。"
+site.maintenance.default_message: 站点正在维护，请稍后再试。

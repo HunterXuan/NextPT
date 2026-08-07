@@ -74,6 +74,11 @@ const (
 
 const SiteConfigEconomyShopProducts = "economy.shop_products"
 
+const (
+	SiteConfigSiteMaintenanceEnabled = "site.maintenance_enabled"
+	SiteConfigSiteMaintenanceMessage = "site.maintenance_message"
+)
+
 // ==============================================================================
 // 后台业务配置的统一默认值字典
 // 供 AdminConfig.GetByPath 取不到数据库值时兜底使用
@@ -89,6 +94,8 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigTrackerBonusBase:                 0.4,
 	SiteConfigIamDefaultRegisterRole:           2,
 	SiteConfigIamRegisterEnabled:               true,
+	SiteConfigSiteMaintenanceEnabled:           false,
+	SiteConfigSiteMaintenanceMessage:           "",
 	SiteConfigCatalogTorrentSource:             "NextPT",
 	SiteConfigCatalogTorrentDirectPublishLevel: 20,
 	SiteConfigCatalogGlobalPromotion: map[string]any{

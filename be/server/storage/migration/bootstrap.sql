@@ -212,6 +212,8 @@ VALUES
     ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
     ('iam', 'default_register_role', '{"val":2}', NOW(), NOW()),
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
+    ('site', 'maintenance_enabled', '{"val":false}', NOW(), NOW()),
+    ('site', 'maintenance_message', '{"val":""}', NOW(), NOW()),
     ('economy', 'shop_products', JSON_OBJECT('val', JSON_ARRAY(
         JSON_OBJECT(
             'key', 'invite',

@@ -1,8 +1,12 @@
 package middleware
 
 import (
+	"context"
+	"errors"
+	"net/http"
 	"regexp"
 	"strings"
+	"time"
 
 	"server/internal/consts"
 	"server/internal/library/contexts"
@@ -12,11 +16,16 @@ import (
 
 	"github.com/anacrolix/torrent/bencode"
 	"github.com/goflyfox/gtoken/v2/gtoken"
+	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/gogf/gf/v2/util/gconv"
 )
+
+const siteMaintenanceRetryAfter = 300
 
 type sMiddleware struct{}
 
@@ -105,6 +114,11 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 		err = r.GetError()
 		res = r.GetHandlerResponse()
 	)
+	var maintenanceError *model.SiteMaintenanceError
+	if errors.As(err, &maintenanceError) {
+		s.writeMaintenanceResponse(r, maintenanceError.Message)
+		return
+	}
 	if err != nil && s.isTrackerRequest(r) {
 		s.writeBencodeError(r, err.Error())
 		return
@@ -134,6 +148,11 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 func (s *sMiddleware) CheckAuth(r *ghttp.Request) {
 	handler := r.GetServeHandler()
 	if handler != nil && handler.GetMetaTag("noAuth") == "true" {
+		maintenance := s.maintenance(r.Context())
+		if !s.isMaintenanceSignInRequest(r) && maintenance.Enabled {
+			s.writeMaintenanceResponse(r, maintenance.DisplayMessage(gi18n.T(r.Context(), "site.maintenance.default_message")))
+			return
+		}
 		r.Middleware.Next()
 		return
 	}
@@ -163,8 +182,52 @@ func (s *sMiddleware) CheckAuth(r *ghttp.Request) {
 		return
 	}
 	contexts.SetActor(r.Context(), actor)
+	maintenance := s.maintenance(r.Context())
+	if maintenance.Enabled && !actor.IsStaff {
+		s.writeMaintenanceResponse(r, maintenance.DisplayMessage(gi18n.T(r.Context(), "site.maintenance.default_message")))
+		return
+	}
 
 	r.Middleware.Next()
+}
+
+func (s *sMiddleware) isMaintenanceSignInRequest(r *ghttp.Request) bool {
+	if r.Method != http.MethodPost {
+		return false
+	}
+	return r.URL.Path == "/api/iam/sessions" || r.URL.Path == "/api/iam/sessions:verifyTwoStep"
+}
+
+func (s *sMiddleware) maintenance(ctx context.Context) model.SiteMaintenance {
+	return model.SiteMaintenance{
+		Enabled: s.siteConfig(ctx, consts.SiteConfigSiteMaintenanceEnabled).Bool(),
+		Message: s.siteConfig(ctx, consts.SiteConfigSiteMaintenanceMessage).String(),
+	}
+}
+
+func (s *sMiddleware) siteConfig(ctx context.Context, path string) *gvar.Var {
+	cacheKey := service.SysCache().KeySiteConfigFullPath(ctx, path)
+	value, err := gcache.GetOrSetFunc(ctx, cacheKey, func(ctx context.Context) (any, error) {
+		return service.SiteConfigDomain().GetByPath(ctx, path).Val(), nil
+	}, 10*time.Minute)
+	if err != nil || value.IsNil() {
+		return service.SiteConfigDomain().GetByPath(ctx, path)
+	}
+	return gvar.New(value.Val())
+}
+
+func (s *sMiddleware) writeMaintenanceResponse(r *ghttp.Request, message string) {
+	r.Response.Header().Set("Retry-After", gconv.String(siteMaintenanceRetryAfter))
+	r.Response.WriteHeader(http.StatusServiceUnavailable)
+	r.Response.WriteJson(ghttp.DefaultHandlerResponse{
+		Code:    http.StatusServiceUnavailable,
+		Message: message,
+		Data: g.Map{
+			"reason":  "site_maintenance",
+			"message": message,
+		},
+	})
+	r.ExitAll()
 }
 
 func (s *sMiddleware) RBAC(r *ghttp.Request) {
