@@ -8,6 +8,7 @@ import (
 
 	"server/internal/consts"
 	"server/internal/dao"
+	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/sitein"
 	"server/internal/model/out/siteout"
@@ -165,6 +166,21 @@ func (s *sSiteConfigDomain) getConfigValueType(group, key string) consts.SiteCon
 }
 
 func (s *sSiteConfigDomain) normalizeConfigValue(group, key string, value any) (any, error) {
+	if group+"."+key == consts.SiteConfigSiteAdvertisements {
+		var advertisements model.SiteAdvertisements
+		if err := gvar.New(value).Scan(&advertisements); err != nil {
+			return nil, gerror.New("invalid site advertisements config")
+		}
+		if err := advertisements.Validate(); err != nil {
+			return nil, err
+		}
+		advertisements = advertisements.Normalized()
+		if err := advertisements.Validate(); err != nil {
+			return nil, err
+		}
+		return advertisements, nil
+	}
+
 	switch s.getConfigValueType(group, key) {
 	case consts.SiteConfigValueTypeBoolean:
 		return s.normalizeConfigBool(value)

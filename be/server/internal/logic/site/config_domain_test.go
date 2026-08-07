@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"server/internal/consts"
+	"server/internal/model"
 	"server/internal/model/entity"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -161,6 +162,32 @@ func TestNormalizeConfigValueUsesDefaultType(t *testing.T) {
 				t.Fatalf("normalized value = %#v, want %#v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestNormalizeSiteAdvertisements(t *testing.T) {
+	s := NewSiteConfigDomain()
+	group, key := splitSiteConfigPathForTest(consts.SiteConfigSiteAdvertisements)
+	value, err := s.normalizeConfigValue(group, key, map[string]any{
+		"home": map[string]any{
+			"enabled": true,
+			"title":   " Partner ",
+			"image":   "https://cdn.example.com/banner.webp",
+			"url":     "/catalog/torrents",
+		},
+	})
+	if err != nil {
+		t.Fatalf("normalizeConfigValue() error = %v", err)
+	}
+	advertisements, ok := value.(model.SiteAdvertisements)
+	if !ok {
+		t.Fatalf("normalized value type = %T, want model.SiteAdvertisements", value)
+	}
+	if advertisements[consts.SiteAdvertisementPlacementHome].Title != "Partner" {
+		t.Fatalf("home title = %q, want Partner", advertisements[consts.SiteAdvertisementPlacementHome].Title)
+	}
+	if _, ok := advertisements[consts.SiteAdvertisementPlacementForumList]; !ok {
+		t.Fatal("normalized advertisements should include all known placements")
 	}
 }
 

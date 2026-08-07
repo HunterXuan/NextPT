@@ -16,6 +16,9 @@ import (
 )
 
 type (
+	ISiteAdvertisementUsecase interface {
+		List(ctx context.Context) (*siteout.AdvertisementListOut, error)
+	}
 	ISiteAnnouncementDomain interface {
 		ListPublished(ctx context.Context, userId uint64, in sitein.AnnouncementListInp) ([]entity.SiteAnnouncement, int, error)
 		QueryReadAnnouncementIdsByUser(ctx context.Context, userId uint64) ([]uint64, error)
@@ -70,14 +73,26 @@ type (
 )
 
 var (
-	localSiteAnnouncementDomain  ISiteAnnouncementDomain
-	localSiteAnnouncementUsecase ISiteAnnouncementUsecase
-	localSiteAuditDomain         ISiteAuditDomain
-	localSiteAuditUsecase        ISiteAuditUsecase
-	localSiteConfigDomain        ISiteConfigDomain
-	localSiteMessageDomain       ISiteMessageDomain
-	localSiteMessageUsecase      ISiteMessageUsecase
+	localSiteAdvertisementUsecase ISiteAdvertisementUsecase
+	localSiteAnnouncementDomain   ISiteAnnouncementDomain
+	localSiteAnnouncementUsecase  ISiteAnnouncementUsecase
+	localSiteAuditDomain          ISiteAuditDomain
+	localSiteAuditUsecase         ISiteAuditUsecase
+	localSiteConfigDomain         ISiteConfigDomain
+	localSiteMessageDomain        ISiteMessageDomain
+	localSiteMessageUsecase       ISiteMessageUsecase
 )
+
+func SiteAdvertisementUsecase() ISiteAdvertisementUsecase {
+	if localSiteAdvertisementUsecase == nil {
+		panic("implement not found for interface ISiteAdvertisementUsecase, forgot register?")
+	}
+	return localSiteAdvertisementUsecase
+}
+
+func RegisterSiteAdvertisementUsecase(i ISiteAdvertisementUsecase) {
+	localSiteAdvertisementUsecase = i
+}
 
 func SiteAnnouncementDomain() ISiteAnnouncementDomain {
 	if localSiteAnnouncementDomain == nil {

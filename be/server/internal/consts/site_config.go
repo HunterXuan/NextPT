@@ -77,25 +77,58 @@ const SiteConfigEconomyShopProducts = "economy.shop_products"
 const (
 	SiteConfigSiteMaintenanceEnabled = "site.maintenance_enabled"
 	SiteConfigSiteMaintenanceMessage = "site.maintenance_message"
+	SiteConfigSiteAdvertisements     = "site.advertisements"
 )
+
+const (
+	SiteAdvertisementPlacementHome        = "home"
+	SiteAdvertisementPlacementCatalogList = "catalog_list"
+	SiteAdvertisementPlacementForumList   = "forum_list"
+)
+
+var SiteAdvertisementPlacements = []string{
+	SiteAdvertisementPlacementHome,
+	SiteAdvertisementPlacementCatalogList,
+	SiteAdvertisementPlacementForumList,
+}
 
 // ==============================================================================
 // 后台业务配置的统一默认值字典
 // 供 AdminConfig.GetByPath 取不到数据库值时兜底使用
 // ==============================================================================
 var SiteConfigDefaults = map[string]any{
-	SiteConfigTrackerAnnounceInterval:          1800,
-	SiteConfigTrackerAnnounceMinInterval:       900,
-	SiteConfigTrackerUrl:                       "http://127.0.0.1:8000/api/tracker/announce",
-	SiteConfigTrackerBonusT0:                   8.0,
-	SiteConfigTrackerBonusN0:                   7.0,
-	SiteConfigTrackerBonusB0:                   100.0,
-	SiteConfigTrackerBonusL:                    300.0,
-	SiteConfigTrackerBonusBase:                 0.4,
-	SiteConfigIamDefaultRegisterRole:           2,
-	SiteConfigIamRegisterEnabled:               true,
-	SiteConfigSiteMaintenanceEnabled:           false,
-	SiteConfigSiteMaintenanceMessage:           "",
+	SiteConfigTrackerAnnounceInterval:    1800,
+	SiteConfigTrackerAnnounceMinInterval: 900,
+	SiteConfigTrackerUrl:                 "http://127.0.0.1:8000/api/tracker/announce",
+	SiteConfigTrackerBonusT0:             8.0,
+	SiteConfigTrackerBonusN0:             7.0,
+	SiteConfigTrackerBonusB0:             100.0,
+	SiteConfigTrackerBonusL:              300.0,
+	SiteConfigTrackerBonusBase:           0.4,
+	SiteConfigIamDefaultRegisterRole:     2,
+	SiteConfigIamRegisterEnabled:         true,
+	SiteConfigSiteMaintenanceEnabled:     false,
+	SiteConfigSiteMaintenanceMessage:     "",
+	SiteConfigSiteAdvertisements: map[string]any{
+		SiteAdvertisementPlacementHome: map[string]any{
+			"enabled": false,
+			"title":   "",
+			"image":   "",
+			"url":     "",
+		},
+		SiteAdvertisementPlacementCatalogList: map[string]any{
+			"enabled": false,
+			"title":   "",
+			"image":   "",
+			"url":     "",
+		},
+		SiteAdvertisementPlacementForumList: map[string]any{
+			"enabled": false,
+			"title":   "",
+			"image":   "",
+			"url":     "",
+		},
+	},
 	SiteConfigCatalogTorrentSource:             "NextPT",
 	SiteConfigCatalogTorrentDirectPublishLevel: 20,
 	SiteConfigCatalogGlobalPromotion: map[string]any{

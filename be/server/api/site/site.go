@@ -11,6 +11,7 @@ import (
 )
 
 type ISiteV1 interface {
+	AdvertisementList(ctx context.Context, req *v1.AdvertisementListReq) (res *v1.AdvertisementListRes, err error)
 	AnnouncementList(ctx context.Context, req *v1.AnnouncementListReq) (res *v1.AnnouncementListRes, err error)
 	AnnouncementRead(ctx context.Context, req *v1.AnnouncementReadReq) (res *v1.AnnouncementReadRes, err error)
 	MessageList(ctx context.Context, req *v1.MessageListReq) (res *v1.MessageListRes, err error)
