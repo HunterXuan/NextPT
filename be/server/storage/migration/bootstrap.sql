@@ -214,6 +214,7 @@ VALUES
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
     ('site', 'maintenance_enabled', '{"val":false}', NOW(), NOW()),
     ('site', 'maintenance_message', '{"val":""}', NOW(), NOW()),
+    ('site', 'tasks', JSON_OBJECT('val', JSON_ARRAY()), NOW(), NOW()),
     ('site', 'advertisements', JSON_OBJECT('val', JSON_OBJECT(
         'home', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', ''),
         'catalog_list', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', ''),

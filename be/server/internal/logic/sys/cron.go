@@ -72,6 +72,28 @@ func (s *sSysCron) Start(ctx context.Context) {
 		return nil
 	}), "catalog_request_claim_expiry")
 
+	gcron.AddSingleton(ctx, "0 */5 * * * *", s.runWrapper("site_task_settlement", 300, func(ctx context.Context) error {
+		rows, err := service.SiteTaskUsecase().Settle(ctx, 500)
+		if err != nil {
+			return err
+		}
+		if rows > 0 {
+			glog.Infof(ctx, "[Cron] Site task settlement completed. Updated %d task instances.", rows)
+		}
+		return nil
+	}), "site_task_settlement")
+
+	gcron.AddSingleton(ctx, "@daily", s.runWrapper("site_task_history_cleanup", 1800, func(ctx context.Context) error {
+		rows, err := service.SiteTaskUsecase().CleanupHistory(ctx)
+		if err != nil {
+			return err
+		}
+		if rows > 0 {
+			glog.Infof(ctx, "[Cron] Site task history cleanup completed. Removed %d task instances.", rows)
+		}
+		return nil
+	}), "site_task_history_cleanup")
+
 	gcron.AddSingleton(ctx, "@daily", s.runWrapper("iam_rank_sync", 3600, func(ctx context.Context) error {
 		_, err := service.IamRoleUsecase().SyncRanks(ctx)
 		return err
@@ -80,6 +102,17 @@ func (s *sSysCron) Start(ctx context.Context) {
 	gcron.AddSingleton(ctx, "@hourly", s.runWrapper("tracker_bonus_points", 1800, func(ctx context.Context) error {
 		return service.EconomyBonusUsecase().DistributeBonusPoints(ctx)
 	}), "tracker_bonus_points")
+
+	gcron.AddSingleton(ctx, "@daily", s.runWrapper("accounting_period_stat_cleanup", 1800, func(ctx context.Context) error {
+		rows, err := service.AccountingTrafficDomain().CleanupPeriodStats(ctx, gtime.Now())
+		if err != nil {
+			return err
+		}
+		if rows > 0 {
+			glog.Infof(ctx, "[Cron] Accounting period stat cleanup completed. Removed %d period stat records.", rows)
+		}
+		return nil
+	}), "accounting_period_stat_cleanup")
 
 	// 每天清理历史定时任务日志，保留最近 7 天
 	gcron.AddSingleton(ctx, "@daily", s.runWrapper("sys_cron_log_cleanup", 3600, func(ctx context.Context) error {

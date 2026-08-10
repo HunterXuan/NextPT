@@ -164,6 +164,41 @@ func (s *sAccountingTrafficDomain) QueryPeriodStats(ctx context.Context, userId 
 	return list, err
 }
 
+func (s *sAccountingTrafficDomain) CleanupPeriodStats(ctx context.Context, now *gtime.Time) (int, error) {
+	if now == nil {
+		now = gtime.Now()
+	}
+	dailyBefore := gtime.NewFromTime(now.Time.AddDate(0, 0, -consts.AccountingDailyStatRetentionDays))
+	monthlyBefore := gtime.NewFromTime(now.Time.AddDate(0, -consts.AccountingMonthlyStatRetentionMonths, 0))
+	columns := dao.IamUserPeriodStat.Columns()
+	deleted := 0
+
+	rows, err := s.deletePeriodStats(dao.IamUserPeriodStat.Ctx(ctx).
+		Where(columns.PeriodType, consts.AccountingStatPeriodDaily).
+		WhereLT(columns.PeriodKey, dailyBefore.Format("Y-m-d")))
+	if err != nil {
+		return deleted, err
+	}
+	deleted += rows
+
+	rows, err = s.deletePeriodStats(dao.IamUserPeriodStat.Ctx(ctx).
+		Where(columns.PeriodType, consts.AccountingStatPeriodMonthly).
+		WhereLT(columns.PeriodKey, monthlyBefore.Format("Y-m")))
+	if err != nil {
+		return deleted, err
+	}
+	return deleted + rows, nil
+}
+
+func (s *sAccountingTrafficDomain) deletePeriodStats(m *gdb.Model) (int, error) {
+	result, err := m.Delete()
+	if err != nil {
+		return 0, err
+	}
+	rows, err := result.RowsAffected()
+	return int(rows), err
+}
+
 func (s *sAccountingTrafficDomain) formatPeriodKey(periodType int, t *gtime.Time) (string, error) {
 	switch periodType {
 	case consts.AccountingStatPeriodDaily:

@@ -78,6 +78,7 @@ const (
 	SiteConfigSiteMaintenanceEnabled = "site.maintenance_enabled"
 	SiteConfigSiteMaintenanceMessage = "site.maintenance_message"
 	SiteConfigSiteAdvertisements     = "site.advertisements"
+	SiteConfigSiteTasks              = "site.tasks"
 )
 
 const (
@@ -109,6 +110,7 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigIamRegisterEnabled:         true,
 	SiteConfigSiteMaintenanceEnabled:     false,
 	SiteConfigSiteMaintenanceMessage:     "",
+	SiteConfigSiteTasks:                  []map[string]any{},
 	SiteConfigSiteAdvertisements: map[string]any{
 		SiteAdvertisementPlacementHome: map[string]any{
 			"enabled": false,

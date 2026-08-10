@@ -1,6 +1,10 @@
 package model
 
-import "testing"
+import (
+	"testing"
+
+	"server/internal/consts"
+)
 
 func TestSiteMaintenanceDisplayMessage(t *testing.T) {
 	tests := []struct {
@@ -75,5 +79,41 @@ func TestSiteAdvertisementsRejectInvalidConfiguration(t *testing.T) {
 				t.Fatal("Validate() error = nil, want invalid configuration error")
 			}
 		})
+	}
+}
+
+func TestSiteTasksNormalizeAndValidate(t *testing.T) {
+	tasks := SiteTasks{{
+		Key:      "  weekly_seed  ",
+		Enabled:  true,
+		Cycle:    consts.SiteTaskCycleWeekly,
+		NameI18N: map[string]string{"zh-CN": "  每周保种  "},
+		Rule:     SiteTaskRule{Type: consts.SiteTaskRuleTypeSeedDuration, Target: 12},
+		Rewards:  []SiteTaskReward{{Type: consts.SiteTaskRewardTypeBonus, Amount: 100.04}},
+	}}
+
+	tasks = tasks.Normalized()
+	if err := tasks.Validate(); err != nil {
+		t.Fatalf("Validate() error = %v", err)
+	}
+	if tasks[0].Key != "weekly_seed" || tasks[0].NameI18N["zh-CN"] != "每周保种" || tasks[0].Rewards[0].Amount != 100 {
+		t.Fatalf("Normalized() task = %#v", tasks[0])
+	}
+}
+
+func TestSiteTasksRejectInvalidRuleAndDuplicateReward(t *testing.T) {
+	tasks := SiteTasks{{
+		Key:      "bad_task",
+		Cycle:    consts.SiteTaskCycleOnce,
+		NameI18N: map[string]string{"zh-CN": "无效任务"},
+		Rule:     SiteTaskRule{Type: consts.SiteTaskRuleTypeUploaded, Target: 1},
+		Rewards: []SiteTaskReward{
+			{Type: consts.SiteTaskRewardTypeInvite, Amount: 1},
+			{Type: consts.SiteTaskRewardTypeInvite, Amount: 1},
+		},
+	}}
+
+	if err := tasks.Validate(); err == nil {
+		t.Fatal("Validate() error = nil, want invalid task error")
 	}
 }

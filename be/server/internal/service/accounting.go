@@ -33,6 +33,7 @@ type (
 		GetUserStat(ctx context.Context, userId uint64) (*entity.IamUserStat, error)
 		RecordTraffic(ctx context.Context, in accountingin.RecordTrafficInp) error
 		QueryPeriodStats(ctx context.Context, userId uint64, periodType int, startDate *gtime.Time, endDate *gtime.Time) ([]entity.IamUserPeriodStat, error)
+		CleanupPeriodStats(ctx context.Context, now *gtime.Time) (int, error)
 	}
 	IAccountingTrafficUsecase interface {
 		GetMyTraffic(ctx context.Context, actor *model.Actor) (*accountingout.TrafficGetMeOut, error)

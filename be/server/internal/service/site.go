@@ -13,6 +13,7 @@ import (
 	"server/internal/model/out/siteout"
 
 	"github.com/gogf/gf/v2/container/gvar"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type (
@@ -70,6 +71,24 @@ type (
 		AdminList(ctx context.Context, actor *model.Actor, in sitein.AdminMessageListInp) (*siteout.MessageListOut, error)
 		AdminCreate(ctx context.Context, actor *model.Actor, in sitein.AdminMessageCreateInp) (*siteout.MessageCreateOut, error)
 	}
+	ISiteTaskDomain interface {
+		ListUserTasks(ctx context.Context, userId uint64) ([]entity.SiteUserTask, error)
+		CreateUserTask(ctx context.Context, task entity.SiteUserTask) (uint64, error)
+		ListActiveUserTasks(ctx context.Context, afterId uint64, size int) ([]entity.SiteUserTask, error)
+		UpdateProgress(ctx context.Context, id uint64, progress uint64) error
+		Complete(ctx context.Context, id uint64, progress uint64) (bool, error)
+		Expire(ctx context.Context, id uint64) (bool, error)
+		GetUserTask(ctx context.Context, id uint64, userId uint64) (*entity.SiteUserTask, error)
+		Reward(ctx context.Context, id uint64) (bool, error)
+		CleanupHistory(ctx context.Context, before *gtime.Time) (int, error)
+	}
+	ISiteTaskUsecase interface {
+		List(ctx context.Context, actor *model.Actor) (*siteout.TaskListOut, error)
+		Claim(ctx context.Context, actor *model.Actor, in sitein.TaskClaimInp) (*siteout.TaskClaimOut, error)
+		ClaimReward(ctx context.Context, actor *model.Actor, in sitein.UserTaskRewardClaimInp) error
+		Settle(ctx context.Context, size int) (int, error)
+		CleanupHistory(ctx context.Context) (int, error)
+	}
 )
 
 var (
@@ -81,6 +100,8 @@ var (
 	localSiteConfigDomain         ISiteConfigDomain
 	localSiteMessageDomain        ISiteMessageDomain
 	localSiteMessageUsecase       ISiteMessageUsecase
+	localSiteTaskDomain           ISiteTaskDomain
+	localSiteTaskUsecase          ISiteTaskUsecase
 )
 
 func SiteAdvertisementUsecase() ISiteAdvertisementUsecase {
@@ -169,4 +190,26 @@ func SiteMessageUsecase() ISiteMessageUsecase {
 
 func RegisterSiteMessageUsecase(i ISiteMessageUsecase) {
 	localSiteMessageUsecase = i
+}
+
+func SiteTaskDomain() ISiteTaskDomain {
+	if localSiteTaskDomain == nil {
+		panic("implement not found for interface ISiteTaskDomain, forgot register?")
+	}
+	return localSiteTaskDomain
+}
+
+func RegisterSiteTaskDomain(i ISiteTaskDomain) {
+	localSiteTaskDomain = i
+}
+
+func SiteTaskUsecase() ISiteTaskUsecase {
+	if localSiteTaskUsecase == nil {
+		panic("implement not found for interface ISiteTaskUsecase, forgot register?")
+	}
+	return localSiteTaskUsecase
+}
+
+func RegisterSiteTaskUsecase(i ISiteTaskUsecase) {
+	localSiteTaskUsecase = i
 }

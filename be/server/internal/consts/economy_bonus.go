@@ -9,6 +9,7 @@ const (
 	EconomyBonusActionRequestReward    = "request_reward"
 	EconomyBonusActionRequestRefund    = "request_refund"
 	EconomyBonusActionShopPurchase     = "shop_purchase"
+	EconomyBonusActionTaskReward       = "task_reward"
 )
 
 const (
@@ -18,4 +19,5 @@ const (
 	EconomyBonusTargetTypeForumReply     = "forum_reply"
 	EconomyBonusTargetTypeCatalogRequest = "catalog_request"
 	EconomyBonusTargetTypeShopOrder      = "economy_shop_order"
+	EconomyBonusTargetTypeSiteUserTask   = "site_user_task"
 )

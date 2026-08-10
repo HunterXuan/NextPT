@@ -124,6 +124,11 @@ func (s *sSiteConfigDomain) AdminUpdateConfig(ctx context.Context, in sitein.Sit
 	if err != nil {
 		return err
 	}
+	if in.Group+"."+in.Key == consts.SiteConfigSiteTasks {
+		if err := s.validateTaskRoleLevels(ctx, normalizedValue.(model.SiteTasks)); err != nil {
+			return err
+		}
+	}
 	valueJson := s.encodeConfigValue(normalizedValue)
 	_, err = dao.SiteConfig.Ctx(ctx).
 		Data(dao.SiteConfig.Columns().Value, valueJson).
@@ -166,7 +171,21 @@ func (s *sSiteConfigDomain) getConfigValueType(group, key string) consts.SiteCon
 }
 
 func (s *sSiteConfigDomain) normalizeConfigValue(group, key string, value any) (any, error) {
-	if group+"."+key == consts.SiteConfigSiteAdvertisements {
+	fullKey := group + "." + key
+
+	if fullKey == consts.SiteConfigSiteTasks {
+		var tasks model.SiteTasks
+		if err := gvar.New(value).Scan(&tasks); err != nil {
+			return nil, gerror.New("invalid site tasks config")
+		}
+		tasks = tasks.Normalized()
+		if err := tasks.Validate(); err != nil {
+			return nil, err
+		}
+		return tasks, nil
+	}
+
+	if fullKey == consts.SiteConfigSiteAdvertisements {
 		var advertisements model.SiteAdvertisements
 		if err := gvar.New(value).Scan(&advertisements); err != nil {
 			return nil, gerror.New("invalid site advertisements config")
@@ -191,6 +210,28 @@ func (s *sSiteConfigDomain) normalizeConfigValue(group, key string, value any) (
 	default:
 		return value, nil
 	}
+}
+
+func (s *sSiteConfigDomain) validateTaskRoleLevels(ctx context.Context, tasks model.SiteTasks) error {
+	roles, err := service.IamRoleDomain().ListRoles(ctx)
+	if err != nil {
+		return err
+	}
+	normalLevels := make(map[uint64]struct{}, len(roles))
+	for _, role := range roles {
+		if !role.IsStaff {
+			normalLevels[uint64(role.Level)] = struct{}{}
+		}
+	}
+	for _, task := range tasks {
+		if task.Rule.Type != consts.SiteTaskRuleTypeRoleLevelReached {
+			continue
+		}
+		if _, exists := normalLevels[task.Rule.Target]; !exists {
+			return gerror.New("task role level must belong to a non-staff role")
+		}
+	}
+	return nil
 }
 
 func (s *sSiteConfigDomain) normalizeConfigBool(value any) (bool, error) {

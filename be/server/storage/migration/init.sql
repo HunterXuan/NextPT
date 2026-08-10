@@ -175,6 +175,29 @@ CREATE TABLE `iam_user_period_stat` (
     KEY `idx_period` (`period_type`, `period_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户周期统计增量';
 
+-- 用户任务实例（任务定义存于 site.tasks 配置；周期流量与做种进度从 iam_user_period_stat 每日数据结算）
+CREATE TABLE `site_user_task` (
+    `id`               BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id`          BIGINT UNSIGNED NOT NULL,
+    `task_key`         VARCHAR(64)     NOT NULL,
+    `cycle_key`        VARCHAR(16)     NOT NULL COMMENT 'once、YYYY-Www 或 YYYY-MM',
+    `cycle_started_at` DATETIME        NOT NULL,
+    `cycle_ended_at`   DATETIME        NULL,
+    `status`           TINYINT         NOT NULL DEFAULT 0 COMMENT '0=active 1=completed 2=rewarded 3=expired',
+    `progress`         BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    `target`           BIGINT UNSIGNED NOT NULL DEFAULT 1,
+    `task_snapshot`    JSON            NOT NULL COMMENT '领取时的任务定义与奖励快照',
+    `claimed_at`       DATETIME        NULL,
+    `completed_at`     DATETIME        NULL,
+    `rewarded_at`      DATETIME        NULL,
+    `created_at`       DATETIME        NULL,
+    `updated_at`       DATETIME        NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_task_cycle` (`user_id`, `task_key`, `cycle_key`),
+    KEY `idx_user_status` (`user_id`, `status`),
+    KEY `idx_status_cycle` (`status`, `cycle_ended_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户任务实例';
+
 -- ============================================================
 -- 模块: 邀请系统
 -- ============================================================

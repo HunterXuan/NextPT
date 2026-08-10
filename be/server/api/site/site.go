@@ -17,4 +17,7 @@ type ISiteV1 interface {
 	MessageList(ctx context.Context, req *v1.MessageListReq) (res *v1.MessageListRes, err error)
 	MessageRead(ctx context.Context, req *v1.MessageReadReq) (res *v1.MessageReadRes, err error)
 	MessageReadAll(ctx context.Context, req *v1.MessageReadAllReq) (res *v1.MessageReadAllRes, err error)
+	TaskList(ctx context.Context, req *v1.TaskListReq) (res *v1.TaskListRes, err error)
+	TaskClaim(ctx context.Context, req *v1.TaskClaimReq) (res *v1.TaskClaimRes, err error)
+	UserTaskRewardClaim(ctx context.Context, req *v1.UserTaskRewardClaimReq) (res *v1.UserTaskRewardClaimRes, err error)
 }
