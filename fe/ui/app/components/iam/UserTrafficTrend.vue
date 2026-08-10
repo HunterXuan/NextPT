@@ -430,7 +430,8 @@ async function loadTrafficHistory() {
 
   try {
     const data = await accounting.listTrafficHistory({
-      period: trafficHistoryPeriod.value
+      period: trafficHistoryPeriod.value,
+      ...trafficHistoryDateRange()
     })
     trafficHistory.value = data.list || []
   } catch (error) {
@@ -439,6 +440,27 @@ async function loadTrafficHistory() {
   } finally {
     trafficHistoryPending.value = false
   }
+}
+
+function trafficHistoryDateRange() {
+  const endDate = new Date()
+  const startDate = new Date(endDate)
+  if (trafficHistoryPeriod.value === 'monthly') {
+    startDate.setMonth(startDate.getMonth() - 11)
+  } else {
+    startDate.setDate(startDate.getDate() - 29)
+  }
+  return {
+    startDate: formatHistoryDate(startDate),
+    endDate: formatHistoryDate(endDate)
+  }
+}
+
+function formatHistoryDate(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 function setTrafficHistoryPeriod(period: TrafficHistoryPeriod) {
