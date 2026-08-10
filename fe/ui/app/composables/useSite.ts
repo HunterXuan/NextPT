@@ -24,6 +24,49 @@ export interface SiteAdvertisementListOut {
   placements: Partial<Record<SiteAdvertisementPlacement, SiteAdvertisement>>
 }
 
+export type SiteTaskCycle = 'once' | 'weekly' | 'monthly'
+export type SiteTaskRuleType = 'catalog.torrent_published' | 'tracker.seed_duration' | 'tracker.uploaded' | 'iam.role_level_reached'
+export type SiteTaskRewardType = 'bonus' | 'vip' | 'invite'
+
+export interface SiteTaskReward {
+  type: SiteTaskRewardType
+  amount: number
+}
+
+export interface SiteTaskRule {
+  type: SiteTaskRuleType
+  target: number
+}
+
+export interface SiteUserTask {
+  id: number
+  taskKey: string
+  cycleKey: string
+  status: number
+  progress: number
+  target: number
+  cycleStartedAt?: string | null
+  cycleEndedAt?: string | null
+  claimedAt?: string | null
+  completedAt?: string | null
+  rewardedAt?: string | null
+}
+
+export interface SiteTask {
+  key: string
+  enabled: boolean
+  cycle: SiteTaskCycle
+  nameI18n: Record<string, string>
+  descriptionI18n: Record<string, string>
+  rule: SiteTaskRule
+  rewards: SiteTaskReward[]
+  userTask?: SiteUserTask | null
+}
+
+export interface SiteTaskListOut {
+  list: SiteTask[]
+}
+
 export interface SiteAnnouncementListOut {
   list: SiteAnnouncement[]
   total: number
@@ -78,6 +121,18 @@ export function useSite() {
     return await fetchApi<SiteAdvertisementListOut>('/api/site/advertisements')
   }
 
+  async function listTasks() {
+    return await fetchApi<SiteTaskListOut>('/api/site/tasks')
+  }
+
+  async function claimTask(key: string) {
+    return await fetchApi<{ userTask: SiteUserTask }>(`/api/site/tasks/${key}:claim`, { method: 'POST' })
+  }
+
+  async function claimTaskReward(id: number) {
+    await fetchApi(`/api/site/user-tasks/${id}:claimReward`, { method: 'POST' })
+  }
+
   async function listAnnouncements(params: SiteAnnouncementListParams = {}) {
     return await fetchApi<SiteAnnouncementListOut>('/api/site/announcements', {
       query: params
@@ -115,6 +170,9 @@ export function useSite() {
 
   return {
     listAdvertisements,
+    listTasks,
+    claimTask,
+    claimTaskReward,
     listAnnouncements,
     markAnnouncementRead,
     listMessages,

@@ -239,6 +239,7 @@ const appNavSections = computed(() => {
         { label: t('user.nav.activity'), to: '/iam/users/me/activity', icon: 'i-lucide-chart-line', active: isActive('/iam/users/me/activity') },
         { label: t('user.nav.bonus'), to: '/iam/users/me/bonus', icon: 'i-lucide-coins', active: isActive('/iam/users/me/bonus') },
         { label: t('user.shop.title'), to: '/economy/shop', icon: 'i-lucide-store', active: isActive('/economy/shop') },
+        { label: t('site.tasks.title'), to: '/site/tasks', icon: 'i-lucide-list-checks', active: isActive('/site/tasks') },
         { label: t('user.nav.settings'), to: '/iam/users/me/settings', icon: 'i-lucide-settings', active: isActive('/iam/users/me/settings') }
       ]
     }

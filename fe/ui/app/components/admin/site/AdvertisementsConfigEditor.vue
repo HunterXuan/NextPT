@@ -170,7 +170,7 @@ function placementAspect(placement: AdvertisementPlacement) {
 }
 
 function previewClass(placement: AdvertisementPlacement) {
-  return placement === 'home' ? 'aspect-[4/1]' : 'aspect-[8/1]'
+  return placement === 'home' ? 'aspect-[8/1]' : 'aspect-[10/1]'
 }
 
 function clearImageError(placement: AdvertisementPlacement) {

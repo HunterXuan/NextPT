@@ -164,6 +164,14 @@
               :disabled="saving"
             />
 
+            <AdminSiteTasksConfigEditor
+              v-else-if="selectedUsesTaskEditor"
+              ref="tasksEditorRef"
+              v-model="tasksFormValue"
+              :roles="roles"
+              :disabled="saving"
+            />
+
             <label v-else-if="selectedKind === 'boolean'" class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
               <span>
                 <span class="block text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.form.booleanValue') }}</span>
@@ -282,6 +290,10 @@ interface AdvertisementsConfigEditorExpose {
   validate: () => PromotionValidationResult
 }
 
+interface TasksConfigEditorExpose {
+  validate: () => PromotionValidationResult
+}
+
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const { t, locale } = useI18n()
@@ -299,7 +311,7 @@ const groups = computed(() => [
 ])
 
 const configs = ref<AdminSiteConfig[]>([])
-const selectedGroup = ref('tracker')
+const selectedGroup = ref('site')
 const selectedConfig = ref<AdminSiteConfig | null>(null)
 const pending = ref(false)
 const saving = ref(false)
@@ -315,6 +327,8 @@ const shopFormValue = ref<unknown>(null)
 const shopEditorRef = ref<ShopProductsConfigEditorExpose | null>(null)
 const advertisementsFormValue = ref<unknown>(null)
 const advertisementsEditorRef = ref<AdvertisementsConfigEditorExpose | null>(null)
+const tasksFormValue = ref<unknown>(null)
+const tasksEditorRef = ref<TasksConfigEditorExpose | null>(null)
 
 const form = reactive({
   textValue: '',
@@ -332,6 +346,7 @@ const selectedDescription = computed(() => selectedConfig.value ? displayConfigD
 const selectedUsesAdvertisementEditor = computed(() => selectedConfigPath.value === 'site.advertisements')
 const selectedUsesPromotionEditor = computed(() => selectedConfigPath.value === 'catalog.global_promotion' || selectedConfigPath.value === 'catalog.new_torrent_promotion')
 const selectedUsesShopEditor = computed(() => selectedConfigPath.value === 'economy.shop_products')
+const selectedUsesTaskEditor = computed(() => selectedConfigPath.value === 'site.tasks')
 const selectedUpdatedAtLabel = computed(() => {
   if (!selectedConfig.value) return '-'
   return formatDateTime(selectedConfig.value.updatedAt || selectedConfig.value.createdAt, locale.value)
@@ -340,7 +355,7 @@ const isFormDirty = computed(() => Boolean(selectedConfig.value && formSnapshot(
 const canSave = computed(() => Boolean(selectedConfig.value && isFormDirty.value && !saving.value))
 const selectedUsesRoleIdSelect = computed(() => selectedConfigPath.value === 'iam.default_register_role')
 const selectedUsesRoleLevelSelect = computed(() => selectedConfigPath.value === 'catalog.torrent_direct_publish_level')
-const selectedUsesRoleConfig = computed(() => selectedUsesRoleIdSelect.value || selectedUsesRoleLevelSelect.value)
+const selectedUsesRoleConfig = computed(() => selectedUsesRoleIdSelect.value || selectedUsesRoleLevelSelect.value || selectedUsesTaskEditor.value)
 const { roleOptions, roleNameWithLevel } = useAdminIamRoleLevels(roles)
 const selectedRoleId = computed({
   get: () => Number.parseInt(getTextFormValue(), 10) || 0,
@@ -439,6 +454,10 @@ function resetFormFromSelected(updateSnapshot = false) {
     shopFormValue.value = cloneConfigValue(value)
     form.textValue = ''
     form.booleanValue = false
+  } else if (selectedUsesTaskEditor.value) {
+    tasksFormValue.value = cloneConfigValue(value)
+    form.textValue = ''
+    form.booleanValue = false
   } else if (selectedKind.value === 'boolean') {
     form.booleanValue = Boolean(value)
     form.textValue = ''
@@ -520,6 +539,12 @@ function formSnapshot() {
       value: shopFormValue.value
     })
   }
+  if (selectedUsesTaskEditor.value) {
+    return JSON.stringify({
+      kind: 'tasks',
+      value: tasksFormValue.value
+    })
+  }
   return JSON.stringify({
     kind: selectedKind.value,
     textValue: selectedKind.value === 'boolean' ? '' : form.textValue,
@@ -537,6 +562,9 @@ function buildSubmitValue() {
   }
   if (selectedUsesShopEditor.value) {
     return getShopSubmitValue()
+  }
+  if (selectedUsesTaskEditor.value) {
+    return getTasksSubmitValue()
   }
   if (selectedKind.value === 'boolean') return form.booleanValue
   if (selectedKind.value === 'int') return Number.parseInt(getTextFormValue(), 10)
@@ -567,6 +595,15 @@ function validateFormValue() {
   if (selectedUsesShopEditor.value) {
     try {
       getShopSubmitValue()
+      return true
+    } catch (error: unknown) {
+      formError.value = error instanceof Error ? error.message : t('admin.site.configs.form.jsonInvalid')
+      return false
+    }
+  }
+  if (selectedUsesTaskEditor.value) {
+    try {
+      getTasksSubmitValue()
       return true
     } catch (error: unknown) {
       formError.value = error instanceof Error ? error.message : t('admin.site.configs.form.jsonInvalid')
@@ -615,6 +652,14 @@ function getAdvertisementsSubmitValue() {
 
 function getShopSubmitValue() {
   const result = shopEditorRef.value?.validate()
+  if (!result?.valid) {
+    throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
+  }
+  return result.value
+}
+
+function getTasksSubmitValue() {
+  const result = tasksEditorRef.value?.validate()
   if (!result?.valid) {
     throw new Error(result?.message || t('admin.site.configs.form.jsonInvalid'))
   }

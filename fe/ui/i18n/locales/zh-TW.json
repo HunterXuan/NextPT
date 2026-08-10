@@ -101,6 +101,12 @@
         "all": "全部",
         "unread": "未讀"
       }
+    },
+    "tasks": {
+      "title": "站點任務", "empty": "暫無可參與的任務", "claim": "認領", "claimed": "任務已認領", "claimReward": "領取獎勵", "rewarded": "獎勵已領取", "endsAt": "截止 {time}", "hours": "{value} 小時",
+      "status": { "available": "可認領", "disabled": "未開放", "active": "進行中", "completed": "待領獎", "rewarded": "已完成", "expired": "已過期" },
+      "rewards": { "bonus": "{amount} 魔力", "vip": "{amount} 天 VIP", "invite": "{amount} 個邀請碼" },
+      "rules": { "torrents": "發布 {value} 個種子", "seedHours": "完成 {value} 小時做種", "uploaded": "完成 {value} GiB 真實上傳", "roleLevel": "達到目標使用者等級" }
     }
   },
   "home": {
@@ -1708,17 +1714,17 @@
             "home": {
               "label": "首頁橫幅",
               "hint": "公告區之後，種子和論壇動態之前。",
-              "aspect": "建議比例 4:1"
+              "aspect": "建議比例 8:1"
             },
             "catalog_list": {
               "label": "種子列表橫幅",
               "hint": "篩選區之後，種子列表之前。",
-              "aspect": "建議比例 8:1"
+              "aspect": "建議比例 10:1"
             },
             "forum_list": {
               "label": "論壇列表橫幅",
               "hint": "節點切換區之後，主題列表之前。",
-              "aspect": "建議比例 8:1"
+              "aspect": "建議比例 10:1"
             }
           },
           "errors": {
@@ -1761,6 +1767,16 @@
             "trafficAmountGiB": "第 {index} 個流量商品的 GiB 數量必須是大於 0 的整數"
           }
         },
+        "tasks": {
+          "hint": "使用者自行認領任務；進度由定時任務依目前業務資料結算。",
+          "add": "新增任務", "empty": "還沒有任務", "ruleType": "完成條件", "cycle": "週期", "name": "名稱", "description": "說明", "rewards": "完成獎勵", "addReward": "新增獎勵", "rewardType": "獎勵類型",
+          "invalid": "請填寫簡體中文名稱，並為每個任務設定有效獎勵。",
+          "rules": { "torrentPublished": "發布種子", "seedDuration": "真實做種時長", "uploaded": "真實上傳量", "roleLevel": "達到使用者等級" },
+          "cycles": { "once": "僅一次", "weekly": "每週", "monthly": "每月" },
+          "targets": { "torrents": "發布數量", "hours": "做種時長（小時）", "gib": "上傳量（GiB）", "role": "目標等級" },
+          "rewardTypes": { "bonus": "魔力", "vip": "VIP", "invite": "邀請碼" },
+          "amounts": { "bonus": "魔力數", "vip": "天數", "invite": "數量" }
+        },
         "types": {
           "string": "文字",
           "int": "整數",
@@ -1800,7 +1816,8 @@
           "site": {
             "maintenance_enabled": "維護模式",
             "maintenance_message": "維護提示",
-            "advertisements": "廣告橫幅"
+            "advertisements": "廣告橫幅",
+            "tasks": "使用者任務"
           }
         },
         "descriptions": {
@@ -1830,7 +1847,8 @@
           "site": {
             "maintenance_enabled": "啟用後，一般使用者暫時無法存取站點 API；工作人員和 Tracker 服務不受影響。",
             "maintenance_message": "維護期間向使用者展示的提示內容；留空時使用系統預設提示。",
-            "advertisements": "配置首頁、種子列表和論壇列表的橫幅廣告。"
+            "advertisements": "配置首頁、種子列表和論壇列表的橫幅廣告。",
+            "tasks": "設定使用者可認領的任務、週期條件與獎勵。"
           }
         }
       },

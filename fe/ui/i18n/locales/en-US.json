@@ -101,6 +101,12 @@
         "all": "All",
         "unread": "Unread"
       }
+    },
+    "tasks": {
+      "title": "Tasks", "empty": "No tasks are available right now", "claim": "Claim", "claimed": "Task claimed", "claimReward": "Claim reward", "rewarded": "Reward claimed", "endsAt": "Ends {time}", "hours": "{value} hours",
+      "status": { "available": "Available", "disabled": "Unavailable", "active": "In progress", "completed": "Reward ready", "rewarded": "Completed", "expired": "Expired" },
+      "rewards": { "bonus": "{amount} bonus", "vip": "{amount} days VIP", "invite": "{amount} invites" },
+      "rules": { "torrents": "Publish {value} torrents", "seedHours": "Seed for {value} hours", "uploaded": "Upload {value} GiB", "roleLevel": "Reach the target user role" }
     }
   },
   "home": {
@@ -1708,17 +1714,17 @@
             "home": {
               "label": "Home banner",
               "hint": "After announcements and before torrent and forum activity.",
-              "aspect": "Recommended 4:1"
+              "aspect": "Recommended 8:1"
             },
             "catalog_list": {
               "label": "Torrent list banner",
               "hint": "After filters and before the torrent list.",
-              "aspect": "Recommended 8:1"
+              "aspect": "Recommended 10:1"
             },
             "forum_list": {
               "label": "Forum list banner",
               "hint": "After node selection and before the topic list.",
-              "aspect": "Recommended 8:1"
+              "aspect": "Recommended 10:1"
             }
           },
           "errors": {
@@ -1761,6 +1767,16 @@
             "trafficAmountGiB": "Traffic amount for product {index} must be a positive integer"
           }
         },
+        "tasks": {
+          "hint": "Users claim tasks themselves. Scheduled settlement calculates progress from current business data.",
+          "add": "Add task", "empty": "No tasks yet", "ruleType": "Completion condition", "cycle": "Cycle", "name": "Name", "description": "Description", "rewards": "Completion rewards", "addReward": "Add reward", "rewardType": "Reward type",
+          "invalid": "Provide a Simplified Chinese name and valid rewards for every task.",
+          "rules": { "torrentPublished": "Publish torrents", "seedDuration": "Raw seed time", "uploaded": "Raw uploaded traffic", "roleLevel": "Reach user role" },
+          "cycles": { "once": "Once", "weekly": "Weekly", "monthly": "Monthly" },
+          "targets": { "torrents": "Torrent count", "hours": "Seed time (hours)", "gib": "Uploaded traffic (GiB)", "role": "Target role" },
+          "rewardTypes": { "bonus": "Bonus", "vip": "VIP", "invite": "Invite" },
+          "amounts": { "bonus": "Bonus amount", "vip": "Days", "invite": "Amount" }
+        },
         "types": {
           "string": "Text",
           "int": "Integer",
@@ -1800,7 +1816,8 @@
           "site": {
             "maintenance_enabled": "Maintenance mode",
             "maintenance_message": "Maintenance message",
-            "advertisements": "Advertisement banners"
+            "advertisements": "Advertisement banners",
+            "tasks": "User tasks"
           }
         },
         "descriptions": {
@@ -1830,7 +1847,8 @@
           "site": {
             "maintenance_enabled": "When enabled, regular users cannot access site APIs. Staff and Tracker services remain available.",
             "maintenance_message": "Message displayed to users during maintenance. The system default is used when empty.",
-            "advertisements": "Configure banner advertisements for the home, torrent list, and forum list."
+            "advertisements": "Configure banner advertisements for the home, torrent list, and forum list.",
+            "tasks": "Configure claimable user tasks, their cycles, completion conditions, and rewards."
           }
         }
       },

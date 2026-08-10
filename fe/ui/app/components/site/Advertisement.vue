@@ -24,9 +24,9 @@ const item = advertisement(props.placement)
 const imageFailed = ref(false)
 const isExternal = computed(() => /^https?:\/\//i.test(item.value?.url || ''))
 const placementClass = computed(() => ({
-  home: 'aspect-[4/1]',
-  catalog_list: 'aspect-[8/1]',
-  forum_list: 'aspect-[8/1]'
+  home: 'aspect-[8/1]',
+  catalog_list: 'h-24 sm:h-28 xl:h-32',
+  forum_list: 'h-24 sm:h-28 xl:h-32'
 })[props.placement])
 
 onMounted(load)

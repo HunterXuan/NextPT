@@ -8,6 +8,7 @@
 - `SiteAnnouncement` (全站公告)
 - `SiteMessage` (站内消息 / 通知)
 - `SiteAdvertisement` (站点广告位配置)
+- `SiteUserTask` (用户任务实例)
 
 Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全站公告系统职责。全站公告先保持轻量，只负责官方信息发布和用户已读状态；站内消息用于用户个人事件触达，也不与论坛私信或工单混用。
 
@@ -45,7 +46,37 @@ Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全�
   - 已登录用户可读取，不增加额外业务权限。
   - 仅返回启用且经过校验的广告位，关闭广告不会在前台产生占位。
 
-### 3. SiteAnnouncement (全站公告)
+### 3. SiteTask (用户任务)
+
+> **定位**：任务定义保存在 `site.tasks` 站点配置中，用户领取后的状态、周期和奖励快照保存于 `site_user_task`。用户统一主动认领，不存在自动分配模式。
+
+* **任务定义**
+  * 支持 `once`、`weekly`、`monthly` 周期；任务 key 由后台新建时生成，作为不可见稳定标识。
+  * 当前规则类型：`catalog.torrent_published`、`tracker.seed_duration`、`tracker.uploaded`、`iam.role_level_reached`。
+  * 所有任务类型均可由后台选择 `once`、`weekly` 或 `monthly` 周期。Tracker 进度都从 `iam_user_period_stat` 的**每日**行累计：上传使用 `raw_uploaded`，做种使用 `seed_time`。
+  * 等级任务由后台选择非 Staff 角色，配置保存对应角色 level。
+  * 奖励支持魔力、VIP 天数和邀请码数量；任务实例会保存定义与奖励快照，之后修改配置不会改写已领取任务。
+* **用户实例状态**
+  * `active`：已认领，等待定时结算。
+  * `completed`：已达到条件，等待用户领取奖励。
+  * `rewarded`：奖励已在事务中发放，不能再次领取。
+  * `expired`：周/月周期结束仍未完成。
+  * 每日清理超过 60 天的周/月 `rewarded`、`expired` 历史实例；`once`、`active` 与 `completed` 实例不会被清理。
+* **结算方式**
+  * 由定时任务批量扫描 `active` 实例；不向 Catalog、Tracker 或 IAM 业务 usecase 注入任务回调。
+  * 周/月实例保存周期开始和结束时间，结算统一按开始日期到当前日期的每日统计累加。
+  * 每日统计默认保留 60 天，每月统计保留 12 个月；保留期覆盖任务结算所需的常规周期。
+
+#### API
+
+- `GET /api/site/tasks`
+  - 返回当前用户的可认领任务和已领取实例。
+- `POST /api/site/tasks/{key}:claim`
+  - 按任务周期创建实例；唯一索引保证每个周期只能认领一次。
+- `POST /api/site/user-tasks/{id}:claimReward`
+  - 为已完成实例发放奖励并原子更新为 `rewarded`。
+
+### 4. SiteAnnouncement (全站公告)
 
 > **定位**：全站公告是站点向用户发布重要信息的官方通道，包括维护通知、规则变动、活动说明和高优先级提醒。
 
@@ -87,7 +118,7 @@ Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全�
 - `published_at`：发布时间。
 - `created_by` / `updated_by`：后台维护人。
 
-### 4. SiteMessage (站内消息 / 通知中心)
+### 5. SiteMessage (站内消息 / 通知中心)
 
 > **定位**：站内消息是用户个人收件箱，用于系统通知和站内事件提醒。它不是论坛私信，也不是管理工单。
 

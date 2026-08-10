@@ -101,6 +101,12 @@
         "all": "全部",
         "unread": "未读"
       }
+    },
+    "tasks": {
+      "title": "站点任务", "empty": "暂无可参与的任务", "claim": "认领", "claimed": "任务已认领", "claimReward": "领取奖励", "rewarded": "奖励已领取", "endsAt": "截止 {time}", "hours": "{value} 小时",
+      "status": { "available": "可认领", "disabled": "未开放", "active": "进行中", "completed": "待领奖", "rewarded": "已完成", "expired": "已过期" },
+      "rewards": { "bonus": "{amount} 魔力", "vip": "{amount} 天 VIP", "invite": "{amount} 个邀请码" },
+      "rules": { "torrents": "发布 {value} 个种子", "seedHours": "完成 {value} 小时做种", "uploaded": "完成 {value} GiB 真实上传", "roleLevel": "达到目标用户等级" }
     }
   },
   "home": {
@@ -1708,17 +1714,17 @@
             "home": {
               "label": "首页横幅",
               "hint": "公告区之后，种子和论坛动态之前。",
-              "aspect": "推荐比例 4:1"
+              "aspect": "推荐比例 8:1"
             },
             "catalog_list": {
               "label": "种子列表横幅",
               "hint": "筛选区之后，种子列表之前。",
-              "aspect": "推荐比例 8:1"
+              "aspect": "推荐比例 10:1"
             },
             "forum_list": {
               "label": "论坛列表横幅",
               "hint": "节点切换区之后，主题列表之前。",
-              "aspect": "推荐比例 8:1"
+              "aspect": "推荐比例 10:1"
             }
           },
           "errors": {
@@ -1761,6 +1767,16 @@
             "trafficAmountGiB": "第 {index} 个流量商品的 GiB 数量必须是大于 0 的整数"
           }
         },
+        "tasks": {
+          "hint": "用户自行认领任务；进度由定时任务按当前业务数据结算。",
+          "add": "添加任务", "empty": "还没有任务", "ruleType": "完成条件", "cycle": "周期", "name": "名称", "description": "说明", "rewards": "完成奖励", "addReward": "添加奖励", "rewardType": "奖励类型",
+          "invalid": "请填写简体中文名称，并为每个任务设置有效奖励。",
+          "rules": { "torrentPublished": "发布种子", "seedDuration": "真实做种时长", "uploaded": "真实上传量", "roleLevel": "达到用户等级" },
+          "cycles": { "once": "仅一次", "weekly": "每周", "monthly": "每月" },
+          "targets": { "torrents": "发布数量", "hours": "做种时长（小时）", "gib": "上传量（GiB）", "role": "目标等级" },
+          "rewardTypes": { "bonus": "魔力", "vip": "VIP", "invite": "邀请码" },
+          "amounts": { "bonus": "魔力数", "vip": "天数", "invite": "数量" }
+        },
         "types": {
           "string": "文本",
           "int": "整数",
@@ -1800,7 +1816,8 @@
           "site": {
             "maintenance_enabled": "维护模式",
             "maintenance_message": "维护提示",
-            "advertisements": "广告横幅"
+            "advertisements": "广告横幅",
+            "tasks": "用户任务"
           }
         },
         "descriptions": {
@@ -1830,7 +1847,8 @@
           "site": {
             "maintenance_enabled": "启用后，普通用户暂时无法访问站点 API；工作人员和 Tracker 服务不受影响。",
             "maintenance_message": "维护期间向用户展示的提示内容；留空时使用系统默认提示。",
-            "advertisements": "配置首页、种子列表和论坛列表的横幅广告。"
+            "advertisements": "配置首页、种子列表和论坛列表的横幅广告。",
+            "tasks": "配置用户可认领的任务、周期条件与奖励。"
           }
         }
       },
