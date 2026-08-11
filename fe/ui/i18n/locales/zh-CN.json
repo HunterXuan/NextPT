@@ -1802,7 +1802,8 @@
           },
           "iam": {
             "default_register_role": "注册默认角色",
-            "register_enabled": "开放注册"
+            "register_enabled": "开放注册",
+            "invite_bypass_email_pattern": "邀请码免除邮箱白名单"
           },
           "catalog": {
             "torrent_source": "种子 Source 标识",
@@ -1833,7 +1834,8 @@
           },
           "iam": {
             "default_register_role": "新注册用户注册完成后分配的默认角色 ID。",
-            "register_enabled": "是否开放全站注册；关闭后通常只能通过邀请注册。"
+            "register_enabled": "是否开放全站注册；关闭后通常只能通过邀请注册。",
+            "invite_bypass_email_pattern": "仅在关闭开放注册时生效。填写 Go 正则后，匹配的邮箱可免邀请码注册；留空则关闭。"
           },
           "catalog": {
             "torrent_source": "写入私有种子 source 字段的站点标识。",

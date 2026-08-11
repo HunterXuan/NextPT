@@ -1802,7 +1802,8 @@
           },
           "iam": {
             "default_register_role": "註冊預設角色",
-            "register_enabled": "開放註冊"
+            "register_enabled": "開放註冊",
+            "invite_bypass_email_pattern": "免邀請碼電子郵件白名單"
           },
           "catalog": {
             "torrent_source": "種子 Source 標識",
@@ -1833,7 +1834,8 @@
           },
           "iam": {
             "default_register_role": "新註冊使用者註冊完成後分配的預設角色 ID。",
-            "register_enabled": "是否開放全站註冊；關閉後通常只能透過邀請註冊。"
+            "register_enabled": "是否開放全站註冊；關閉後通常只能透過邀請註冊。",
+            "invite_bypass_email_pattern": "僅在關閉開放註冊時生效。填寫 Go 正規表示式後，符合的電子郵件可免邀請碼註冊；留空則關閉。"
           },
           "catalog": {
             "torrent_source": "寫入私有種子 source 欄位的站點標識。",

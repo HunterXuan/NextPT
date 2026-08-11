@@ -1802,7 +1802,8 @@
           },
           "iam": {
             "default_register_role": "Registration default role",
-            "register_enabled": "Open registration"
+            "register_enabled": "Open registration",
+            "invite_bypass_email_pattern": "Invite bypass email whitelist"
           },
           "catalog": {
             "torrent_source": "Torrent source identifier",
@@ -1833,7 +1834,8 @@
           },
           "iam": {
             "default_register_role": "Default role ID assigned after a new user completes registration.",
-            "register_enabled": "Whether open registration is enabled. When disabled, users usually need an invite."
+            "register_enabled": "Whether open registration is enabled. When disabled, users usually need an invite.",
+            "invite_bypass_email_pattern": "Only applies when open registration is disabled. Matching email addresses may register without an invite; leave empty to disable. Uses a Go regular expression."
           },
           "catalog": {
             "torrent_source": "Site identifier written into the private torrent source field.",
