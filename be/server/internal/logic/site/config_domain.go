@@ -3,6 +3,7 @@ package site
 import (
 	"context"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -172,6 +173,16 @@ func (s *sSiteConfigDomain) getConfigValueType(group, key string) consts.SiteCon
 
 func (s *sSiteConfigDomain) normalizeConfigValue(group, key string, value any) (any, error) {
 	fullKey := group + "." + key
+	if fullKey == consts.SiteConfigIamInviteBypassEmailPattern {
+		pattern := strings.TrimSpace(gvar.New(value).String())
+		if pattern == "" {
+			return "", nil
+		}
+		if _, err := regexp.Compile(pattern); err != nil {
+			return nil, gerror.New("invalid invite registration email pattern")
+		}
+		return pattern, nil
+	}
 
 	if fullKey == consts.SiteConfigSiteTasks {
 		var tasks model.SiteTasks

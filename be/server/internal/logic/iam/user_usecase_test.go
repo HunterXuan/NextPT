@@ -146,6 +146,29 @@ func TestTemporaryTokenIsRandomAndDigestible(t *testing.T) {
 	}
 }
 
+func TestInviteBypassEmailPatternMatchesEmail(t *testing.T) {
+	tests := []struct {
+		name    string
+		pattern string
+		email   string
+		want    bool
+	}{
+		{name: "matching address", pattern: `^[^@]+@example\.com$`, email: "member@example.com", want: true},
+		{name: "nonmatching address", pattern: `^[^@]+@example\.com$`, email: "member@other.com", want: false},
+		{name: "empty pattern", pattern: "", email: "member@example.com", want: false},
+		{name: "invalid pattern", pattern: "[invalid", email: "member@example.com", want: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := NewIamUserUsecase().matchesInviteBypassEmailPattern(tt.pattern, tt.email)
+			if got != tt.want {
+				t.Fatalf("pattern match = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 type fakeIamUserDomain struct {
 	service.IIamUserDomain
 

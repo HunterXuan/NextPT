@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"html"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 
@@ -321,7 +322,7 @@ func (s *sIamUserUsecase) Create(ctx context.Context, in iamin.UserCreateInp) (u
 	in.InviteHash = strings.TrimSpace(in.InviteHash)
 
 	registerEnabled := s.getIamConfigCache(ctx, consts.SiteConfigIamRegisterEnabled).Bool()
-	if !registerEnabled && in.InviteHash == "" {
+	if !registerEnabled && in.InviteHash == "" && !s.isInviteBypassEmailWhitelisted(ctx, in.Email) {
 		return 0, gerror.New(gi18n.T(ctx, "iam.invite.register_disabled"))
 	}
 
@@ -1053,6 +1054,19 @@ func (s *sIamUserUsecase) calculateShareRatio(uploaded, downloaded uint64) float
 		return 0
 	}
 	return float64(uploaded) / float64(downloaded)
+}
+
+func (s *sIamUserUsecase) isInviteBypassEmailWhitelisted(ctx context.Context, email string) bool {
+	pattern := strings.TrimSpace(s.getIamConfigCache(ctx, consts.SiteConfigIamInviteBypassEmailPattern).String())
+	return s.matchesInviteBypassEmailPattern(pattern, email)
+}
+
+func (s *sIamUserUsecase) matchesInviteBypassEmailPattern(pattern string, email string) bool {
+	if pattern == "" {
+		return false
+	}
+	re, err := regexp.Compile(pattern)
+	return err == nil && re.MatchString(email)
 }
 
 func (s *sIamUserUsecase) getIamConfigCache(ctx context.Context, key string) *gvar.Var {

@@ -197,7 +197,8 @@ ON DUPLICATE KEY UPDATE
 -- Site config defaults
 -- ------------------------------------------------------------
 
-DELETE FROM `site_config` WHERE `group` = 'iam' AND `key` = 'default_role';
+DELETE FROM `site_config`
+WHERE `group` = 'iam' AND `key` IN ('default_role', 'invite_register_email_pattern');
 
 INSERT INTO `site_config`
     (`group`, `key`, `value`, `created_at`, `updated_at`)
@@ -212,6 +213,7 @@ VALUES
     ('tracker', 'bonus_base', '{"val":0.4}', NOW(), NOW()),
     ('iam', 'default_register_role', '{"val":2}', NOW(), NOW()),
     ('iam', 'register_enabled', '{"val":true}', NOW(), NOW()),
+    ('iam', 'invite_bypass_email_pattern', '{"val":""}', NOW(), NOW()),
     ('site', 'maintenance_enabled', '{"val":false}', NOW(), NOW()),
     ('site', 'maintenance_message', '{"val":""}', NOW(), NOW()),
     ('site', 'tasks', JSON_OBJECT('val', JSON_ARRAY()), NOW(), NOW()),

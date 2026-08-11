@@ -143,6 +143,24 @@ func TestNormalizeConfigValueUsesDefaultType(t *testing.T) {
 			value:   "abc",
 			wantErr: true,
 		},
+		{
+			name:  "invite registration email pattern accepts valid expression",
+			path:  consts.SiteConfigIamInviteBypassEmailPattern,
+			value: " ^[A-Z0-9._%+-]+@example\\.com$ ",
+			want:  "^[A-Z0-9._%+-]+@example\\.com$",
+		},
+		{
+			name:  "invite registration email pattern accepts empty expression",
+			path:  consts.SiteConfigIamInviteBypassEmailPattern,
+			value: "  ",
+			want:  "",
+		},
+		{
+			name:    "invite registration email pattern rejects invalid expression",
+			path:    consts.SiteConfigIamInviteBypassEmailPattern,
+			value:   "[invalid",
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
