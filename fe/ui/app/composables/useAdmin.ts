@@ -527,6 +527,39 @@ export interface AdminModReportListParams {
   targetType?: string
 }
 
+export interface AdminModStaffMessage {
+  id: number
+  senderId: number
+  sender: AdminUserSummary
+  subject: string
+  content: string
+  status: number
+  answeredBy: number
+  answeredByUser: AdminUserSummary
+  answer: string
+  answeredAt?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface AdminModStaffMessageListParams {
+  page?: number
+  size?: number
+  status?: number
+  senderId?: number
+}
+
+export interface AdminModStaffMessageListOut {
+  page: number
+  size: number
+  total: number
+  list: AdminModStaffMessage[]
+}
+
+export interface AdminModStaffMessageUpdateInput {
+  answer?: string
+}
+
 export interface AdminModResolveInput {
   status: number
   comment: string
@@ -898,6 +931,19 @@ export function useAdmin() {
     })
   }
 
+  async function listModStaffMessages(params: AdminModStaffMessageListParams = {}) {
+    return await fetchApi<AdminModStaffMessageListOut>('/api/admin/mod/staff-messages', {
+      query: params
+    })
+  }
+
+  async function updateModStaffMessage(id: number, input: AdminModStaffMessageUpdateInput) {
+    await fetchApi(`/api/admin/mod/staff-messages/${id}`, {
+      method: 'PATCH',
+      body: input
+    })
+  }
+
   async function listModCheaters(params: AdminModCheaterListParams = {}) {
     return await fetchApi<AdminModCheaterListOut>('/api/admin/mod/cheaters', {
       query: params
@@ -1083,6 +1129,8 @@ export function useAdmin() {
     listSysCronLogs,
     listModReports,
     resolveModReport,
+    listModStaffMessages,
+    updateModStaffMessage,
     listModCheaters,
     resolveModCheater,
     listUserMods,

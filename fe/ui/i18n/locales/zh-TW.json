@@ -109,6 +109,26 @@
       "rules": { "torrents": "發布 {value} 個種子", "seedHours": "完成 {value} 小時做種", "uploaded": "完成 {value} GiB 真實上傳", "roleLevel": "達到目標使用者等級" }
     }
   },
+  "mod": {
+    "staffMessages": {
+      "title": "站務信箱",
+      "description": "向管理組留言，並在這裡查看處理結果。",
+      "empty": "暫無寄信記錄",
+      "actions": { "create": "寫信" },
+      "filters": { "all": "全部" },
+      "status": { "pending": "待處理", "processed": "已處理" },
+      "detail": { "message": "訊息內容", "reply": "管理組回覆", "waiting": "訊息已送達，等待管理組處理。", "processedNoReply": "管理組已處理這則訊息。" },
+      "compose": {
+        "title": "給管理組發訊息",
+        "description": "請描述需要反饋的問題，管理組會在後台查看並處理。",
+        "subject": "主題",
+        "content": "內容",
+        "required": "請填寫主題和內容",
+        "submit": "發送",
+        "sent": "訊息已發送"
+      }
+    }
+  },
   "home": {
     "metaTitle": "首頁",
     "metaDescription": "NextPT 私有資源社群，圍繞高品質資源、長期做種和站內交流建立分享秩序。",
@@ -2144,6 +2164,25 @@
         "handledBy": "處理人",
         "handledAt": "處理時間",
         "resolved": "檢舉已處理"
+      },
+      "staffMessages": {
+        "title": "站務信箱",
+        "empty": "暫無管理組訊息",
+        "select": "選擇一則訊息",
+        "selectHint": "從左側選擇訊息後查看內容並進行處理。",
+        "updated": "訊息已更新",
+        "filters": { "senderId": "使用者 ID" },
+        "status": { "all": "全部狀態", "pending": "待處理", "processed": "已處理" },
+        "table": { "message": "訊息", "sender": "寄件人", "status": "狀態", "time": "時間" },
+        "actions": { "process": "標記已處理" },
+        "detail": {
+          "current": "目前訊息",
+          "message": "訊息內容",
+          "existingReply": "目前回覆",
+          "replyOptional": "處理回覆（可選）",
+          "replyPlaceholder": "填寫回覆內容",
+          "processed": "這則訊息已處理。"
+        }
       },
       "cheaters": {
         "title": "作弊記錄",

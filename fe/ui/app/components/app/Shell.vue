@@ -232,6 +232,14 @@ const appNavSections = computed(() => {
       ]
     },
     {
+      key: 'site',
+      label: t('nav.site'),
+      items: [
+        { label: t('site.tasks.title'), to: '/site/tasks', icon: 'i-lucide-list-checks', active: isActive('/site/tasks') },
+        { label: t('mod.staffMessages.title'), to: '/mod/staff-messages', icon: 'i-lucide-mail-question', active: isActive('/mod/staff-messages') }
+      ]
+    },
+    {
       key: 'account',
       label: t('nav.my'),
       items: [
@@ -239,7 +247,6 @@ const appNavSections = computed(() => {
         { label: t('user.nav.activity'), to: '/iam/users/me/activity', icon: 'i-lucide-chart-line', active: isActive('/iam/users/me/activity') },
         { label: t('user.nav.bonus'), to: '/iam/users/me/bonus', icon: 'i-lucide-coins', active: isActive('/iam/users/me/bonus') },
         { label: t('user.shop.title'), to: '/economy/shop', icon: 'i-lucide-store', active: isActive('/economy/shop') },
-        { label: t('site.tasks.title'), to: '/site/tasks', icon: 'i-lucide-list-checks', active: isActive('/site/tasks') },
         { label: t('user.nav.settings'), to: '/iam/users/me/settings', icon: 'i-lucide-settings', active: isActive('/iam/users/me/settings') }
       ]
     }
@@ -298,6 +305,7 @@ const adminNavSections = computed<ShellNavSection[]>(() => compactNavSections([
     label: t('admin.nav.moderation'),
     items: compactNavItems([
       permissionNavItem(Permission.AdminModReportManage, { label: t('admin.mod.reports.title'), to: '/admin/mod/reports', icon: 'i-lucide-flag', active: isActive('/admin/mod/reports') }),
+      permissionNavItem(Permission.AdminModStaffMessage, { label: t('admin.mod.staffMessages.title'), to: '/admin/mod/staff-messages', icon: 'i-lucide-mail-question', active: isActive('/admin/mod/staff-messages') }),
       permissionNavItem(Permission.AdminModCheaterManage, { label: t('admin.mod.cheaters.title'), to: '/admin/mod/cheaters', icon: 'i-lucide-radar', active: isActive('/admin/mod/cheaters') })
     ])
   },
@@ -352,6 +360,8 @@ const routeSpecificLabel = computed(() => {
   if (path === '/forum/topics/create') return t('forum.create.title')
   if (path === '/forum/bookmarks') return t('forum.bookmarks.title')
   if (path === '/site/messages') return t('site.messages.title')
+  if (path === '/mod/staff-messages') return t('mod.staffMessages.title')
+  if (path === '/admin/mod/staff-messages') return t('admin.mod.staffMessages.title')
   if (path === '/iam/users/me/activity') return t('user.nav.activity')
   if (path === '/iam/users/me/bonus') return t('user.nav.bonus')
   if (path === '/economy/shop') return t('user.shop.title')

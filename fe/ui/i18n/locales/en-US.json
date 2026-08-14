@@ -109,6 +109,26 @@
       "rules": { "torrents": "Publish {value} torrents", "seedHours": "Seed for {value} hours", "uploaded": "Upload {value} GiB", "roleLevel": "Reach the target user role" }
     }
   },
+  "mod": {
+    "staffMessages": {
+      "title": "Staff mailbox",
+      "description": "Send a message to staff and follow its handling status here.",
+      "empty": "No messages yet",
+      "actions": { "create": "New message" },
+      "filters": { "all": "All" },
+      "status": { "pending": "Pending", "processed": "Processed" },
+      "detail": { "message": "Message", "reply": "Staff reply", "waiting": "Your message was sent and is waiting for staff review.", "processedNoReply": "Staff processed this message." },
+      "compose": {
+        "title": "Message staff",
+        "description": "Describe the issue or request. Staff will review it from the admin panel.",
+        "subject": "Subject",
+        "content": "Message",
+        "required": "Subject and message are required",
+        "submit": "Send",
+        "sent": "Message sent"
+      }
+    }
+  },
   "home": {
     "metaTitle": "Home",
     "metaDescription": "NextPT is a private resource community built around quality releases, long-term seeding, and member discussion.",
@@ -2144,6 +2164,25 @@
         "handledBy": "Handled by",
         "handledAt": "Handled at",
         "resolved": "Report resolved"
+      },
+      "staffMessages": {
+        "title": "Staff mailbox",
+        "empty": "No staff messages",
+        "select": "Select a message",
+        "selectHint": "Select a message on the left to read and process it.",
+        "updated": "Message updated",
+        "filters": { "senderId": "User ID" },
+        "status": { "all": "All statuses", "pending": "Pending", "processed": "Processed" },
+        "table": { "message": "Message", "sender": "Sender", "status": "Status", "time": "Time" },
+        "actions": { "process": "Mark processed" },
+        "detail": {
+          "current": "Current message",
+          "message": "Message",
+          "existingReply": "Current reply",
+          "replyOptional": "Reply (optional)",
+          "replyPlaceholder": "Write a reply",
+          "processed": "This message has been processed."
+        }
       },
       "cheaters": {
         "title": "Cheater Logs",

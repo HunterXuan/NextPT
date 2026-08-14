@@ -109,6 +109,26 @@
       "rules": { "torrents": "发布 {value} 个种子", "seedHours": "完成 {value} 小时做种", "uploaded": "完成 {value} GiB 真实上传", "roleLevel": "达到目标用户等级" }
     }
   },
+  "mod": {
+    "staffMessages": {
+      "title": "站务信箱",
+      "description": "向管理组留言，并在这里查看处理结果。",
+      "empty": "暂无发信记录",
+      "actions": { "create": "写信" },
+      "filters": { "all": "全部" },
+      "status": { "pending": "待处理", "processed": "已处理" },
+      "detail": { "message": "消息内容", "reply": "管理组回复", "waiting": "消息已送达，等待管理组处理。", "processedNoReply": "管理组已处理这条消息。" },
+      "compose": {
+        "title": "给管理组发消息",
+        "description": "请描述需要反馈的问题，管理组会在后台查看并处理。",
+        "subject": "主题",
+        "content": "内容",
+        "required": "请填写主题和内容",
+        "submit": "发送",
+        "sent": "消息已发送"
+      }
+    }
+  },
   "home": {
     "metaTitle": "首页",
     "metaDescription": "NextPT 私有资源社区，围绕高质量资源、长期做种和站内交流建立分享秩序。",
@@ -2144,6 +2164,25 @@
         "handledBy": "处理人",
         "handledAt": "处理时间",
         "resolved": "举报已处理"
+      },
+      "staffMessages": {
+        "title": "站务信箱",
+        "empty": "暂无管理组消息",
+        "select": "选择一条消息",
+        "selectHint": "从左侧选择消息后查看内容并进行处理。",
+        "updated": "消息已更新",
+        "filters": { "senderId": "用户 ID" },
+        "status": { "all": "全部状态", "pending": "待处理", "processed": "已处理" },
+        "table": { "message": "消息", "sender": "发信人", "status": "状态", "time": "时间" },
+        "actions": { "process": "标记已处理" },
+        "detail": {
+          "current": "当前消息",
+          "message": "消息内容",
+          "existingReply": "当前回复",
+          "replyOptional": "处理回复（可选）",
+          "replyPlaceholder": "填写回复内容",
+          "processed": "这条消息已处理。"
+        }
       },
       "cheaters": {
         "title": "作弊记录",
