@@ -41,6 +41,19 @@ type (
 		List(ctx context.Context, actor *model.Actor, in modin.ListReportsInp) (*modout.ListReportsOut, error)
 		Resolve(ctx context.Context, actor *model.Actor, in modin.ResolveReportInp) error
 	}
+	IModStaffMessageDomain interface {
+		Create(ctx context.Context, message entity.ModStaffMessage) (uint64, error)
+		GetById(ctx context.Context, id uint64) (*entity.ModStaffMessage, error)
+		ListBySender(ctx context.Context, senderId uint64, in modin.StaffMessageListInp) ([]entity.ModStaffMessage, int, error)
+		AdminList(ctx context.Context, in modin.AdminStaffMessageListInp) ([]entity.ModStaffMessage, int, error)
+		Update(ctx context.Context, id uint64, data interface{}) error
+	}
+	IModStaffMessageUsecase interface {
+		Create(ctx context.Context, actor *model.Actor, in modin.StaffMessageCreateInp) (*modout.StaffMessageCreateOut, error)
+		List(ctx context.Context, actor *model.Actor, in modin.StaffMessageListInp) (*modout.StaffMessageListOut, error)
+		AdminList(ctx context.Context, actor *model.Actor, in modin.AdminStaffMessageListInp) (*modout.StaffMessageListOut, error)
+		AdminProcess(ctx context.Context, actor *model.Actor, in modin.StaffMessageProcessInp) error
+	}
 	IModUserDomain interface {
 		Create(ctx context.Context, mod entity.ModUserLog) (uint64, error)
 		GetById(ctx context.Context, id uint64) (*entity.ModUserLog, error)
@@ -58,12 +71,14 @@ type (
 )
 
 var (
-	localModCheaterDomain  IModCheaterDomain
-	localModCheaterUsecase IModCheaterUsecase
-	localModReportDomain   IModReportDomain
-	localModReportUsecase  IModReportUsecase
-	localModUserDomain     IModUserDomain
-	localModUserUsecase    IModUserUsecase
+	localModCheaterDomain       IModCheaterDomain
+	localModCheaterUsecase      IModCheaterUsecase
+	localModReportDomain        IModReportDomain
+	localModReportUsecase       IModReportUsecase
+	localModStaffMessageDomain  IModStaffMessageDomain
+	localModStaffMessageUsecase IModStaffMessageUsecase
+	localModUserDomain          IModUserDomain
+	localModUserUsecase         IModUserUsecase
 )
 
 func ModCheaterDomain() IModCheaterDomain {
@@ -108,6 +123,28 @@ func ModReportUsecase() IModReportUsecase {
 
 func RegisterModReportUsecase(i IModReportUsecase) {
 	localModReportUsecase = i
+}
+
+func ModStaffMessageDomain() IModStaffMessageDomain {
+	if localModStaffMessageDomain == nil {
+		panic("implement not found for interface IModStaffMessageDomain, forgot register?")
+	}
+	return localModStaffMessageDomain
+}
+
+func RegisterModStaffMessageDomain(i IModStaffMessageDomain) {
+	localModStaffMessageDomain = i
+}
+
+func ModStaffMessageUsecase() IModStaffMessageUsecase {
+	if localModStaffMessageUsecase == nil {
+		panic("implement not found for interface IModStaffMessageUsecase, forgot register?")
+	}
+	return localModStaffMessageUsecase
+}
+
+func RegisterModStaffMessageUsecase(i IModStaffMessageUsecase) {
+	localModStaffMessageUsecase = i
 }
 
 func ModUserDomain() IModUserDomain {

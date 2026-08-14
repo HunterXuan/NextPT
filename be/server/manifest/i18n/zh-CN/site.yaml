@@ -60,4 +60,8 @@ site.message.rank.auto_banned.title: 账号已被自动封禁
 site.message.rank.auto_banned.content: 你的账号因不再满足最低等级要求而被自动封禁
 site.message.iam_session.new_device.title: 新设备登录提醒
 site.message.iam_session.new_device.content: "检测到新的登录设备。\n\n设备：%s\nIP：%s\n时间：%s\n\n如果这不是你的操作，请前往账号安全退出该设备并修改密码。"
+site.message.staff_message.processed_with_reply.title: 管理组已回复你的消息
+site.message.staff_message.processed_with_reply.content: "管理组已处理你的消息《%s》，回复如下：\n\n%s"
+site.message.staff_message.processed.title: 管理组消息已处理
+site.message.staff_message.processed.content: "你的管理组消息《%s》已处理。"
 site.maintenance.default_message: 站点正在维护，请稍后再试。

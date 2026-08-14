@@ -25,7 +25,7 @@ type ModStaffMessageColumns struct {
 	SenderId   string //
 	Subject    string //
 	Content    string //
-	Status     string // 0=pending 1=answered 2=closed
+	Status     string // 0=pending 1=processed
 	AnsweredBy string //
 	Answer     string //
 	AnsweredAt string //

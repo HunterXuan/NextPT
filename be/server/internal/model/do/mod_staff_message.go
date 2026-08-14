@@ -16,7 +16,7 @@ type ModStaffMessage struct {
 	SenderId   any         //
 	Subject    any         //
 	Content    any         //
-	Status     any         // 0=pending 1=answered 2=closed
+	Status     any         // 0=pending 1=processed
 	AnsweredBy any         //
 	Answer     any         //
 	AnsweredAt *gtime.Time //

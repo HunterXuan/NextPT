@@ -683,7 +683,7 @@ CREATE TABLE `mod_staff_message` (
     `sender_id`       BIGINT UNSIGNED NOT NULL,
     `subject`         VARCHAR(200)    NOT NULL DEFAULT '',
     `content`         TEXT            NOT NULL,
-    `status`          TINYINT         NOT NULL DEFAULT 0  COMMENT '0=pending 1=answered 2=closed',
+    `status`          TINYINT         NOT NULL DEFAULT 0  COMMENT '0=pending 1=processed',
     `answered_by`     BIGINT UNSIGNED NOT NULL DEFAULT 0,
     `answer`          TEXT            NULL,
     `answered_at`     DATETIME        NULL,
@@ -692,7 +692,7 @@ CREATE TABLE `mod_staff_message` (
     PRIMARY KEY (`id`),
     KEY `idx_sender` (`sender_id`),
     KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理员工单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理组信箱';
 
 -- ============================================================
 -- 模块: 字幕系统

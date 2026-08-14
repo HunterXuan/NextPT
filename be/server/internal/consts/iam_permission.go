@@ -22,6 +22,7 @@ const (
 	IamPermissionAdminModReportManage  = "admin:mod/report:*"
 	IamPermissionAdminModCheaterManage = "admin:mod/cheater:*"
 	IamPermissionAdminModUserManage    = "admin:mod/user:*"
+	IamPermissionAdminModStaffMessage  = "admin:mod/staff-message:*"
 
 	// Site Management
 	IamPermissionAdminSiteConfig       = "admin:site/config:*"
@@ -56,8 +57,10 @@ const (
 	IamPermissionEconomyShopOrderCreate = "create:economy/shop-order:*"
 
 	// Site
-	IamPermissionSiteAnnouncementRead = "read:site/announcement:*"
-	IamPermissionSiteMessageRead      = "read:site/message:*"
+	IamPermissionSiteAnnouncementRead  = "read:site/announcement:*"
+	IamPermissionSiteMessageRead       = "read:site/message:*"
+	IamPermissionModStaffMessageRead   = "read:mod/staff-message:*"
+	IamPermissionModStaffMessageCreate = "create:mod/staff-message:*"
 
 	// Forum
 	IamPermissionForumTopicRead   = "read:forum/topic:*"
@@ -92,6 +95,7 @@ var (
 		IamPermissionAdminModReportManage,
 		IamPermissionAdminModCheaterManage,
 		IamPermissionAdminModUserManage,
+		IamPermissionAdminModStaffMessage,
 
 		IamPermissionAdminSiteConfig,
 		IamPermissionAdminSiteAudit,
@@ -121,6 +125,8 @@ var (
 
 		IamPermissionSiteAnnouncementRead,
 		IamPermissionSiteMessageRead,
+		IamPermissionModStaffMessageRead,
+		IamPermissionModStaffMessageCreate,
 
 		IamPermissionForumTopicRead,
 		IamPermissionForumTopicCreate,

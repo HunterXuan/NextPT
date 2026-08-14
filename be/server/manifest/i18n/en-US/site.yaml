@@ -60,4 +60,8 @@ site.message.rank.auto_banned.title: Account banned automatically
 site.message.rank.auto_banned.content: Your account was banned because it no longer meets the minimum rank requirements
 site.message.iam_session.new_device.title: New device sign-in
 site.message.iam_session.new_device.content: "A new device signed in to your account.\n\nDevice: %s\nIP: %s\nTime: %s\n\nIf this was not you, open Account Security to sign out the device and change your password."
+site.message.staff_message.processed_with_reply.title: Staff processed your message with a reply
+site.message.staff_message.processed_with_reply.content: "Staff processed your message \"%s\" and replied:\n\n%s"
+site.message.staff_message.processed.title: Staff message processed
+site.message.staff_message.processed.content: "Your staff message \"%s\" was processed."
 site.maintenance.default_message: The site is under maintenance. Please try again later.

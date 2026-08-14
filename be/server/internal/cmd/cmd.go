@@ -42,6 +42,7 @@ var (
 				router.Site(ctx, group)
 				router.Tracker(ctx, group)
 				router.Iam(ctx, group)
+				router.Mod(ctx, group)
 			})
 			s.Run()
 			return nil

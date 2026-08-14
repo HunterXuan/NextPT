@@ -60,4 +60,5 @@ const (
 	SiteAuditTargetTypeModReport        = "mod_report"
 	SiteAuditTargetTypeModCheaterLog    = "mod_cheater_log"
 	SiteAuditTargetTypeModUserLog       = "mod_user_log"
+	SiteAuditTargetTypeModStaffMessage  = "mod_staff_message"
 )

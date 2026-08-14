@@ -60,4 +60,8 @@ site.message.rank.auto_banned.title: 帳號已被自動封禁
 site.message.rank.auto_banned.content: 你的帳號因不再符合最低等級要求而被自動封禁
 site.message.iam_session.new_device.title: 新裝置登入提醒
 site.message.iam_session.new_device.content: "偵測到新的登入裝置。\n\n裝置：%s\nIP：%s\n時間：%s\n\n如果這不是你的操作，請前往帳號安全登出該裝置並修改密碼。"
+site.message.staff_message.processed_with_reply.title: 管理組已回覆你的訊息
+site.message.staff_message.processed_with_reply.content: "管理組已處理你的訊息《%s》，回覆如下：\n\n%s"
+site.message.staff_message.processed.title: 管理組訊息已處理
+site.message.staff_message.processed.content: "你的管理組訊息《%s》已處理。"
 site.maintenance.default_message: 站點正在維護，請稍後再試。
