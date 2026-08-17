@@ -16,6 +16,7 @@ type sSysCache struct {
 	prefix                      string
 	channelCacheInvalidate      string
 	prefixSiteConfig            string
+	prefixSiteChat              string
 	prefixTrackerPeers          string
 	prefixTrackerClientWL       string
 	prefixSysCronLock           string
@@ -43,6 +44,7 @@ func NewSysCache() *sSysCache {
 		prefix:                      p,
 		channelCacheInvalidate:      p + "sys:cache:invalidate",
 		prefixSiteConfig:            p + "site:config:",
+		prefixSiteChat:              p + "site:chat:",
 		prefixTrackerPeers:          p + "tracker:peers:torrent:",
 		prefixTrackerClientWL:       p + "tracker:client_wl:compiled",
 		prefixSysCronLock:           p + "sys:cron:lock:",
@@ -128,6 +130,10 @@ func (s *sSysCache) KeySiteConfig(ctx context.Context, group, key string) string
 
 func (s *sSysCache) KeySiteConfigFullPath(ctx context.Context, key string) string {
 	return s.prefixSiteConfig + key
+}
+
+func (s *sSysCache) KeySiteChatRecentMessages(ctx context.Context) string {
+	return s.prefixSiteChat + "recent_messages"
 }
 
 func (s *sSysCache) KeyTrackerPeers(ctx context.Context, torrentId uint64) string {

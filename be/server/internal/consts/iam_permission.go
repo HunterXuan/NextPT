@@ -59,6 +59,8 @@ const (
 	// Site
 	IamPermissionSiteAnnouncementRead  = "read:site/announcement:*"
 	IamPermissionSiteMessageRead       = "read:site/message:*"
+	IamPermissionSiteChatMessageRead   = "read:site/chat-message:*"
+	IamPermissionSiteChatMessageCreate = "create:site/chat-message:*"
 	IamPermissionModStaffMessageRead   = "read:mod/staff-message:*"
 	IamPermissionModStaffMessageCreate = "create:mod/staff-message:*"
 
@@ -125,6 +127,8 @@ var (
 
 		IamPermissionSiteAnnouncementRead,
 		IamPermissionSiteMessageRead,
+		IamPermissionSiteChatMessageRead,
+		IamPermissionSiteChatMessageCreate,
 		IamPermissionModStaffMessageRead,
 		IamPermissionModStaffMessageCreate,
 

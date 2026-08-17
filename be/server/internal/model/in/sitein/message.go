@@ -47,3 +47,11 @@ type MessageNotifyInp struct {
 	TargetType  string
 	TargetId    uint64
 }
+
+type ChatMessageListInp struct {
+	AfterId uint64 `json:"afterId" in:"query"`
+}
+
+type ChatMessageCreateInp struct {
+	Content string `json:"content" v:"required|length:1,1000"`
+}

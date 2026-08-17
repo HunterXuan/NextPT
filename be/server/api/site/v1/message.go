@@ -29,3 +29,21 @@ type MessageReadAllReq struct {
 }
 
 type MessageReadAllRes struct{}
+
+type ChatMessageListReq struct {
+	g.Meta `path:"/chat-messages" method:"get" tags:"Site" summary:"获取聊天室消息" perm:"read:site/chat-message:*"`
+	sitein.ChatMessageListInp
+}
+
+type ChatMessageListRes struct {
+	siteout.ChatMessageListOut
+}
+
+type ChatMessageCreateReq struct {
+	g.Meta `path:"/chat-messages" method:"post" tags:"Site" summary:"发送聊天室消息" perm:"create:site/chat-message:*"`
+	sitein.ChatMessageCreateInp
+}
+
+type ChatMessageCreateRes struct {
+	siteout.ChatMessageItem
+}

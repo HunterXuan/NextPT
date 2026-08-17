@@ -31,3 +31,14 @@ type MessageListOut struct {
 type MessageCreateOut struct {
 	Count int `json:"count"`
 }
+
+type ChatMessageItem struct {
+	Id        uint64               `json:"id"`
+	User      model.IamUserSummary `json:"user"`
+	Content   string               `json:"content"`
+	CreatedAt *gtime.Time          `json:"createdAt"`
+}
+
+type ChatMessageListOut struct {
+	List []*ChatMessageItem `json:"list"`
+}

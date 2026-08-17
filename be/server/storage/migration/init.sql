@@ -677,6 +677,17 @@ CREATE TABLE `site_message` (
     KEY `idx_sender` (`sender_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统通知表';
 
+-- 在线聊天室消息（仅追加）
+CREATE TABLE `site_chat_message` (
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id`         BIGINT UNSIGNED NOT NULL,
+    `content`         VARCHAR(1000)    NOT NULL DEFAULT '',
+    `created_at`      DATETIME         NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_created_at` (`created_at`),
+    KEY `idx_user_created` (`user_id`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='在线聊天室消息';
+
 -- 管理员工单
 CREATE TABLE `mod_staff_message` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

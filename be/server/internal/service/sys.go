@@ -17,6 +17,7 @@ type (
 		PublishInvalidate(ctx context.Context, key string) error
 		KeySiteConfig(ctx context.Context, group string, key string) string
 		KeySiteConfigFullPath(ctx context.Context, key string) string
+		KeySiteChatRecentMessages(ctx context.Context) string
 		KeyTrackerPeers(ctx context.Context, torrentId uint64) string
 		KeyTrackerClientWhitelist(ctx context.Context) string
 		KeySysCronLock(ctx context.Context, lockName string) string

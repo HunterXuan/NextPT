@@ -46,6 +46,14 @@ type (
 	ISiteAuditUsecase interface {
 		Record(ctx context.Context, actor *model.Actor, in sitein.AuditRecordInp)
 	}
+	ISiteChatMessageDomain interface {
+		ListRecent(ctx context.Context, size int) ([]entity.SiteChatMessage, error)
+		Create(ctx context.Context, userId uint64, content string) (*entity.SiteChatMessage, error)
+	}
+	ISiteChatMessageUsecase interface {
+		List(ctx context.Context, actor *model.Actor, in sitein.ChatMessageListInp) (*siteout.ChatMessageListOut, error)
+		Create(ctx context.Context, actor *model.Actor, in sitein.ChatMessageCreateInp) (*siteout.ChatMessageItem, error)
+	}
 	ISiteConfigDomain interface {
 		// Get 获取后台业务配置项，支持传入默认值兜底（直接查库，无缓存）
 		Get(ctx context.Context, group string, key string, def ...any) *gvar.Var
@@ -97,6 +105,8 @@ var (
 	localSiteAnnouncementUsecase  ISiteAnnouncementUsecase
 	localSiteAuditDomain          ISiteAuditDomain
 	localSiteAuditUsecase         ISiteAuditUsecase
+	localSiteChatMessageDomain    ISiteChatMessageDomain
+	localSiteChatMessageUsecase   ISiteChatMessageUsecase
 	localSiteConfigDomain         ISiteConfigDomain
 	localSiteMessageDomain        ISiteMessageDomain
 	localSiteMessageUsecase       ISiteMessageUsecase
@@ -157,6 +167,28 @@ func SiteAuditUsecase() ISiteAuditUsecase {
 
 func RegisterSiteAuditUsecase(i ISiteAuditUsecase) {
 	localSiteAuditUsecase = i
+}
+
+func SiteChatMessageDomain() ISiteChatMessageDomain {
+	if localSiteChatMessageDomain == nil {
+		panic("implement not found for interface ISiteChatMessageDomain, forgot register?")
+	}
+	return localSiteChatMessageDomain
+}
+
+func RegisterSiteChatMessageDomain(i ISiteChatMessageDomain) {
+	localSiteChatMessageDomain = i
+}
+
+func SiteChatMessageUsecase() ISiteChatMessageUsecase {
+	if localSiteChatMessageUsecase == nil {
+		panic("implement not found for interface ISiteChatMessageUsecase, forgot register?")
+	}
+	return localSiteChatMessageUsecase
+}
+
+func RegisterSiteChatMessageUsecase(i ISiteChatMessageUsecase) {
+	localSiteChatMessageUsecase = i
 }
 
 func SiteConfigDomain() ISiteConfigDomain {
