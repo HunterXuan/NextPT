@@ -12,20 +12,23 @@
     </div>
 
     <section v-for="(task, index) in tasks" :key="task.key" class="overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
-      <header class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950/60">
-        <div class="min-w-0">
-          <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ task.nameI18n['zh-CN'] || task.key }}</p>
-          <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ task.key }}</p>
-        </div>
+      <header class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 dark:bg-slate-950/60" :class="isExpanded(task.key) ? 'border-b border-slate-200 dark:border-slate-800' : ''">
+        <button type="button" class="min-w-0 flex-1 text-left" @click="toggleTask(task.key)">
+          <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ taskName(task) }}</p>
+          <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ ruleSummary(task) }} <span class="mx-1 text-slate-300 dark:text-slate-700">·</span> {{ rewardsSummary(task) }}</p>
+        </button>
         <div class="flex items-center gap-2">
           <USwitch v-model="task.enabled" :disabled="disabled" />
+          <UTooltip :text="isExpanded(task.key) ? $t('admin.site.configs.tasks.collapse') : $t('admin.site.configs.tasks.expand')">
+            <UButton type="button" color="neutral" variant="ghost" size="xs" :icon="isExpanded(task.key) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" :disabled="disabled" :aria-label="isExpanded(task.key) ? $t('admin.site.configs.tasks.collapse') : $t('admin.site.configs.tasks.expand')" @click="toggleTask(task.key)" />
+          </UTooltip>
           <UTooltip :text="$t('common.delete')">
             <UButton type="button" color="error" variant="ghost" size="xs" icon="i-lucide-trash-2" :disabled="disabled" :aria-label="$t('common.delete')" @click="removeTask(index)" />
           </UTooltip>
         </div>
       </header>
 
-      <div class="space-y-3 p-3">
+      <div v-show="isExpanded(task.key)" class="space-y-3 p-3">
         <div class="grid gap-3 sm:grid-cols-2">
           <UFormField :label="$t('admin.site.configs.tasks.ruleType')">
             <USelect v-model="task.rule.type" class="w-full" size="lg" :items="ruleTypes" value-key="value" :disabled="disabled" />
@@ -84,6 +87,7 @@
 
 <script setup lang="ts">
 import type { AdminIamRole } from '~/composables/useAdmin'
+import { localizeI18nName } from '~/utils/format'
 
 type RuleType = 'catalog.torrent_published' | 'tracker.seed_duration' | 'tracker.uploaded' | 'iam.role_level_reached'
 type RewardType = 'bonus' | 'vip' | 'invite'
@@ -99,9 +103,10 @@ interface TaskForm {
 
 const props = withDefaults(defineProps<{ modelValue: unknown, roles: AdminIamRole[], disabled?: boolean }>(), { disabled: false })
 const emit = defineEmits<{ 'update:modelValue': [value: unknown] }>()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const locales = ['zh-CN', 'zh-TW', 'en-US']
 const tasks = ref<TaskForm[]>([])
+const expandedTaskKeys = ref<string[]>([])
 let resetting = false
 let lastSnapshot = ''
 const normalRoles = computed(() => props.roles.filter(role => !role.isStaff))
@@ -130,6 +135,7 @@ function reset() {
   if (snapshot === lastSnapshot) return
   resetting = true
   tasks.value = Array.isArray(props.modelValue) ? props.modelValue.filter(isSupportedTask).map(toTask) : []
+  expandedTaskKeys.value = tasks.value.length <= 2 ? tasks.value.map(task => task.key) : []
   nextTick(() => { resetting = false })
 }
 function toTask(value: any): TaskForm {
@@ -144,8 +150,32 @@ function toTask(value: any): TaskForm {
 function isSupportedTask(value: any) {
   return ['catalog.torrent_published', 'tracker.seed_duration', 'tracker.uploaded', 'iam.role_level_reached'].includes(value?.rule?.type)
 }
-function addTask() { tasks.value.push(toTask({})) }
-function removeTask(index: number) { tasks.value.splice(index, 1) }
+function addTask() {
+  const task = toTask({})
+  tasks.value.push(task)
+  expandedTaskKeys.value = [...expandedTaskKeys.value, task.key]
+}
+function removeTask(index: number) {
+  const [task] = tasks.value.splice(index, 1)
+  if (task) expandedTaskKeys.value = expandedTaskKeys.value.filter(key => key !== task.key)
+}
+function isExpanded(key: string) { return expandedTaskKeys.value.includes(key) }
+function toggleTask(key: string) {
+  expandedTaskKeys.value = isExpanded(key)
+    ? expandedTaskKeys.value.filter(item => item !== key)
+    : [...expandedTaskKeys.value, key]
+}
+function taskName(task: TaskForm) { return localizeI18nName(task.nameI18n, locale.value, task.key) }
+function ruleSummary(task: TaskForm) {
+  if (task.rule.type === 'catalog.torrent_published') return t('site.tasks.rules.torrents', { value: task.rule.target })
+  if (task.rule.type === 'tracker.seed_duration') return t('site.tasks.rules.seedHours', { value: task.rule.target })
+  if (task.rule.type === 'tracker.uploaded') return t('site.tasks.rules.uploaded', { value: task.rule.target })
+  const role = normalRoles.value.find(item => item.level === task.rule.target)
+  return role
+    ? t('site.tasks.rules.roleLevel', { value: localizeI18nName(role.nameI18N, locale.value, String(task.rule.target)) })
+    : t('site.tasks.rules.roleLevelFallback')
+}
+function rewardsSummary(task: TaskForm) { return task.rewards.map(reward => t(`site.tasks.rewards.${reward.type}`, { amount: reward.amount })).join(' + ') }
 function targetLabel(type: RuleType) {
   if (type === 'catalog.torrent_published') return t('admin.site.configs.tasks.targets.torrents')
   if (type === 'tracker.seed_duration') return t('admin.site.configs.tasks.targets.hours')

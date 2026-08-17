@@ -106,7 +106,8 @@
       "title": "站点任务", "empty": "暂无可参与的任务", "claim": "认领", "claimed": "任务已认领", "claimReward": "领取奖励", "rewarded": "奖励已领取", "endsAt": "截止 {time}", "hours": "{value} 小时",
       "status": { "available": "可认领", "disabled": "未开放", "active": "进行中", "completed": "待领奖", "rewarded": "已完成", "expired": "已过期" },
       "rewards": { "bonus": "{amount} 魔力", "vip": "{amount} 天 VIP", "invite": "{amount} 个邀请码" },
-      "rules": { "torrents": "发布 {value} 个种子", "seedHours": "完成 {value} 小时做种", "uploaded": "完成 {value} GiB 真实上传", "roleLevel": "达到目标用户等级" }
+      "rules": { "torrents": "发布 {value} 个种子", "seedHours": "完成 {value} 小时做种", "uploaded": "完成 {value} GiB 真实上传", "roleLevel": "达到 {value}", "roleLevelFallback": "达到目标用户等级" },
+      "categories": { "all": "全部", "publishing": "发布", "sharing": "分享", "growth": "成长" }
     }
   },
   "mod": {
@@ -1789,7 +1790,7 @@
         },
         "tasks": {
           "hint": "用户自行认领任务；进度由定时任务按当前业务数据结算。",
-          "add": "添加任务", "empty": "还没有任务", "ruleType": "完成条件", "cycle": "周期", "name": "名称", "description": "说明", "rewards": "完成奖励", "addReward": "添加奖励", "rewardType": "奖励类型",
+          "add": "添加任务", "empty": "还没有任务", "expand": "展开", "collapse": "收起", "ruleType": "完成条件", "cycle": "周期", "name": "名称", "description": "说明", "rewards": "完成奖励", "addReward": "添加奖励", "rewardType": "奖励类型",
           "invalid": "请填写简体中文名称，并为每个任务设置有效奖励。",
           "rules": { "torrentPublished": "发布种子", "seedDuration": "真实做种时长", "uploaded": "真实上传量", "roleLevel": "达到用户等级" },
           "cycles": { "once": "仅一次", "weekly": "每周", "monthly": "每月" },

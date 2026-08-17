@@ -106,7 +106,8 @@
       "title": "Tasks", "empty": "No tasks are available right now", "claim": "Claim", "claimed": "Task claimed", "claimReward": "Claim reward", "rewarded": "Reward claimed", "endsAt": "Ends {time}", "hours": "{value} hours",
       "status": { "available": "Available", "disabled": "Unavailable", "active": "In progress", "completed": "Reward ready", "rewarded": "Completed", "expired": "Expired" },
       "rewards": { "bonus": "{amount} bonus", "vip": "{amount} days VIP", "invite": "{amount} invites" },
-      "rules": { "torrents": "Publish {value} torrents", "seedHours": "Seed for {value} hours", "uploaded": "Upload {value} GiB", "roleLevel": "Reach the target user role" }
+      "rules": { "torrents": "Publish {value} torrents", "seedHours": "Seed for {value} hours", "uploaded": "Upload {value} GiB", "roleLevel": "Reach {value}", "roleLevelFallback": "Reach the target user role" },
+      "categories": { "all": "All", "publishing": "Publishing", "sharing": "Sharing", "growth": "Growth" }
     }
   },
   "mod": {
@@ -1789,7 +1790,7 @@
         },
         "tasks": {
           "hint": "Users claim tasks themselves. Scheduled settlement calculates progress from current business data.",
-          "add": "Add task", "empty": "No tasks yet", "ruleType": "Completion condition", "cycle": "Cycle", "name": "Name", "description": "Description", "rewards": "Completion rewards", "addReward": "Add reward", "rewardType": "Reward type",
+          "add": "Add task", "empty": "No tasks yet", "expand": "Expand", "collapse": "Collapse", "ruleType": "Completion condition", "cycle": "Cycle", "name": "Name", "description": "Description", "rewards": "Completion rewards", "addReward": "Add reward", "rewardType": "Reward type",
           "invalid": "Provide a Simplified Chinese name and valid rewards for every task.",
           "rules": { "torrentPublished": "Publish torrents", "seedDuration": "Raw seed time", "uploaded": "Raw uploaded traffic", "roleLevel": "Reach user role" },
           "cycles": { "once": "Once", "weekly": "Weekly", "monthly": "Monthly" },

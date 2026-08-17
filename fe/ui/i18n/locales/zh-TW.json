@@ -106,7 +106,8 @@
       "title": "站點任務", "empty": "暫無可參與的任務", "claim": "認領", "claimed": "任務已認領", "claimReward": "領取獎勵", "rewarded": "獎勵已領取", "endsAt": "截止 {time}", "hours": "{value} 小時",
       "status": { "available": "可認領", "disabled": "未開放", "active": "進行中", "completed": "待領獎", "rewarded": "已完成", "expired": "已過期" },
       "rewards": { "bonus": "{amount} 魔力", "vip": "{amount} 天 VIP", "invite": "{amount} 個邀請碼" },
-      "rules": { "torrents": "發布 {value} 個種子", "seedHours": "完成 {value} 小時做種", "uploaded": "完成 {value} GiB 真實上傳", "roleLevel": "達到目標使用者等級" }
+      "rules": { "torrents": "發布 {value} 個種子", "seedHours": "完成 {value} 小時做種", "uploaded": "完成 {value} GiB 真實上傳", "roleLevel": "達到 {value}", "roleLevelFallback": "達到目標使用者等級" },
+      "categories": { "all": "全部", "publishing": "發布", "sharing": "分享", "growth": "成長" }
     }
   },
   "mod": {
@@ -1789,7 +1790,7 @@
         },
         "tasks": {
           "hint": "使用者自行認領任務；進度由定時任務依目前業務資料結算。",
-          "add": "新增任務", "empty": "還沒有任務", "ruleType": "完成條件", "cycle": "週期", "name": "名稱", "description": "說明", "rewards": "完成獎勵", "addReward": "新增獎勵", "rewardType": "獎勵類型",
+          "add": "新增任務", "empty": "還沒有任務", "expand": "展開", "collapse": "收起", "ruleType": "完成條件", "cycle": "週期", "name": "名稱", "description": "說明", "rewards": "完成獎勵", "addReward": "新增獎勵", "rewardType": "獎勵類型",
           "invalid": "請填寫簡體中文名稱，並為每個任務設定有效獎勵。",
           "rules": { "torrentPublished": "發布種子", "seedDuration": "真實做種時長", "uploaded": "真實上傳量", "roleLevel": "達到使用者等級" },
           "cycles": { "once": "僅一次", "weekly": "每週", "monthly": "每月" },
