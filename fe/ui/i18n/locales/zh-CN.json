@@ -102,6 +102,14 @@
         "unread": "未读"
       }
     },
+    "chat": {
+      "title": "在线聊天",
+      "description": "站内轻量交流，消息会保留。",
+      "empty": "还没有消息，来聊点什么吧。",
+      "placeholder": "输入消息，按 Enter 发送",
+      "readOnly": "当前账号只能查看聊天内容",
+      "send": "发送"
+    },
     "tasks": {
       "title": "站点任务", "empty": "暂无可参与的任务", "claim": "认领", "claimed": "任务已认领", "claimReward": "领取奖励", "rewarded": "奖励已领取", "endsAt": "截止 {time}", "hours": "{value} 小时",
       "status": { "available": "可认领", "disabled": "未开放", "active": "进行中", "completed": "待领奖", "rewarded": "已完成", "expired": "已过期" },

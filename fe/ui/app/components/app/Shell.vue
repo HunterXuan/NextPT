@@ -83,6 +83,17 @@
               </UButton>
             </UTooltip>
 
+            <UTooltip :text="$t('site.chat.title')" :content="{ side: 'bottom', sideOffset: 8 }" :delay-duration="600">
+              <UButton
+                v-if="props.mode === 'app' && hasPermission(Permission.SiteChatMessageRead)"
+                color="neutral"
+                variant="ghost"
+                icon="i-lucide-message-circle-more"
+                :aria-label="$t('site.chat.title')"
+                @click="chatOpen = true"
+              />
+            </UTooltip>
+
             <UDropdownMenu :items="languageItems" :content="{ align: 'end' }">
               <UButton
                 color="neutral"
@@ -102,6 +113,12 @@
         <slot />
       </main>
     </div>
+
+    <SiteChatPanel
+      v-if="props.mode === 'app' && hasPermission(Permission.SiteChatMessageRead)"
+      v-model:open="chatOpen"
+      :can-send="hasPermission(Permission.SiteChatMessageCreate)"
+    />
   </div>
 </template>
 
@@ -141,6 +158,7 @@ const sidebarCollapsed = ref(false)
 const loggingOut = ref(false)
 const pageRefreshKey = ref(0)
 const unreadMessageCount = ref(0)
+const chatOpen = ref(false)
 const sidebarStorageKey = 'nextpt_sidebar_collapsed'
 
 onMounted(() => {

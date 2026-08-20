@@ -185,6 +185,8 @@ export const Permission = {
   EconomyShopOrderCreate: 'create:economy/shop-order:*',
   SiteAnnouncementRead: 'read:site/announcement:*',
   SiteMessageRead: 'read:site/message:*',
+  SiteChatMessageRead: 'read:site/chat-message:*',
+  SiteChatMessageCreate: 'create:site/chat-message:*',
   ModStaffMessageRead: 'read:mod/staff-message:*',
   ModStaffMessageCreate: 'create:mod/staff-message:*',
   ForumTopicRead: 'read:forum/topic:*',

@@ -102,6 +102,14 @@
         "unread": "Unread"
       }
     },
+    "chat": {
+      "title": "Chat",
+      "description": "A lightweight on-site conversation with retained messages.",
+      "empty": "No messages yet. Start the conversation.",
+      "placeholder": "Write a message, then press Enter to send",
+      "readOnly": "This account can view chat but cannot send messages",
+      "send": "Send"
+    },
     "tasks": {
       "title": "Tasks", "empty": "No tasks are available right now", "claim": "Claim", "claimed": "Task claimed", "claimReward": "Claim reward", "rewarded": "Reward claimed", "endsAt": "Ends {time}", "hours": "{value} hours",
       "status": { "available": "Available", "disabled": "Unavailable", "active": "In progress", "completed": "Reward ready", "rewarded": "Completed", "expired": "Expired" },

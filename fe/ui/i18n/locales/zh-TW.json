@@ -102,6 +102,14 @@
         "unread": "未讀"
       }
     },
+    "chat": {
+      "title": "線上聊天",
+      "description": "站內輕量交流，訊息會保留。",
+      "empty": "還沒有訊息，來聊點什麼吧。",
+      "placeholder": "輸入訊息，按 Enter 發送",
+      "readOnly": "目前帳號只能查看聊天內容",
+      "send": "發送"
+    },
     "tasks": {
       "title": "站點任務", "empty": "暫無可參與的任務", "claim": "認領", "claimed": "任務已認領", "claimReward": "領取獎勵", "rewarded": "獎勵已領取", "endsAt": "截止 {time}", "hours": "{value} 小時",
       "status": { "available": "可認領", "disabled": "未開放", "active": "進行中", "completed": "待領獎", "rewarded": "已完成", "expired": "已過期" },

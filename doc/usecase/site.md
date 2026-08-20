@@ -7,6 +7,7 @@
 - `SiteAudit` (管理员及高危系统操作审计)
 - `SiteAnnouncement` (全站公告)
 - `SiteMessage` (站内消息 / 通知)
+- `SiteChatMessage` (在线聊天室消息)
 - `SiteAdvertisement` (站点广告位配置)
 - `SiteUserTask` (用户任务实例)
 
@@ -160,3 +161,28 @@ Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全�
 - `content`：通知正文。
 - `target_type` / `target_id`：关联资源信息，由前端根据资源类型自行拼接跳转地址。
 - `is_read` / `read_at`：已读状态。
+
+### 6. SiteChatMessage (在线聊天室)
+
+> **定位**：在线聊天室是登录用户之间的轻量公共交流区，不替代论坛讨论、站内消息或站务信箱。首版使用短周期轮询，不建立 WebSocket 长连接；消息只追加，不提供删除、编辑或专门管理能力。
+
+* **访问与发送**
+  * 所有具备 `read:site/chat-message:*` 的用户可以读取最近消息；`create:site/chat-message:*` 控制发言资格。
+  * Bootstrap 中 `Peasant` 只读，`User` 及以上可发言；不新增聊天室专用角色。
+  * 每条消息限制 1-1000 个字符，服务端以纯文本保存和展示。
+* **轮询**
+  * 所有读取都使用 `afterId`，每次最多返回最近 200 条缓存消息：省略或传 `0` 时返回整个缓存窗口；传入具体 ID 时从窗口中筛选该 ID 之后的消息。
+  * 聊天室展开时每 8 秒携带当前最新消息 ID 拉取新消息。
+  * 发送成功后直接使用接口返回的完整消息更新本地列表，不等待下一轮轮询。
+* **留存与管理**
+  * 消息不提供删除接口，不在后台建立独立删除或编辑能力。
+  * 聊天内容不采用 Markdown/BBCode，避免公共实时区的富文本攻击面和阅读噪音。
+
+#### API
+
+- `GET /api/site/chat-messages`
+  - 权限：`read:site/chat-message:*`
+  - 使用 `afterId` 统一查询，最多返回 200 条消息。
+- `POST /api/site/chat-messages`
+  - 权限：`create:site/chat-message:*`
+  - 创建一条聊天室消息，并返回带发送者公开信息的完整消息项。

@@ -116,6 +116,21 @@ export interface SiteMessageListOut {
   size: number
 }
 
+export interface SiteChatMessage {
+  id: number
+  user: {
+    id: number
+    username: string
+    avatar: string
+  }
+  content: string
+  createdAt?: string | null
+}
+
+export interface SiteChatMessageListOut {
+  list: SiteChatMessage[]
+}
+
 export function useSite() {
   async function listAdvertisements() {
     return await fetchApi<SiteAdvertisementListOut>('/api/site/advertisements')
@@ -168,6 +183,19 @@ export function useSite() {
     })
   }
 
+  async function listChatMessages(afterId?: number) {
+    return await fetchApi<SiteChatMessageListOut>('/api/site/chat-messages', {
+      query: afterId ? { afterId } : undefined
+    })
+  }
+
+  async function createChatMessage(content: string) {
+    return await fetchApi<SiteChatMessage>('/api/site/chat-messages', {
+      method: 'POST',
+      body: { content }
+    })
+  }
+
   return {
     listAdvertisements,
     listTasks,
@@ -178,6 +206,8 @@ export function useSite() {
     listMessages,
     unreadMessageCount,
     markMessageRead,
-    markAllMessagesRead
+    markAllMessagesRead,
+    listChatMessages,
+    createChatMessage
   }
 }
