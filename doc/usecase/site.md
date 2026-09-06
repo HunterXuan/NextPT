@@ -34,7 +34,7 @@ Forum 域中的公告节点只用于社区讨论和长期沉淀，不承担全�
 > **定位**：站点广告使用 `site.advertisements` 配置保存，不增加业务表。首版固定三个广告位：`home`、`catalog_list` 与 `forum_list`，每个位点最多展示一张横幅。
 
 * **配置与校验**
-  * 每个广告位包含 `enabled`、`title`、`image` 和 `url`。
+  * 每个广告位包含 `enabled`、`title`、`image`、`url` 和 `aspectRatio`；比例使用 `宽:高` 格式。首页默认建议 `8:1`，种子列表与论坛列表默认建议 `10:1`，管理员可按素材实际比例修改。
   * 启用广告时，标题必填且不超过 120 字；图片和跳转地址只允许站内绝对路径或 `http(s)` URL。
   * 后台配置页使用可视化表单和实时预览，不提供裸 JSON 编辑入口。
 * **SiteAdvertisementUsecase**

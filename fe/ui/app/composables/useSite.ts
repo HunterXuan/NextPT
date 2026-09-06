@@ -18,6 +18,7 @@ export interface SiteAdvertisement {
   title: string
   image: string
   url: string
+  aspectRatio: string
 }
 
 export interface SiteAdvertisementListOut {

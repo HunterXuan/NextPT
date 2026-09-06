@@ -1736,30 +1736,30 @@
           "hint": "Each placement shows one banner. Disabled placements leave no empty space on the site.",
           "title": "Advertisement title",
           "image": "Image URL",
+          "aspectRatio": "Display ratio",
+          "aspectRatioHint": "Recommended: {ratio}. Adjust it to match the source image.",
           "url": "Destination URL",
           "preview": "Preview",
           "imagePlaceholder": "Enter an image URL to preview it here",
           "placements": {
             "home": {
               "label": "Home banner",
-              "hint": "After announcements and before torrent and forum activity.",
-              "aspect": "Recommended 8:1"
+              "hint": "After announcements and before torrent and forum activity."
             },
             "catalog_list": {
               "label": "Torrent list banner",
-              "hint": "After filters and before the torrent list.",
-              "aspect": "Recommended 10:1"
+              "hint": "After filters and before the torrent list."
             },
             "forum_list": {
               "label": "Forum list banner",
-              "hint": "After node selection and before the topic list.",
-              "aspect": "Recommended 10:1"
+              "hint": "After node selection and before the topic list."
             }
           },
           "errors": {
             "title": "{placement} needs a title of no more than 120 characters",
             "image": "{placement} needs an internal path or an http(s) image URL",
-            "url": "{placement} needs an internal path or an http(s) destination URL"
+            "url": "{placement} needs an internal path or an http(s) destination URL",
+            "aspectRatio": "{placement} display ratio must use width:height, for example 8:1"
           }
         },
         "shop": {

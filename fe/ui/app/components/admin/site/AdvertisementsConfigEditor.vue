@@ -8,12 +8,7 @@
           <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ placementLabel(advertisement.placement) }}</h3>
           <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ placementHint(advertisement.placement) }}</p>
         </div>
-        <div class="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
-          <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
-            {{ placementAspect(advertisement.placement) }}
-          </span>
-          <USwitch v-model="advertisement.enabled" :disabled="disabled" />
-        </div>
+        <USwitch v-model="advertisement.enabled" class="shrink-0" :disabled="disabled" />
       </header>
 
       <div class="space-y-3 p-3">
@@ -24,6 +19,9 @@
           <UFormField :label="$t('admin.site.configs.advertisements.image')">
             <UInput v-model="advertisement.image" class="w-full" size="lg" type="url" :disabled="disabled" @update:model-value="clearImageError(advertisement.placement)" />
           </UFormField>
+          <UFormField :label="$t('admin.site.configs.advertisements.aspectRatio')" :description="$t('admin.site.configs.advertisements.aspectRatioHint', { ratio: defaultAspectRatio(advertisement.placement) })">
+            <UInput v-model="advertisement.aspectRatio" class="w-full" size="lg" :placeholder="defaultAspectRatio(advertisement.placement)" :disabled="disabled" />
+          </UFormField>
           <UFormField :label="$t('admin.site.configs.advertisements.url')">
             <UInput v-model="advertisement.url" class="w-full" size="lg" type="url" :disabled="disabled" />
           </UFormField>
@@ -31,7 +29,7 @@
 
         <div>
           <p class="mb-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.advertisements.preview') }}</p>
-          <div class="relative overflow-hidden rounded-md border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-950" :class="previewClass(advertisement.placement)">
+          <div class="relative overflow-hidden rounded-md border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-950" :style="previewStyle(advertisement.aspectRatio, advertisement.placement)">
             <img
               v-if="advertisement.image && !imageErrors[advertisement.placement]"
               :src="advertisement.image"
@@ -58,6 +56,7 @@ interface AdvertisementForm {
   enabled: boolean
   title: string
   image: string
+  aspectRatio: string
   url: string
 }
 
@@ -68,6 +67,11 @@ interface ValidationResult {
 }
 
 const advertisementPlacements: AdvertisementPlacement[] = ['home', 'catalog_list', 'forum_list']
+const defaultAspectRatios: Record<AdvertisementPlacement, string> = {
+  home: '8:1',
+  catalog_list: '10:1',
+  forum_list: '10:1'
+}
 
 const props = withDefaults(defineProps<{
   modelValue: unknown
@@ -106,6 +110,7 @@ function resetFromModelValue() {
       enabled: Boolean(item.enabled),
       title: String(item.title || '').trim(),
       image: String(item.image || '').trim(),
+      aspectRatio: normalizedAspectRatio(item.aspectRatio, placement),
       url: String(item.url || '').trim()
     }
   })
@@ -125,6 +130,7 @@ function buildValue() {
     enabled: advertisement.enabled,
     title: advertisement.title.trim(),
     image: advertisement.image.trim(),
+    aspectRatio: normalizedAspectRatio(advertisement.aspectRatio, advertisement.placement),
     url: advertisement.url.trim()
   }]))
 }
@@ -132,8 +138,11 @@ function buildValue() {
 function validate(): ValidationResult {
   const value = buildValue()
   for (const advertisement of advertisements.value) {
-    if (!advertisement.enabled) continue
     const placement = placementLabel(advertisement.placement)
+    if (!isValidAspectRatio(normalizedAspectRatio(advertisement.aspectRatio, advertisement.placement))) {
+      return { valid: false, message: t('admin.site.configs.advertisements.errors.aspectRatio', { placement }) }
+    }
+    if (!advertisement.enabled) continue
     if (!advertisement.title.trim() || advertisement.title.trim().length > 120) {
       return { valid: false, message: t('admin.site.configs.advertisements.errors.title', { placement }) }
     }
@@ -165,12 +174,24 @@ function placementHint(placement: AdvertisementPlacement) {
   return t(`admin.site.configs.advertisements.placements.${placement}.hint`)
 }
 
-function placementAspect(placement: AdvertisementPlacement) {
-  return t(`admin.site.configs.advertisements.placements.${placement}.aspect`)
+function defaultAspectRatio(placement: AdvertisementPlacement) {
+  return defaultAspectRatios[placement]
 }
 
-function previewClass(placement: AdvertisementPlacement) {
-  return placement === 'home' ? 'aspect-[8/1]' : 'aspect-[10/1]'
+function normalizedAspectRatio(value: unknown, placement: AdvertisementPlacement) {
+  const matched = String(value || '').match(/^\s*(\d{1,3})\s*:\s*(\d{1,3})\s*$/)
+  if (!matched) return String(value || '').trim() || defaultAspectRatio(placement)
+  return `${matched[1]}:${matched[2]}`
+}
+
+function isValidAspectRatio(value: string) {
+  const matched = value.match(/^(\d{1,3}):(\d{1,3})$/)
+  return Boolean(matched && Number(matched[1]) > 0 && Number(matched[2]) > 0)
+}
+
+function previewStyle(value: string, placement: AdvertisementPlacement) {
+  const ratio = normalizedAspectRatio(value, placement).replace(':', ' / ')
+  return { aspectRatio: ratio }
 }
 
 function clearImageError(placement: AdvertisementPlacement) {

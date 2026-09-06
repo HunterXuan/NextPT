@@ -1736,30 +1736,30 @@
           "hint": "每个广告位只展示一张横幅；关闭后前台不会保留空白区域。",
           "title": "广告标题",
           "image": "图片地址",
+          "aspectRatio": "展示比例",
+          "aspectRatioHint": "建议使用 {ratio}，可按素材实际比例调整。",
           "url": "跳转地址",
           "preview": "展示预览",
           "imagePlaceholder": "输入图片地址后在此预览",
           "placements": {
             "home": {
               "label": "首页横幅",
-              "hint": "公告区之后，种子和论坛动态之前。",
-              "aspect": "推荐比例 8:1"
+              "hint": "公告区之后，种子和论坛动态之前。"
             },
             "catalog_list": {
               "label": "种子列表横幅",
-              "hint": "筛选区之后，种子列表之前。",
-              "aspect": "推荐比例 10:1"
+              "hint": "筛选区之后，种子列表之前。"
             },
             "forum_list": {
               "label": "论坛列表横幅",
-              "hint": "节点切换区之后，主题列表之前。",
-              "aspect": "推荐比例 10:1"
+              "hint": "节点切换区之后，主题列表之前。"
             }
           },
           "errors": {
             "title": "{placement}需要填写不超过 120 字的广告标题",
             "image": "{placement}需要填写站内路径或 http(s) 图片地址",
-            "url": "{placement}需要填写站内路径或 http(s) 跳转地址"
+            "url": "{placement}需要填写站内路径或 http(s) 跳转地址",
+            "aspectRatio": "{placement}的展示比例应为宽:高格式，例如 8:1"
           }
         },
         "shop": {
