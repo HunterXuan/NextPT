@@ -225,9 +225,9 @@ VALUES
     ('site', 'maintenance_message', '{"val":""}', NOW(), NOW()),
     ('site', 'tasks', JSON_OBJECT('val', JSON_ARRAY()), NOW(), NOW()),
     ('site', 'advertisements', JSON_OBJECT('val', JSON_OBJECT(
-        'home', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', ''),
-        'catalog_list', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', ''),
-        'forum_list', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', '')
+        'home', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', '', 'aspectRatio', '8:1'),
+        'catalog_list', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', '', 'aspectRatio', '10:1'),
+        'forum_list', JSON_OBJECT('enabled', false, 'title', '', 'image', '', 'url', '', 'aspectRatio', '10:1')
     )), NOW(), NOW()),
     ('economy', 'shop_products', JSON_OBJECT('val', JSON_ARRAY(
         JSON_OBJECT(

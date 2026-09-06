@@ -30,10 +30,11 @@ func TestSiteMaintenanceDisplayMessage(t *testing.T) {
 func TestSiteAdvertisementsNormalizeAndValidate(t *testing.T) {
 	advertisements := SiteAdvertisements{
 		"home": {
-			Enabled: true,
-			Title:   "  Partner  ",
-			Image:   " https://cdn.example.com/banner.webp ",
-			URL:     " /catalog/torrents ",
+			Enabled:     true,
+			Title:       "  Partner  ",
+			Image:       " https://cdn.example.com/banner.webp ",
+			URL:         " /catalog/torrents ",
+			AspectRatio: " 16 : 9 ",
 		},
 	}
 
@@ -41,7 +42,7 @@ func TestSiteAdvertisementsNormalizeAndValidate(t *testing.T) {
 	if err := advertisements.Validate(); err != nil {
 		t.Fatalf("Validate() error = %v", err)
 	}
-	if got := advertisements["home"]; got.Title != "Partner" || got.Image != "https://cdn.example.com/banner.webp" || got.URL != "/catalog/torrents" {
+	if got := advertisements["home"]; got.Title != "Partner" || got.Image != "https://cdn.example.com/banner.webp" || got.URL != "/catalog/torrents" || got.AspectRatio != "16:9" {
 		t.Fatalf("Normalized() home = %#v", got)
 	}
 	if len(advertisements.Enabled()) != 1 {
@@ -70,6 +71,10 @@ func TestSiteAdvertisementsRejectInvalidConfiguration(t *testing.T) {
 				Image:   "https://cdn.example.com/banner.webp",
 				URL:     "javascript:alert(1)",
 			}},
+		},
+		{
+			name: "invalid aspect ratio",
+			ads:  SiteAdvertisements{"home": {AspectRatio: "wide"}},
 		},
 	}
 

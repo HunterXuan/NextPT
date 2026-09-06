@@ -96,6 +96,17 @@ var SiteAdvertisementPlacements = []string{
 	SiteAdvertisementPlacementForumList,
 }
 
+func SiteAdvertisementDefaultAspectRatio(placement string) string {
+	switch placement {
+	case SiteAdvertisementPlacementHome:
+		return "8:1"
+	case SiteAdvertisementPlacementCatalogList, SiteAdvertisementPlacementForumList:
+		return "10:1"
+	default:
+		return ""
+	}
+}
+
 // ==============================================================================
 // 后台业务配置的统一默认值字典
 // 供 AdminConfig.GetByPath 取不到数据库值时兜底使用
@@ -117,22 +128,25 @@ var SiteConfigDefaults = map[string]any{
 	SiteConfigSiteTasks:                   []map[string]any{},
 	SiteConfigSiteAdvertisements: map[string]any{
 		SiteAdvertisementPlacementHome: map[string]any{
-			"enabled": false,
-			"title":   "",
-			"image":   "",
-			"url":     "",
+			"enabled":     false,
+			"title":       "",
+			"image":       "",
+			"url":         "",
+			"aspectRatio": SiteAdvertisementDefaultAspectRatio(SiteAdvertisementPlacementHome),
 		},
 		SiteAdvertisementPlacementCatalogList: map[string]any{
-			"enabled": false,
-			"title":   "",
-			"image":   "",
-			"url":     "",
+			"enabled":     false,
+			"title":       "",
+			"image":       "",
+			"url":         "",
+			"aspectRatio": SiteAdvertisementDefaultAspectRatio(SiteAdvertisementPlacementCatalogList),
 		},
 		SiteAdvertisementPlacementForumList: map[string]any{
-			"enabled": false,
-			"title":   "",
-			"image":   "",
-			"url":     "",
+			"enabled":     false,
+			"title":       "",
+			"image":       "",
+			"url":         "",
+			"aspectRatio": SiteAdvertisementDefaultAspectRatio(SiteAdvertisementPlacementForumList),
 		},
 	},
 	SiteConfigCatalogTorrentSource:             "NextPT",

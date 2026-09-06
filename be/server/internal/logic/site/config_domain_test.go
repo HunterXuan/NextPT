@@ -204,6 +204,9 @@ func TestNormalizeSiteAdvertisements(t *testing.T) {
 	if advertisements[consts.SiteAdvertisementPlacementHome].Title != "Partner" {
 		t.Fatalf("home title = %q, want Partner", advertisements[consts.SiteAdvertisementPlacementHome].Title)
 	}
+	if advertisements[consts.SiteAdvertisementPlacementHome].AspectRatio != "8:1" {
+		t.Fatalf("home aspect ratio = %q, want 8:1", advertisements[consts.SiteAdvertisementPlacementHome].AspectRatio)
+	}
 	if _, ok := advertisements[consts.SiteAdvertisementPlacementForumList]; !ok {
 		t.Fatal("normalized advertisements should include all known placements")
 	}

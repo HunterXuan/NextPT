@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
@@ -36,10 +37,11 @@ func (e *SiteMaintenanceError) Error() string {
 }
 
 type SiteAdvertisementConfig struct {
-	Enabled bool   `json:"enabled"`
-	Title   string `json:"title"`
-	Image   string `json:"image"`
-	URL     string `json:"url"`
+	Enabled     bool   `json:"enabled"`
+	Title       string `json:"title"`
+	Image       string `json:"image"`
+	URL         string `json:"url"`
+	AspectRatio string `json:"aspectRatio"`
 }
 
 type SiteAdvertisements map[string]SiteAdvertisementConfig
@@ -51,6 +53,10 @@ func (ads SiteAdvertisements) Normalized() SiteAdvertisements {
 		advertisement.Title = strings.TrimSpace(advertisement.Title)
 		advertisement.Image = strings.TrimSpace(advertisement.Image)
 		advertisement.URL = strings.TrimSpace(advertisement.URL)
+		advertisement.AspectRatio = normalizeSiteAdvertisementAspectRatio(advertisement.AspectRatio)
+		if advertisement.AspectRatio == "" {
+			advertisement.AspectRatio = consts.SiteAdvertisementDefaultAspectRatio(placement)
+		}
 		result[placement] = advertisement
 	}
 	return result
@@ -75,6 +81,9 @@ func (ads SiteAdvertisements) Validate() error {
 
 	for _, placement := range consts.SiteAdvertisementPlacements {
 		advertisement := ads[placement]
+		if advertisement.AspectRatio != "" && !isSiteAdvertisementAspectRatio(normalizeSiteAdvertisementAspectRatio(advertisement.AspectRatio)) {
+			return gerror.New("advertisement aspect ratio must use width:height format")
+		}
 		if !advertisement.Enabled {
 			continue
 		}
@@ -89,6 +98,24 @@ func (ads SiteAdvertisements) Validate() error {
 		}
 	}
 	return nil
+}
+
+func normalizeSiteAdvertisementAspectRatio(value string) string {
+	parts := strings.Split(strings.TrimSpace(value), ":")
+	if len(parts) != 2 {
+		return strings.TrimSpace(value)
+	}
+	return strings.TrimSpace(parts[0]) + ":" + strings.TrimSpace(parts[1])
+}
+
+func isSiteAdvertisementAspectRatio(value string) bool {
+	parts := strings.Split(value, ":")
+	if len(parts) != 2 {
+		return false
+	}
+	width, widthErr := strconv.Atoi(parts[0])
+	height, heightErr := strconv.Atoi(parts[1])
+	return widthErr == nil && heightErr == nil && width > 0 && height > 0 && width <= 100 && height <= 100
 }
 
 func isSiteAdvertisementURL(value string) bool {
