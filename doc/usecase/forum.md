@@ -8,26 +8,35 @@
 
 ## Usecase 划分及 RESTful 接口设计
 
-> **路由前缀约定**: `/api/v1/forum`
+> **路由前缀约定**: `/api/forum`
 
 ### 1. TopicUsecase (话题应用服务)
 * **发布帖子 (CreateTopic)**
   * **Method/Path**: `POST /topics`
-  * **参数概述**: `node_id`, `title`, `content`
+  * **参数概述**: `nodeId`, `subject`, `content`
 * **获取帖子列表 (ListTopics)**
-  * **Method/Path**: `GET /topics`
-  * **参数概述**: `node_id`, `page`, `size`
+  * **Method/Path**: `GET /nodes/{slug}/topics`
+  * **参数概述**: `slug`, `page`, `size`
+* **获取热门主题 (GetHotTopics)**
+  * **Method/Path**: `GET /topics:getHot`
 * **获取帖子详情 (GetTopic)**
   * **Method/Path**: `GET /topics/{id}`
+* **编辑帖子 (UpdateTopic)**
+  * **Method/Path**: `PATCH /topics/{id}`
+  * **参数概述**: `nodeId`, `subject`, `content`
+  * **核心逻辑**: 仅作者可在编辑时限内修改未锁定主题；移动节点时同步更新原节点与目标节点统计。
 * **追加帖子内容 (AppendTopic)**
   * **Method/Path**: `POST /topics/{id}:append`
   * **参数概述**: `content`
-  * **核心逻辑**: 用户无法编辑原帖，但可以追加补充说明。追加的内容将以 JSON 数组追加到表的 `appends` 字段中。
+  * **核心逻辑**: 作者可为未锁定主题追加补充说明。追加内容以 JSON 数组写入 `appends` 字段，不受原帖编辑时限限制。
 ### 2. ReplyUsecase (回复应用服务)
 > 使用子资源形式表达关系
+* **获取回复列表 (ListReplies)**
+  * **Method/Path**: `GET /topics/{id}/replies`
+  * **参数概述**: `page`, `size`
 * **回复某贴 (CreateReply)**
-  * **Method/Path**: `POST /topics/{topic_id}/replies`
-  * **参数概述**: `content`, `quote_id`
+  * **Method/Path**: `POST /topics/{id}/replies`
+  * **参数概述**: `content`, `replyTo`（可选，被引用回复 ID）
 ### 3. TopicInteractionUsecase (话题互动应用服务)
 处理跨域的打赏、举报、以及本域的点赞行为。
 * **点赞/取消点赞帖子 (ToggleTopicLike)**
@@ -42,7 +51,7 @@
 * **取消收藏帖子 (UnbookmarkTopic)**
   * **Method/Path**: `POST /topics/{id}:unbookmark`
 * **获取主题收藏列表 (ListBookmarkedTopics)**
-  * **Method/Path**: `GET /bookmarks` (基于前缀即为 `/api/v1/forum/bookmarks`)
+  * **Method/Path**: `GET /bookmarks`（即 `/api/forum/bookmarks`）
 
 ### 4. ReplyInteractionUsecase (回复互动应用服务)
 * **点赞/取消点赞回复 (ToggleReplyLike)**

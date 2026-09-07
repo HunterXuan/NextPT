@@ -9,7 +9,7 @@
 
 ## Usecase 划分及 RESTful 接口设计
 
-> **路由前缀约定**: `/api/v1/iam`
+> **路由前缀约定**: `/api/iam`
 
 ### 1. SessionUsecase (会话与认证应用服务)
 * **登录 (Login)**
@@ -57,6 +57,12 @@
 * **修改密码 (ChangePassword)**
   * **Method/Path**: `POST /users/me:changePassword`
   * **参数概述**: `old_password`, `new_password`
+* **获取当前权限与登录记录**
+  * **Method/Path**: `GET /users/me/permissions`, `GET /users/me/login-logs`
+  * 权限列表供前端做交互限制，实际授权仍由后端 RBAC 判定；登录记录只返回当前用户自身数据。
+* **重置 Passkey**
+  * **Method/Path**: `POST /users/me:resetPasskey`
+  * 重置后会销毁该用户现有会话，Tracker 客户端需要使用新的 Passkey 重新配置。
 * **申请重置密码 (CreatePasswordResetRequest)**
   * **Method/Path**: `POST /password-reset-requests`
   * **参数概述**: `email`
@@ -86,13 +92,13 @@
 
 ### 3. InviteUsecase (邀请应用服务)
 * **发送/生成邀请 (CreateInvite)**
-  * **Method/Path**: `POST /invites`
+  * **Method/Path**: `POST /invites:send`
   * **参数概述**: `email`
   * **核心逻辑**: 调用 Economy 扣除发送者魔力值 -> 生成 `invite` -> 发送邮件。
 * **获取我的邀请记录 (ListInvites)**
   * **Method/Path**: `GET /invites`
 * **核验邀请码有效性 (CheckInvite)**
-  * **Method/Path**: `GET /invites/{token}:check`
+  * **Method/Path**: `GET /invites:check`
 
 ### 4. PermissionDomain (内部权限域)
 * **核心职责**：

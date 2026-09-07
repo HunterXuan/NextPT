@@ -12,7 +12,7 @@
 
 ## Usecase 划分及 RESTful 接口设计
 
-> **路由前缀约定**: `/api/v1/catalog`
+> **路由前缀约定**: `/api/catalog`
 
 ### 1. TorrentPublishUsecase (种子发布与管理)
 * **发布种子 (CreateTorrent)**
@@ -24,8 +24,6 @@
   * 新种优惠在实际进入 `published` 时生成，公开列表的发布时间使用 `published_at`。
 * **局部更新种子信息 (UpdateTorrent)**
   * **Method/Path**: `PATCH /torrents/{id}`
-* **删除种子 (DeleteTorrent)**
-  * **Method/Path**: `DELETE /torrents/{id}`
 * **重新提交审核 (ResubmitTorrent)**
   * **Method/Path**: `POST /torrents/{id}:resubmit`
   * 仅上传者可以重新提交被拒绝的种子；重新按当前用户等级判断待审核或直接发布。
@@ -53,7 +51,7 @@
 * **获取种子做种/下载者列表 (ListTorrentPeers)**
   * **Method/Path**: `GET /torrents/{id}/peers`
 * **获取种子收藏列表 (ListBookmarkedTorrents)**
-  * **Method/Path**: `GET /bookmarks` (基于前缀即为 `/api/v1/catalog/bookmarks`)
+  * **Method/Path**: `GET /bookmarks`（即 `/api/catalog/bookmarks`）
 
 ### 3. TorrentMetadataUsecase (资源元数据增强)
 
@@ -109,7 +107,7 @@
 * **收藏种子 (BookmarkTorrent)**
   * **Method/Path**: `POST /torrents/{id}:bookmark`
 * **取消收藏 (UnbookmarkTorrent)**
-  * **Method/Path**: `POST /torrents/{id}:unbookmark` (或 `DELETE /bookmarks/{id}`)
+  * **Method/Path**: `POST /torrents/{id}:unbookmark`
 * **赞赏种子 (RewardTorrent)**
   * **Method/Path**: `POST /torrents/{id}:reward`
 * **获取赞赏记录 (ListTorrentRewards)**

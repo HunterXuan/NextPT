@@ -18,7 +18,7 @@ NextPT 项目后端为了解决 Web 请求上下文（`context`）污染底层�
   - 接收 Controller 传来的业务参数和 `Actor`。
   - 执行综合业务策略判断（前置条件校验）。
   - 编排下层一个或多个 Domain 的基础能力，推进业务流转。
-  - **唯一允许开启数据库事务 (`dao.Xxx.Transaction`) 的地方**。
+  - 负责跨 Domain、跨资源的事务编排；这类事务应由 Usecase 开启。
 - **禁忌**：
   - 绝对不可以在此层包含纯粹的数据库表插入、更新语句，或执行复杂的 QueryBuilder 拼接。
   - 不得使用 `contexts.GetActor(ctx)`。
@@ -30,7 +30,7 @@ NextPT 项目后端为了解决 Web 请求上下文（`context`）污染底层�
   - 提供单表的增、删、改、查等原子方法（例如 `GetTopicById`, `InsertTopic`）。
   - 提供不依赖大环境上下文的权限校验等静态策略检查方法（例如 `CheckTopicWritePolicy`）。
 - **禁忌**：
-  - 绝对不允许在此层主动开启事务（Domain 直接使用 `Ctx(ctx)` 执行语句，若外层 Usecase 开启了事务，则会自动加入）。
+  - 通常直接使用 `Ctx(ctx)` 执行语句，若外层 Usecase 开启了事务则自动加入。仅当单个 Domain 方法需要保证自身单资源读改写原子性时，可以在该方法内部开启紧凑事务；不得在其中编排跨 Domain 的业务流程。
   - 绝对不允许在此层内自发地跨界调用其它 Domain 去组合宏大的业务流（跨 Domain 调用的编排职责归 Usecase 所有）。
   - 不得使用 `contexts.GetActor(ctx)`。
 

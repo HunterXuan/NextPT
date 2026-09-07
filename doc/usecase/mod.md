@@ -23,7 +23,7 @@
 * **解除处罚 (RemoveMod)**
   * **入口**: 由 `Admin` 域调用。
 * **获取某用户的历史处罚记录 (ListUserMods)**
-  * **入口**: 由 `Admin` 域调用（版主查阅），或由 `IAM` 域的 `GET /users/me/mods` 跨域调用（用户查阅自己的历史）。
+  * **入口**: 由 `Admin` 域调用，供具备对应后台权限的 Staff 查阅。
 
 ### 3. AntiCheatUsecase (防作弊监控服务)
 * **记录作弊嫌疑 (RecordCheaterLog)**

@@ -1,12 +1,12 @@
 # Economy (经济系统) 域设计
 
 ## 核心实体 (Domain Entities)
-- `UserBonus` (用户魔力值余额，存储于 `user_stat.bonus`)
+- `UserBonus` (用户魔力值余额，存储于 `iam_user_stat.bonus`)
 - `BonusLog` (魔力值变动流水)
 
 ## Usecase 划分及 RESTful 接口设计
 
-> **路由前缀约定**: `/api/v1/economy`
+> **路由前缀约定**: `/api/economy`
 
 ### 1. BonusUsecase (魔力值应用服务)
 * **获取我的魔力值与流水 (ListMyBonusLogs)**
@@ -21,7 +21,7 @@
 
 ## Domain Service（内部调用，不直接暴露 API）
 
-> 以下方法由其他域（Catalog、Cron、Admin 等）通过 `service.EconomyBonusDomain()` 调用，**所有魔力值变动必须经由此处**，禁止直接操作 `dao.UserStat`。
+> 以下方法由其他域（Catalog、Cron、Admin 等）通过 `service.EconomyBonusDomain()` 调用，**所有魔力值变动必须经由此处**，禁止直接操作 `dao.IamUserStat`。
 
 * **AddBonus(ctx, userId, amount, action, targetType, targetId, remark)**
   * 为指定用户增加魔力值（支持正负数），同时自动写入 `bonus_log` 流水。

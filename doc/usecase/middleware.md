@@ -7,13 +7,14 @@
 ## 核心中间件划分
 
 ### 1. AuthMiddleware (认证鉴权)
-- **JwtParser**: 解析请求头中的 Token，并将解析出的 `user_id`、`role` 注入到当前请求的 `context.Context` 中。
-- **PasskeyParser**: 专为 Tracker 域准备，拦截所有 `/announce` 和 `/scrape` 请求，从 URL Params 中提取 Passkey，校验后放行。
+- **CheckAuth**: 校验 Web Session Token 与 `X-Device-Id` 摘要的一致性，将 `model.Actor` 写入请求上下文；Controller 再显式向 Usecase 传递 Actor。
+- **CheckTrackerAuth**: 专为 Tracker 域准备，从请求参数提取 Passkey，校验账户状态后建立 Actor。它覆盖 announce、scrape、RSS 与种子文件下载等 Tracker 路由。
+- **RBAC**: 同时处理 Web 和 Tracker 请求的通配权限校验；资源级权限仍由业务 Usecase 处理 owner 与状态等约束。
 
 ### 2. SecurityMiddleware (安全风控)
-- **RateLimiter**: 接口限流器，防止恶意爬虫和高频访问。
-- **Cors**: 跨域资源共享配置。
+- **Maintenance**: 维护模式下阻断普通用户 API 请求，同时保留 Staff、Tracker、`/healthz` 与 `/readyz`。
+- 通用限流与 CORS 当前由部署入口或后续网关配置承担，不在本服务中声明独立中间件。
 
 ### 3. ToolingMiddleware (工具链)
-- **I18nInjector**: 根据请求头（如 `Accept-Language`）自动设置多语言环境上下文。
-- **ResponseWrapper**: 统一拦截成功的 Response 或抛出的 Error，包装为 `{code, message, data}` 标准 JSON 格式返回。
+- **I18N**: 根据请求语言设置多语言上下文。
+- **ResponseHandler**: 将普通 Web API 的成功和错误响应包装为 `{code, message, data}`；Tracker 协议响应保持 Bencode 格式。

@@ -2,6 +2,8 @@
 
 > 本域已按照 Clean Architecture 进行全面重构，遵循“实体为王，动作分离”的设计原则。
 
+> **路由前缀约定**: `/api/tracker`
+
 ## 核心实体 (Domain Entities)
 - `Peer` (节点状态，存储于 Redis，包含 IP/Port/上传量/下载量/做种状态等)
 - `AgentWhitelist` (客户端白名单规则，存储于 MySQL)
@@ -44,9 +46,9 @@
   * 全量白名单内存缓存（1 小时过期），预编译正则。匹配规则：PeerID 前缀 + User-Agent 正则。由中间件统一调用。
 
 ### 2.2 异步流水线: TrackerEventUsecase
-负责承接庞大的写入吞吐量，将写操作异步化。
+负责承接庞大的写入吞吐量，将写操作通过 Redis Stream 异步化。
 
-* **10 个常驻协程** 从 Channel 消费 `AnnounceEvent`。
+* **10 个常驻协程** 从 Redis Stream Consumer Group 消费 `AnnounceEvent`，另有 pending watcher 通过 `XAUTOCLAIM` 处理超时未确认事件。
 * **handleAnnounceEvent(event)**: 
   1. 获取 Redis 分布式锁 `SET NX EX 5s` 防止双花
   2. 获取旧 Peer 快照
