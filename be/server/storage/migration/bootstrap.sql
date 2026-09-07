@@ -1,10 +1,12 @@
 SET NAMES utf8mb4;
 
 -- ============================================================
--- NextPT development bootstrap data
--- Run after init.sql on an empty development database.
+-- NextPT development bootstrap data.
+-- Run after init.sql only on an empty local development database.
+-- DO NOT use this file unchanged in production: it creates a predictable
+-- administrator account and Tracker passkey for local development.
 --
--- Default admin:
+-- Development-only admin:
 --   username: admin
 --   password: admin123456
 -- ============================================================

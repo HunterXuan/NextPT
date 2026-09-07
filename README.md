@@ -44,7 +44,15 @@ mysql -u <user> -p <database> < be/server/storage/migration/init.sql
 mysql -u <user> -p <database> < be/server/storage/migration/bootstrap.sql
 ```
 
-根据本地环境调整 `be/server/manifest/config/config.yaml` 后启动后端：
+`bootstrap.sql` 只用于本地开发：它会创建可预测的管理员账号和 Tracker Passkey，**不得原样用于生产环境**。生产部署应通过受控初始化流程创建唯一的首个 Staff 账户，并立即设置独立密码与 Passkey。
+
+先从模板创建本地配置，并填写数据库及按需启用的对象存储、邮件和元数据服务凭据：
+
+```bash
+cp be/server/manifest/config/config.example.yaml be/server/manifest/config/config.yaml
+```
+
+`config.yaml` 已被 Git 忽略，不应提交。随后启动后端：
 
 ```bash
 cd be/server
@@ -64,3 +72,5 @@ npm run dev
 ## 容器镜像
 
 推送至 `main` 时，[镜像构建工作流](.github/workflows/build.yml) 会将前端和后端镜像发布到 GHCR，并同时提供 `linux/amd64` 与 `linux/arm64`。工作流只负责构建和推送，不包含生产部署；部署编排、密钥和运行时配置需要由实际运维环境提供。
+
+安全问题请遵循 [安全披露说明](SECURITY.md)，不要在公开 Issue 中提交漏洞细节或疑似凭据。

@@ -1,0 +1,83 @@
+# Copy to config.yaml for local development. Keep all real credentials only in
+# config.yaml or deployment-managed secrets; neither file should be committed.
+server:
+  address: ":8000"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+logger:
+  level: "all"
+  stdout: true
+
+database:
+  default:
+    link: "mysql:nextpt:CHANGE_ME@tcp(127.0.0.1:3306)/nextpt?loc=Local&parseTime=true&charset=utf8mb4"
+    debug: true
+
+redis:
+  default:
+    address: "127.0.0.1:6379"
+    db: 12
+
+storage:
+  driver: local
+  local:
+    path: "./storage/uploads"
+  s3:
+    id: ""
+    key: ""
+    bucket: ""
+    endpoint: ""
+    region: "auto"
+
+mailgun:
+  domain: ""
+  key: ""
+  sender: ""
+
+site:
+  name: "NextPT"
+  url: "http://localhost:3000"
+
+iam:
+  cacheMode: 2
+  cachePreKey: "nextpt:iam:"
+  timeout: "10d"
+  maxRefresh: "5d"
+  tokenDelimiter: "_"
+  # Use a high-entropy deployment secret. Existing TOTP bindings cannot be
+  # decrypted after this value changes.
+  twoStepEncryptionKey: "CHANGE_ME_TO_A_RANDOM_SECRET"
+
+i18n:
+  lang:
+    en-US: English
+    zh-CN: 简体中文
+    zh-TW: 繁体中文
+  default: zh-CN
+
+cache:
+  prefix: "nextpt:"
+
+catalog:
+  metadata:
+    userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+    tmdb:
+      token: ""
+      baseUrl: "https://api.themoviedb.org/3"
+      imageBaseUrl: "https://image.tmdb.org/t/p/w500"
+      cacheTtl: "168h"
+    imdb:
+      enabled: true
+      baseUrl: "https://www.imdb.com"
+      graphqlUrl: "https://api.graphql.imdb.com/"
+      cacheTtl: "168h"
+    douban:
+      enabled: true
+      baseUrl: "https://m.douban.com/movie"
+      apiBaseUrl: "https://m.douban.com/rexxar/api/v2"
+      cacheTtl: "720h"
+    bangumi:
+      enabled: true
+      baseUrl: "https://api.bgm.tv/v0"
+      cacheTtl: "720h"
