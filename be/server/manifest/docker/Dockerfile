@@ -2,13 +2,13 @@
 #                                  BUILD
 ###############################################################################
 
-FROM golang:bookworm as builder
+FROM golang:1.25-bookworm AS builder
 
 WORKDIR /app
 
 COPY . /app
 
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o main main.go
+RUN CGO_ENABLED=1 go build -o main main.go
 
 ###############################################################################
 #                                INSTALLATION
