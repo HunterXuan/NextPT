@@ -71,6 +71,8 @@ npm run dev
 
 ## 容器镜像
 
-推送至 `main` 时，[镜像构建工作流](.github/workflows/build.yml) 会将前端和后端镜像发布到 GHCR，并同时提供 `linux/amd64` 与 `linux/arm64`。工作流只负责构建和推送，不包含生产部署；部署编排、密钥和运行时配置需要由实际运维环境提供。
+推送至 `main` 时，[镜像构建工作流](.github/workflows/build.yml) 会按实际变更构建前端或后端镜像，并发布到 GHCR。`main` 构建使用可变的 `edge` 标签及不可变的 `sha-<commit>` 标签；创建 `v*` 版本 tag 时会发布 SemVer 标签并更新 `latest`。镜像同时提供 `linux/amd64` 与 `linux/arm64`，每日自动保留各组件最近 30 个开发镜像，正式版本不会被该清理任务删除。
+
+工作流只负责构建和推送，不包含生产部署；部署编排、密钥和运行时配置需要由实际运维环境提供。生产环境应固定使用某个 `sha-<commit>` 标签或镜像 digest，不应跟随 `edge`、`latest` 等可变标签。
 
 安全问题请遵循 [安全披露说明](SECURITY.md)，不要在公开 Issue 中提交漏洞细节或疑似凭据。
