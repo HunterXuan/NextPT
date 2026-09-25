@@ -106,7 +106,7 @@
             <AppThemeToggle />
           </div>
         </div>
-        <AppShellTabs :mode="props.mode" :current-title="activeItemLabel" @refresh="refreshCurrentPage" />
+        <AppShellTabs :mode="props.mode" :current-title="activeItemLabel" :resolve-title="resolveTabTitle" @refresh="refreshCurrentPage" />
       </header>
 
       <main :key="pageRefreshKey" class="min-w-0">
@@ -212,15 +212,17 @@ function refreshCurrentPage() {
   pageRefreshKey.value += 1
 }
 
-const currentAppPath = computed(() => {
+function appPath(path: string) {
   const codes = (locales.value as any[]).map((item) => item.code).filter(Boolean)
   for (const code of codes) {
     const prefix = `/${code}`
-    if (route.path === prefix) return '/'
-    if (route.path.startsWith(`${prefix}/`)) return route.path.slice(prefix.length)
+    if (path === prefix) return '/'
+    if (path.startsWith(`${prefix}/`)) return path.slice(prefix.length)
   }
-  return route.path
-})
+  return path
+}
+
+const currentAppPath = computed(() => appPath(route.path))
 
 const appNavSections = computed(() => {
   const sections = [
@@ -362,11 +364,11 @@ const adminReturnAction = computed(() => props.mode === 'admin'
   : null
 )
 const activeItem = computed(() => navSections.value.flatMap((section) => section.items).find((item) => item.active))
-const routeSpecificLabel = computed(() => {
-  const path = currentAppPath.value
+function routeSpecificTitle(path: string) {
+  if (path === '/catalog/torrents/upload') return t('catalog.torrents.upload.title')
+  if (path === '/forum/topics/create') return t('forum.create.title')
   const torrentDetailMatch = path.match(/^\/catalog\/torrents\/([^/]+)$/)
   if (torrentDetailMatch?.[1]) return t('catalog.torrents.detail.titleFallback', { id: torrentDetailMatch[1] })
-  if (path === '/catalog/torrents/upload') return t('catalog.torrents.upload.title')
   if (/^\/catalog\/torrents\/[^/]+\/edit$/.test(path)) return t('catalog.torrents.edit.title')
   if (path === '/catalog/requests/create') return t('catalog.requests.create.title')
   if (/^\/catalog\/requests\/[^/]+$/.test(path)) return t('catalog.requests.detail.title')
@@ -375,7 +377,6 @@ const routeSpecificLabel = computed(() => {
   if (path === '/catalog/subtitles') return t('catalog.subtitles.title')
   const forumTopicMatch = path.match(/^\/forum\/topics\/([^/]+)$/)
   if (forumTopicMatch?.[1]) return t('forum.detail.titleFallback', { id: forumTopicMatch[1] })
-  if (path === '/forum/topics/create') return t('forum.create.title')
   if (path === '/forum/bookmarks') return t('forum.bookmarks.title')
   if (path === '/site/messages') return t('site.messages.title')
   if (path === '/mod/staff-messages') return t('mod.staffMessages.title')
@@ -385,8 +386,16 @@ const routeSpecificLabel = computed(() => {
   if (path === '/economy/shop') return t('user.shop.title')
   if (path === '/iam/users/me/settings') return t('user.nav.settings')
   return ''
-})
+}
+const routeSpecificLabel = computed(() => routeSpecificTitle(currentAppPath.value))
 const activeItemLabel = computed(() => routeSpecificLabel.value || activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : t('common.brand')))
+
+function resolveTabTitle(to: string) {
+  const path = appPath(to.split(/[?#]/, 1)[0] || '/')
+  return routeSpecificTitle(path)
+    || navSections.value.flatMap((section) => section.items).find((item) => item.to === path)?.label
+    || (path.startsWith('/forum/nodes/') ? t('nav.forum') : '')
+}
 
 const languageItems = computed<DropdownMenuItem[][]>(() => [
   (locales.value as any[]).map((item) => ({

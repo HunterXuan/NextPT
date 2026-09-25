@@ -50,7 +50,7 @@
                 @dragend="draggingIndex = -1"
               >
                 <UTooltip
-                  :text="tab.title"
+                  :text="tabTitle(tab)"
                   :content="{ side: 'bottom', sideOffset: 8 }"
                   :delay-duration="600"
                 >
@@ -61,7 +61,7 @@
                     @click="activateTab(tab)"
                   >
                     <UIcon :name="tabIcon(tab)" class="size-3.5 shrink-0 text-slate-400" />
-                    <span class="truncate">{{ tab.title }}</span>
+                    <span class="truncate">{{ tabTitle(tab) }}</span>
                   </button>
                 </UTooltip>
 
@@ -145,6 +145,7 @@ import type { WorkspaceTabItem, WorkspaceTabMode } from '~/composables/useWorksp
 const props = defineProps<{
   mode: WorkspaceTabMode
   currentTitle: string
+  resolveTitle: (to: string) => string
 }>()
 
 const emit = defineEmits<{
@@ -166,6 +167,12 @@ const tabElements = new Map<string, HTMLElement>()
 const activeTab = computed(() => tabs.value.find((tab) => tab.id === activeId.value) || null)
 const fallbackPath = computed(() => localePath(props.mode === 'admin' ? '/admin' : '/'))
 const fallbackTitle = computed(() => props.mode === 'admin' ? t('admin.nav.overview') : t('nav.home'))
+function tabTitle(tab: WorkspaceTabItem) {
+  if (tab.titleSource === 'resource') return tab.title
+  if (!tab.titleSource && /(?:catalog\/torrents|forum\/topics)\/\d+$/.test(tab.id)) return tab.title
+  return props.resolveTitle(tab.to) || tab.title
+}
+
 const tabMenuItems = computed<DropdownMenuItem[][]>(() => [
   [
     {

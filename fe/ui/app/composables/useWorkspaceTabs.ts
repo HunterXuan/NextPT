@@ -4,6 +4,7 @@ export interface WorkspaceTabItem {
   id: string
   to: string
   title: string
+  titleSource?: 'page' | 'resource'
   createdAt: number
   updatedAt: number
 }
@@ -86,7 +87,7 @@ export function useWorkspaceTabs(mode: WorkspaceTabMode = 'app') {
 
     if (existing) {
       tabs.value = tabs.value.map((tab) => tab.id === tabId
-        ? { ...tab, to: normalizedTo, title: nextTitle, updatedAt: now }
+        ? { ...tab, to: normalizedTo, title: tab.titleSource === 'resource' ? tab.title : nextTitle, titleSource: tab.titleSource === 'resource' ? 'resource' : 'page', updatedAt: now }
         : tab
       )
     } else {
@@ -94,6 +95,7 @@ export function useWorkspaceTabs(mode: WorkspaceTabMode = 'app') {
         id: tabId,
         to: normalizedTo,
         title: nextTitle,
+        titleSource: 'page',
         createdAt: now,
         updatedAt: now
       }]
@@ -114,7 +116,7 @@ export function useWorkspaceTabs(mode: WorkspaceTabMode = 'app') {
     if (!tab) return
 
     tabs.value = tabs.value.map((item) => item.id === normalizedTo
-      ? { ...item, title: nextTitle, updatedAt: Date.now() }
+      ? { ...item, title: nextTitle, titleSource: 'resource', updatedAt: Date.now() }
       : item
     )
     saveTabs()
