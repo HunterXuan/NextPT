@@ -273,11 +273,34 @@
             </div>
 
             <div v-if="peerView" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <div v-if="peerView === 'completed'" class="px-4 py-8 text-center">
-                <UIcon name="i-lucide-circle-check" class="mx-auto size-8 text-slate-400" />
-                <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
-                  {{ $t('catalog.torrents.detail.peers.completedUnavailable') }}
-                </p>
+              <div v-if="peerView === 'completed'" class="px-4 py-3">
+                <p v-if="completionsError" class="py-5 text-center text-sm text-red-500">{{ completionsError }}</p>
+                <div v-else-if="completionsPending && !completionsLoaded" class="space-y-2 py-2">
+                  <div v-for="item in 3" :key="item" class="h-12 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                </div>
+                <p v-else-if="completions.length === 0" class="py-5 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.noCompletions') }}</p>
+                <div v-else class="max-h-80 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
+                  <div v-for="item in completions" :key="item.user?.id || item.completedAt" class="grid gap-3 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
+                    <div class="min-w-0">
+                      <IamUserPopover :user="item.user" :fallback="item.user?.username || '-'" class="truncate font-medium text-slate-950 dark:text-white" />
+                      <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-500 dark:text-slate-400">
+                        <span v-if="item.startedAt">{{ $t('catalog.torrents.detail.peers.startedAt') }} {{ formatDateTime(item.startedAt, locale) }}</span>
+                        <span>{{ $t('catalog.torrents.detail.peers.completedAt') }} {{ formatDateTime(item.completedAt, locale) }}</span>
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs sm:text-right">
+                      <div>
+                        <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.uploaded') }}</p>
+                        <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(item.uploaded) }}</p>
+                      </div>
+                      <div>
+                        <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.downloaded') }}</p>
+                        <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(item.downloaded) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <AppPager v-if="completionsTotal > completionSize" class="mt-3 border-t border-slate-200 pt-3 dark:border-slate-800" size="xs" :page="completionPage" :total="completionsTotal" :page-size="completionSize" :disabled="completionsPending" @page-change="loadCompletionsPage" />
               </div>
               <div v-else-if="peersError" class="flex flex-col items-center justify-center px-4 py-8 text-center">
                 <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
@@ -826,7 +849,7 @@
 <script setup lang="ts">
 import CatalogTorrentReviewPanel from '~/components/catalog/TorrentReviewPanel.vue'
 import { ApiError } from '~/composables/useApi'
-import { TorrentStatus, type CatalogCategory, type CatalogTagItem, type CommentItem, type SubtitleItem, type TorrentDetail, type TorrentFileItem, type TorrentPeerItem } from '~/composables/useCatalogTorrents'
+import { TorrentStatus, type CatalogCategory, type CatalogTagItem, type CommentItem, type SubtitleItem, type TorrentDetail, type TorrentFileItem, type TorrentPeerItem, type TorrentCompletionItem } from '~/composables/useCatalogTorrents'
 import { renderUserMarkdown } from '~/utils/richText'
 
 interface FileTreeNode {
@@ -876,6 +899,13 @@ const { user, hasPermission } = useAuth()
 const torrent = ref<TorrentDetail | null>(null)
 const files = ref<TorrentFileItem[]>([])
 const peers = ref<TorrentPeerItem[]>([])
+const completions = ref<TorrentCompletionItem[]>([])
+const completionPage = ref(1)
+const completionSize = 20
+const completionsTotal = ref(0)
+const completionsPending = ref(false)
+const completionsLoaded = ref(false)
+const completionsError = ref('')
 const comments = ref<CommentItem[]>([])
 const subtitles = ref<SubtitleItem[]>([])
 const categories = ref<CatalogCategory[]>([])
@@ -1432,6 +1462,11 @@ async function loadPage() {
 function resetInteractionState() {
   peers.value = []
   peersLoaded.value = false
+  completions.value = []
+  completionPage.value = 1
+  completionsTotal.value = 0
+  completionsLoaded.value = false
+  completionsError.value = ''
   comments.value = []
   commentPage.value = readCommentPageQuery()
   subtitles.value = []
@@ -1485,8 +1520,30 @@ async function handlePeerStatClick(view: PeerView) {
 
   filePanelOpen.value = false
   peerView.value = view
-  if (view !== 'completed') {
+  if (view === 'completed') {
+    await loadCompletionsPage(1)
+  } else {
     await loadPeers()
+  }
+}
+
+async function loadCompletionsPage(page: number) {
+  if (torrentId.value <= 0 || completionsPending.value) return
+  completionsPending.value = true
+  completionsError.value = ''
+  const id = torrentId.value
+  try {
+    const data = await catalogTorrents.listCompletions(id, page, completionSize)
+    if (id !== torrentId.value) return
+    completions.value = data.list || []
+    completionsTotal.value = data.total
+    completionPage.value = page
+    completionsLoaded.value = true
+  } catch (error) {
+    if (id !== torrentId.value) return
+    completionsError.value = error instanceof ApiError ? error.message : t('common.requestFailed')
+  } finally {
+    completionsPending.value = false
   }
 }
 

@@ -194,6 +194,14 @@ export interface TorrentPeerItem {
   startedAt: string
 }
 
+export interface TorrentCompletionItem {
+  user: UserSummary
+  uploaded: number
+  downloaded: number
+  startedAt: string
+  completedAt: string
+}
+
 export interface TorrentRewardItem {
   user: UserSummary
   amount: number
@@ -312,6 +320,11 @@ export interface TorrentPeerListOut {
   list: TorrentPeerItem[]
 }
 
+export interface TorrentCompletionListOut {
+  list: TorrentCompletionItem[]
+  total: number
+}
+
 export interface TorrentRewardListOut {
   list: TorrentRewardItem[]
   total: number
@@ -418,6 +431,12 @@ export function useCatalogTorrents() {
 
   async function listPeers(id: number) {
     return await fetchApi<TorrentPeerListOut>(`/api/catalog/torrents/${id}/peers`)
+  }
+
+  async function listCompletions(id: number, page = 1, size = 20) {
+    return await fetchApi<TorrentCompletionListOut>(`/api/catalog/torrents/${id}/completions`, {
+      query: { page, size }
+    })
   }
 
   async function listRewards(id: number, page = 1, size = 20) {
@@ -581,6 +600,7 @@ export function useCatalogTorrents() {
     getTorrent,
     listFiles,
     listPeers,
+    listCompletions,
     listRewards,
     rewardTorrent,
     listComments,
