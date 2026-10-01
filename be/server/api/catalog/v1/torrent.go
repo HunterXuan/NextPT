@@ -160,6 +160,15 @@ type TorrentPeerListRes struct {
 	catalogout.TorrentPeerListOut
 }
 
+type TorrentCompletionListReq struct {
+	g.Meta `path:"/torrents/{id}/completions" method:"get" tags:"Catalog" summary:"获取种子完成下载用户列表"`
+	catalogin.TorrentCompletionListInp
+}
+
+type TorrentCompletionListRes struct {
+	catalogout.TorrentCompletionListOut
+}
+
 type TorrentReportReq struct {
 	g.Meta `path:"/torrents/{id}:report" method:"post" tags:"Catalog" summary:"举报种子" perm:"read:catalog/torrent:*"`
 	catalogin.TorrentReportInp

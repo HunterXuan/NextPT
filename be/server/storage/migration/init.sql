@@ -410,7 +410,8 @@ CREATE TABLE `tracker_snatch` (
     `created_at`      DATETIME        NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_torrent_user` (`torrent_id`, `user_id`),
-    KEY `idx_user` (`user_id`)
+    KEY `idx_user` (`user_id`),
+    KEY `idx_torrent_completed` (`torrent_id`, `completed_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='下载/做种完成记录表';
 
 -- BT 客户端白名单

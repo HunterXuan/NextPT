@@ -21,6 +21,7 @@ type (
 	}
 	IAccountingSnatchDomain interface {
 		RecordSnatch(ctx context.Context, in accountingin.RecordSnatchInp) (bool, error)
+		ListCompletions(ctx context.Context, torrentId uint64, page int, size int) ([]*entity.TrackerSnatch, int, error)
 		ListSnatches(ctx context.Context, userId uint64, page int, size int, isFinished *bool) ([]*entity.TrackerSnatch, int, error)
 		GetSnatch(ctx context.Context, userId uint64, torrentId uint64) (*entity.TrackerSnatch, error)
 		DeleteSnatchesByTorrentId(ctx context.Context, torrentId uint64) error

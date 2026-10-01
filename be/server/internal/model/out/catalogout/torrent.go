@@ -222,6 +222,19 @@ type TorrentPeerListOut struct {
 	List []TorrentPeerItem `json:"list"`
 }
 
+type TorrentCompletionItem struct {
+	User        model.IamUserSummary `json:"user"`
+	Uploaded    uint64               `json:"uploaded"`
+	Downloaded  uint64               `json:"downloaded"`
+	StartedAt   string               `json:"startedAt"`
+	CompletedAt string               `json:"completedAt"`
+}
+
+type TorrentCompletionListOut struct {
+	List  []TorrentCompletionItem `json:"list"`
+	Total int                     `json:"total"`
+}
+
 type TorrentReportOut struct {
 	Success bool `json:"success"`
 }

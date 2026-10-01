@@ -55,5 +55,6 @@ type ICatalogV1 interface {
 	TorrentResubmit(ctx context.Context, req *v1.TorrentResubmitReq) (res *v1.TorrentResubmitRes, err error)
 	TorrentFileList(ctx context.Context, req *v1.TorrentFileListReq) (res *v1.TorrentFileListRes, err error)
 	TorrentPeerList(ctx context.Context, req *v1.TorrentPeerListReq) (res *v1.TorrentPeerListRes, err error)
+	TorrentCompletionList(ctx context.Context, req *v1.TorrentCompletionListReq) (res *v1.TorrentCompletionListRes, err error)
 	TorrentReport(ctx context.Context, req *v1.TorrentReportReq) (res *v1.TorrentReportRes, err error)
 }

@@ -204,6 +204,7 @@ type (
 		Resubmit(ctx context.Context, actor *model.Actor, in catalogin.TorrentResubmitInp) (*catalogout.TorrentResubmitOut, error)
 		ListFiles(ctx context.Context, actor *model.Actor, in catalogin.TorrentFileListInp) (*catalogout.TorrentFileListOut, error)
 		ListPeers(ctx context.Context, actor *model.Actor, in catalogin.TorrentPeerListInp) (*catalogout.TorrentPeerListOut, error)
+		ListCompletions(ctx context.Context, actor *model.Actor, in catalogin.TorrentCompletionListInp) (*catalogout.TorrentCompletionListOut, error)
 		Report(ctx context.Context, actor *model.Actor, in catalogin.TorrentReportInp) (*catalogout.TorrentReportOut, error)
 	}
 )

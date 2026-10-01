@@ -135,6 +135,12 @@ type TorrentPeerListInp struct {
 	Id uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
 }
 
+type TorrentCompletionListInp struct {
+	Id   uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
+	Page int    `json:"page" d:"1" v:"min:1" description:"页码"`
+	Size int    `json:"size" d:"20" v:"min:1|max:100" description:"每页数量"`
+}
+
 type TorrentReportInp struct {
 	Id     uint64 `json:"id" in:"path" v:"required#{#catalog.torrent.id_req}" description:"种子ID"`
 	Reason string `json:"reason" v:"required" description:"举报原因"`

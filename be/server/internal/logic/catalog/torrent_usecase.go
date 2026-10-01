@@ -1286,6 +1286,40 @@ func (s *sCatalogTorrentUsecase) ListPeers(ctx context.Context, actor *model.Act
 	return &catalogout.TorrentPeerListOut{List: list}, nil
 }
 
+func (s *sCatalogTorrentUsecase) ListCompletions(ctx context.Context, actor *model.Actor, in catalogin.TorrentCompletionListInp) (*catalogout.TorrentCompletionListOut, error) {
+	if _, err := service.CatalogTorrentDomain().LoadViewableTorrent(ctx, actor, in.Id); err != nil {
+		return nil, err
+	}
+	list, total, err := service.AccountingSnatchDomain().ListCompletions(ctx, in.Id, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+	userIds := make([]uint64, 0, len(list))
+	for _, item := range list {
+		userIds = append(userIds, item.UserId)
+	}
+	users := s.loadUserSummaryMap(ctx, userIds)
+	items := make([]catalogout.TorrentCompletionItem, 0, len(list))
+	for _, item := range list {
+		startedAt := ""
+		if item.StartedAt != nil {
+			startedAt = item.StartedAt.String()
+		}
+		completedAt := ""
+		if item.CompletedAt != nil {
+			completedAt = item.CompletedAt.String()
+		}
+		items = append(items, catalogout.TorrentCompletionItem{
+			User:        users[item.UserId],
+			Uploaded:    item.Uploaded,
+			Downloaded:  item.Downloaded,
+			StartedAt:   startedAt,
+			CompletedAt: completedAt,
+		})
+	}
+	return &catalogout.TorrentCompletionListOut{List: items, Total: total}, nil
+}
+
 func (s *sCatalogTorrentUsecase) Report(ctx context.Context, actor *model.Actor, in catalogin.TorrentReportInp) (*catalogout.TorrentReportOut, error) {
 	if actor == nil {
 		return nil, gerror.New(gi18n.T(ctx, "catalog.general.unauthorized"))

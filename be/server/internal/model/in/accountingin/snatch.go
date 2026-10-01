@@ -22,7 +22,6 @@ type RecordSnatchInp struct {
 	DownloadedDiff int64
 	Remaining      int64
 	IsSeeder       bool
-	IsFinished     bool
 	EventTime      *gtime.Time
 	TimeDiff       int
 }
