@@ -11,6 +11,25 @@ export interface WorkspaceTabItem {
 
 const maxWorkspaceTabs = 16
 
+export function useWorkspacePageCache() {
+  const revisions = useState<Record<string, number>>('workspace-page-revisions', () => ({}))
+
+  function pageKey(route: { path: string }) {
+    const path = normalizeWorkspaceTabPath(route.path)
+    return `${path}:${revisions.value[path] || 0}`
+  }
+
+  function invalidatePage(path: string) {
+    const normalizedPath = normalizeWorkspaceTabPath(path)
+    revisions.value = {
+      ...revisions.value,
+      [normalizedPath]: (revisions.value[normalizedPath] || 0) + 1
+    }
+  }
+
+  return { pageKey, invalidatePage }
+}
+
 function normalizeWorkspacePathOnly(path: string) {
   const normalized = path.trim() || '/'
   if (normalized === '/') return normalized

@@ -316,21 +316,31 @@ useHead(() => ({
 }))
 
 onMounted(() => {
-  window.addEventListener('beforeunload', handleTopicEditBeforeUnload)
-  currentTimeTimer = setInterval(() => {
-    currentTimeMs.value = Date.now()
-  }, 1000)
+  startTopicActivity()
   loadPage()
   if (canManageForumTopic.value) loadAdminNodes()
 })
 
-onBeforeUnmount(() => {
+onActivated(startTopicActivity)
+onDeactivated(stopTopicActivity)
+onBeforeUnmount(stopTopicActivity)
+
+function startTopicActivity() {
+  if (currentTimeTimer) return
+  currentTimeMs.value = Date.now()
+  window.addEventListener('beforeunload', handleTopicEditBeforeUnload)
+  currentTimeTimer = setInterval(() => {
+    currentTimeMs.value = Date.now()
+  }, 1000)
+}
+
+function stopTopicActivity() {
   if (currentTimeTimer) {
     clearInterval(currentTimeTimer)
     currentTimeTimer = null
   }
   window.removeEventListener('beforeunload', handleTopicEditBeforeUnload)
-})
+}
 
 onBeforeRouteLeave(() => {
   if (!shouldWarnTopicEditLeave()) return true

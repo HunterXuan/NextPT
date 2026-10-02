@@ -109,7 +109,7 @@
         <AppShellTabs :mode="props.mode" :current-title="activeItemLabel" :resolve-title="resolveTabTitle" @refresh="refreshCurrentPage" />
       </header>
 
-      <main :key="pageRefreshKey" class="min-w-0">
+      <main class="min-w-0">
         <slot />
       </main>
     </div>
@@ -156,7 +156,7 @@ const siteApi = useSite()
 const mobileSidebarOpen = ref(false)
 const sidebarCollapsed = ref(false)
 const loggingOut = ref(false)
-const pageRefreshKey = ref(0)
+const { invalidatePage } = useWorkspacePageCache()
 const unreadMessageCount = ref(0)
 const chatOpen = ref(false)
 const sidebarStorageKey = 'nextpt_sidebar_collapsed'
@@ -209,7 +209,7 @@ function isCatalogTorrentsActive() {
 }
 
 function refreshCurrentPage() {
-  pageRefreshKey.value += 1
+  invalidatePage(route.path)
 }
 
 function appPath(path: string) {

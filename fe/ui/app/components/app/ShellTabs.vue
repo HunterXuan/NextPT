@@ -156,6 +156,7 @@ const route = useRoute()
 const localePath = useLocalePath()
 const { t } = useI18n()
 const { tabs, activeId, loadTabs, upsertTab, removeTab, closeOtherTabs, closeRightTabs, closeAllTabs, moveTab, setActiveTab, normalizeTabPath } = useWorkspaceTabs(props.mode)
+const { invalidatePage } = useWorkspacePageCache()
 
 const scroller = ref<HTMLElement | null>(null)
 const draggingIndex = ref(-1)
@@ -310,12 +311,14 @@ async function closeTab(tab: WorkspaceTabItem) {
       suppressedRouteId.value = tab.id
       await navigateTo(destination)
       suppressedRouteId.value = ''
+      invalidatePage(tab.id)
       return
     }
 
     tabAutoAddPaused.value = true
     try {
       await navigateTo(destination)
+      invalidatePage(tab.id)
       upsertTab(destination, fallbackTitle.value)
       await nextTick()
       scrollActiveTabIntoView()
@@ -324,6 +327,8 @@ async function closeTab(tab: WorkspaceTabItem) {
     }
     return
   }
+
+  invalidatePage(tab.id)
 
   if (suppressedRouteId.value === tab.id) {
     suppressedRouteId.value = ''
@@ -362,18 +367,21 @@ async function closeRightActiveTabs() {
 }
 
 async function closeOtherTabsFor(tab: WorkspaceTabItem) {
+  const removedTabs = tabs.value.filter((item) => item.id !== tab.id)
   closeOtherTabs(tab.id)
   if (normalizeTabPath(route.fullPath) !== tab.id) {
     await navigateTo(tab.to)
   } else {
     setActiveTab(tab.to)
   }
+  removedTabs.forEach((item) => invalidatePage(item.id))
 }
 
 async function closeRightTabsFor(tab: WorkspaceTabItem) {
   const targetIndex = tabs.value.findIndex((item) => item.id === tab.id)
   const activeIndex = tabs.value.findIndex((item) => item.id === activeId.value)
   const shouldActivateTarget = targetIndex >= 0 && activeIndex > targetIndex
+  const removedTabs = targetIndex >= 0 ? tabs.value.slice(targetIndex + 1) : []
 
   closeRightTabs(tab.id)
   if (shouldActivateTarget && normalizeTabPath(route.fullPath) !== tab.id) {
@@ -381,13 +389,16 @@ async function closeRightTabsFor(tab: WorkspaceTabItem) {
   } else if (normalizeTabPath(route.fullPath) === tab.id) {
     setActiveTab(tab.to)
   }
+  removedTabs.forEach((item) => invalidatePage(item.id))
 }
 
 async function closeAllAndNavigate() {
   tabAutoAddPaused.value = true
   try {
+    const removedTabs = [...tabs.value]
     closeAllTabs()
     await navigateTo(fallbackPath.value)
+    removedTabs.forEach((item) => invalidatePage(item.id))
     upsertTab(fallbackPath.value, fallbackTitle.value)
     await nextTick()
     scrollActiveTabIntoView()
