@@ -1719,7 +1719,7 @@ async function handleCommentSubmit() {
 
   commentSubmitPending.value = true
   try {
-    await catalogTorrents.createComment(torrent.value.id, content)
+    const created = await catalogTorrents.createComment(torrent.value.id, content)
     commentForm.content = ''
     commentEditorMode.value = 'write'
     toast.add({
@@ -1729,6 +1729,12 @@ async function handleCommentSubmit() {
     })
     commentPage.value = Math.max(1, Math.ceil((commentTotal.value + 1) / commentSize))
     await loadComments()
+    if (commentPage.value < commentTotalPages.value) {
+      commentPage.value = commentTotalPages.value
+      await loadComments()
+    }
+    await nextTick()
+    scrollToCommentAnchor(`comment-${created.id}`)
   } catch (error) {
     toast.add({
       title: error instanceof ApiError ? error.message : t('common.requestFailed'),

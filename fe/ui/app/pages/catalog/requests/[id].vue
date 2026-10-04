@@ -295,12 +295,19 @@ async function handleCommentSubmit() {
   if (content.length < 3 || commentSubmitPending.value) return
   commentSubmitPending.value = true
   try {
-    await requestApi.createComment(requestId.value, content)
+    const created = await requestApi.createComment(requestId.value, content)
     commentContent.value = ''
     commentEditorMode.value = 'write'
-    commentPage.value = 1
+    commentPage.value = Math.max(1, Math.ceil((commentTotal.value + 1) / commentPageSize))
     toast.add({ title: t('catalog.torrents.detail.comments.created'), color: 'success', icon: 'i-lucide-circle-check' })
     await loadComments()
+    const lastPage = Math.max(1, Math.ceil(commentTotal.value / commentPageSize))
+    if (commentPage.value < lastPage) {
+      commentPage.value = lastPage
+      await loadComments()
+    }
+    await nextTick()
+    document.getElementById(`comment-${created.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch (error) {
     commentsError.value = apiErrorMessage(error)
   } finally {

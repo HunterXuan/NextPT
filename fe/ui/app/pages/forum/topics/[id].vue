@@ -104,29 +104,27 @@
 
           <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.replies.title') }}</h2>
-              <UBadge color="neutral" variant="soft">
-                {{ $t('forum.detail.replies.summary', { count: numberFormatter.format(replyTotal) }) }}
-              </UBadge>
+              <div class="flex min-w-0 items-center gap-2">
+                <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.replies.title') }}</h2>
+                <UBadge color="neutral" variant="soft">
+                  {{ $t('forum.detail.replies.summary', { count: numberFormatter.format(replyTotal) }) }}
+                </UBadge>
+              </div>
+              <UTooltip :text="topic.isLocked ? $t('forum.detail.replyForm.locked') : !canCreateForumReply ? $t('common.noPermission') : $t('forum.detail.replyForm.title')">
+                <span class="inline-flex shrink-0">
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="sm"
+                    icon="i-lucide-reply"
+                    :disabled="topic.isLocked || !canCreateForumReply"
+                    @click="focusReplyComposer"
+                  >
+                    {{ $t('forum.detail.replyForm.submit') }}
+                  </UButton>
+                </span>
+              </UTooltip>
             </div>
-
-            <RichTextComposer
-              id="forum-reply-composer"
-              v-model="replyContent"
-              v-model:mode="replyEditorMode"
-              class="border-b border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40"
-              :placeholder="$t('forum.detail.replyForm.placeholder')"
-              :disabled="replyCreatePending || topic.isLocked || !canCreateForumReply"
-              :pending="replyCreatePending"
-              :submit-disabled="!canCreateReply"
-              :submit-disabled-text="canCreateForumReply ? '' : $t('common.noPermission')"
-              :submit-label="$t('forum.detail.replyForm.submit')"
-              :write-label="$t('common.editor.edit')"
-              :preview-label="$t('common.editor.preview')"
-              :preview-empty="$t('common.editor.previewEmpty')"
-              :locked-text="!canCreateForumReply ? $t('common.noPermission') : topic.isLocked ? $t('forum.detail.replyForm.locked') : ''"
-              @submit="handleCreateReply"
-            />
 
             <ForumReplyList
               v-model:active-report-id="activeReplyReportId"
@@ -144,6 +142,24 @@
               @reward-success="handleReplyRewardSuccess"
               @quote="insertReplyQuote"
               @report="handleReportReply"
+            />
+
+            <RichTextComposer
+              id="forum-reply-composer"
+              v-model="replyContent"
+              v-model:mode="replyEditorMode"
+              class="scroll-mt-32 border-t border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40"
+              :placeholder="$t('forum.detail.replyForm.placeholder')"
+              :disabled="replyCreatePending || topic.isLocked || !canCreateForumReply"
+              :pending="replyCreatePending"
+              :submit-disabled="!canCreateReply"
+              :submit-disabled-text="canCreateForumReply ? '' : $t('common.noPermission')"
+              :submit-label="$t('forum.detail.replyForm.submit')"
+              :write-label="$t('common.editor.edit')"
+              :preview-label="$t('common.editor.preview')"
+              :preview-empty="$t('common.editor.previewEmpty')"
+              :locked-text="!canCreateForumReply ? $t('common.noPermission') : topic.isLocked ? $t('forum.detail.replyForm.locked') : ''"
+              @submit="handleCreateReply"
             />
           </section>
         </main>
@@ -624,13 +640,20 @@ async function handleCreateReply() {
   try {
     const content = replyContent.value.trim()
     const replyTo = replyTarget.value && content.includes(replyTarget.value.marker) ? replyTarget.value.id : 0
-    await forum.createReply(topic.value.id, content, replyTo)
+    const created = await forum.createReply(topic.value.id, content, replyTo)
     toast.add({ title: t('forum.detail.replyForm.success'), color: 'success', icon: 'i-lucide-check-circle' })
     replyContent.value = ''
     replyTarget.value = null
     replyEditorMode.value = 'write'
     replyPage.value = Math.max(1, Math.ceil((replyTotal.value + 1) / replySize))
     await Promise.all([loadTopic(), loadReplies()])
+    if (replyPage.value < replyTotalPages.value) {
+      replyPage.value = replyTotalPages.value
+      await loadReplies()
+    }
+    await router.replace({ path: route.path, query: nextReplyQuery(replyPage.value) })
+    await nextTick()
+    document.getElementById(`reply-${created.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch (error) {
     showErrorToast(error)
   } finally {
@@ -681,9 +704,16 @@ function insertReplyQuote(quote: string, replyId: number) {
   if (!canCreateForumReply.value) return
   replyContent.value = replyContent.value.trim() ? `${replyContent.value.trim()}\n\n${quote}` : quote
   replyTarget.value = { id: replyId, marker: quote.trim() }
+  focusReplyComposer()
+}
+
+function focusReplyComposer() {
+  if (topic.value?.isLocked || !canCreateForumReply.value) return
   replyEditorMode.value = 'write'
   void nextTick(() => {
-    document.getElementById('forum-reply-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const composer = document.getElementById('forum-reply-composer')
+    composer?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    composer?.querySelector('textarea')?.focus({ preventScroll: true })
   })
 }
 

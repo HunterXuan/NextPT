@@ -1,13 +1,41 @@
 <template>
   <section :id="sectionId" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
     <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-      <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('catalog.torrents.detail.comments.title') }}</h2>
-      <UBadge color="neutral" variant="soft">
-        {{ t('catalog.torrents.detail.comments.summary', { count: numberFormatter.format(total) }) }}
-      </UBadge>
+      <div class="flex min-w-0 items-center gap-2">
+        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('catalog.torrents.detail.comments.title') }}</h2>
+        <UBadge color="neutral" variant="soft">
+          {{ t('catalog.torrents.detail.comments.summary', { count: numberFormatter.format(total) }) }}
+        </UBadge>
+      </div>
+      <UTooltip :text="canCreate ? t('catalog.torrents.detail.comments.submit') : t('common.noPermission')">
+        <span class="inline-flex shrink-0">
+          <UButton color="neutral" variant="ghost" size="sm" icon="i-lucide-reply" :disabled="!canCreate" @click="focusComposer">
+            {{ t('catalog.torrents.detail.comments.submit') }}
+          </UButton>
+        </span>
+      </UTooltip>
     </div>
 
-    <form :id="composerId" class="border-b border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40" @submit.prevent="emit('submit')">
+    <CatalogCommentList
+      v-model:active-report-id="activeReportIdValue"
+      v-model:report-reason="reportReasonValue"
+      :comments="comments"
+      :total="total"
+      :page="page"
+      :page-size="pageSize"
+      :pending="pending"
+      :error="error"
+      :like-pending-id="likePendingId"
+      :report-pending="reportPending"
+      :submit-reward="submitReward"
+      @page-change="emit('pageChange', $event)"
+      @toggle-like="emit('toggleLike', $event)"
+      @reward-success="emit('rewardSuccess', $event)"
+      @quote="insertQuote"
+      @report="emit('report', $event)"
+    />
+
+    <form :id="composerId" class="scroll-mt-32 border-t border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40" @submit.prevent="emit('submit')">
       <UTextarea
         v-if="editorModeValue === 'write'"
         ref="commentInput"
@@ -45,25 +73,6 @@
         </AppPermissionButton>
       </div>
     </form>
-
-    <CatalogCommentList
-      v-model:active-report-id="activeReportIdValue"
-      v-model:report-reason="reportReasonValue"
-      :comments="comments"
-      :total="total"
-      :page="page"
-      :page-size="pageSize"
-      :pending="pending"
-      :error="error"
-      :like-pending-id="likePendingId"
-      :report-pending="reportPending"
-      :submit-reward="submitReward"
-      @page-change="emit('pageChange', $event)"
-      @toggle-like="emit('toggleLike', $event)"
-      @reward-success="emit('rewardSuccess', $event)"
-      @quote="insertQuote"
-      @report="emit('report', $event)"
-    />
   </section>
 </template>
 
@@ -151,10 +160,15 @@ function editorTabClass(mode: EditorMode) {
 function insertQuote(quote: string) {
   if (!props.canCreate) return
   contentValue.value = contentValue.value.trim() ? `${contentValue.value.trim()}\n\n${quote}` : quote
+  focusComposer()
+}
+
+function focusComposer() {
+  if (!props.canCreate) return
   editorModeValue.value = 'write'
   void nextTick(() => {
     document.getElementById(props.composerId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    commentInput.value?.textareaRef?.focus()
+    commentInput.value?.textareaRef?.focus({ preventScroll: true })
   })
 }
 </script>
