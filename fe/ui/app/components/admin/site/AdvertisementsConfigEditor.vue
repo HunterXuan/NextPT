@@ -1,12 +1,12 @@
 <template>
   <div class="space-y-3">
-    <p class="text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.advertisements.hint') }}</p>
+    <p class="text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.advertisements.hint') }}</p>
 
-    <section v-for="advertisement in advertisements" :key="advertisement.placement" class="overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
-      <header class="flex flex-col gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950/60">
+    <section v-for="advertisement in advertisements" :key="advertisement.placement" class="overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
+      <header class="flex flex-col gap-2 border-b border-neutral-200 bg-neutral-50 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800 dark:bg-neutral-950/60">
         <div class="min-w-0">
-          <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ placementLabel(advertisement.placement) }}</h3>
-          <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ placementHint(advertisement.placement) }}</p>
+          <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ placementLabel(advertisement.placement) }}</h3>
+          <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ placementHint(advertisement.placement) }}</p>
         </div>
         <USwitch v-model="advertisement.enabled" class="shrink-0" :disabled="disabled" />
       </header>
@@ -28,8 +28,8 @@
         </div>
 
         <div>
-          <p class="mb-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.advertisements.preview') }}</p>
-          <div class="relative overflow-hidden rounded-md border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-950" :style="previewStyle(advertisement.aspectRatio, advertisement.placement)">
+          <p class="mb-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.advertisements.preview') }}</p>
+          <div class="relative overflow-hidden rounded-md border border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-950" :style="previewStyle(advertisement.aspectRatio, advertisement.placement)">
             <img
               v-if="advertisement.image && !imageErrors[advertisement.placement]"
               :src="advertisement.image"
@@ -37,7 +37,7 @@
               class="h-full w-full object-cover"
               @error="imageErrors[advertisement.placement] = true"
             >
-            <div v-else class="flex h-full items-center justify-center gap-2 px-3 text-center text-xs text-slate-400 dark:text-slate-500">
+            <div v-else class="flex h-full items-center justify-center gap-2 px-3 text-center text-xs text-neutral-400 dark:text-neutral-500">
               <UIcon name="i-lucide-image" class="size-4 shrink-0" />
               <span>{{ $t('admin.site.configs.advertisements.imagePlaceholder') }}</span>
             </div>

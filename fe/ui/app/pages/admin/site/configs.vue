@@ -1,14 +1,14 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(680px,860px)_minmax(480px,1fr)] 2xl:grid-cols-[minmax(740px,920px)_minmax(520px,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div class="flex items-center gap-2">
                 <UIcon name="i-lucide-settings-2" class="size-5 text-indigo-600 dark:text-indigo-300" />
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.configs.list') }}</h2>
-                <span class="inline-flex h-6 items-center rounded-md bg-slate-100 px-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.site.configs.list') }}</h2>
+                <span class="inline-flex h-6 items-center rounded-md bg-neutral-100 px-2 text-xs font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
                   {{ $t('admin.site.configs.stats.total') }} {{ numberFormatter.format(configs.length) }}
                 </span>
               </div>
@@ -29,20 +29,20 @@
 
           <div v-if="pending" class="overflow-x-auto">
             <table class="min-w-[780px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[24%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.site.configs.table.key') }}</th>
-                  <th class="w-[28%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.site.configs.table.value') }}</th>
-                  <th class="w-[34%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.site.configs.table.description') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.site.configs.table.updatedAt') }}</th>
+                  <th class="w-[24%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.site.configs.table.key') }}</th>
+                  <th class="w-[28%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.site.configs.table.value') }}</th>
+                  <th class="w-[34%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.site.configs.table.description') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.site.configs.table.updatedAt') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="index in 6" :key="index" class="border-b border-slate-200 last:border-b-0 dark:border-slate-800">
-                  <td class="px-3 py-3"><div class="h-4 w-40 animate-pulse rounded bg-slate-200 dark:bg-slate-800" /></td>
-                  <td class="px-3 py-3"><div class="h-5 w-52 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="h-4 w-64 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="ml-auto h-4 w-24 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
+                <tr v-for="index in 6" :key="index" class="border-b border-neutral-200 last:border-b-0 dark:border-neutral-800">
+                  <td class="px-3 py-3"><div class="h-4 w-40 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" /></td>
+                  <td class="px-3 py-3"><div class="h-5 w-52 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-64 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="ml-auto h-4 w-24 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
                 </tr>
               </tbody>
             </table>
@@ -50,30 +50,30 @@
 
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
           </div>
 
           <div v-else-if="configs.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.empty') }}</p>
+            <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.empty') }}</p>
           </div>
 
           <div v-else class="overflow-x-auto">
             <table class="min-w-[780px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[24%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.site.configs.table.key') }}</th>
-                  <th class="w-[28%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.site.configs.table.value') }}</th>
-                  <th class="w-[34%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.site.configs.table.description') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.site.configs.table.updatedAt') }}</th>
+                  <th class="w-[24%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.site.configs.table.key') }}</th>
+                  <th class="w-[28%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.site.configs.table.value') }}</th>
+                  <th class="w-[34%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.site.configs.table.description') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.site.configs.table.updatedAt') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="config in configs"
                   :key="config.id || `${config.group}.${config.key}`"
-                  class="cursor-pointer border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
-                  :class="isSelectedConfig(config) ? 'bg-indigo-50/70 dark:bg-indigo-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+                  class="cursor-pointer border-b border-neutral-200 transition-colors last:border-b-0 dark:border-neutral-800"
+                  :class="isSelectedConfig(config) ? 'bg-indigo-50/70 dark:bg-indigo-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
                   role="button"
                   tabindex="0"
                   @click="selectConfig(config)"
@@ -81,20 +81,20 @@
                   @keydown.space.prevent="selectConfig(config)"
                 >
                   <td class="px-3 py-2.5 align-middle">
-                    <span class="block truncate text-sm font-semibold text-slate-950 dark:text-white">
+                    <span class="block truncate text-sm font-semibold text-neutral-950 dark:text-white">
                       {{ displayConfigLabel(config) }}
                     </span>
-                    <code class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">{{ config.group }}.{{ config.key }}</code>
+                    <code class="mt-1 block truncate text-xs text-neutral-500 dark:text-neutral-400">{{ config.group }}.{{ config.key }}</code>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
-                    <code class="block truncate rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                    <code class="block truncate rounded-md bg-neutral-100 px-2 py-1 text-xs text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                       {{ previewConfigValue(config) }}
                     </code>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
-                    <span class="block truncate text-sm text-slate-600 dark:text-slate-300">{{ displayConfigDescription(config) }}</span>
+                    <span class="block truncate text-sm text-neutral-600 dark:text-neutral-300">{{ displayConfigDescription(config) }}</span>
                   </td>
-                  <td class="px-3 py-2.5 text-right align-middle text-xs text-slate-600 dark:text-slate-300">
+                  <td class="px-3 py-2.5 text-right align-middle text-xs text-neutral-600 dark:text-neutral-300">
                     {{ formatDateTime(config.updatedAt || config.createdAt, locale) }}
                   </td>
                 </tr>
@@ -103,14 +103,14 @@
           </div>
         </section>
 
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
-                <h2 class="truncate text-sm font-semibold text-slate-950 dark:text-white">
+                <h2 class="truncate text-sm font-semibold text-neutral-950 dark:text-white">
                   {{ selectedConfig ? selectedConfigLabel : $t('admin.site.configs.form.empty') }}
                 </h2>
-                <p v-if="selectedConfig" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                <p v-if="selectedConfig" class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">
                   {{ selectedConfigPath }}
                 </p>
               </div>
@@ -121,24 +121,24 @@
           </div>
 
           <div v-if="!selectedConfig" class="flex min-h-80 flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-mouse-pointer-2" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.form.empty') }}</p>
-            <p class="mt-1 max-w-xs text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.form.emptyHint') }}</p>
+            <UIcon name="i-lucide-mouse-pointer-2" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.form.empty') }}</p>
+            <p class="mt-1 max-w-xs text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.form.emptyHint') }}</p>
           </div>
 
           <form v-else class="space-y-4 p-4" @submit.prevent="saveConfig">
-            <div class="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-300">
+            <div class="rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950/70 dark:text-neutral-300">
               {{ selectedDescription }}
             </div>
 
             <dl class="grid gap-2 text-xs sm:grid-cols-2">
-              <div class="rounded-md bg-slate-50 px-3 py-2 dark:bg-slate-950/70">
-                <dt class="text-slate-400 dark:text-slate-500">{{ $t('admin.site.configs.form.group') }}</dt>
-                <dd class="mt-1 font-medium text-slate-700 dark:text-slate-200">{{ currentGroupLabel }}</dd>
+              <div class="rounded-md bg-neutral-50 px-3 py-2 dark:bg-neutral-950/70">
+                <dt class="text-neutral-400 dark:text-neutral-500">{{ $t('admin.site.configs.form.group') }}</dt>
+                <dd class="mt-1 font-medium text-neutral-700 dark:text-neutral-200">{{ currentGroupLabel }}</dd>
               </div>
-              <div class="rounded-md bg-slate-50 px-3 py-2 dark:bg-slate-950/70">
-                <dt class="text-slate-400 dark:text-slate-500">{{ $t('admin.site.configs.form.updatedAt') }}</dt>
-                <dd class="mt-1 font-medium text-slate-700 dark:text-slate-200">{{ selectedUpdatedAtLabel }}</dd>
+              <div class="rounded-md bg-neutral-50 px-3 py-2 dark:bg-neutral-950/70">
+                <dt class="text-neutral-400 dark:text-neutral-500">{{ $t('admin.site.configs.form.updatedAt') }}</dt>
+                <dd class="mt-1 font-medium text-neutral-700 dark:text-neutral-200">{{ selectedUpdatedAtLabel }}</dd>
               </div>
             </dl>
 
@@ -172,17 +172,17 @@
               :disabled="saving"
             />
 
-            <label v-else-if="selectedKind === 'boolean'" class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
+            <label v-else-if="selectedKind === 'boolean'" class="flex items-center justify-between gap-3 rounded-md border border-neutral-200 px-3 py-3 dark:border-neutral-800">
               <span>
-                <span class="block text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.form.booleanValue') }}</span>
-                <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ previewBooleanValue(form.booleanValue) }}</span>
+                <span class="block text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.form.booleanValue') }}</span>
+                <span class="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">{{ previewBooleanValue(form.booleanValue) }}</span>
               </span>
               <button
                 type="button"
                 role="switch"
                 :aria-checked="form.booleanValue"
                 class="relative h-6 w-11 rounded-full transition disabled:cursor-not-allowed disabled:opacity-60"
-                :class="form.booleanValue ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'"
+                :class="form.booleanValue ? 'bg-indigo-600' : 'bg-neutral-300 dark:bg-neutral-700'"
                 :disabled="saving"
                 @click="form.booleanValue = !form.booleanValue"
               >
@@ -194,7 +194,7 @@
             </label>
 
             <label v-else-if="selectedUsesRoleIdSelect" class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.form.value') }}</span>
               <USelect
                 v-model="selectedRoleId"
                 class="mt-1 w-full"
@@ -208,7 +208,7 @@
             </label>
 
             <label v-else-if="selectedUsesRoleLevelSelect" class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.form.value') }}</span>
               <AdminIamRoleLevelSelect
                 v-model="selectedRoleLevel"
                 :roles="roles"
@@ -218,31 +218,31 @@
             </label>
 
             <label v-else-if="selectedKind === 'int' || selectedKind === 'float'" class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.form.value') }}</span>
               <input
                 v-model="form.textValue"
                 type="number"
                 :step="selectedKind === 'int' ? 1 : 'any'"
-                class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950"
+                class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950"
                 :disabled="saving"
               >
             </label>
 
             <label v-else-if="selectedKind === 'json'" class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.form.value') }}</span>
               <textarea
                 v-model="form.textValue"
                 rows="12"
-                class="mt-1 w-full resize-y rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950"
+                class="mt-1 w-full resize-y rounded-md border border-neutral-200 bg-white px-3 py-2 font-mono text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950"
                 :disabled="saving"
               />
             </label>
 
             <label v-else class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.form.value') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.form.value') }}</span>
               <input
                 v-model="form.textValue"
-                class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950"
+                class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950"
                 :disabled="saving"
               >
             </label>
@@ -251,8 +251,8 @@
               {{ formError }}
             </p>
 
-            <div class="flex justify-end gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
-              <UButton type="button" color="neutral" variant="outline" icon="i-lucide-rotate-ccw" :disabled="saving || !isFormDirty" @click="resetFormFromSelected">
+            <div class="flex justify-end gap-2 border-t border-neutral-200 pt-4 dark:border-neutral-800">
+              <UButton type="button" color="neutral" variant="outline" icon="i-lucide-rotate-ccw" :disabled="saving || !isFormDirty" @click="resetFormFromSelected()">
                 {{ $t('admin.actions.reset') }}
               </UButton>
               <UButton type="submit" color="primary" icon="i-lucide-save" :loading="saving" :disabled="!canSave">

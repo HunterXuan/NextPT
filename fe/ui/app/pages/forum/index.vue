@@ -1,25 +1,25 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="nodesPending" class="space-y-3">
-        <div class="h-24 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
-        <div class="h-96 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+        <div class="h-24 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
+        <div class="h-96 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
       </div>
 
-      <div v-else-if="nodesError" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
+      <div v-else-if="nodesError" class="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-        <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ nodesError }}</p>
+        <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ nodesError }}</p>
       </div>
 
-      <div v-else-if="categories.length === 0" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
-        <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-        <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('forum.empty.title') }}</p>
-        <p class="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ $t('forum.empty.description') }}</p>
+      <div v-else-if="categories.length === 0" class="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
+        <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+        <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('forum.empty.title') }}</p>
+        <p class="mt-1 max-w-md text-sm text-neutral-500 dark:text-neutral-400">{{ $t('forum.empty.description') }}</p>
       </div>
 
       <div v-else class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
         <main class="min-w-0 space-y-3">
-          <section class="rounded-lg border border-slate-200 bg-white px-3 py-2.5 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white px-3 py-2.5 dark:border-neutral-800 dark:bg-neutral-900">
             <div class="-mx-1 flex min-w-0 items-center gap-1 overflow-x-auto px-1">
               <button
                 v-for="category in categories"
@@ -27,15 +27,15 @@
                 type="button"
                 class="inline-flex h-8 shrink-0 items-center rounded-md px-2.5 text-sm font-medium transition-colors"
                 :class="selectedCategoryId === category.id
-                  ? 'bg-slate-100 text-slate-950 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-white dark:ring-slate-700'
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-white'"
+                  ? 'app-selected ring-1 ring-primary/20'
+                  : 'text-neutral-500 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-800/70 dark:hover:text-white'"
                 @click="selectCategory(category)"
               >
                 {{ categoryDisplayName(category) }}
               </button>
             </div>
 
-            <div v-if="selectedCategoryNodes.length > 0" class="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2 dark:border-slate-800">
+            <div v-if="selectedCategoryNodes.length > 0" class="mt-2 flex items-center gap-2 border-t border-neutral-100 pt-2 dark:border-neutral-800">
               <div class="-mx-1 flex min-w-0 flex-1 items-center gap-1 overflow-x-auto px-1">
                 <button
                   v-for="node in selectedCategoryNodes"
@@ -43,15 +43,15 @@
                   type="button"
                   class="inline-flex h-7 shrink-0 items-center rounded-md px-2.5 text-sm transition-colors"
                   :class="selectedNodeSlug === node.slug
-                    ? 'bg-sky-50 font-medium text-sky-700 ring-1 ring-sky-100 dark:bg-sky-950/50 dark:text-sky-200 dark:ring-sky-900'
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-white'"
+                    ? 'bg-primary-50 font-medium text-primary-700 ring-1 ring-primary-100 dark:bg-primary-950/50 dark:text-primary-200 dark:ring-primary-900'
+                    : 'text-neutral-500 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-800/70 dark:hover:text-white'"
                   @click="selectNode(node)"
                 >
                   {{ nodeDisplayName(node) }}
                 </button>
               </div>
             </div>
-            <div v-else class="mt-2 flex items-center gap-2 border-t border-slate-100 pt-3 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+            <div v-else class="mt-2 flex items-center gap-2 border-t border-neutral-100 pt-3 text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
               <UIcon name="i-lucide-circle-slash" class="size-4" />
               <span>{{ $t('forum.empty.nodes') }}</span>
             </div>
@@ -86,7 +86,7 @@
         </main>
 
         <aside class="app-sticky-offset space-y-3 xl:sticky">
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
             <AppPermissionButton
               :permission="Permission.ForumTopicCreate"
               color="primary"
@@ -99,50 +99,50 @@
             </AppPermissionButton>
           </section>
 
-          <section v-if="selectedNode" class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.sidebar.currentNode') }}</h2>
-            <p class="mt-1 truncate text-sm text-slate-500 dark:text-slate-400" :title="nodeDisplayName(selectedNode)">
+          <section v-if="selectedNode" class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('forum.sidebar.currentNode') }}</h2>
+            <p class="mt-1 truncate text-sm text-neutral-500 dark:text-neutral-400" :title="nodeDisplayName(selectedNode)">
               {{ nodeDisplayName(selectedNode) }}
             </p>
             <dl class="mt-3 grid grid-cols-2 gap-2">
-              <div class="rounded-md bg-slate-50 px-3 py-2 dark:bg-slate-950/60">
-                <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('forum.fields.topics') }}</dt>
-                <dd class="mt-1 text-base font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(selectedNode.topicCount) }}</dd>
+              <div class="rounded-md bg-neutral-50 px-3 py-2 dark:bg-neutral-950/60">
+                <dt class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('forum.fields.topics') }}</dt>
+                <dd class="mt-1 text-base font-semibold text-neutral-950 dark:text-white">{{ numberFormatter.format(selectedNode.topicCount) }}</dd>
               </div>
-              <div class="rounded-md bg-slate-50 px-3 py-2 dark:bg-slate-950/60">
-                <dt class="text-xs text-slate-500 dark:text-slate-400">{{ $t('forum.fields.replies') }}</dt>
-                <dd class="mt-1 text-base font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(selectedNode.replyCount) }}</dd>
+              <div class="rounded-md bg-neutral-50 px-3 py-2 dark:bg-neutral-950/60">
+                <dt class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('forum.fields.replies') }}</dt>
+                <dd class="mt-1 text-base font-semibold text-neutral-950 dark:text-white">{{ numberFormatter.format(selectedNode.replyCount) }}</dd>
               </div>
             </dl>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.sidebar.siteStats') }}</h2>
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('forum.sidebar.siteStats') }}</h2>
             <dl class="mt-3 space-y-2 text-sm">
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.summary.nodes') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(forumStats.nodes) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.summary.nodes') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(forumStats.nodes) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.summary.topics') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(forumStats.topics) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.summary.topics') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(forumStats.topics) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.fields.replies') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(forumStats.replies) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.fields.replies') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(forumStats.replies) }}</dd>
               </div>
             </dl>
           </section>
 
-          <section v-if="quickNodes.length > 0" class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.sidebar.quickNodes') }}</h2>
+          <section v-if="quickNodes.length > 0" class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('forum.sidebar.quickNodes') }}</h2>
             <div class="mt-3 flex flex-wrap gap-1.5">
               <button
                 v-for="node in quickNodes"
                 :key="node.id"
                 type="button"
-                class="rounded-md bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-sky-50 hover:text-sky-700 dark:bg-slate-950/70 dark:text-slate-300 dark:hover:bg-sky-950/50 dark:hover:text-sky-200"
-                :class="selectedNodeSlug === node.slug ? 'bg-sky-50 text-sky-700 dark:bg-sky-950/50 dark:text-sky-200' : ''"
+                class="rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 transition-colors hover:bg-primary-50 hover:text-primary-700 dark:bg-neutral-950/70 dark:text-neutral-300 dark:hover:bg-primary-950/50 dark:hover:text-primary-200"
+                :class="selectedNodeSlug === node.slug ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/50 dark:text-primary-200' : ''"
                 @click="selectNode(node)"
               >
                 {{ nodeDisplayName(node) }}

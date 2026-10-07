@@ -1,26 +1,26 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(0,720px)_minmax(460px,1fr)] xl:items-start">
-        <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.invites.form.title') }}</h2>
+        <section class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.invites.form.title') }}</h2>
           </div>
 
           <form class="grid gap-4 p-4" @submit.prevent="grantInvites">
             <div class="grid gap-4 lg:grid-cols-[180px_minmax(0,1fr)]">
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.invites.form.amount') }}</span>
-                <input v-model.number="form.amount" type="number" min="1" step="1" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" :disabled="saving">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.invites.form.amount') }}</span>
+                <input v-model.number="form.amount" type="number" min="1" step="1" class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950" :disabled="saving">
               </label>
 
               <div>
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.invites.form.targetMode') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.invites.form.targetMode') }}</span>
                 <div class="mt-1 grid gap-2 sm:grid-cols-2">
                   <button
                     type="button"
                     class="flex h-10 items-center justify-center rounded-md border px-3 text-sm font-semibold transition"
-                    :class="targetMode === 'site' ? 'border-sky-300 bg-sky-50 text-sky-950 dark:border-sky-700 dark:bg-sky-950/40 dark:text-sky-100' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700'"
+                    :class="targetMode === 'site' ? 'border-primary-300 bg-primary-50 text-primary-950 dark:border-primary-700 dark:bg-primary-950/40 dark:text-primary-100' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-neutral-700'"
                     :disabled="saving"
                     @click="setTargetMode('site')"
                   >
@@ -29,7 +29,7 @@
                   <button
                     type="button"
                     class="flex h-10 items-center justify-center rounded-md border px-3 text-sm font-semibold transition"
-                    :class="targetMode === 'roles' ? 'border-sky-300 bg-sky-50 text-sky-950 dark:border-sky-700 dark:bg-sky-950/40 dark:text-sky-100' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700'"
+                    :class="targetMode === 'roles' ? 'border-primary-300 bg-primary-50 text-primary-950 dark:border-primary-700 dark:bg-primary-950/40 dark:text-primary-100' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-neutral-700'"
                     :disabled="saving"
                     @click="setTargetMode('roles')"
                   >
@@ -41,72 +41,72 @@
 
             <div v-if="targetMode === 'roles'" class="grid gap-2">
               <div class="flex items-center justify-between gap-3">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.invites.form.roleIds') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.invites.form.roleIds') }}</span>
                 <button
                   v-if="form.roleIds.length > 0"
                   type="button"
-                  class="text-xs font-medium text-slate-500 transition hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"
+                  class="text-xs font-medium text-neutral-500 transition hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
                   :disabled="saving"
                   @click="form.roleIds = []"
                 >
                   {{ $t('common.clear') }}
                 </button>
               </div>
-              <div class="grid max-h-36 gap-1 overflow-y-auto rounded-md border border-slate-200 bg-slate-50 p-2 sm:grid-cols-2 dark:border-slate-800 dark:bg-slate-950/60">
-                <p v-if="rolesPending" class="px-2 py-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.form.rolesLoading') }}</p>
-                <p v-else-if="roleOptions.length === 0" class="px-2 py-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.form.rolesEmpty') }}</p>
+              <div class="grid max-h-36 gap-1 overflow-y-auto rounded-md border border-neutral-200 bg-neutral-50 p-2 sm:grid-cols-2 dark:border-neutral-800 dark:bg-neutral-950/60">
+                <p v-if="rolesPending" class="px-2 py-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.form.rolesLoading') }}</p>
+                <p v-else-if="roleOptions.length === 0" class="px-2 py-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.form.rolesEmpty') }}</p>
                 <template v-else>
                   <label
                     v-for="role in roleOptions"
                     :key="role.id"
-                    class="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm transition hover:bg-white dark:hover:bg-slate-900"
+                    class="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 text-sm transition hover:bg-white dark:hover:bg-neutral-900"
                   >
                     <input
                       v-model="form.roleIds"
                       type="checkbox"
-                      class="size-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600"
+                      class="size-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500 dark:border-neutral-600"
                       :value="role.id"
                       :disabled="saving"
                     >
-                    <span class="min-w-0 truncate text-slate-700 dark:text-slate-200">{{ roleNameWithLevel(role) }}</span>
+                    <span class="min-w-0 truncate text-neutral-700 dark:text-neutral-200">{{ roleNameWithLevel(role) }}</span>
                   </label>
                 </template>
               </div>
-              <p class="text-xs" :class="targetMode === 'roles' && form.roleIds.length === 0 ? 'text-red-500 dark:text-red-300' : 'text-slate-500 dark:text-slate-400'">
+              <p class="text-xs" :class="targetMode === 'roles' && form.roleIds.length === 0 ? 'text-red-500 dark:text-red-300' : 'text-neutral-500 dark:text-neutral-400'">
                 {{ targetMode === 'roles' && form.roleIds.length === 0 ? $t('admin.iam.invites.form.roleRequired') : $t('admin.iam.invites.form.roleIdsHint') }}
               </p>
             </div>
 
             <div class="grid gap-4 lg:grid-cols-[180px_minmax(0,1fr)]">
-              <label class="flex h-10 items-center justify-between gap-4 rounded-md border border-slate-200 px-3 dark:border-slate-800">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.invites.form.isTemp') }}</span>
-                <input v-model="form.isTemp" type="checkbox" class="size-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600" :disabled="saving">
+              <label class="flex h-10 items-center justify-between gap-4 rounded-md border border-neutral-200 px-3 dark:border-neutral-800">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.invites.form.isTemp') }}</span>
+                <input v-model="form.isTemp" type="checkbox" class="size-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500 dark:border-neutral-600" :disabled="saving">
               </label>
 
               <label class="block">
                 <span class="sr-only">{{ $t('admin.iam.invites.form.expireAt') }}</span>
-                <input v-model="form.expireAt" type="datetime-local" class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" :disabled="saving || !form.isTemp">
-                <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ expireHint }}</span>
+                <input v-model="form.expireAt" type="datetime-local" class="h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950" :disabled="saving || !form.isTemp">
+                <span class="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">{{ expireHint }}</span>
               </label>
             </div>
 
-            <div class="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950/60">
+            <div class="rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-950/60">
               <dl class="space-y-2 text-sm">
                 <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.preview.amount') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(normalizedAmount) }}</dd>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.preview.amount') }}</dt>
+                  <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(normalizedAmount) }}</dd>
                 </div>
                 <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.preview.target') }}</dt>
-                  <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ targetPreview }}</dd>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.preview.target') }}</dt>
+                  <dd class="min-w-0 truncate font-medium text-neutral-950 dark:text-white">{{ targetPreview }}</dd>
                 </div>
                 <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.preview.type') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">{{ inviteTypeLabel }}</dd>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.preview.type') }}</dt>
+                  <dd class="font-medium text-neutral-950 dark:text-white">{{ inviteTypeLabel }}</dd>
                 </div>
                 <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.preview.expireAt') }}</dt>
-                  <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ expirePreview }}</dd>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.preview.expireAt') }}</dt>
+                  <dd class="min-w-0 truncate font-medium text-neutral-950 dark:text-white">{{ expirePreview }}</dd>
                 </div>
               </dl>
             </div>
@@ -122,30 +122,30 @@
         </section>
 
         <aside>
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+          <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="flex flex-col gap-3 border-b border-neutral-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
               <div>
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.invites.siteList.title') }}</h2>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.siteList.description') }}</p>
+                <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.invites.siteList.title') }}</h2>
+                <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.siteList.description') }}</p>
               </div>
               <USelect v-model="siteInviteStatusFilter" class="w-32" size="lg" :ui="{ base: 'h-9 w-full' }" :items="siteInviteStatusOptions" value-key="value" />
             </div>
 
             <div v-if="siteInvitesPending && siteInvites.length === 0" class="space-y-2 p-4">
-              <div v-for="item in 5" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+              <div v-for="item in 5" :key="item" class="h-14 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
             </div>
             <div v-else-if="siteInvitesError" class="m-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
               {{ siteInvitesError }}
             </div>
-            <div v-else-if="siteInvites.length === 0" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">
+            <div v-else-if="siteInvites.length === 0" class="px-4 py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
               {{ $t('admin.iam.invites.siteList.empty') }}
             </div>
-            <div v-else class="divide-y divide-slate-100 dark:divide-slate-800">
+            <div v-else class="divide-y divide-neutral-100 dark:divide-neutral-800">
               <div v-for="invite in siteInvites" :key="invite.id" class="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
                 <div class="min-w-0">
                   <div class="flex min-w-0 items-center gap-2">
                     <UTooltip :text="invite.hash" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="120">
-                      <span class="min-w-0 truncate font-mono text-xs font-medium text-slate-800 dark:text-slate-200">
+                      <span class="min-w-0 truncate font-mono text-xs font-medium text-neutral-800 dark:text-neutral-200">
                         {{ formatInviteHash(invite.hash) }}
                       </span>
                     </UTooltip>
@@ -153,7 +153,7 @@
                       {{ inviteStatusLabel(invite.status) }}
                     </UBadge>
                   </div>
-                  <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+                  <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
                     <span>{{ $t('admin.iam.invites.siteList.expireAt') }} {{ inviteValidUntilText(invite) }}</span>
                     <span>{{ $t('admin.iam.invites.siteList.createdAt') }} {{ formatDateTime(invite.createdAt, locale) }}</span>
                     <span v-if="invite.inviteeEmail || invite.inviteeName">{{ $t('admin.iam.invites.siteList.usedBy') }} {{ invite.inviteeEmail || invite.inviteeName }}</span>
@@ -167,8 +167,8 @@
                     <UButton color="error" variant="ghost" size="xs" icon="i-lucide-archive" :disabled="!canRecycleSiteInvite(invite) || recyclingInviteId !== null" :loading="recyclingInviteId === invite.id" :aria-label="$t('admin.iam.invites.siteList.recycle')" />
                     <template #content="{ close }">
                       <div class="space-y-3">
-                        <p class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.iam.invites.siteList.confirmRecycleTitle') }}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.invites.siteList.confirmRecycleDescription') }}</p>
+                        <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.iam.invites.siteList.confirmRecycleTitle') }}</p>
+                        <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.invites.siteList.confirmRecycleDescription') }}</p>
                         <div class="flex justify-end gap-2">
                           <UButton color="neutral" variant="ghost" size="xs" type="button" @click="close()">{{ $t('common.cancel') }}</UButton>
                           <UButton color="error" size="xs" type="button" icon="i-lucide-archive" :loading="recyclingInviteId === invite.id" :disabled="recyclingInviteId !== null" @click="recycleSiteInvite(invite, close)">
@@ -184,7 +184,7 @@
 
             <AppPager
               v-if="siteInviteTotal > 0"
-              class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+              class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800"
               size="sm"
               :page="siteInvitePage"
               :total="siteInviteTotal"

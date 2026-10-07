@@ -1,49 +1,49 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(420px,620px)_minmax(620px,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex h-12 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="flex h-12 items-center justify-between border-b border-neutral-200 px-4 dark:border-neutral-800">
             <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-tags" class="size-4 text-sky-600 dark:text-sky-300" />
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.tags.list') }}</h2>
+              <UIcon name="i-lucide-tags" class="size-4 text-primary-600 dark:text-primary-300" />
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.catalog.tags.list') }}</h2>
             </div>
-            <span class="text-xs tabular-nums text-slate-500 dark:text-slate-400">{{ numberFormatter.format(groups.length) }}</span>
+            <span class="text-xs tabular-nums text-neutral-500 dark:text-neutral-400">{{ numberFormatter.format(groups.length) }}</span>
           </div>
 
-          <div v-if="pending" class="divide-y divide-slate-200 dark:divide-slate-800">
+          <div v-if="pending" class="divide-y divide-neutral-200 dark:divide-neutral-800">
             <div v-for="index in 5" :key="index" class="space-y-2 px-4 py-3">
-              <div class="h-4 w-36 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-              <div class="h-3 w-52 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+              <div class="h-4 w-36 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+              <div class="h-3 w-52 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
             </div>
           </div>
           <div v-else-if="errorMessage" class="px-4 py-16 text-center text-sm text-red-600 dark:text-red-300">{{ errorMessage }}</div>
-          <div v-else-if="groups.length === 0" class="px-4 py-16 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.catalog.tags.empty') }}</div>
-          <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
+          <div v-else-if="groups.length === 0" class="px-4 py-16 text-center text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.catalog.tags.empty') }}</div>
+          <div v-else class="divide-y divide-neutral-200 dark:divide-neutral-800">
             <button
               v-for="group in groups"
               :key="group.id"
               type="button"
               class="flex w-full items-center justify-between gap-4 px-4 py-3 text-left transition-colors"
-              :class="selectedGroupId === group.id ? 'bg-sky-50/70 dark:bg-sky-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+              :class="selectedGroupId === group.id ? 'bg-primary-50/70 dark:bg-primary-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
               @click="selectGroup(group)"
             >
               <span class="min-w-0">
-                <span class="block truncate text-sm font-semibold text-slate-950 dark:text-white">{{ groupName(group) }}</span>
-                <span class="mt-1 flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <span class="block truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ groupName(group) }}</span>
+                <span class="mt-1 flex min-w-0 items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
                   <code class="truncate">{{ group.slug }}</code>
                   <span>·</span>
                   <span class="shrink-0">{{ $t('admin.catalog.tags.tagCount', { count: numberFormatter.format(group.tags.length) }) }}</span>
                 </span>
               </span>
-              <UIcon name="i-lucide-chevron-right" class="size-4 shrink-0 text-slate-400" />
+              <UIcon name="i-lucide-chevron-right" class="size-4 shrink-0 text-neutral-400" />
             </button>
           </div>
         </section>
 
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex h-12 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="flex h-12 items-center justify-between border-b border-neutral-200 px-4 dark:border-neutral-800">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">
               {{ selectedGroupId ? $t('admin.catalog.tags.form.editGroup') : $t('admin.catalog.tags.form.createGroup') }}
             </h2>
             <UButton v-if="selectedGroupId" color="primary" variant="soft" size="sm" icon="i-lucide-plus" @click="startCreateGroup">
@@ -68,7 +68,7 @@
             </div>
 
             <div>
-              <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.catalog.tags.form.categories') }}</p>
+              <p class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.catalog.tags.form.categories') }}</p>
               <div class="mt-2 flex flex-wrap gap-1.5">
                 <UButton
                   v-for="category in categories"
@@ -77,20 +77,20 @@
                   color="neutral"
                   size="xs"
                   :variant="groupForm.categoryIds.includes(category.id) ? 'soft' : 'outline'"
-                  :class="groupForm.categoryIds.includes(category.id) ? 'ring-1 ring-sky-300 dark:ring-sky-700' : ''"
+                  :class="groupForm.categoryIds.includes(category.id) ? 'ring-1 ring-primary-300 dark:ring-primary-700' : ''"
                   :disabled="savingGroup"
                   @click="toggleCategory(category.id)"
                 >
                   {{ categoryName(category) }}
                 </UButton>
-                <span v-if="categories.length === 0" class="text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.catalog.tags.form.allCategories') }}</span>
+                <span v-if="categories.length === 0" class="text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.catalog.tags.form.allCategories') }}</span>
               </div>
-              <p v-if="categories.length && groupForm.categoryIds.length === 0" class="mt-2 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.catalog.tags.form.allCategories') }}</p>
+              <p v-if="categories.length && groupForm.categoryIds.length === 0" class="mt-2 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.catalog.tags.form.allCategories') }}</p>
             </div>
 
             <p v-if="formError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">{{ formError }}</p>
 
-            <div class="flex items-center justify-between border-t border-slate-200 pt-4 dark:border-slate-800">
+            <div class="flex items-center justify-between border-t border-neutral-200 pt-4 dark:border-neutral-800">
               <UPopover v-if="selectedGroup" :content="{ side: 'top', align: 'start', sideOffset: 8 }" :ui="{ content: 'w-72 p-3' }">
                 <UButton type="button" color="error" variant="ghost" size="sm" icon="i-lucide-trash-2" :disabled="busy" />
                 <template #content="{ close }">
@@ -105,28 +105,28 @@
             </div>
           </form>
 
-          <div v-if="selectedGroup" class="border-t border-slate-200 dark:border-slate-800">
+          <div v-if="selectedGroup" class="border-t border-neutral-200 dark:border-neutral-800">
             <div class="flex h-12 items-center justify-between px-4">
-              <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.tags.tags') }}</h3>
+              <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.catalog.tags.tags') }}</h3>
               <UButton color="neutral" variant="soft" size="sm" icon="i-lucide-plus" @click="startCreateTag">{{ $t('admin.actions.new') }}</UButton>
             </div>
-            <div class="border-t border-slate-200 dark:border-slate-800">
+            <div class="border-t border-neutral-200 dark:border-neutral-800">
               <button
                 v-for="tag in selectedGroup.tags"
                 :key="tag.id"
                 type="button"
-                class="grid w-full grid-cols-[minmax(0,1fr)_minmax(100px,180px)_64px] items-center gap-3 border-b border-slate-100 px-4 py-2.5 text-left last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-950/70"
-                :class="selectedTagId === tag.id ? 'bg-sky-50/60 dark:bg-sky-950/20' : ''"
+                class="grid w-full grid-cols-[minmax(0,1fr)_minmax(100px,180px)_64px] items-center gap-3 border-b border-neutral-100 px-4 py-2.5 text-left last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950/70"
+                :class="selectedTagId === tag.id ? 'bg-primary-50/60 dark:bg-primary-950/20' : ''"
                 @click="selectTag(tag)"
               >
-                <span class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ tagName(tag) }}</span>
-                <code class="truncate text-xs text-slate-500 dark:text-slate-400">{{ tag.value }}</code>
-                <span class="text-right text-xs tabular-nums text-slate-500 dark:text-slate-400">{{ tag.sortOrder }}</span>
+                <span class="truncate text-sm font-medium text-neutral-950 dark:text-white">{{ tagName(tag) }}</span>
+                <code class="truncate text-xs text-neutral-500 dark:text-neutral-400">{{ tag.value }}</code>
+                <span class="text-right text-xs tabular-nums text-neutral-500 dark:text-neutral-400">{{ tag.sortOrder }}</span>
               </button>
-              <p v-if="selectedGroup.tags.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.catalog.tags.noTags') }}</p>
+              <p v-if="selectedGroup.tags.length === 0" class="px-4 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.catalog.tags.noTags') }}</p>
             </div>
 
-            <form v-if="tagEditorOpen" class="space-y-4 border-t border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/30" @submit.prevent="saveTag">
+            <form v-if="tagEditorOpen" class="space-y-4 border-t border-neutral-200 bg-neutral-50/60 p-4 dark:border-neutral-800 dark:bg-neutral-950/30" @submit.prevent="saveTag">
               <div class="grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
                 <UFormField v-for="item in localeOptions" :key="item.code" :label="`${item.name} (${item.code})`">
                   <UInput v-model="tagForm.names[item.code]" class="w-full" :ui="{ base: 'h-10 w-full' }" :disabled="savingTag" />
@@ -149,7 +149,7 @@
                 </UPopover>
                 <span v-else />
                 <div class="flex gap-2">
-                  <UButton type="button" color="neutral" variant="ghost" @click="tagEditorOpen = false">{{ $t('common.cancel') }}</UButton>
+                  <UButton type="button" color="neutral" variant="ghost" @click="() => { tagEditorOpen = false }">{{ $t('common.cancel') }}</UButton>
                   <UButton type="submit" color="primary" icon="i-lucide-save" :loading="savingTag" :disabled="busy || !canSaveTag">{{ $t('common.save') }}</UButton>
                 </div>
               </div>

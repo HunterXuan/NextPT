@@ -2,8 +2,8 @@
   <UCard class="rounded-lg">
     <template #header>
       <div>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.profile.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.profile.subtitle') }}</p>
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.profile.title') }}</h2>
+        <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.profile.subtitle') }}</p>
       </div>
     </template>
 
@@ -14,7 +14,7 @@
         :avatar="profileForm.avatar"
         :alt="user?.user.username || $t('user.profile.avatar')"
         size="xl"
-        class="ring-1 ring-slate-200 dark:ring-slate-800"
+        class="ring-1 ring-neutral-200 dark:ring-neutral-800"
         @load-error="avatarLoadFailed = true"
         @load-success="avatarLoadFailed = false"
       />

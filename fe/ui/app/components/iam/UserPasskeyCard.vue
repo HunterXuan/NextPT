@@ -9,13 +9,13 @@
   >
     <template #header>
       <div>
-        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.passkey.title') }}</h2>
-        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('user.passkey.subtitle') }}</p>
+        <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('user.passkey.title') }}</h2>
+        <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('user.passkey.subtitle') }}</p>
       </div>
     </template>
 
-    <div class="flex min-h-10 items-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950">
-      <p class="break-all font-mono text-xs text-slate-700 dark:text-slate-300">{{ displayPasskey }}</p>
+    <div class="flex min-h-10 items-center rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-950">
+      <p class="break-all font-mono text-xs text-neutral-700 dark:text-neutral-300">{{ displayPasskey }}</p>
     </div>
     <div class="grid grid-cols-2 gap-2 pt-3 sm:grid-cols-3">
       <UButton
@@ -25,7 +25,7 @@
         :icon="showPasskey ? 'i-lucide-eye-off' : 'i-lucide-eye'"
         block
         :disabled="!user?.user.passkey"
-        @click="showPasskey = !showPasskey"
+        @click="() => { showPasskey = !showPasskey }"
       >
         {{ showPasskey ? $t('user.passkey.hide') : $t('user.passkey.show') }}
       </UButton>
@@ -60,10 +60,10 @@
 
         <template #content="{ close }">
           <div class="space-y-3">
-            <p class="text-sm font-medium text-slate-950 dark:text-white">
+            <p class="text-sm font-medium text-neutral-950 dark:text-white">
               {{ $t('user.passkey.resetConfirm') }}
             </p>
-            <p class="text-xs leading-5 text-slate-500 dark:text-slate-400">
+            <p class="text-xs leading-5 text-neutral-500 dark:text-neutral-400">
               {{ $t('user.passkey.resetDescription') }}
             </p>
             <div class="flex justify-end gap-2">

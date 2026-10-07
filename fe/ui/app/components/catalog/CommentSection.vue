@@ -1,8 +1,8 @@
 <template>
-  <section :id="sectionId" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+  <section :id="sectionId" class="scroll-mt-24 overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
       <div class="flex min-w-0 items-center gap-2">
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('catalog.torrents.detail.comments.title') }}</h2>
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ t('catalog.torrents.detail.comments.title') }}</h2>
         <UBadge color="neutral" variant="soft">
           {{ t('catalog.torrents.detail.comments.summary', { count: numberFormatter.format(total) }) }}
         </UBadge>
@@ -35,7 +35,7 @@
       @report="emit('report', $event)"
     />
 
-    <form :id="composerId" class="scroll-mt-32 border-t border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40" @submit.prevent="emit('submit')">
+    <form :id="composerId" class="scroll-mt-32 border-t border-neutral-200 bg-neutral-50/60 p-4 dark:border-neutral-800 dark:bg-neutral-950/40" @submit.prevent="emit('submit')">
       <UTextarea
         v-if="editorModeValue === 'write'"
         ref="commentInput"
@@ -45,13 +45,13 @@
         :placeholder="canCreate ? t('catalog.torrents.detail.comments.placeholder') : t('common.noPermission')"
         :disabled="!canCreate || submitPending"
       />
-      <div v-else class="min-h-28 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+      <div v-else class="min-h-28 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2.5 dark:border-neutral-800 dark:bg-neutral-950">
         <div v-if="renderedPreview" class="rich-text rich-text-compact" v-html="renderedPreview" />
-        <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ t('catalog.torrents.detail.comments.previewEmpty') }}</p>
+        <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">{{ t('catalog.torrents.detail.comments.previewEmpty') }}</p>
       </div>
 
       <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+        <div class="inline-flex w-fit rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-800 dark:bg-neutral-950">
           <button type="button" :class="editorTabClass('write')" @click="editorModeValue = 'write'">
             {{ t('catalog.torrents.detail.comments.edit') }}
           </button>
@@ -150,11 +150,11 @@ const reportReasonValue = computed({
 const renderedPreview = computed(() => renderUserMarkdown(contentValue.value).trim())
 
 function editorTabClass(mode: EditorMode) {
-  const base = 'h-8 rounded px-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  const base = 'h-8 rounded px-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 dark:focus-visible:ring-primary-900'
   if (editorModeValue.value === mode) {
-    return `${base} bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white`
+    return `${base} app-selected shadow-sm`
   }
-  return `${base} text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white`
+  return `${base} text-neutral-500 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white`
 }
 
 function insertQuote(quote: string) {

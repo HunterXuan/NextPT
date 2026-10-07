@@ -1,14 +1,14 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="grid grid-cols-1 divide-y divide-slate-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4 dark:divide-slate-800">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="grid grid-cols-1 divide-y divide-neutral-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4 dark:divide-neutral-800">
       <div v-for="item in statCards" :key="item.label" class="flex items-center justify-between gap-3 p-4">
         <div class="min-w-0 space-y-1">
           <div class="flex items-center gap-2">
             <span class="size-2 rounded-full" :class="item.dotClass" />
-            <p class="text-sm text-slate-500 dark:text-slate-400">{{ item.label }}</p>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ item.label }}</p>
           </div>
-          <p class="truncate text-2xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ item.value }}</p>
-          <p v-if="item.secondary" class="truncate text-xs text-slate-500 dark:text-slate-400">{{ item.secondary }}</p>
+          <p class="truncate text-2xl font-semibold tabular-nums text-neutral-950 dark:text-white">{{ item.value }}</p>
+          <p v-if="item.secondary" class="truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.secondary }}</p>
         </div>
         <span class="flex size-10 shrink-0 items-center justify-center rounded-md" :class="item.iconClass">
           <UIcon :name="item.icon" class="size-5" />

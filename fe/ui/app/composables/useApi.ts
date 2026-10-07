@@ -238,7 +238,7 @@ export async function fetchApi<T = unknown>(
   opts?: Parameters<typeof $fetch>[1]
 ): Promise<T> {
   try {
-    const payload = await $fetch<ApiEnvelope<T> | T>(request, {
+    const payload = await $fetch<ApiEnvelope<T> | T, string | Request>(request, {
       ...opts,
       headers: useApiHeaders(opts?.headers as HeadersInit)
     })

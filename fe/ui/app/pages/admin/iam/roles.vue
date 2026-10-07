@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(620px,820px)_minmax(520px,1fr)] 2xl:grid-cols-[minmax(660px,880px)_minmax(560px,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div class="flex items-center gap-2">
                 <UIcon name="i-lucide-shield-check" class="size-5 text-emerald-600 dark:text-emerald-300" />
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.roles.list') }}</h2>
+                <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.roles.list') }}</h2>
               </div>
               <div class="flex flex-wrap items-center gap-2 text-xs">
-                <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-slate-100 px-2.5 font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-neutral-100 px-2.5 font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
                   <span>{{ $t('admin.iam.roles.stats.total') }}</span>
-                  <span class="font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(roles.length) }}</span>
+                  <span class="font-semibold text-neutral-950 dark:text-white">{{ numberFormatter.format(roles.length) }}</span>
                 </span>
                 <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
                   <span>{{ $t('admin.iam.roles.stats.staff') }}</span>
@@ -24,22 +24,22 @@
 
           <div v-if="pending" class="overflow-x-auto">
             <table class="min-w-[820px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[34%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.iam.roles.table.name') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.iam.roles.table.level') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.iam.roles.table.staff') }}</th>
-                  <th class="w-[18%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.iam.roles.table.permissions') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.iam.roles.table.updatedAt') }}</th>
+                  <th class="w-[34%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.iam.roles.table.name') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.iam.roles.table.level') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.iam.roles.table.staff') }}</th>
+                  <th class="w-[18%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.iam.roles.table.permissions') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.iam.roles.table.updatedAt') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="index in 5" :key="index" class="border-b border-slate-200 last:border-b-0 dark:border-slate-800">
-                  <td class="px-4 py-4"><div class="h-4 w-44 animate-pulse rounded bg-slate-200 dark:bg-slate-800" /></td>
-                  <td class="px-4 py-4"><div class="ml-auto h-4 w-12 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-4 py-4"><div class="h-4 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-4 py-4"><div class="ml-auto h-4 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-4 py-4"><div class="h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
+                <tr v-for="index in 5" :key="index" class="border-b border-neutral-200 last:border-b-0 dark:border-neutral-800">
+                  <td class="px-4 py-4"><div class="h-4 w-44 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" /></td>
+                  <td class="px-4 py-4"><div class="ml-auto h-4 w-12 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-4 py-4"><div class="h-4 w-16 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-4 py-4"><div class="ml-auto h-4 w-16 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-4 py-4"><div class="h-4 w-28 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
                 </tr>
               </tbody>
             </table>
@@ -47,31 +47,31 @@
 
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
           </div>
 
           <div v-else-if="roles.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.iam.roles.empty') }}</p>
+            <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.iam.roles.empty') }}</p>
           </div>
 
           <div v-else class="overflow-x-auto">
             <table class="min-w-[820px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[34%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.iam.roles.table.name') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.iam.roles.table.level') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.iam.roles.table.staff') }}</th>
-                  <th class="w-[18%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.iam.roles.table.permissions') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.iam.roles.table.updatedAt') }}</th>
+                  <th class="w-[34%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.iam.roles.table.name') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.iam.roles.table.level') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.iam.roles.table.staff') }}</th>
+                  <th class="w-[18%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.iam.roles.table.permissions') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.iam.roles.table.updatedAt') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="role in roles"
                   :key="role.id"
-                  class="cursor-pointer border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
-                  :class="selectedId === role.id ? 'bg-emerald-50/70 dark:bg-emerald-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+                  class="cursor-pointer border-b border-neutral-200 transition-colors last:border-b-0 dark:border-neutral-800"
+                  :class="selectedId === role.id ? 'bg-emerald-50/70 dark:bg-emerald-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
                   role="button"
                   tabindex="0"
                   @click="selectRole(role)"
@@ -80,13 +80,13 @@
                 >
                   <td class="px-4 py-3 align-middle">
                     <div class="block max-w-full text-left">
-                      <span class="block truncate text-sm font-semibold text-slate-950 hover:text-emerald-700 dark:text-white dark:hover:text-emerald-300">
+                      <span class="block truncate text-sm font-semibold text-neutral-950 hover:text-emerald-700 dark:text-white dark:hover:text-emerald-300">
                         {{ roleName(role) }}
                       </span>
-                      <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">#{{ role.id }}</span>
+                      <span class="mt-1 block truncate text-xs text-neutral-500 dark:text-neutral-400">#{{ role.id }}</span>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-right align-middle text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-4 py-3 text-right align-middle text-sm text-neutral-600 dark:text-neutral-300">
                     {{ numberFormatter.format(role.level) }}
                   </td>
                   <td class="px-4 py-3 align-middle">
@@ -94,10 +94,10 @@
                       {{ role.isStaff ? $t('admin.iam.roles.staff.yes') : $t('admin.iam.roles.staff.no') }}
                     </UBadge>
                   </td>
-                  <td class="px-4 py-3 text-right align-middle text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-4 py-3 text-right align-middle text-sm text-neutral-600 dark:text-neutral-300">
                     {{ numberFormatter.format(rolePermissions(role).length) }}
                   </td>
-                  <td class="px-4 py-3 align-middle text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-4 py-3 align-middle text-sm text-neutral-600 dark:text-neutral-300">
                     {{ formatDateTime(role.updatedAt || role.createdAt, locale) }}
                   </td>
                 </tr>
@@ -106,10 +106,10 @@
           </div>
         </section>
 
-        <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex items-center justify-between gap-3">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">
                 {{ selectedId ? $t('admin.iam.roles.form.edit') : $t('admin.iam.roles.form.create') }}
               </h2>
               <div class="flex h-8 min-w-20 items-center justify-end">
@@ -122,21 +122,21 @@
 
           <form class="space-y-5 p-4" @submit.prevent="saveRole">
             <div>
-              <div class="flex items-center justify-between gap-3 border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.roles.form.name') }}</span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">
+              <div class="flex items-center justify-between gap-3 border-b border-neutral-200 pb-2 dark:border-neutral-800">
+                <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.roles.form.name') }}</span>
+                <span class="text-xs text-neutral-500 dark:text-neutral-400">
                   {{ $t('admin.iam.roles.form.primaryLocale', { locale: primaryLocaleLabel }) }}
                 </span>
               </div>
               <div class="mt-3 grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
                 <label v-for="item in localeOptions" :key="item.code" class="block">
-                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
                     <span>{{ item.name }}</span>
-                    <span class="text-xs font-normal text-slate-400 dark:text-slate-500">{{ item.code }}</span>
+                    <span class="text-xs font-normal text-neutral-400 dark:text-neutral-500">{{ item.code }}</span>
                   </span>
                   <input
                     v-model="form.names[item.code]"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-emerald-500 dark:focus:ring-emerald-950"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-emerald-500 dark:focus:ring-emerald-950"
                     :disabled="saving"
                   >
                 </label>
@@ -145,15 +145,15 @@
 
             <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px]">
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.roles.form.level') }}</span>
-                <input v-model.number="form.level" type="number" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-emerald-500 dark:focus:ring-emerald-950" :disabled="saving">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.roles.form.level') }}</span>
+                <input v-model.number="form.level" type="number" class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-emerald-500 dark:focus:ring-emerald-950" :disabled="saving">
               </label>
 
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.roles.form.isStaff') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.roles.form.isStaff') }}</span>
                 <span
                   class="mt-1 flex h-10 items-center justify-between gap-3 rounded-md border px-3 text-sm font-medium transition"
-                  :class="form.isStaff ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/30 dark:text-emerald-300' : 'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300'"
+                  :class="form.isStaff ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/30 dark:text-emerald-300' : 'border-neutral-200 bg-white text-neutral-600 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300'"
                 >
                   <span>{{ form.isStaff ? $t('admin.iam.roles.staff.yes') : $t('admin.iam.roles.staff.no') }}</span>
                   <input
@@ -162,65 +162,65 @@
                     class="peer sr-only"
                     :disabled="saving"
                   >
-                  <span class="relative h-5 w-9 rounded-full bg-slate-200 transition-colors after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:bg-emerald-500 peer-checked:after:translate-x-4 peer-disabled:opacity-60 dark:bg-slate-700" />
+                  <span class="relative h-5 w-9 rounded-full bg-neutral-200 transition-colors after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:bg-emerald-500 peer-checked:after:translate-x-4 peer-disabled:opacity-60 dark:bg-neutral-700" />
                 </span>
               </label>
             </div>
 
             <div>
               <div class="mb-2 flex items-center justify-between gap-3">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.roles.form.permissions') }}</span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">{{ numberFormatter.format(form.permissions.length) }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.roles.form.permissions') }}</span>
+                <span class="text-xs text-neutral-500 dark:text-neutral-400">{{ numberFormatter.format(form.permissions.length) }}</span>
               </div>
-              <div v-if="permissions.length" class="max-h-72 overflow-y-auto rounded-md border border-slate-200 dark:border-slate-700">
+              <div v-if="permissions.length" class="max-h-72 overflow-y-auto rounded-md border border-neutral-200 dark:border-neutral-700">
                 <section
                   v-for="group in permissionGroups"
                   :key="group.key"
-                  class="border-b border-slate-200 last:border-b-0 dark:border-slate-800"
+                  class="border-b border-neutral-200 last:border-b-0 dark:border-neutral-800"
                 >
-                  <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
+                  <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-900">
                     <label class="flex min-w-0 items-center gap-2">
                       <input
                         type="checkbox"
-                        class="size-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600"
+                        class="size-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500 dark:border-neutral-600"
                         :checked="isPermissionGroupSelected(group)"
                         :indeterminate="isPermissionGroupPartial(group)"
                         :disabled="saving"
                         @change="togglePermissionGroup(group)"
                       >
-                      <span class="truncate text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ group.label }}</span>
+                      <span class="truncate text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">{{ group.label }}</span>
                     </label>
-                    <span class="shrink-0 rounded bg-white px-1.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+                    <span class="shrink-0 rounded bg-white px-1.5 py-0.5 text-xs font-medium text-neutral-500 dark:bg-neutral-950 dark:text-neutral-400">
                       {{ permissionGroupSelectedCount(group) }}/{{ group.permissions.length }}
                     </span>
                   </div>
                   <label
                     v-for="permission in group.permissions"
                     :key="permission"
-                    class="flex items-center gap-2 border-b border-slate-100 px-3 py-2 text-xs last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-950/70"
+                    class="flex items-center gap-2 border-b border-neutral-100 px-3 py-2 text-xs last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950/70"
                   >
                     <input
                       type="checkbox"
-                      class="size-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600"
+                      class="size-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500 dark:border-neutral-600"
                       :checked="isPermissionSelected(permission)"
                       :disabled="saving"
                       @change="togglePermission(permission)"
                     >
-                    <span class="w-20 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-center font-mono text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                    <span class="w-20 shrink-0 rounded bg-neutral-100 px-1.5 py-0.5 text-center font-mono text-[11px] font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
                       {{ permissionAction(permission) }}
                     </span>
-                    <code class="min-w-0 truncate text-slate-700 dark:text-slate-200">{{ permission }}</code>
+                    <code class="min-w-0 truncate text-neutral-700 dark:text-neutral-200">{{ permission }}</code>
                   </label>
                 </section>
               </div>
-              <div v-else class="rounded-md border border-dashed border-slate-300 px-3 py-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              <div v-else class="rounded-md border border-dashed border-neutral-300 px-3 py-4 text-sm text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
                 {{ $t('admin.iam.roles.form.noPermissions') }}
               </div>
             </div>
 
             <div>
               <div class="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.roles.form.rules') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.roles.form.rules') }}</span>
                 <UButton
                   type="button"
                   color="neutral"
@@ -255,7 +255,7 @@
               {{ formError }}
             </p>
 
-            <div class="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+            <div class="flex flex-col gap-3 border-t border-neutral-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
               <div class="flex justify-start">
                 <UPopover
                   v-if="selectedRole"
@@ -274,10 +274,10 @@
 
                   <template #content="{ close }">
                     <div class="space-y-3">
-                      <p class="text-sm font-medium text-slate-950 dark:text-white">
+                      <p class="text-sm font-medium text-neutral-950 dark:text-white">
                         {{ $t('admin.actions.confirmDeleteTitle') }}
                       </p>
-                      <p class="text-xs text-slate-500 dark:text-slate-400">
+                      <p class="text-xs text-neutral-500 dark:text-neutral-400">
                         {{ $t('admin.actions.deleteIrreversible') }}
                       </p>
                       <div class="flex justify-end gap-2">
@@ -469,7 +469,7 @@ function permissionAction(permission: string) {
 
 function permissionGroupMeta(permission: string) {
   const parts = permission.split(':')
-  const target = parts.length >= 2 ? parts[1] : permission
+  const target = parts[1] ?? permission
   const [domain, ...resourceParts] = target.split('/')
   const resource = resourceParts.join('/')
   if (!domain) {

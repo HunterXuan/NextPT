@@ -1,21 +1,21 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="mb-4 flex justify-end">
-        <div class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2 dark:border-neutral-800 dark:bg-neutral-900">
           <UIcon name="i-lucide-shield-check" class="size-4 text-emerald-600 dark:text-emerald-400" />
-          <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ user?.role.name || $t('user.staff') }}</span>
+          <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ user?.role.name || $t('user.staff') }}</span>
         </div>
       </div>
 
       <div v-if="dashboardStats.length" class="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div v-for="stat in dashboardStats" :key="stat.key" class="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div v-for="stat in dashboardStats" :key="stat.key" class="rounded-lg border border-neutral-200 bg-white px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900">
           <div class="flex items-center justify-between gap-3">
-            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ stat.label }}</p>
-            <UIcon :name="stat.icon" class="size-4 text-slate-400" />
+            <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ stat.label }}</p>
+            <UIcon :name="stat.icon" class="size-4 text-neutral-400" />
           </div>
-          <p class="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">
-            <span v-if="dashboardPending" class="inline-block h-7 w-16 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
+          <p class="mt-2 text-2xl font-semibold text-neutral-950 dark:text-white">
+            <span v-if="dashboardPending" class="inline-block h-7 w-16 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
             <span v-else>{{ numberFormatter.format(stat.value) }}</span>
           </p>
         </div>
@@ -26,7 +26,7 @@
           v-for="card in adminEntryCards"
           :key="card.key"
           :to="localePath(card.to)"
-          :class="['group rounded-lg border border-slate-200 bg-white p-5 transition dark:border-slate-800 dark:bg-slate-900', card.hoverClass]"
+          :class="['group rounded-lg border border-neutral-200 bg-white p-5 transition dark:border-neutral-800 dark:bg-neutral-900', card.hoverClass]"
         >
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
@@ -34,11 +34,11 @@
                 <UIcon :name="card.icon" class="size-5" />
               </span>
               <div class="min-w-0">
-                <h2 class="truncate text-base font-semibold text-slate-950 dark:text-white">{{ card.title }}</h2>
-                <p class="mt-0.5 truncate text-sm text-slate-500 dark:text-slate-400">{{ card.description }}</p>
+                <h2 class="truncate text-base font-semibold text-neutral-950 dark:text-white">{{ card.title }}</h2>
+                <p class="mt-0.5 truncate text-sm text-neutral-500 dark:text-neutral-400">{{ card.description }}</p>
               </div>
             </div>
-            <UIcon name="i-lucide-arrow-right" :class="['size-5 text-slate-400 transition', card.arrowClass]" />
+            <UIcon name="i-lucide-arrow-right" :class="['size-5 text-neutral-400 transition', card.arrowClass]" />
           </div>
         </NuxtLink>
       </div>
@@ -84,9 +84,9 @@ const adminEntryCards = computed(() => compactDashboardItems([
           [Permission.AdminCatalogTagManage, '/admin/catalog/tags']
         ]),
         icon: 'i-lucide-tags',
-        iconClass: 'bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300',
-        hoverClass: 'hover:border-sky-300 hover:bg-sky-50/70 dark:hover:border-sky-800 dark:hover:bg-sky-950/30',
-        arrowClass: 'group-hover:text-sky-600 dark:group-hover:text-sky-300'
+        iconClass: 'bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300',
+        hoverClass: 'hover:border-primary-300 hover:bg-primary-50/70 dark:hover:border-primary-800 dark:hover:bg-primary-950/30',
+        arrowClass: 'group-hover:text-primary-600 dark:group-hover:text-primary-300'
       }
     : null,
   hasAnyPermission(Permission.AdminForumCategoryManage, Permission.AdminForumNodeManage)

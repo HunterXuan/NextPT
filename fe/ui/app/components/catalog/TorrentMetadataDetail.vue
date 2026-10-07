@@ -1,7 +1,7 @@
 <template>
-  <section id="torrent-metadata" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-      <h2 class="shrink-0 text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.metadata.title') }}</h2>
+  <section id="torrent-metadata" class="scroll-mt-24 overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+      <h2 class="shrink-0 text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.metadata.title') }}</h2>
       <div v-if="sources.length" class="min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div class="ml-auto flex min-w-max items-center justify-end gap-1.5">
           <UTooltip v-for="source in sources" :key="source.provider" :text="source.label">
@@ -9,10 +9,10 @@
               :to="source.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="group inline-flex h-6 shrink-0 items-center overflow-hidden rounded-full border border-slate-200 bg-white text-xs transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600"
+              class="group inline-flex h-6 shrink-0 items-center overflow-hidden rounded-full border border-neutral-200 bg-white text-xs transition hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600"
             >
               <span :class="['inline-flex self-stretch items-center px-2 font-semibold', providerPillClass(source.provider)]">{{ source.label }}</span>
-              <span class="inline-flex self-stretch items-center border-l border-slate-200 px-2 font-semibold tabular-nums text-slate-950 dark:border-slate-700 dark:text-white">
+              <span class="inline-flex self-stretch items-center border-l border-neutral-200 px-2 font-semibold tabular-nums text-neutral-950 dark:border-neutral-700 dark:text-white">
                 {{ source.rating ? source.rating.toFixed(1) : '-' }}
               </span>
             </NuxtLink>
@@ -26,27 +26,27 @@
           v-if="metadata.data.posterUrl"
           :src="metadata.data.posterUrl"
           :alt="metadata.data.title"
-          class="aspect-[2/3] w-32 rounded-md object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+          class="aspect-[2/3] w-32 rounded-md object-cover ring-1 ring-neutral-200 dark:ring-neutral-700"
           referrerpolicy="no-referrer"
         >
-        <div v-else class="flex aspect-[2/3] w-32 items-center justify-center rounded-md bg-slate-100 text-slate-400 ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700">
+        <div v-else class="flex aspect-[2/3] w-32 items-center justify-center rounded-md bg-neutral-100 text-neutral-400 ring-1 ring-neutral-200 dark:bg-neutral-800 dark:ring-neutral-700">
           <UIcon name="i-lucide-image-off" class="size-6" />
         </div>
 
         <div class="min-w-0">
           <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <h3 class="break-words text-lg font-semibold text-slate-950 dark:text-white">{{ metadata.data.title }}</h3>
-            <span v-if="metadata.data.year" class="text-sm text-slate-500 dark:text-slate-400">{{ metadata.data.year }}</span>
+            <h3 class="break-words text-lg font-semibold text-neutral-950 dark:text-white">{{ metadata.data.title }}</h3>
+            <span v-if="metadata.data.year" class="text-sm text-neutral-500 dark:text-neutral-400">{{ metadata.data.year }}</span>
           </div>
-          <p v-if="metadata.data.originalTitle && metadata.data.originalTitle !== metadata.data.title" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <p v-if="metadata.data.originalTitle && metadata.data.originalTitle !== metadata.data.title" class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             {{ metadata.data.originalTitle }}
           </p>
 
           <div v-if="metadata.data.genres?.length" class="mt-3 flex flex-wrap gap-1.5">
             <UBadge v-for="genre in metadata.data.genres" :key="genre" color="neutral" variant="soft">{{ genre }}</UBadge>
           </div>
-          <p v-if="metadata.data.overview" class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ metadata.data.overview }}</p>
-          <p v-else class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.metadata.noOverview') }}</p>
+          <p v-if="metadata.data.overview" class="mt-3 text-sm leading-6 text-neutral-600 dark:text-neutral-300">{{ metadata.data.overview }}</p>
+          <p v-else class="mt-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.metadata.noOverview') }}</p>
         </div>
       </div>
 
@@ -87,6 +87,6 @@ function providerPillClass(provider: string) {
   if (provider === 'imdb') return 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300'
   if (provider === 'douban') return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300'
   if (provider === 'bangumi') return 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300'
-  return 'bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+  return 'bg-neutral-50 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
 }
 </script>

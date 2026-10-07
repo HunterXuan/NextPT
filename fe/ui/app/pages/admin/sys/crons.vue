@@ -1,62 +1,62 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[340px_minmax(0,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.sys.crons.list') }}</h2>
-            <span class="text-xs text-slate-500 dark:text-slate-400">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.sys.crons.list') }}</h2>
+            <span class="text-xs text-neutral-500 dark:text-neutral-400">
               {{ $t('admin.sys.crons.tasksCount', { count: numberFormatter.format(crons.length) }) }}
             </span>
           </div>
 
           <div v-if="cronsPending" class="space-y-2 p-4">
-            <div v-for="item in 5" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+            <div v-for="item in 5" :key="item" class="h-14 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
           </div>
           <div v-else-if="cronsError" class="px-4 py-10 text-center text-sm text-red-600 dark:text-red-300">{{ cronsError }}</div>
-          <div v-else-if="crons.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.sys.crons.empty') }}</div>
+          <div v-else-if="crons.length === 0" class="px-4 py-10 text-center text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.sys.crons.empty') }}</div>
           <div v-else class="space-y-1 p-2">
             <button
               v-for="cron in crons"
               :key="cron.name"
               type="button"
               class="group flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-colors"
-              :class="selectedName === cron.name ? 'bg-sky-50 ring-1 ring-sky-200 dark:bg-sky-950/30 dark:ring-sky-900' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+              :class="selectedName === cron.name ? 'bg-primary-50 ring-1 ring-primary-200 dark:bg-primary-950/30 dark:ring-primary-900' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
               @click="selectCron(cron.name)"
             >
               <span class="size-2.5 shrink-0 rounded-full" :class="cronStatusDotClass(cron.status)" />
               <UTooltip class="min-w-0 flex-1" :text="cron.name" :content="{ side: 'right', sideOffset: 8 }" :delay-duration="600">
-                <p class="truncate font-mono text-[13px] font-semibold leading-6 text-slate-950 dark:text-white">{{ cron.name }}</p>
+                <p class="truncate font-mono text-[13px] font-semibold leading-6 text-neutral-950 dark:text-white">{{ cron.name }}</p>
               </UTooltip>
               <span class="sr-only">{{ cronStatusLabel(cron.status) }}</span>
             </button>
           </div>
         </section>
 
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="flex flex-col gap-3 border-b border-neutral-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
             <div class="flex min-w-0 items-center gap-3">
-              <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+              <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-300">
                 <UIcon name="i-lucide-scroll-text" class="size-4" />
               </span>
               <div class="min-w-0">
                 <div class="flex min-w-0 items-center gap-2">
-                  <h2 class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ selectedName || $t('admin.sys.crons.logsTitle') }}</h2>
+                  <h2 class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ selectedName || $t('admin.sys.crons.logsTitle') }}</h2>
                   <UBadge v-if="selectedCron" :color="cronStatusColor(selectedCron.status)" variant="soft" class="shrink-0 whitespace-nowrap">{{ cronStatusLabel(selectedCron.status) }}</UBadge>
                 </div>
-                <p v-if="selectedCron" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                <p v-if="selectedCron" class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">
                   {{ $t('admin.sys.crons.registeredAt', { time: formatDateTime(selectedCron.registerTime, locale) }) }}
                 </p>
               </div>
             </div>
             <div v-if="selectedCron" class="flex shrink-0 flex-wrap items-center gap-2">
-              <div class="inline-flex h-9 items-center gap-0.5 rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-700 dark:bg-slate-950" :aria-label="$t('admin.sys.crons.filters.status')" role="group">
+              <div class="inline-flex h-9 items-center gap-0.5 rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-700 dark:bg-neutral-950" :aria-label="$t('admin.sys.crons.filters.status')" role="group">
                 <button
                   v-for="option in logStatusOptions"
                   :key="option.value"
                   type="button"
                   class="h-7 rounded px-2.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-60"
-                  :class="logQuery.status === option.value ? 'bg-slate-950 text-white shadow-sm dark:bg-white dark:text-slate-950' : 'text-slate-500 hover:bg-white hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white'"
+                  :class="logQuery.status === option.value ? 'app-selected shadow-sm' : 'text-neutral-500 hover:bg-white hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-white'"
                   :disabled="logsPending"
                   @click="setLogStatus(option.value)"
                 >
@@ -67,39 +67,39 @@
           </div>
 
           <div v-if="!selectedName" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-clock-3" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.sys.crons.select') }}</p>
+            <UIcon name="i-lucide-clock-3" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.sys.crons.select') }}</p>
           </div>
           <div v-else-if="logsPending" class="space-y-2 p-4">
-            <div v-for="item in 8" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+            <div v-for="item in 8" :key="item" class="h-16 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
           </div>
           <div v-else-if="logsError" class="px-4 py-10 text-center text-sm text-red-600 dark:text-red-300">{{ logsError }}</div>
-          <div v-else-if="logs.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.sys.crons.logsEmpty') }}</div>
+          <div v-else-if="logs.length === 0" class="px-4 py-10 text-center text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.sys.crons.logsEmpty') }}</div>
           <div v-else class="overflow-x-auto">
             <table class="min-w-[820px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[10%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.sys.crons.table.status') }}</th>
-                  <th class="w-[10%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.sys.crons.table.duration') }}</th>
-                  <th class="w-[26%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.sys.crons.table.node') }}</th>
-                  <th class="w-[32%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.sys.crons.table.error') }}</th>
-                  <th class="w-[22%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.sys.crons.table.time') }}</th>
+                  <th class="w-[10%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.sys.crons.table.status') }}</th>
+                  <th class="w-[10%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.sys.crons.table.duration') }}</th>
+                  <th class="w-[26%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.sys.crons.table.node') }}</th>
+                  <th class="w-[32%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.sys.crons.table.error') }}</th>
+                  <th class="w-[22%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.sys.crons.table.time') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="log in logs" :key="log.id" class="border-b border-slate-200 last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-950/70">
+                <tr v-for="log in logs" :key="log.id" class="border-b border-neutral-200 last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950/70">
                   <td class="px-4 py-2.5">
                     <div class="flex min-w-0 items-center gap-2">
                       <UBadge :color="cronLogStatusColor(log.status)" variant="soft" class="shrink-0 whitespace-nowrap">{{ cronLogStatusLabel(log.status) }}</UBadge>
                     </div>
                   </td>
-                  <td class="whitespace-nowrap px-4 py-2.5 text-right font-mono text-sm text-slate-600 dark:text-slate-300">{{ formatDuration(log.durationMs) }}</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-slate-600 dark:text-slate-300">
+                  <td class="whitespace-nowrap px-4 py-2.5 text-right font-mono text-sm text-neutral-600 dark:text-neutral-300">{{ formatDuration(log.durationMs) }}</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-neutral-600 dark:text-neutral-300">
                     <UTooltip :text="log.nodeIp || '-'" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
                       <p class="truncate">{{ log.nodeIp || '-' }}</p>
                     </UTooltip>
                   </td>
-                  <td class="px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-4 py-2.5 text-sm text-neutral-600 dark:text-neutral-300">
                     <button
                       v-if="log.errorMessage"
                       type="button"
@@ -109,9 +109,9 @@
                       <span class="line-clamp-2 min-w-0 flex-1 break-all">{{ log.errorMessage }}</span>
                       <UIcon name="i-lucide-maximize-2" class="mt-0.5 size-3.5 shrink-0 opacity-50 group-hover:opacity-100" />
                     </button>
-                    <span v-else class="text-slate-300 dark:text-slate-600">-</span>
+                    <span v-else class="text-neutral-300 dark:text-neutral-600">-</span>
                   </td>
-                  <td class="whitespace-nowrap px-4 py-2.5 text-right text-sm text-slate-600 dark:text-slate-300">
+                  <td class="whitespace-nowrap px-4 py-2.5 text-right text-sm text-neutral-600 dark:text-neutral-300">
                     <UTooltip :text="formatDateTime(log.createdAt, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
                       <span>{{ formatDateTime(log.createdAt, locale) }}</span>
                     </UTooltip>
@@ -122,7 +122,7 @@
           </div>
 
           <AppPager
-            class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+            class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800"
             size="sm"
             :page="logQuery.page"
             :total="logTotal"
@@ -144,21 +144,21 @@
         content: 'sm:max-w-2xl overflow-hidden',
         header: 'min-h-0 px-5 py-4 sm:px-5',
         body: 'p-0 sm:p-0',
-        title: 'text-base font-semibold text-slate-950 dark:text-white',
-        description: 'mt-1 text-sm text-slate-500 dark:text-slate-400',
+        title: 'text-base font-semibold text-neutral-950 dark:text-white',
+        description: 'mt-1 text-sm text-neutral-500 dark:text-neutral-400',
         close: 'top-4 end-4'
       }"
       @update:open="setErrorModalOpen"
     >
       <template #body>
         <div>
-          <div class="flex items-center justify-end border-b border-slate-200 bg-slate-50 px-5 py-2.5 dark:border-slate-800 dark:bg-slate-950/70">
+          <div class="flex items-center justify-end border-b border-neutral-200 bg-neutral-50 px-5 py-2.5 dark:border-neutral-800 dark:bg-neutral-950/70">
             <UButton color="neutral" variant="soft" size="xs" icon="i-lucide-copy" :disabled="!selectedErrorLog?.errorMessage" @click="copyError">
               {{ $t('common.copy') }}
             </UButton>
           </div>
-          <div class="max-h-[58vh] overflow-auto bg-slate-950">
-            <pre class="min-h-40 whitespace-pre-wrap break-words px-5 py-4 font-mono text-xs leading-5 text-slate-100 selection:bg-sky-500/30">{{ selectedErrorLog?.errorMessage || '' }}</pre>
+          <div class="max-h-[58vh] overflow-auto bg-neutral-950">
+            <pre class="min-h-40 whitespace-pre-wrap break-words px-5 py-4 font-mono text-xs leading-5 text-neutral-100 selection:bg-primary-500/30">{{ selectedErrorLog?.errorMessage || '' }}</pre>
           </div>
         </div>
       </template>

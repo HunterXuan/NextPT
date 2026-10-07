@@ -1,24 +1,24 @@
 <template>
-  <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+  <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.roleStandards.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.roleStandards.subtitle') }}</p>
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.roleStandards.title') }}</h2>
+        <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.roleStandards.subtitle') }}</p>
       </div>
     </div>
 
-    <div v-if="pending" class="mt-4 h-64 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+    <div v-if="pending" class="mt-4 h-64 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
 
     <div v-else-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
       {{ error }}
     </div>
 
-    <div v-else-if="orderedRoles.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+    <div v-else-if="orderedRoles.length === 0" class="mt-4 rounded-md border border-dashed border-neutral-200 px-4 py-8 text-center text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
       {{ $t('user.roleStandards.empty') }}
     </div>
 
     <div v-else-if="activeRole" class="mt-4">
-      <div class="rounded-md bg-slate-50 p-4 dark:bg-slate-950/50">
+      <div class="rounded-md bg-neutral-50 p-4 dark:bg-neutral-950/50">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div class="min-w-0">
             <div class="flex flex-wrap items-center gap-2">
@@ -28,12 +28,12 @@
               >
                 <UIcon :name="activeRole.isStaff ? 'i-lucide-shield-check' : 'i-lucide-medal'" class="size-5" />
               </span>
-              <h3 class="truncate text-lg font-semibold text-slate-950 dark:text-white">{{ activeRole.name }}</h3>
+              <h3 class="truncate text-lg font-semibold text-neutral-950 dark:text-white">{{ activeRole.name }}</h3>
               <UBadge v-if="activeRole.id === user?.role.id" color="primary" variant="soft">
                 {{ $t('user.roleStandards.currentShort') }}
               </UBadge>
             </div>
-            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
               {{ $t('user.roleStandards.position', { current: numberFormatter.format(activeIndex + 1), total: numberFormatter.format(orderedRoles.length) }) }}
             </p>
           </div>
@@ -51,7 +51,7 @@
                 @click="goPrevious"
               />
             </UTooltip>
-            <span class="min-w-14 text-center text-sm tabular-nums text-slate-500 dark:text-slate-400">
+            <span class="min-w-14 text-center text-sm tabular-nums text-neutral-500 dark:text-neutral-400">
               {{ numberFormatter.format(activeIndex + 1) }} / {{ numberFormatter.format(orderedRoles.length) }}
             </span>
             <UTooltip :text="$t('user.roleStandards.next')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
@@ -70,14 +70,14 @@
         </div>
 
         <div class="mt-4">
-          <div v-if="activeRole.isStaff" class="rounded-md bg-white px-4 py-4 dark:bg-slate-900">
+          <div v-if="activeRole.isStaff" class="rounded-md bg-white px-4 py-4 dark:bg-neutral-900">
             <div class="flex min-w-0 items-start gap-3">
-              <span class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-200">
+              <span class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-700 dark:bg-primary-950 dark:text-primary-200">
                 <UIcon name="i-lucide-shield-check" class="size-4" />
               </span>
               <div>
-                <p class="font-medium text-slate-950 dark:text-white">{{ $t('user.roleStandards.staffTitle') }}</p>
-                <p class="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">{{ $t('user.roleStandards.notAuto') }}</p>
+                <p class="font-medium text-neutral-950 dark:text-white">{{ $t('user.roleStandards.staffTitle') }}</p>
+                <p class="mt-1 text-sm leading-6 text-neutral-500 dark:text-neutral-400">{{ $t('user.roleStandards.notAuto') }}</p>
               </div>
             </div>
           </div>
@@ -127,14 +127,14 @@ const RulePanel = defineComponent({
   },
   setup(props) {
     const { t } = useI18n()
-    return () => h('div', { class: 'rounded-md bg-white/80 p-3 ring-1 ring-slate-200/70 dark:bg-slate-900/80 dark:ring-slate-800' }, [
-      h('p', { class: 'text-sm font-semibold text-slate-950 dark:text-white' }, props.title),
+    return () => h('div', { class: 'rounded-md bg-white/80 p-3 ring-1 ring-neutral-200/70 dark:bg-neutral-900/80 dark:ring-neutral-800' }, [
+      h('p', { class: 'text-sm font-semibold text-neutral-950 dark:text-white' }, props.title),
       props.groups.length > 0
-        ? h('div', { class: 'mt-2 max-h-28 space-y-1.5 overflow-y-auto pr-1' }, props.groups.map((group, index) => h('p', { class: 'text-sm leading-6 text-slate-600 dark:text-slate-300' }, [
-            index > 0 ? h('span', { class: 'mr-1 text-slate-400 dark:text-slate-500' }, t('user.roleStandards.or')) : null,
+        ? h('div', { class: 'mt-2 max-h-28 space-y-1.5 overflow-y-auto pr-1' }, props.groups.map((group, index) => h('p', { class: 'text-sm leading-6 text-neutral-600 dark:text-neutral-300' }, [
+            index > 0 ? h('span', { class: 'mr-1 text-neutral-400 dark:text-neutral-500' }, t('user.roleStandards.or')) : null,
             group.join(` ${t('user.roleStandards.and')} `)
           ])))
-        : h('p', { class: 'mt-2 text-sm leading-6 text-slate-400 dark:text-slate-500' }, t('user.roleStandards.noRules'))
+        : h('p', { class: 'mt-2 text-sm leading-6 text-neutral-400 dark:text-neutral-500' }, t('user.roleStandards.noRules'))
     ])
   }
 })
@@ -202,12 +202,12 @@ function goTo(index: number) {
 function roleDotClass(role: AuthRoleItem, index: number) {
   const classes = []
   if (index === activeIndex.value) {
-    classes.push('w-8 bg-sky-500 dark:bg-sky-400')
+    classes.push('w-8 bg-primary-500 dark:bg-primary-400')
   } else {
-    classes.push('w-2.5 bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600')
+    classes.push('w-2.5 bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600')
   }
   if (role.id === props.user?.role.id && index !== activeIndex.value) {
-    classes.push('bg-sky-300 dark:bg-sky-700')
+    classes.push('bg-primary-300 dark:bg-primary-700')
   }
   if (role.isStaff) {
     classes.push('opacity-70')

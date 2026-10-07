@@ -1,28 +1,28 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(360px,430px)_minmax(0,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.messages.send') }}</h2>
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.site.messages.send') }}</h2>
           </div>
 
           <form class="space-y-3 p-4" @submit.prevent="sendMessage">
             <label class="block">
               <span class="flex items-center justify-between gap-3">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.receiverIds') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.messages.fields.receiverIds') }}</span>
                 <UBadge v-if="receiverCount > 0" color="neutral" variant="soft">{{ $t('admin.site.messages.receiverCount', { count: receiverCount }) }}</UBadge>
               </span>
-              <textarea v-model="form.receiverIds" rows="2" class="mt-1 w-full resize-y rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :placeholder="$t('admin.site.messages.receiverPlaceholder')" />
+              <textarea v-model="form.receiverIds" rows="2" class="mt-1 w-full resize-y rounded-md border border-neutral-200 bg-white px-3 py-2 font-mono text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950" :placeholder="$t('admin.site.messages.receiverPlaceholder')" />
             </label>
 
             <label class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.title') }}</span>
-              <input v-model.trim="form.title" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950">
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.messages.fields.title') }}</span>
+              <input v-model.trim="form.title" class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950">
             </label>
 
             <div>
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.content') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.messages.fields.content') }}</span>
               <RichTextComposer
                 v-model="form.content"
                 v-model:mode="editorMode"
@@ -44,36 +44,36 @@
                 <USelect v-model="form.targetType" class="w-full" size="lg" :ui="{ base: 'h-10 w-full' }" :items="messageTargetTypeOptions" value-key="value" />
               </UFormField>
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.messages.fields.targetId') }}</span>
-                <input v-model.number="form.targetId" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:disabled:bg-slate-900 dark:disabled:text-slate-600 dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="form.targetType === noMessageTargetValue">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.messages.fields.targetId') }}</span>
+                <input v-model.number="form.targetId" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-400 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:disabled:bg-neutral-900 dark:disabled:text-neutral-600 dark:focus:border-primary-500 dark:focus:ring-primary-950" :disabled="form.targetType === noMessageTargetValue">
               </label>
             </div>
 
             <p v-if="formError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">{{ formError }}</p>
 
-            <div class="flex justify-end gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
+            <div class="flex justify-end gap-2 border-t border-neutral-200 pt-4 dark:border-neutral-800">
               <UButton type="button" color="neutral" variant="outline" :disabled="sending || !isFormFilled" @click="resetForm">{{ $t('admin.actions.reset') }}</UButton>
               <UButton type="submit" color="primary" icon="i-lucide-send" :loading="sending">{{ $t('admin.site.messages.submit') }}</UButton>
             </div>
           </form>
         </section>
 
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.messages.list') }}</h2>
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.site.messages.list') }}</h2>
               <form class="flex flex-wrap items-center gap-2" @submit.prevent="applyFilters">
-                <input v-model.trim="receiverFilter" inputmode="numeric" class="h-8 w-28 rounded-md border border-slate-200 bg-white px-2.5 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :placeholder="$t('admin.site.messages.filters.receiverId')">
+                <input v-model.trim="receiverFilter" inputmode="numeric" class="h-8 w-28 rounded-md border border-neutral-200 bg-white px-2.5 text-sm outline-none transition focus:border-primary-300 dark:border-neutral-700 dark:bg-neutral-950 dark:focus:border-primary-700" :placeholder="$t('admin.site.messages.filters.receiverId')">
                 <UTooltip :text="$t('admin.site.messages.filters.search')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">
                   <UButton type="submit" class="h-8" size="sm" color="neutral" variant="outline" icon="i-lucide-search" :loading="pending" :aria-label="$t('admin.site.messages.filters.search')" />
                 </UTooltip>
-                <div class="inline-flex h-8 items-center rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950/70" :aria-label="$t('admin.site.messages.filters.readState')" role="group">
+                <div class="inline-flex h-8 items-center rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-800 dark:bg-neutral-950/70" :aria-label="$t('admin.site.messages.filters.readState')" role="group">
                   <button
                     v-for="option in readFilterOptions"
                     :key="option.value"
                     type="button"
                     class="h-7 rounded px-2.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-60"
-                    :class="readFilter === option.value ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'"
+                    :class="readFilter === option.value ? 'app-selected shadow-sm' : 'text-neutral-500 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white'"
                     :disabled="pending"
                     @click="setReadFilter(option.value)"
                   >
@@ -85,31 +85,31 @@
           </div>
 
           <div v-if="pending" class="space-y-2 p-4">
-            <div v-for="item in 8" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+            <div v-for="item in 8" :key="item" class="h-16 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
           </div>
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
           </div>
           <div v-else-if="messages.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.messages.empty') }}</p>
+            <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.messages.empty') }}</p>
           </div>
           <div v-else class="overflow-x-auto">
             <table class="min-w-[820px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[48%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.messages.table.message') }}</th>
-                  <th class="w-[22%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.messages.table.receiver') }}</th>
-                  <th class="w-[10%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.messages.table.state') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.site.messages.table.time') }}</th>
+                  <th class="w-[48%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.messages.table.message') }}</th>
+                  <th class="w-[22%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.messages.table.receiver') }}</th>
+                  <th class="w-[10%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.messages.table.state') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.site.messages.table.time') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="item in messages"
                   :key="item.id"
-                  class="group cursor-pointer border-b border-slate-200 transition-colors last:border-b-0 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 dark:border-slate-800 dark:hover:bg-slate-950/70 dark:focus-visible:ring-sky-700"
+                  class="group cursor-pointer border-b border-neutral-200 transition-colors last:border-b-0 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-300 dark:border-neutral-800 dark:hover:bg-neutral-950/70 dark:focus-visible:ring-primary-700"
                   role="button"
                   tabindex="0"
                   @click="openMessage(item)"
@@ -119,25 +119,25 @@
                   <td class="px-4 py-3">
                     <div class="min-w-0">
                       <div class="flex min-w-0 items-center gap-2">
-                        <p class="truncate text-sm font-semibold text-slate-950 transition group-hover:text-sky-700 dark:text-white dark:group-hover:text-sky-300">{{ item.title }}</p>
+                        <p class="truncate text-sm font-semibold text-neutral-950 transition group-hover:text-primary-700 dark:text-white dark:group-hover:text-primary-300">{{ item.title }}</p>
                         <UBadge v-if="messageTargetLabel(item)" color="neutral" variant="soft" class="shrink-0">{{ messageTargetLabel(item) }}</UBadge>
                       </div>
-                      <p class="mt-1 line-clamp-2 text-sm leading-5 text-slate-500 dark:text-slate-400">{{ messageExcerpt(item) }}</p>
+                      <p class="mt-1 line-clamp-2 text-sm leading-5 text-neutral-500 dark:text-neutral-400">{{ messageExcerpt(item) }}</p>
                     </div>
                   </td>
                   <td class="px-4 py-3">
                     <div class="flex min-w-0 items-center gap-2.5">
                       <IamUserAvatar :user="item.receiver" size="sm" />
                       <div class="min-w-0">
-                        <IamUserPopover :id="item.receiverId" :user="item.receiver" class="truncate text-sm font-medium text-slate-950 dark:text-white" />
-                        <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">#{{ item.receiverId }}</p>
+                        <IamUserPopover :id="item.receiverId" :user="item.receiver" class="truncate text-sm font-medium text-neutral-950 dark:text-white" />
+                        <p class="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">#{{ item.receiverId }}</p>
                       </div>
                     </div>
                   </td>
                   <td class="px-4 py-3">
                     <UBadge :color="item.isRead ? 'neutral' : 'warning'" variant="soft">{{ item.isRead ? $t('admin.site.messages.readState.read') : $t('admin.site.messages.readState.unread') }}</UBadge>
                   </td>
-                  <td class="px-4 py-3 text-right text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-4 py-3 text-right text-sm text-neutral-600 dark:text-neutral-300">
                     <UTooltip :text="formatDateTime(item.createdAt, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
                       <span>{{ formatDateTime(item.createdAt, locale) }}</span>
                     </UTooltip>
@@ -148,7 +148,7 @@
           </div>
 
           <AppPager
-            class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+            class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800"
             size="sm"
             :page="page"
             :total="total"
@@ -170,15 +170,15 @@
         content: 'sm:max-w-3xl overflow-hidden',
         header: 'min-h-0 px-5 py-4 sm:px-5',
         body: 'p-0 sm:p-0',
-        title: 'text-base font-semibold text-slate-950 dark:text-white',
-        description: 'mt-1 text-sm text-slate-500 dark:text-slate-400',
+        title: 'text-base font-semibold text-neutral-950 dark:text-white',
+        description: 'mt-1 text-sm text-neutral-500 dark:text-neutral-400',
         close: 'top-4 end-4'
       }"
       @update:open="setDetailModalOpen"
     >
       <template #body>
         <div>
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-5 py-2.5 dark:border-slate-800 dark:bg-slate-950/70">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 bg-neutral-50 px-5 py-2.5 dark:border-neutral-800 dark:bg-neutral-950/70">
             <div class="flex min-w-0 flex-wrap items-center gap-2">
               <UBadge v-if="selectedMessage" :color="selectedMessage.isRead ? 'neutral' : 'warning'" variant="soft">
                 {{ selectedMessage.isRead ? $t('admin.site.messages.readState.read') : $t('admin.site.messages.readState.unread') }}
@@ -198,7 +198,7 @@
           </div>
           <div class="max-h-[62vh] overflow-auto px-5 py-4">
             <div v-if="selectedMessageContent" class="rich-text" v-html="selectedMessageContent" />
-            <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.site.messages.noContent') }}</p>
+            <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.messages.noContent') }}</p>
           </div>
         </div>
       </template>

@@ -1,8 +1,8 @@
 <template>
-  <section v-if="visibleGroups.length" id="torrent-tags" class="rounded-md border border-slate-200 bg-slate-50/70 px-3 py-3 dark:border-slate-800 dark:bg-slate-950/50">
+  <section v-if="visibleGroups.length" id="torrent-tags" class="rounded-md border border-neutral-200 bg-neutral-50/70 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-950/50">
     <div class="space-y-3">
       <div v-for="group in visibleGroups" :key="group.id" class="grid gap-2 sm:grid-cols-[96px_minmax(0,1fr)] sm:items-start">
-        <span class="pt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ groupName(group) }}</span>
+        <span class="pt-1 text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ groupName(group) }}</span>
         <div class="flex min-w-0 flex-wrap gap-1.5">
           <UButton
             v-for="tag in group.tags"
@@ -11,7 +11,7 @@
             color="neutral"
             size="xs"
             :variant="modelValue.includes(tag.id) ? 'soft' : 'outline'"
-            :class="modelValue.includes(tag.id) ? 'ring-1 ring-sky-300 dark:ring-sky-700' : ''"
+            :class="modelValue.includes(tag.id) ? 'ring-1 ring-primary-300 dark:ring-primary-700' : ''"
             :disabled="disabled"
             @click="toggleTag(tag.id)"
           >

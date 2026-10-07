@@ -10,7 +10,7 @@
     :class="attrs.class"
   >
     <slot :label="displayName" :user="triggerUser">
-      <span class="inline-flex min-w-0 cursor-default items-center gap-2 text-inherit transition-colors hover:text-sky-700 dark:hover:text-sky-300">
+      <span class="inline-flex min-w-0 cursor-default items-center gap-2 text-inherit transition-colors hover:text-primary-700 dark:hover:text-primary-300">
         <IamUserAvatar v-if="showAvatar" :user="triggerUser" :size="avatarSize" />
         <span class="truncate">{{ displayName }}</span>
       </span>
@@ -19,10 +19,10 @@
     <template #content>
       <div v-if="pending" class="p-3.5">
         <div class="flex items-center gap-3">
-          <div class="size-10 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
+          <div class="size-10 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-800" />
           <div class="min-w-0 flex-1 space-y-2">
-            <div class="h-4 w-28 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-            <div class="h-3 w-40 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+            <div class="h-4 w-28 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+            <div class="h-3 w-40 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
           </div>
         </div>
       </div>
@@ -42,33 +42,33 @@
           />
           <div class="min-w-0 flex-1">
             <div class="flex min-w-0 items-center gap-1.5">
-              <p class="truncate text-base font-semibold text-slate-950 dark:text-white">{{ publicUser.user.username }}</p>
+              <p class="truncate text-base font-semibold text-neutral-950 dark:text-white">{{ publicUser.user.username }}</p>
               <UBadge :color="publicUser.role.isStaff ? 'warning' : 'primary'" variant="soft" size="xs" class="shrink-0">{{ roleName }}</UBadge>
             </div>
-            <div class="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <div class="mt-1 flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
               <span class="tabular-nums">#{{ publicUser.user.id }}</span>
-              <span class="text-slate-300 dark:text-slate-700">&middot;</span>
+              <span class="text-neutral-300 dark:text-neutral-700">&middot;</span>
               <span class="truncate">{{ $t('user.publicCard.joined', { date: joinedAt }) }}</span>
             </div>
-            <p v-if="publicUser.profile.signature" class="mt-1.5 line-clamp-1 text-xs leading-5 text-slate-600 dark:text-slate-300">
+            <p v-if="publicUser.profile.signature" class="mt-1.5 line-clamp-1 text-xs leading-5 text-neutral-600 dark:text-neutral-300">
               {{ publicUser.profile.signature }}
             </p>
           </div>
         </div>
 
-        <dl class="grid grid-cols-4 border-t border-slate-200 bg-slate-50/70 dark:border-slate-800 dark:bg-slate-950/40">
+        <dl class="grid grid-cols-4 border-t border-neutral-200 bg-neutral-50/70 dark:border-neutral-800 dark:bg-neutral-950/40">
           <div
             v-for="(item, index) in statItems"
             :key="item.label"
-            class="min-w-0 border-slate-200 px-2 py-2.5 text-center dark:border-slate-800"
+            class="min-w-0 border-neutral-200 px-2 py-2.5 text-center dark:border-neutral-800"
             :class="index < statItems.length - 1 ? 'border-r' : ''"
           >
-            <dt class="truncate text-[10px] leading-4 text-slate-500 dark:text-slate-400">{{ item.label }}</dt>
-            <dd class="mt-0.5 truncate text-[13px] font-semibold tabular-nums text-slate-950 dark:text-white" :title="item.value">{{ item.value }}</dd>
+            <dt class="truncate text-[10px] leading-4 text-neutral-500 dark:text-neutral-400">{{ item.label }}</dt>
+            <dd class="mt-0.5 truncate text-[13px] font-semibold tabular-nums text-neutral-950 dark:text-white" :title="item.value">{{ item.value }}</dd>
           </div>
         </dl>
 
-        <div v-if="renderedBio" class="border-t border-slate-200 px-4 py-2.5 dark:border-slate-800">
+        <div v-if="renderedBio" class="border-t border-neutral-200 px-4 py-2.5 dark:border-neutral-800">
           <div class="rich-text rich-text-compact max-h-16 overflow-hidden text-xs leading-5" v-html="renderedBio" />
         </div>
       </div>

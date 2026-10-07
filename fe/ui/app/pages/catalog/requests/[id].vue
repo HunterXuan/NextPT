@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="pending && !request" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <div class="h-80 animate-pulse rounded-lg bg-white dark:bg-slate-900" />
-        <div class="h-64 animate-pulse rounded-lg bg-white dark:bg-slate-900" />
+        <div class="h-80 animate-pulse rounded-lg bg-white dark:bg-neutral-900" />
+        <div class="h-64 animate-pulse rounded-lg bg-white dark:bg-neutral-900" />
       </div>
 
       <section v-else-if="errorMessage && !request" class="rounded-lg border border-red-200 bg-red-50 p-5 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
@@ -13,90 +13,90 @@
 
       <div v-else-if="request" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
         <main class="min-w-0 space-y-3">
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
             <div class="p-4">
               <div class="flex flex-wrap items-center gap-2">
                 <UBadge :color="request.requestType === CatalogRequestType.Reseed ? 'warning' : 'primary'" variant="soft">{{ requestTypeLabel }}</UBadge>
                 <UBadge :color="requestStatusColor(request.status)" variant="soft">{{ requestStatusLabel(request.status) }}</UBadge>
                 <UBadge v-if="categoryName" color="neutral" variant="soft">{{ categoryName }}</UBadge>
               </div>
-              <h1 class="mt-3 break-words text-xl font-semibold leading-8 text-slate-950 dark:text-white">{{ request.title }}</h1>
-              <div class="mt-2 flex flex-wrap items-center gap-x-2 text-xs text-slate-500 dark:text-slate-400">
-                <IamUserPopover :user="request.requester" class="font-medium text-slate-600 dark:text-slate-300" />
+              <h1 class="mt-3 break-words text-xl font-semibold leading-8 text-neutral-950 dark:text-white">{{ request.title }}</h1>
+              <div class="mt-2 flex flex-wrap items-center gap-x-2 text-xs text-neutral-500 dark:text-neutral-400">
+                <IamUserPopover :user="request.requester" class="font-medium text-neutral-600 dark:text-neutral-300" />
                 <span>/</span>
                 <UTooltip :text="formatDateTime(request.createdAt, locale)" :delay-duration="600"><span>{{ formatRelativeDateTime(request.createdAt, locale) }}</span></UTooltip>
               </div>
             </div>
-            <div class="border-t border-slate-200 px-4 py-4 dark:border-slate-800">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.fields.description') }}</h2>
+            <div class="border-t border-neutral-200 px-4 py-4 dark:border-neutral-800">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.fields.description') }}</h2>
               <div v-if="renderedDescription" class="rich-text mt-3" v-html="renderedDescription" />
             </div>
           </section>
 
-          <section v-if="hasRelatedTorrent" class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.detail.relatedTorrent') }}</h2>
+          <section v-if="hasRelatedTorrent" class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.detail.relatedTorrent') }}</h2>
             </div>
             <div class="grid gap-2 p-4" :class="hasBothRelatedTorrents ? 'xl:grid-cols-2' : 'grid-cols-1'">
-              <NuxtLink v-if="request.targetTorrent?.exist" :to="localePath(`/catalog/torrents/${request.targetTorrent.id}`)" class="group flex min-w-0 items-center gap-3 rounded-md border border-slate-200 px-3 py-2.5 transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-950">
-                <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+              <NuxtLink v-if="request.targetTorrent?.exist" :to="localePath(`/catalog/torrents/${request.targetTorrent.id}`)" class="group flex min-w-0 items-center gap-3 rounded-md border border-neutral-200 px-3 py-2.5 transition hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:border-neutral-700 dark:hover:bg-neutral-950">
+                <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-300">
                   <UIcon name="i-lucide-library" class="size-4" />
                 </span>
                 <span class="min-w-0 flex-1">
-                  <span class="block text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.targetTorrent') }}</span>
-                  <span class="mt-0.5 block truncate text-sm font-medium text-slate-950 dark:text-white">{{ request.targetTorrent.name }}</span>
+                  <span class="block text-xs text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.fields.targetTorrent') }}</span>
+                  <span class="mt-0.5 block truncate text-sm font-medium text-neutral-950 dark:text-white">{{ request.targetTorrent.name }}</span>
                 </span>
-                <UIcon name="i-lucide-arrow-up-right" class="size-4 shrink-0 text-slate-400 transition group-hover:text-sky-600 dark:group-hover:text-sky-300" />
+                <UIcon name="i-lucide-arrow-up-right" class="size-4 shrink-0 text-neutral-400 transition group-hover:text-primary-600 dark:group-hover:text-primary-300" />
               </NuxtLink>
               <NuxtLink v-if="request.resultTorrent?.exist" :to="localePath(`/catalog/torrents/${request.resultTorrent.id}`)" class="group flex min-w-0 items-center gap-3 rounded-md border border-emerald-200 bg-emerald-50/40 px-3 py-2.5 transition hover:border-emerald-300 hover:bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/20 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/40">
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-300">
                   <UIcon name="i-lucide-circle-check" class="size-4" />
                 </span>
                 <span class="min-w-0 flex-1">
-                  <span class="block text-xs text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.resultTorrent') }}</span>
-                  <span class="mt-0.5 block truncate text-sm font-medium text-slate-950 dark:text-white">{{ request.resultTorrent.name }}</span>
+                  <span class="block text-xs text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.fields.resultTorrent') }}</span>
+                  <span class="mt-0.5 block truncate text-sm font-medium text-neutral-950 dark:text-white">{{ request.resultTorrent.name }}</span>
                 </span>
-                <UIcon name="i-lucide-arrow-up-right" class="size-4 shrink-0 text-slate-400 transition group-hover:text-emerald-600 dark:group-hover:text-emerald-300" />
+                <UIcon name="i-lucide-arrow-up-right" class="size-4 shrink-0 text-neutral-400 transition group-hover:text-emerald-600 dark:group-hover:text-emerald-300" />
               </NuxtLink>
             </div>
           </section>
         </main>
 
         <aside class="app-sticky-offset space-y-3 lg:sticky lg:col-start-2 lg:row-span-2 lg:row-start-1">
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.detail.progress') }}</h2>
+          <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.detail.progress') }}</h2>
             </div>
             <div class="p-4">
-              <dl class="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-                <div class="flex items-center justify-between gap-3 pb-2.5"><dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.reward') }}</dt><dd class="inline-flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400"><UIcon name="i-lucide-coins" class="size-4" />{{ numberFormatter.format(request.rewardAmount) }}</dd></div>
+              <dl class="divide-y divide-neutral-100 text-sm dark:divide-neutral-800">
+                <div class="flex items-center justify-between gap-3 pb-2.5"><dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.fields.reward') }}</dt><dd class="inline-flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400"><UIcon name="i-lucide-coins" class="size-4" />{{ numberFormatter.format(request.rewardAmount) }}</dd></div>
                 <div class="grid grid-cols-[80px_minmax(0,1fr)] gap-3 py-2.5">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</dt>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.fields.claimer') }}</dt>
                   <dd class="truncate text-right font-medium">
                     <IamUserPopover
                       v-if="request.claimer?.id"
                       :user="request.claimer"
-                      class="text-slate-950 transition-colors hover:text-sky-700 dark:text-white dark:hover:text-sky-300"
+                      class="text-neutral-950 transition-colors hover:text-primary-700 dark:text-white dark:hover:text-primary-300"
                     />
-                    <span v-else class="text-slate-400">-</span>
+                    <span v-else class="text-neutral-400">-</span>
                   </dd>
                 </div>
-                <div v-if="request.claimExpiresAt" class="grid grid-cols-[80px_minmax(0,1fr)] gap-3 pt-2.5"><dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.fields.claimExpiresAt') }}</dt><dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(request.claimExpiresAt, locale) }}</dd></div>
+                <div v-if="request.claimExpiresAt" class="grid grid-cols-[80px_minmax(0,1fr)] gap-3 pt-2.5"><dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.fields.claimExpiresAt') }}</dt><dd class="text-right font-medium text-neutral-950 dark:text-white">{{ formatDateTime(request.claimExpiresAt, locale) }}</dd></div>
               </dl>
 
               <div v-if="request.status === CatalogRequestStatus.Cancelled && request.cancelReason" class="mt-3 border-t border-red-100 pt-3 text-sm dark:border-red-950">
                 <p class="font-medium text-red-700 dark:text-red-300">{{ $t('catalog.requests.fields.cancelReason') }}</p>
-                <p class="mt-1 break-words leading-5 text-slate-600 dark:text-slate-300">{{ request.cancelReason }}</p>
+                <p class="mt-1 break-words leading-5 text-neutral-600 dark:text-neutral-300">{{ request.cancelReason }}</p>
               </div>
             </div>
           </section>
 
-          <section v-if="hasActions" class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+          <section v-if="hasActions" class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
             <div class="grid gap-2">
               <UButton v-if="request.actions.canClaim" color="primary" icon="i-lucide-hand" block :loading="actionPending === 'claim'" @click="handleClaim">{{ $t('catalog.requests.actions.claim') }}</UButton>
               <UButton v-if="request.actions.canAbandon" color="neutral" variant="outline" icon="i-lucide-log-out" block :loading="actionPending === 'abandon'" @click="handleAbandon">{{ $t('catalog.requests.actions.abandon') }}</UButton>
 
-              <div v-if="request.actions.canSubmit && request.requestType === CatalogRequestType.Torrent" class="rounded-md border border-slate-200 p-3 dark:border-slate-800">
+              <div v-if="request.actions.canSubmit && request.requestType === CatalogRequestType.Torrent" class="rounded-md border border-neutral-200 p-3 dark:border-neutral-800">
                 <UFormField :label="$t('catalog.requests.fields.resultTorrent')">
                   <UInput v-model.number="resultTorrentId" type="number" min="1" :placeholder="$t('catalog.requests.detail.resultTorrentPlaceholder')" />
                 </UFormField>
@@ -107,8 +107,8 @@
               <UPopover v-if="request.actions.canComplete" :content="{ side: 'bottom', align: 'end', sideOffset: 8 }" :ui="{ content: 'w-64 p-3' }">
                 <UButton color="success" icon="i-lucide-circle-check" block :loading="actionPending === 'complete'">{{ $t('catalog.requests.actions.complete') }}</UButton>
                 <template #content="{ close }">
-                  <p class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.requests.actions.completeConfirm') }}</p>
-                  <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.actions.completeHint') }}</p>
+                  <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.requests.actions.completeConfirm') }}</p>
+                  <p class="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.actions.completeHint') }}</p>
                   <div class="mt-3 flex justify-end gap-2"><UButton color="neutral" variant="ghost" size="xs" @click="close">{{ $t('common.cancel') }}</UButton><UButton color="success" size="xs" :loading="actionPending === 'complete'" @click="handleComplete(close)">{{ $t('common.confirm') }}</UButton></div>
                 </template>
               </UPopover>
@@ -116,8 +116,8 @@
               <UPopover v-if="request.actions.canCancel" :content="{ side: 'bottom', align: 'end', sideOffset: 8 }" :ui="{ content: 'w-72 p-3' }">
                 <UButton color="error" variant="soft" icon="i-lucide-x-circle" block :loading="actionPending === 'cancel'">{{ $t('catalog.requests.actions.cancel') }}</UButton>
                 <template #content="{ close }">
-                  <p class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.requests.actions.cancelConfirm') }}</p>
-                  <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.actions.cancelHint') }}</p>
+                  <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.requests.actions.cancelConfirm') }}</p>
+                  <p class="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.actions.cancelHint') }}</p>
                   <UTextarea v-model="cancelReason" class="mt-3 w-full" :rows="2" :placeholder="$t('catalog.requests.actions.cancelReason')" />
                   <div class="mt-3 flex justify-end gap-2"><UButton color="neutral" variant="ghost" size="xs" @click="close">{{ $t('common.cancel') }}</UButton><UButton color="error" size="xs" :loading="actionPending === 'cancel'" @click="handleCancel(close)">{{ $t('common.confirm') }}</UButton></div>
                 </template>

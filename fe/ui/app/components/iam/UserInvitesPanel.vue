@@ -2,17 +2,17 @@
   <UCard class="rounded-lg">
     <template #header>
       <div>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.invites.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.invites.title') }}</h2>
+        <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           {{ $t('user.invites.summary', { total: numberFormatter.format(inviteTotal) }) }}
         </p>
       </div>
     </template>
 
-    <section class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
+    <section class="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950/60">
       <div class="mb-4 flex flex-col gap-1">
-        <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.invites.sendTitle') }}</h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">
+        <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('user.invites.sendTitle') }}</h3>
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
           {{ inviteSendDescription }}
         </p>
       </div>
@@ -39,7 +39,7 @@
               :placeholder="$t('user.invites.selectCode')"
               :disabled="!canCreateInvite || inviteSendPending || availableInvitesPending || availableInvites.length === 0"
             />
-            <p v-if="selectedInviteValidityLabel" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <p v-if="selectedInviteValidityLabel" class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
               {{ selectedInviteValidityLabel }}
             </p>
           </div>
@@ -64,13 +64,13 @@
       {{ invitesError }}
     </div>
     <div v-else-if="invitesPending && invites.length === 0" class="mt-4 space-y-2">
-      <div v-for="item in 6" :key="item" class="h-12 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+      <div v-for="item in 6" :key="item" class="h-12 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
     </div>
-    <div v-else-if="invites.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-3 py-12 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+    <div v-else-if="invites.length === 0" class="mt-4 rounded-md border border-dashed border-neutral-200 px-3 py-12 text-center text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
       {{ $t('user.invites.empty') }}
     </div>
-    <div v-else class="mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
-      <div class="hidden grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_136px_112px_132px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-medium text-slate-500 md:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+    <div v-else class="mt-4 overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
+      <div class="hidden grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_136px_112px_132px] gap-4 border-b border-neutral-200 bg-neutral-50 px-4 py-2.5 text-xs font-medium text-neutral-500 md:grid dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-400">
         <span>{{ $t('user.invites.code') }}</span>
         <span>{{ $t('user.invites.invitee') }}</span>
         <span>{{ $t('user.invites.validUntil') }}</span>
@@ -78,7 +78,7 @@
         <span class="text-right">{{ $t('user.invites.updatedAt') }}</span>
       </div>
 
-      <div class="divide-y divide-slate-100 dark:divide-slate-800">
+      <div class="divide-y divide-neutral-100 dark:divide-neutral-800">
         <div v-for="invite in invites" :key="invite.id" class="grid gap-3 px-4 py-3 text-sm md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_136px_112px_132px] md:items-center md:gap-4">
           <div class="min-w-0">
             <div class="flex min-w-0 items-center gap-1">
@@ -87,7 +87,7 @@
                 :content="{ side: 'top', sideOffset: 8 }"
                 :delay-duration="120"
               >
-                <span class="min-w-0 truncate font-mono text-xs text-slate-700 dark:text-slate-300">
+                <span class="min-w-0 truncate font-mono text-xs text-neutral-700 dark:text-neutral-300">
                   {{ formatInviteHash(invite.hash) }}
                 </span>
               </UTooltip>
@@ -107,19 +107,19 @@
                 />
               </UTooltip>
             </div>
-            <p class="mt-1 text-xs text-slate-500 md:hidden dark:text-slate-400">{{ $t('user.invites.validUntil') }} {{ inviteValidUntilText(invite) }}</p>
-            <p class="mt-1 text-xs text-slate-500 md:hidden dark:text-slate-400">{{ $t('user.invites.createdAt') }} {{ formatDateTime(invite.createdAt, locale) }}</p>
+            <p class="mt-1 text-xs text-neutral-500 md:hidden dark:text-neutral-400">{{ $t('user.invites.validUntil') }} {{ inviteValidUntilText(invite) }}</p>
+            <p class="mt-1 text-xs text-neutral-500 md:hidden dark:text-neutral-400">{{ $t('user.invites.createdAt') }} {{ formatDateTime(invite.createdAt, locale) }}</p>
           </div>
-          <p class="min-w-0 truncate text-sm text-slate-600 dark:text-slate-300">
+          <p class="min-w-0 truncate text-sm text-neutral-600 dark:text-neutral-300">
             {{ invite.inviteeEmail || invite.inviteeName || '-' }}
           </p>
-          <p class="hidden text-xs text-slate-500 md:block dark:text-slate-400">
+          <p class="hidden text-xs text-neutral-500 md:block dark:text-neutral-400">
             {{ inviteValidUntilText(invite) }}
           </p>
           <UBadge class="w-fit md:justify-self-center" :color="inviteStatusColor(invite.status)" variant="soft">
             {{ inviteStatusLabel(invite.status) }}
           </UBadge>
-          <p class="hidden text-right text-xs text-slate-500 md:block dark:text-slate-400">
+          <p class="hidden text-right text-xs text-neutral-500 md:block dark:text-neutral-400">
             {{ inviteTimeLabel(invite) }}
           </p>
         </div>
@@ -166,7 +166,7 @@ const availableInvitesPending = ref(false)
 const invitesError = ref('')
 const inviteSendPending = ref(false)
 const inviteEmail = ref('')
-const selectedInviteId = ref<number | null>(null)
+const selectedInviteId = ref<number>()
 
 const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 const canCreateInvite = computed(() => hasPermission(Permission.IamInviteCreate))
@@ -247,11 +247,11 @@ async function loadAvailableInvites() {
     })
     availableInvites.value = data.list || []
     if (!selectedInviteId.value || !availableInvites.value.some((invite) => invite.id === selectedInviteId.value)) {
-      selectedInviteId.value = availableInvites.value[0]?.id || null
+      selectedInviteId.value = availableInvites.value[0]?.id
     }
   } catch {
     availableInvites.value = []
-    selectedInviteId.value = null
+    selectedInviteId.value = undefined
   } finally {
     availableInvitesPending.value = false
   }

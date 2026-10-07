@@ -106,7 +106,7 @@
       </UFormField>
 
       <div class="sm:col-span-2 xl:col-span-2">
-        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.filters.sizeRange') }}</span>
+        <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('catalog.torrents.filters.sizeRange') }}</span>
         <div class="mt-1 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
           <UInput
             v-model="minSizeGiB"
@@ -117,9 +117,9 @@
             :placeholder="$t('catalog.torrents.filters.minSize')"
             :disabled="pending"
           >
-            <template #trailing><span class="text-xs text-slate-400">GiB</span></template>
+            <template #trailing><span class="text-xs text-neutral-400">GiB</span></template>
           </UInput>
-          <span class="text-sm text-slate-400">-</span>
+          <span class="text-sm text-neutral-400">-</span>
           <UInput
             v-model="maxSizeGiB"
             type="number"
@@ -129,24 +129,24 @@
             :placeholder="$t('catalog.torrents.filters.maxSize')"
             :disabled="pending"
           >
-            <template #trailing><span class="text-xs text-slate-400">GiB</span></template>
+            <template #trailing><span class="text-xs text-neutral-400">GiB</span></template>
           </UInput>
         </div>
       </div>
 
       <div>
-        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.filters.featured') }}</span>
-        <label class="mt-1 flex h-10 items-center justify-between rounded-md border border-slate-200 px-3 dark:border-slate-700">
-          <span class="text-sm text-slate-600 dark:text-slate-300">{{ $t('catalog.torrents.filters.featuredOnly') }}</span>
+        <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('catalog.torrents.filters.featured') }}</span>
+        <label class="mt-1 flex h-10 items-center justify-between rounded-md border border-neutral-200 px-3 dark:border-neutral-700">
+          <span class="text-sm text-neutral-600 dark:text-neutral-300">{{ $t('catalog.torrents.filters.featuredOnly') }}</span>
           <USwitch v-model="draft.featuredOnly" size="sm" :disabled="pending" />
         </label>
       </div>
     </div>
 
-    <div v-if="visibleTagGroups.length" class="mt-3 border-t border-slate-200 pt-3 dark:border-slate-800">
+    <div v-if="visibleTagGroups.length" class="mt-3 border-t border-neutral-200 pt-3 dark:border-neutral-800">
       <div class="grid gap-2">
         <div v-for="group in visibleTagGroups" :key="group.id" class="grid gap-2 sm:grid-cols-[112px_minmax(0,1fr)] sm:items-center">
-          <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ groupName(group) }}</span>
+          <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ groupName(group) }}</span>
           <div class="flex min-w-0 flex-wrap gap-1.5">
             <UButton
               v-for="tag in group.tags"
@@ -155,7 +155,7 @@
               color="neutral"
               size="xs"
               :variant="draft.tagIds.includes(tag.id) ? 'soft' : 'outline'"
-              :class="draft.tagIds.includes(tag.id) ? 'ring-1 ring-sky-300 dark:ring-sky-700' : ''"
+              :class="draft.tagIds.includes(tag.id) ? 'ring-1 ring-primary-300 dark:ring-primary-700' : ''"
               :disabled="pending"
               @click="toggleTag(tag.id)"
             >

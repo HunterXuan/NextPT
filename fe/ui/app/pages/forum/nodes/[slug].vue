@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div class="min-w-0">
-          <h1 class="break-words text-2xl font-semibold text-slate-950 dark:text-white">
+          <h1 class="break-words text-2xl font-semibold text-neutral-950 dark:text-white">
             {{ node ? nodeDisplayName(node) : $t('forum.fallback.node') }}
           </h1>
-          <p v-if="node && nodeDisplayDesc(node)" class="mt-2 max-w-3xl break-words text-sm text-slate-500 dark:text-slate-400">
+          <p v-if="node && nodeDisplayDesc(node)" class="mt-2 max-w-3xl break-words text-sm text-neutral-500 dark:text-neutral-400">
             {{ nodeDisplayDesc(node) }}
           </p>
         </div>
@@ -32,8 +32,8 @@
         </main>
 
         <aside class="space-y-4">
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.sidebar.title') }}</h2>
+          <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('forum.sidebar.title') }}</h2>
             <div class="mt-4 grid gap-2">
               <UButton color="primary" icon="i-lucide-square-pen" block :to="createTopicPath">
                 {{ $t('forum.actions.createTopic') }}
@@ -44,16 +44,16 @@
             </div>
           </section>
 
-          <section v-if="node" class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.topicList.nodeStats') }}</h2>
+          <section v-if="node" class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('forum.topicList.nodeStats') }}</h2>
             <dl class="mt-4 space-y-3 text-sm">
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.fields.topics') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(node.topicCount) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.fields.topics') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(node.topicCount) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.fields.replies') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(node.replyCount) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.fields.replies') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(node.replyCount) }}</dd>
               </div>
             </dl>
           </section>

@@ -1,14 +1,12 @@
 <template>
-  <div class="flex h-full flex-col overflow-hidden bg-white dark:bg-slate-950">
+  <div class="flex h-full flex-col overflow-hidden bg-white dark:bg-neutral-950">
     <div
-      class="flex h-16 shrink-0 items-center border-b border-slate-200 dark:border-slate-800"
+      class="flex h-16 shrink-0 items-center border-b border-neutral-200 dark:border-neutral-800"
       :class="collapsed ? 'justify-center px-2' : 'justify-between px-4'"
     >
-      <NuxtLink :to="localePath('/')" class="flex min-w-0 items-center gap-3" @click="$emit('navigate')">
-        <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 text-white dark:bg-white dark:text-slate-950">
-          <UIcon name="i-lucide-radio-tower" class="size-5" />
-        </span>
-        <span v-if="!collapsed" class="truncate text-base font-semibold text-slate-950 dark:text-white">NextPT</span>
+      <NuxtLink :to="localePath('/')" class="flex min-w-0 items-center gap-3" :aria-label="siteName" @click="$emit('navigate')">
+        <AppLogo />
+        <span v-if="!collapsed" class="truncate text-base font-semibold text-neutral-950 dark:text-white">{{ siteName }}</span>
       </NuxtLink>
 
       <UButton
@@ -23,12 +21,12 @@
 
     <div
       v-if="returnAction"
-      class="shrink-0 border-b border-slate-200 dark:border-slate-800"
+      class="shrink-0 border-b border-neutral-200 dark:border-neutral-800"
       :class="collapsed ? 'p-2' : 'p-3'"
     >
       <NuxtLink
         :to="localePath(returnAction.to)"
-        class="flex min-h-10 items-center gap-3 rounded-md border border-slate-200 bg-slate-50 text-sm font-medium text-slate-600 transition-colors hover:border-slate-300 hover:bg-white hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-900 dark:hover:text-white"
+        class="flex min-h-10 items-center gap-3 rounded-md border border-neutral-200 bg-neutral-50 text-sm font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-white hover:text-neutral-950 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 dark:hover:text-white"
         :class="collapsed ? 'justify-center px-0' : 'px-3'"
         :title="collapsed ? returnAction.label : undefined"
         :aria-label="returnAction.label"
@@ -42,18 +40,19 @@
     <div class="min-h-0 flex-1 overflow-y-auto py-4" :class="collapsed ? 'px-2' : 'px-3'">
       <nav class="space-y-6">
         <section v-for="section in sections" :key="section.key">
-          <h2 v-if="!collapsed && section.label" class="px-2 text-xs font-semibold uppercase text-slate-400 dark:text-slate-500">{{ section.label }}</h2>
+          <h2 v-if="!collapsed && section.label" class="px-2 text-xs font-semibold uppercase text-neutral-400 dark:text-neutral-500">{{ section.label }}</h2>
           <div class="space-y-1" :class="!collapsed && section.label ? 'mt-2' : ''">
             <NuxtLink
               v-for="item in section.items"
               :key="item.to"
               :to="localePath(item.to)"
-              class="flex min-h-10 items-center gap-3 rounded-md text-sm font-medium transition-colors"
+              class="flex min-h-10 items-center gap-3 rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               :class="[
-                item.active ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white',
+                item.active ? 'app-selected' : 'text-neutral-600 hover:bg-neutral-100 hover:text-primary dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-primary',
                 collapsed ? 'justify-center px-0' : 'px-3'
               ]"
               :title="collapsed ? item.label : undefined"
+              :aria-current="item.active ? 'page' : undefined"
               @click="$emit('navigate')"
             >
               <UIcon :name="item.icon" class="size-4 shrink-0" />
@@ -64,7 +63,7 @@
       </nav>
     </div>
 
-    <div class="shrink-0 border-t border-slate-200 dark:border-slate-800" :class="collapsed ? 'p-2' : 'p-3'">
+    <div class="shrink-0 border-t border-neutral-200 dark:border-neutral-800" :class="collapsed ? 'p-2' : 'p-3'">
       <UDropdownMenu
         v-if="userMenuItems?.length"
         :items="userMenuItems"
@@ -72,18 +71,18 @@
       >
         <button
           type="button"
-          class="flex w-full min-w-0 items-center gap-3 rounded-md py-2 text-left transition-colors hover:bg-slate-100 disabled:cursor-wait disabled:opacity-70 dark:hover:bg-slate-900"
+          class="flex w-full min-w-0 items-center gap-3 rounded-md py-2 text-left transition-colors hover:bg-neutral-100 disabled:cursor-wait disabled:opacity-70 dark:hover:bg-neutral-900"
           :class="collapsed ? 'justify-center px-0' : 'px-2'"
-          :title="collapsed ? user?.username || 'NextPT' : undefined"
-          :aria-label="user?.username || 'NextPT'"
+          :title="collapsed ? user?.username || siteName : undefined"
+          :aria-label="user?.username || siteName"
           :disabled="loggingOut"
         >
-          <IamUserAvatar :user="user" :alt="user?.username || 'NextPT'" size="sm" />
+          <IamUserAvatar :user="user" :alt="user?.username || siteName" size="sm" />
           <div v-if="!collapsed" class="min-w-0 flex-1">
-            <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ user?.username || 'NextPT' }}</p>
-            <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ user?.roleName || user?.email || '-' }}</p>
+            <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ user?.username || siteName }}</p>
+            <p class="truncate text-xs text-neutral-500 dark:text-neutral-400">{{ user?.roleName || user?.email || '-' }}</p>
           </div>
-          <UIcon v-if="!collapsed" name="i-lucide-chevron-up" class="size-4 shrink-0 text-slate-400" />
+          <UIcon v-if="!collapsed" name="i-lucide-chevron-up" class="size-4 shrink-0 text-neutral-400" />
         </button>
       </UDropdownMenu>
 
@@ -91,12 +90,12 @@
         v-else
         class="flex min-w-0 items-center gap-3 rounded-md py-2"
         :class="collapsed ? 'justify-center px-0' : 'px-2'"
-        :title="collapsed ? user?.username || 'NextPT' : undefined"
+        :title="collapsed ? user?.username || siteName : undefined"
       >
-        <IamUserAvatar :user="user" :alt="user?.username || 'NextPT'" size="sm" />
+        <IamUserAvatar :user="user" :alt="user?.username || siteName" size="sm" />
         <div v-if="!collapsed" class="min-w-0">
-          <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ user?.username || 'NextPT' }}</p>
-          <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ user?.roleName || user?.email || '-' }}</p>
+          <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ user?.username || siteName }}</p>
+          <p class="truncate text-xs text-neutral-500 dark:text-neutral-400">{{ user?.roleName || user?.email || '-' }}</p>
         </div>
       </div>
     </div>
@@ -105,6 +104,8 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
+
+const { siteName } = useSiteBranding()
 
 interface ShellNavItem {
   label: string

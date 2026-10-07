@@ -1,16 +1,16 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
     <form class="space-y-4 p-4" @submit.prevent="$emit('submit')">
       <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('forum.detail.edit.title') }}</h2>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ t('forum.detail.edit.hint') }}</p>
+          <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ t('forum.detail.edit.title') }}</h2>
+          <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{{ t('forum.detail.edit.hint') }}</p>
         </div>
       </div>
 
       <div v-if="nodesPending" class="grid gap-3 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
-        <div class="h-10 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-        <div class="h-10 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+        <div class="h-10 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
+        <div class="h-10 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
       </div>
       <div v-else class="grid gap-3 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
         <UFormField :label="t('forum.create.fields.category')">
@@ -62,7 +62,7 @@
         />
       </UFormField>
 
-      <div class="flex justify-end gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
+      <div class="flex justify-end gap-2 border-t border-neutral-200 pt-4 dark:border-neutral-800">
         <UPopover
           :open="cancelConfirmOpen"
           :content="{ side: 'top', align: 'end', sideOffset: 8 }"
@@ -75,7 +75,7 @@
 
           <template #content="{ close }">
             <div class="space-y-3">
-              <p class="text-sm font-medium text-slate-950 dark:text-white">
+              <p class="text-sm font-medium text-neutral-950 dark:text-white">
                 {{ t('forum.detail.edit.confirmCancel') }}
               </p>
               <div class="flex justify-end gap-2">

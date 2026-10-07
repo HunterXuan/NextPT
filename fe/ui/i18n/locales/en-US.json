@@ -1,6 +1,27 @@
 {
+  "appearance": {
+    "title": "Appearance",
+    "description": "Palette and color mode",
+    "palette": "Color theme",
+    "siteDefault": "Use site default · {name}",
+    "mode": "Color mode",
+    "themes": {
+      "teal": "Teal",
+      "green": "Forest",
+      "sky": "Sky",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "rose": "Rose",
+      "amber": "Amber",
+      "graphite": "Graphite"
+    },
+    "modes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
   "common": {
-    "brand": "NextPT",
     "cancel": "Cancel",
     "confirm": "Confirm",
     "copy": "Copy",
@@ -140,10 +161,10 @@
   },
   "home": {
     "metaTitle": "Home",
-    "metaDescription": "NextPT is a private resource community built around quality releases, long-term seeding, and member discussion.",
+    "metaDescription": "{siteName} is a private resource community built around quality releases, long-term seeding, and member discussion.",
     "guest": {
       "eyebrow": "A private community for careful collecting and sharing",
-      "title": "NextPT",
+      "title": "{siteName}",
       "description": "Resources here are not only downloaded. They are organized, supplemented, and kept alive through seeding. Find what you want, then leave something useful for the next member.",
       "primaryAction": "Request access",
       "secondaryAction": "Log in",
@@ -315,7 +336,7 @@
       "action": "Log in",
       "eyebrow": "Welcome back",
       "metaTitle": "Log in",
-      "title": "Log in to NextPT",
+      "title": "Log in to {siteName}",
       "subtitle": "Return to the catalog, bookmarks, and discussions, then continue browsing and sharing.",
       "heroTitle": "Return to your private resource community",
       "heroDescription": "Keep following resources you care about, maintain your seeding and sharing history, and see what members have added, requested, or discussed recently.",
@@ -359,7 +380,7 @@
       "metaTitle": "Set a new password",
       "title": "Set a new password",
       "subtitle": "Choose a new password, then log in again when the reset is complete.",
-      "heroTitle": "Secure your NextPT account again",
+      "heroTitle": "Secure your {siteName} account again",
       "heroDescription": "A reset link can only be used once. Changing the password also ends existing sessions on other devices.",
       "submit": "Reset password",
       "passwordMismatch": "The passwords do not match",
@@ -377,7 +398,7 @@
       "metaTitle": "Verify email",
       "title": "Check your inbox",
       "subtitle": "We sent a verification link to your registered email. You can request another message here.",
-      "heroTitle": "Verify your email to start using NextPT",
+      "heroTitle": "Verify your email to start using {siteName}",
       "heroDescription": "Email verification confirms account ownership. The link can only be used once and expires after 24 hours.",
       "verifyingTitle": "Verifying your email",
       "verifyingDescription": "We are checking this verification link.",
@@ -395,7 +416,7 @@
       "action": "Register",
       "eyebrow": "Join the community",
       "metaTitle": "Register",
-      "title": "Create a NextPT account",
+      "title": "Create a {siteName} account",
       "subtitle": "Create a profile and join a resource community sustained by curation, seeding, and member help.",
       "heroTitle": "Join a community that keeps good resources alive",
       "heroDescription": "Downloading is only the beginning. Seeding, adding context, reporting issues, and joining discussions all help resources remain useful for more members.",

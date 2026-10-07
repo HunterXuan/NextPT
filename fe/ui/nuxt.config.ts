@@ -9,6 +9,15 @@ const nodeEnv = (globalThis as typeof globalThis & {
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  runtimeConfig: {
+    public: {
+      siteName: 'NextPT',
+      siteTheme: 'sky',
+      siteLogo: '',
+      siteLogoDark: '',
+      siteFavicon: '/favicon.ico'
+    }
+  },
   devtools: { enabled: true },
   sourcemap: {
     server: false,
@@ -22,13 +31,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'NextPT',
-      meta: [
-        {
-          name: 'description',
-          content: 'NextPT private tracker community.'
-        }
-      ]
+      title: 'NextPT'
     },
     pageTransition: { name: 'page', mode: 'out-in' },
     layoutTransition: { name: 'layout', mode: 'out-in' }

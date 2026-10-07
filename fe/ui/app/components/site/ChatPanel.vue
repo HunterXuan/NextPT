@@ -3,7 +3,6 @@
     :open="open"
     :title="$t('site.chat.title')"
     :description="$t('site.chat.description')"
-    :content="modalContent"
     :ui="modalUi"
     @update:open="emit('update:open', $event)"
   >
@@ -12,10 +11,10 @@
         <div ref="messageList" class="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-4">
           <div v-if="loading && messages.length === 0" class="space-y-3">
             <div v-for="index in 5" :key="index" class="flex gap-2.5">
-              <div class="size-7 shrink-0 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
+              <div class="size-7 shrink-0 animate-pulse rounded-md bg-neutral-200 dark:bg-neutral-800" />
               <div class="min-w-0 flex-1 space-y-1.5 pt-0.5">
-                <div class="h-3 w-24 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-                <div class="h-3 w-4/5 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                <div class="h-3 w-24 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+                <div class="h-3 w-4/5 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
               </div>
             </div>
           </div>
@@ -24,7 +23,7 @@
             {{ errorMessage }}
           </p>
 
-          <p v-else-if="messages.length === 0" class="py-12 text-center text-sm text-slate-500 dark:text-slate-400">
+          <p v-else-if="messages.length === 0" class="py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
             {{ $t('site.chat.empty') }}
           </p>
 
@@ -33,14 +32,14 @@
               <IamUserAvatar v-if="!isOwnMessage(message)" :user="message.user" size="xs" />
               <div class="inline-flex min-w-0 max-w-[82%] flex-col" :class="isOwnMessage(message) ? 'items-end text-right' : 'items-start'">
                 <div class="inline-flex min-w-0 items-baseline gap-2" :class="isOwnMessage(message) ? 'justify-end' : ''">
-                  <IamUserPopover :user="message.user" class="min-w-0 text-sm font-semibold text-slate-800 dark:text-slate-100" />
-                  <time class="shrink-0 text-[11px] text-slate-400 dark:text-slate-500" :title="formatDateTime(message.createdAt, locale)">
+                  <IamUserPopover :user="message.user" class="min-w-0 text-sm font-semibold text-neutral-800 dark:text-neutral-100" />
+                  <time class="shrink-0 text-[11px] text-neutral-400 dark:text-neutral-500" :title="formatDateTime(message.createdAt, locale)">
                     {{ formatRelativeDateTime(message.createdAt, locale) }}
                   </time>
                 </div>
                 <p
                   class="mt-0.5 inline-block max-w-full whitespace-pre-wrap break-words rounded-md px-2.5 py-1.5 text-left text-sm leading-5"
-                  :class="isOwnMessage(message) ? 'bg-sky-50 text-slate-800 dark:bg-sky-950/50 dark:text-slate-100' : 'bg-slate-50 text-slate-700 dark:bg-slate-900/70 dark:text-slate-300'"
+                  :class="isOwnMessage(message) ? 'bg-primary-50 text-neutral-800 dark:bg-primary-950/50 dark:text-neutral-100' : 'bg-neutral-50 text-neutral-700 dark:bg-neutral-900/70 dark:text-neutral-300'"
                 >{{ message.content }}</p>
               </div>
               <IamUserAvatar v-if="isOwnMessage(message)" :user="message.user" size="xs" />
@@ -48,7 +47,7 @@
           </ol>
         </div>
 
-        <form class="border-t border-slate-200 p-3 dark:border-slate-800" @submit.prevent="sendMessage">
+        <form class="border-t border-neutral-200 p-3 dark:border-neutral-800" @submit.prevent="sendMessage">
           <UTextarea
             v-model="draft"
             class="w-full"
@@ -60,7 +59,7 @@
             @keydown.enter.exact.prevent="sendMessage"
           />
           <div class="mt-2 flex items-center justify-between gap-3">
-            <p class="text-xs text-slate-400 dark:text-slate-500">{{ draftLength }}/1000</p>
+            <p class="text-xs text-neutral-400 dark:text-neutral-500">{{ draftLength }}/1000</p>
             <UTooltip :text="canSend ? $t('site.chat.send') : $t('common.noPermission')">
               <UButton
                 type="submit"
@@ -106,13 +105,8 @@ const errorMessage = ref('')
 const messageList = ref<HTMLElement | null>(null)
 let pollTimer: ReturnType<typeof setInterval> | undefined
 
-const modalContent = {
-  style: {
-    width: 'min(calc(100vw - 2rem), 34rem)',
-    maxWidth: '34rem'
-  }
-}
 const modalUi = {
+  content: 'w-[calc(100vw-2rem)] max-w-[34rem] sm:max-w-[34rem]',
   header: 'min-h-0 px-4 py-3 sm:px-4 sm:py-3',
   title: 'text-sm font-semibold',
   description: 'mt-0.5 text-xs',

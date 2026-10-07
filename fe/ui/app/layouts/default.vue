@@ -3,7 +3,7 @@
     <slot />
   </AppShell>
 
-  <div v-else class="min-h-screen bg-white text-slate-950 antialiased dark:bg-slate-950 dark:text-white">
+  <div v-else class="min-h-screen bg-white text-neutral-950 antialiased dark:bg-neutral-950 dark:text-white">
     <AppHeader />
     <main>
       <slot />

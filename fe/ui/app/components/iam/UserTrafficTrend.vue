@@ -1,21 +1,21 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="border-b border-neutral-200 px-5 py-4 dark:border-neutral-800">
       <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div class="min-w-0">
-          <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.trafficHistory.title') }}</h2>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.trafficHistory.subtitle') }}</p>
+          <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.trafficHistory.title') }}</h2>
+          <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.trafficHistory.subtitle') }}</p>
         </div>
 
-        <div class="flex rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
+        <div class="flex rounded-md border border-neutral-200 bg-neutral-50 p-1 dark:border-neutral-800 dark:bg-neutral-950">
           <button
             v-for="period in trafficHistoryPeriods"
             :key="period.value"
             type="button"
             class="inline-flex h-8 items-center gap-1.5 rounded px-3 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60"
             :class="trafficHistoryPeriod === period.value
-              ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
-              : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
+              ? 'app-selected shadow-sm'
+              : 'text-neutral-600 hover:bg-white/70 dark:text-neutral-300 dark:hover:bg-neutral-900'"
             :disabled="trafficHistoryPending"
             @click="setTrafficHistoryPeriod(period.value)"
           >
@@ -27,17 +27,17 @@
     </div>
 
     <div class="px-5 py-5">
-      <p class="mb-3 text-sm font-medium text-slate-700 dark:text-slate-200">{{ trafficHistorySummaryTitle }}</p>
-      <div class="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 sm:grid-cols-4 dark:border-slate-800 dark:bg-slate-800">
+      <p class="mb-3 text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ trafficHistorySummaryTitle }}</p>
+      <div class="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 sm:grid-cols-4 dark:border-neutral-800 dark:bg-neutral-800">
         <div
           v-for="item in trafficHistorySummaryCards"
           :key="item.label"
-          class="flex min-w-0 items-start justify-between gap-3 bg-slate-50/80 px-3 py-3 dark:bg-slate-950/70"
+          class="flex min-w-0 items-start justify-between gap-3 bg-neutral-50/80 px-3 py-3 dark:bg-neutral-950/70"
         >
           <div class="min-w-0">
-            <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</p>
-            <p class="mt-1 truncate text-base font-semibold tabular-nums text-slate-950 dark:text-white">{{ item.value }}</p>
-            <p v-if="item.secondary" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.secondary }}</p>
+            <p class="truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.label }}</p>
+            <p class="mt-1 truncate text-base font-semibold tabular-nums text-neutral-950 dark:text-white">{{ item.value }}</p>
+            <p v-if="item.secondary" class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.secondary }}</p>
           </div>
           <span class="flex size-8 shrink-0 items-center justify-center rounded-md" :class="item.iconClass">
             <UIcon :name="item.icon" class="size-4" />
@@ -46,31 +46,31 @@
       </div>
 
       <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ trafficHistoryChartTitle }}</p>
+        <p class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ trafficHistoryChartTitle }}</p>
         <div class="flex flex-wrap items-center gap-2">
-          <div v-if="trafficChartMode === 'traffic'" class="flex w-fit rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
+          <div v-if="trafficChartMode === 'traffic'" class="flex w-fit rounded-md border border-neutral-200 bg-neutral-50 p-1 dark:border-neutral-800 dark:bg-neutral-950">
             <button
               v-for="basis in trafficChartTrafficBasisOptions"
               :key="basis.value"
               type="button"
               class="inline-flex h-8 items-center rounded px-3 text-sm font-medium transition"
               :class="trafficChartTrafficBasis === basis.value
-                ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
-                : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
+                ? 'app-selected shadow-sm'
+                : 'text-neutral-600 hover:bg-white/70 dark:text-neutral-300 dark:hover:bg-neutral-900'"
               @click="trafficChartTrafficBasis = basis.value"
             >
               {{ basis.label }}
             </button>
           </div>
-          <div class="flex w-fit rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
+          <div class="flex w-fit rounded-md border border-neutral-200 bg-neutral-50 p-1 dark:border-neutral-800 dark:bg-neutral-950">
             <button
               v-for="mode in trafficHistoryModes"
               :key="mode.value"
               type="button"
               class="inline-flex h-8 items-center gap-1.5 rounded px-3 text-sm font-medium transition"
               :class="trafficChartMode === mode.value
-                ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
-                : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
+                ? 'app-selected shadow-sm'
+                : 'text-neutral-600 hover:bg-white/70 dark:text-neutral-300 dark:hover:bg-neutral-900'"
               @click="trafficChartMode = mode.value"
             >
               <UIcon :name="mode.icon" class="size-4" />
@@ -84,16 +84,16 @@
         <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
         <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ trafficHistoryError }}</p>
       </div>
-      <div v-else-if="trafficHistoryPending && trafficHistory.length === 0" class="mt-4 h-80 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-      <div v-else-if="trafficChartItems.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-10 text-center dark:border-slate-800">
-        <UIcon name="i-lucide-chart-no-axes-column" class="mx-auto size-8 text-slate-400" />
-        <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.trafficHistory.empty') }}</p>
+      <div v-else-if="trafficHistoryPending && trafficHistory.length === 0" class="mt-4 h-80 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
+      <div v-else-if="trafficChartItems.length === 0" class="mt-4 rounded-md border border-dashed border-neutral-200 px-4 py-10 text-center dark:border-neutral-800">
+        <UIcon name="i-lucide-chart-no-axes-column" class="mx-auto size-8 text-neutral-400" />
+        <p class="mt-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.trafficHistory.empty') }}</p>
       </div>
-      <div v-else class="mt-4 h-80 rounded-md border border-slate-200 bg-white px-3 py-4 dark:border-slate-800 dark:bg-slate-950">
+      <div v-else class="mt-4 h-80 rounded-md border border-neutral-200 bg-white px-3 py-4 dark:border-neutral-800 dark:bg-neutral-950">
         <ClientOnly>
           <Line :key="trafficChartKey" :data="trafficChartData" :options="trafficChartOptions" />
           <template #fallback>
-            <div class="h-full animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+            <div class="h-full animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
           </template>
         </ClientOnly>
       </div>

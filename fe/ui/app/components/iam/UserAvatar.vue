@@ -83,10 +83,10 @@ const rootAttrs = computed(() => {
   return rest
 })
 const baseClass = computed(() => [sizeClasses[props.size], 'shrink-0 rounded-md border object-cover', attrs.class])
-const imageClass = computed(() => [baseClass.value, 'border-slate-200 dark:border-slate-800'])
+const imageClass = computed(() => [baseClass.value, 'border-neutral-200 dark:border-neutral-800'])
 const fallbackClass = computed(() => [baseClass.value, 'flex items-center justify-center font-semibold leading-none', paletteClass.value])
 const initial = computed(() => {
-  if (username.value) return Array.from(username.value)[0].toUpperCase()
+  if (username.value) return Array.from(username.value)[0]?.toUpperCase() || '?'
   if (userId.value) return String(userId.value).slice(-2)
   return '?'
 })

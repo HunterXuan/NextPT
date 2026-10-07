@@ -1,7 +1,6 @@
-export function normalizeLocaleCode(code: string | null | undefined, supportedCodes: string[], defaultCode: string) {
+export function normalizeLocaleCode<T extends string>(code: string | null | undefined, supportedCodes: readonly T[], defaultCode: T): T {
   const fallback = supportedCodes.includes(defaultCode) ? defaultCode : supportedCodes[0] || defaultCode
 
   if (!code) return fallback
-  if (supportedCodes.includes(code)) return code
-  return fallback
+  return supportedCodes.find(supportedCode => supportedCode === code) ?? fallback
 }

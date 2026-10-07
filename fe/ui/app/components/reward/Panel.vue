@@ -1,9 +1,9 @@
 <template>
-  <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+  <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
     <div class="flex items-start justify-between gap-3">
       <div>
-        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ title }}</h2>
-        <p v-if="summaryText" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ title }}</h2>
+        <p v-if="summaryText" class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           {{ summaryText }}
         </p>
       </div>
@@ -32,7 +32,7 @@
 
         <template #content="{ close }">
           <div class="space-y-3">
-            <p class="text-sm font-medium text-slate-950 dark:text-white">
+            <p class="text-sm font-medium text-neutral-950 dark:text-white">
               {{ t(confirmTitleKey, { amount: formatRewardAmount(amount) }) }}
             </p>
             <div class="flex justify-end gap-2">
@@ -61,26 +61,26 @@
         {{ previewError }}
       </div>
       <div v-else-if="previewPending && previewRewards.length === 0" class="mt-4 space-y-2">
-        <div v-for="item in 3" :key="item" class="h-9 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+        <div v-for="item in 3" :key="item" class="h-9 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
       </div>
-      <div v-else-if="previewRewards.length === 0" class="mt-3 rounded-md border border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+      <div v-else-if="previewRewards.length === 0" class="mt-3 rounded-md border border-dashed border-neutral-200 px-3 py-2 text-xs text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
         {{ t(emptyKey) }}
       </div>
-      <div v-else class="mt-4 max-h-72 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
+      <div v-else class="mt-4 max-h-72 divide-y divide-neutral-100 overflow-auto dark:divide-neutral-800">
         <div v-for="(reward, index) in previewRewards" :key="rewardKey(reward, index)" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3 text-sm">
           <div class="flex min-w-0 items-center gap-2">
             <IamUserAvatar :user="reward.user" :alt="rewardDisplayName(reward)" size="xs" />
             <div class="min-w-0">
-              <IamUserPopover :user="reward.user" :fallback="rewardDisplayName(reward)" class="truncate font-medium text-slate-950 dark:text-white" />
-              <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ rewardMetaText(reward) }}</p>
+              <IamUserPopover :user="reward.user" :fallback="rewardDisplayName(reward)" class="truncate font-medium text-neutral-950 dark:text-white" />
+              <p class="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ rewardMetaText(reward) }}</p>
             </div>
           </div>
           <span class="self-center whitespace-nowrap text-sm font-semibold text-amber-600 dark:text-amber-300">{{ formatRewardAmount(reward.amount) }}</span>
         </div>
       </div>
 
-      <div v-if="rewardTotal > previewRewards.length && previewRewards.length > 0" class="mt-3 flex items-center justify-between gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
-        <p class="min-w-0 text-xs text-slate-500 dark:text-slate-400">
+      <div v-if="rewardTotal > previewRewards.length && previewRewards.length > 0" class="mt-3 flex items-center justify-between gap-3 border-t border-neutral-100 pt-3 dark:border-neutral-800">
+        <p class="min-w-0 text-xs text-neutral-500 dark:text-neutral-400">
           {{ t(previewKey, { count: numberFormatter.format(previewRewards.length), total: numberFormatter.format(rewardTotal) }) }}
         </p>
         <UButton color="neutral" variant="ghost" size="xs" trailing-icon="i-lucide-arrow-right" @click="setModalOpen(true)">
@@ -104,18 +104,18 @@
           {{ modalError }}
         </div>
         <div v-else-if="modalPending && modalRewards.length === 0" class="space-y-2">
-          <div v-for="item in 5" :key="item" class="h-12 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+          <div v-for="item in 5" :key="item" class="h-12 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
         </div>
-        <div v-else-if="modalRewards.length === 0" class="rounded-md border border-dashed border-slate-200 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+        <div v-else-if="modalRewards.length === 0" class="rounded-md border border-dashed border-neutral-200 px-4 py-10 text-center text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
           {{ t(emptyKey) }}
         </div>
-        <div v-else class="divide-y divide-slate-100 dark:divide-slate-800">
+        <div v-else class="divide-y divide-neutral-100 dark:divide-neutral-800">
           <div v-for="(reward, index) in modalRewards" :key="rewardKey(reward, index)" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-3 text-sm">
             <div class="flex min-w-0 items-center gap-2">
               <IamUserAvatar :user="reward.user" :alt="rewardDisplayName(reward)" size="xs" />
               <div class="min-w-0">
-                <IamUserPopover :user="reward.user" :fallback="rewardDisplayName(reward)" class="truncate font-medium text-slate-950 dark:text-white" />
-                <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ rewardMetaText(reward) }}</p>
+                <IamUserPopover :user="reward.user" :fallback="rewardDisplayName(reward)" class="truncate font-medium text-neutral-950 dark:text-white" />
+                <p class="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ rewardMetaText(reward) }}</p>
               </div>
             </div>
             <span class="self-center whitespace-nowrap text-sm font-semibold text-amber-600 dark:text-amber-300">{{ formatRewardAmount(reward.amount) }}</span>
@@ -124,7 +124,7 @@
 
         <AppPager
           v-if="rewardTotal > modalSize"
-          class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+          class="mt-4 border-t border-neutral-200 pt-4 dark:border-neutral-800"
           size="xs"
           :page="modalPage"
           :page-size="modalSize"

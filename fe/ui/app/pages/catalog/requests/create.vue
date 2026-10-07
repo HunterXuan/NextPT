@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <form class="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start xl:gap-5" @submit.prevent="handleSubmit">
         <main class="min-w-0">
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h1 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.create.formTitle') }}</h1>
+          <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h1 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.create.formTitle') }}</h1>
             </div>
 
             <div class="space-y-5 p-4">
               <div class="grid gap-4" :class="form.requestType === CatalogRequestType.Torrent ? '2xl:grid-cols-[190px_230px_minmax(0,1fr)]' : '2xl:grid-cols-[190px_minmax(0,1fr)]'">
               <UFormField :label="$t('catalog.requests.fields.type')">
-                <div class="grid h-10 grid-cols-2 rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+                <div class="grid h-10 grid-cols-2 rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-800 dark:bg-neutral-950">
                   <button type="button" :class="typeButtonClass(form.requestType === CatalogRequestType.Torrent)" @click="form.requestType = CatalogRequestType.Torrent">
                     <UIcon name="i-lucide-package-search" class="size-4" />
                     {{ $t('catalog.requests.types.torrent') }}
@@ -42,10 +42,10 @@
               </template>
 
               <UFormField v-else :label="$t('catalog.requests.fields.targetTorrent')" required>
-                <div v-if="selectedTarget" class="flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 dark:border-slate-800 dark:bg-slate-950">
-                  <UIcon name="i-lucide-library" class="size-4 shrink-0 text-sky-500" />
-                  <p class="min-w-0 flex-1 truncate text-sm font-medium text-slate-950 dark:text-white">{{ selectedTarget.name }}</p>
-                  <span class="hidden shrink-0 text-xs text-slate-500 sm:inline dark:text-slate-400">#{{ selectedTarget.id }} / {{ $t('catalog.requests.create.seeders', { count: selectedTarget.seeders }) }}</span>
+                <div v-if="selectedTarget" class="flex h-10 items-center gap-2 rounded-md border border-neutral-200 bg-neutral-50 px-3 dark:border-neutral-800 dark:bg-neutral-950">
+                  <UIcon name="i-lucide-library" class="size-4 shrink-0 text-primary-500" />
+                  <p class="min-w-0 flex-1 truncate text-sm font-medium text-neutral-950 dark:text-white">{{ selectedTarget.name }}</p>
+                  <span class="hidden shrink-0 text-xs text-neutral-500 sm:inline dark:text-neutral-400">#{{ selectedTarget.id }} / {{ $t('catalog.requests.create.seeders', { count: selectedTarget.seeders }) }}</span>
                   <UTooltip :text="$t('catalog.requests.create.changeTarget')" :delay-duration="300">
                     <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-pencil" :aria-label="$t('catalog.requests.create.changeTarget')" @click="clearTarget" />
                   </UTooltip>
@@ -53,29 +53,29 @@
 
                 <div v-else class="relative">
                   <UInput v-model="torrentKeyword" class="w-full" size="lg" :ui="{ base: 'h-10' }" icon="i-lucide-search" :loading="torrentSearchPending" :disabled="pending" :placeholder="$t('catalog.requests.create.targetPlaceholder')" />
-                  <div v-if="torrentKeyword.trim() && !torrentSearchPending" class="mt-2 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
+                  <div v-if="torrentKeyword.trim() && !torrentSearchPending" class="mt-2 overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
                     <button
                       v-for="torrent in torrentResults"
                       :key="torrent.id"
                       type="button"
-                      class="flex w-full items-start gap-3 border-t border-slate-100 px-3 py-2.5 text-left first:border-t-0 dark:border-slate-800"
-                      :class="torrent.seeders > 0 ? 'cursor-not-allowed opacity-50' : 'hover:bg-slate-50 dark:hover:bg-slate-950'"
+                      class="flex w-full items-start gap-3 border-t border-neutral-100 px-3 py-2.5 text-left first:border-t-0 dark:border-neutral-800"
+                      :class="torrent.seeders > 0 ? 'cursor-not-allowed opacity-50' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950'"
                       :disabled="torrent.seeders > 0"
                       @click="selectTarget(torrent)"
                     >
                       <span class="min-w-0 flex-1">
-                        <span class="block truncate text-sm font-medium text-slate-950 dark:text-white">{{ torrent.name }}</span>
-                        <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">#{{ torrent.id }} / {{ $t('catalog.requests.create.seeders', { count: torrent.seeders }) }}</span>
+                        <span class="block truncate text-sm font-medium text-neutral-950 dark:text-white">{{ torrent.name }}</span>
+                        <span class="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">#{{ torrent.id }} / {{ $t('catalog.requests.create.seeders', { count: torrent.seeders }) }}</span>
                       </span>
-                      <UIcon v-if="torrent.seeders === 0" name="i-lucide-chevron-right" class="mt-0.5 size-4 shrink-0 text-slate-400" />
+                      <UIcon v-if="torrent.seeders === 0" name="i-lucide-chevron-right" class="mt-0.5 size-4 shrink-0 text-neutral-400" />
                     </button>
-                    <p v-if="torrentResults.length === 0" class="px-3 py-4 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.create.noTorrentResults') }}</p>
+                    <p v-if="torrentResults.length === 0" class="px-3 py-4 text-center text-sm text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.create.noTorrentResults') }}</p>
                   </div>
                 </div>
               </UFormField>
               </div>
 
-              <div class="border-t border-slate-100 pt-5 dark:border-slate-800">
+              <div class="border-t border-neutral-100 pt-5 dark:border-neutral-800">
                 <UFormField :label="$t('catalog.requests.fields.description')" required>
                   <RichTextComposer
                     v-model="form.description"
@@ -93,11 +93,11 @@
                 </UFormField>
               </div>
 
-              <div class="border-t border-slate-100 pt-5 dark:border-slate-800">
+              <div class="border-t border-neutral-100 pt-5 dark:border-neutral-800">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.fields.reward') }}</h2>
-                    <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.create.rewardHelp') }}</p>
+                    <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.fields.reward') }}</h2>
+                    <p class="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.create.rewardHelp') }}</p>
                   </div>
                   <div class="grid grid-cols-4 gap-2 sm:flex sm:shrink-0">
                     <button v-for="amount in rewardOptions" :key="amount" type="button" :class="rewardButtonClass(form.rewardAmount === amount)" @click="form.rewardAmount = amount">
@@ -111,28 +111,28 @@
         </main>
 
         <aside class="app-sticky-offset space-y-3 xl:sticky">
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.create.publishTitle') }}</h2>
-            <dl class="mt-3 divide-y divide-slate-100 text-sm dark:divide-slate-800">
+          <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.create.publishTitle') }}</h2>
+            <dl class="mt-3 divide-y divide-neutral-100 text-sm dark:divide-neutral-800">
               <div class="flex items-center justify-between gap-3 py-2">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.create.summary.currentBalance') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(user?.stat.bonus || 0) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.create.summary.currentBalance') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(user?.stat.bonus || 0) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3 py-2">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.create.summary.balance') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(balanceAfterReward) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.create.summary.balance') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(balanceAfterReward) }}</dd>
               </div>
             </dl>
-            <div class="mt-3 border-t border-slate-100 pt-3 dark:border-slate-800">
+            <div class="mt-3 border-t border-neutral-100 pt-3 dark:border-neutral-800">
               <AppPermissionButton :permission="Permission.CatalogRequestCreate" type="submit" color="primary" icon="i-lucide-send" block :loading="pending" :disabled="!canSubmit" :tooltip="$t('catalog.requests.create.submit')">
                 {{ $t('catalog.requests.create.submit') }}
               </AppPermissionButton>
             </div>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.create.guide.title') }}</h2>
-            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.create.guide.title') }}</h2>
+            <ul class="mt-3 space-y-2 text-sm leading-6 text-neutral-600 dark:text-neutral-300">
               <li class="flex gap-2"><UIcon name="i-lucide-search" class="mt-1 size-4 shrink-0" /><span>{{ $t('catalog.requests.create.guide.search') }}</span></li>
               <li class="flex gap-2"><UIcon name="i-lucide-circle-check" class="mt-1 size-4 shrink-0" /><span>{{ $t('catalog.requests.create.guide.confirm') }}</span></li>
               <li class="flex gap-2"><UIcon name="i-lucide-coins" class="mt-1 size-4 shrink-0" /><span>{{ $t('catalog.requests.create.guide.reward') }}</span></li>
@@ -304,10 +304,10 @@ function categoryName(category: CatalogCategory) {
 }
 
 function typeButtonClass(active: boolean) {
-  return ['inline-flex h-9 items-center gap-2 rounded px-3 text-sm font-medium transition-colors', active ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white']
+  return ['inline-flex h-9 items-center gap-2 rounded px-3 text-sm font-medium transition-colors', active ? 'app-selected shadow-sm' : 'text-neutral-500 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white']
 }
 
 function rewardButtonClass(active: boolean) {
-  return ['inline-flex h-9 min-w-16 items-center justify-center rounded-md border px-3 text-sm font-semibold transition-colors', active ? 'border-amber-400 bg-amber-50 text-amber-700 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-300' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-950']
+  return ['inline-flex h-9 min-w-16 items-center justify-center rounded-md border px-3 text-sm font-semibold transition-colors', active ? 'border-amber-400 bg-amber-50 text-amber-700 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-300' : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-950']
 }
 </script>

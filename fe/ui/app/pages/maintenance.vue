@@ -1,11 +1,11 @@
 <template>
-  <main class="flex min-h-screen items-center bg-slate-50 px-5 py-12 text-center dark:bg-slate-950">
+  <main class="flex min-h-screen items-center bg-neutral-50 px-5 py-12 text-center dark:bg-neutral-950">
     <section class="mx-auto w-full max-w-xl">
       <span class="mx-auto flex size-12 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">
         <UIcon name="i-lucide-wrench" class="size-6" />
       </span>
-      <h1 class="mt-5 text-xl font-semibold text-slate-950 dark:text-white">{{ $t('site.maintenance.title') }}</h1>
-      <p class="mx-auto mt-3 max-w-md whitespace-pre-line text-sm leading-6 text-slate-600 dark:text-slate-300">{{ message }}</p>
+      <h1 class="mt-5 text-xl font-semibold text-neutral-950 dark:text-white">{{ $t('site.maintenance.title') }}</h1>
+      <p class="mx-auto mt-3 max-w-md whitespace-pre-line text-sm leading-6 text-neutral-600 dark:text-neutral-300">{{ message }}</p>
       <div class="mt-6 flex flex-wrap justify-center gap-2">
         <UButton icon="i-lucide-refresh-cw" @click="retry">
           {{ $t('site.maintenance.retry') }}

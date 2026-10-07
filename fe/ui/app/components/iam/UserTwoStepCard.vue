@@ -7,30 +7,30 @@
   >
     <div class="flex min-h-10 items-center justify-between gap-4">
       <div class="flex min-w-0 items-center gap-3">
-        <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300">
           <UIcon name="i-lucide-shield-check" class="size-4" />
         </span>
         <div class="flex min-w-0 items-center gap-2.5">
-          <h2 class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ t('user.twoStep.title') }}</h2>
+          <h2 class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ t('user.twoStep.title') }}</h2>
           <UBadge :color="enabled ? 'success' : 'neutral'" variant="subtle" size="sm">
             {{ enabled ? t('user.twoStep.status.enabled') : t('user.twoStep.status.disabled') }}
           </UBadge>
         </div>
       </div>
 
-      <UButton v-if="!enabled" color="primary" variant="soft" size="sm" icon="i-lucide-plus" @click="setupOpen = true">
+      <UButton v-if="!enabled" color="primary" variant="soft" size="sm" icon="i-lucide-plus" @click="() => { setupOpen = true }">
         {{ t('user.twoStep.enable') }}
       </UButton>
       <div v-else class="flex shrink-0 items-center gap-1">
         <UTooltip :text="t('user.twoStep.regenerate')">
-          <UButton color="neutral" variant="ghost" size="sm" icon="i-lucide-key-round" :aria-label="t('user.twoStep.regenerate')" @click="regenerateOpen = true" />
+          <UButton color="neutral" variant="ghost" size="sm" icon="i-lucide-key-round" :aria-label="t('user.twoStep.regenerate')" @click="() => { regenerateOpen = true }" />
         </UTooltip>
-        <UButton color="error" variant="soft" size="sm" icon="i-lucide-shield-off" @click="disableOpen = true">{{ t('user.twoStep.disable') }}</UButton>
+        <UButton color="error" variant="soft" size="sm" icon="i-lucide-shield-off" @click="() => { disableOpen = true }">{{ t('user.twoStep.disable') }}</UButton>
       </div>
     </div>
   </UCard>
 
-  <UModal :open="setupOpen" :title="setupData ? t('user.twoStep.setupTitle') : t('user.twoStep.enableTitle')" :content="setupModalContent" :ui="compactModalUi" @update:open="setSetupOpen">
+  <UModal :open="setupOpen" :title="setupData ? t('user.twoStep.setupTitle') : t('user.twoStep.enableTitle')" :ui="setupModalUi" @update:open="setSetupOpen">
     <template #body>
       <div v-if="!setupData" class="px-4 py-3">
         <UFormField size="sm" :label="t('user.twoStep.password')" required :error="setupError || undefined">
@@ -38,7 +38,7 @@
         </UFormField>
       </div>
       <div v-else class="grid gap-4 px-4 py-4 sm:grid-cols-[112px_minmax(0,1fr)] sm:items-center">
-        <div class="flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 p-2 dark:border-slate-800 dark:bg-slate-950">
+        <div class="flex items-center justify-center rounded-md border border-neutral-200 bg-neutral-50 p-2 dark:border-neutral-800 dark:bg-neutral-950">
           <img :src="setupData.qrCodeDataUrl" :alt="t('user.twoStep.qrCode')" class="size-24 bg-white">
         </div>
         <div class="grid gap-3">
@@ -65,7 +65,7 @@
     </template>
   </UModal>
 
-  <UModal :open="regenerateOpen" :title="t('user.twoStep.regenerate')" :content="compactModalContent" :ui="compactModalUi" @update:open="setRegenerateOpen">
+  <UModal :open="regenerateOpen" :title="t('user.twoStep.regenerate')" :ui="compactModalUi" @update:open="setRegenerateOpen">
     <template #body>
       <div class="px-4 py-3">
         <UFormField size="sm" :label="t('user.twoStep.code')" required :error="regenerateError || undefined">
@@ -80,7 +80,7 @@
     </template>
   </UModal>
 
-  <UModal :open="disableOpen" :title="t('user.twoStep.disableTitle')" :content="compactModalContent" :ui="compactModalUi" @update:open="setDisableOpen">
+  <UModal :open="disableOpen" :title="t('user.twoStep.disableTitle')" :ui="compactModalUi" @update:open="setDisableOpen">
     <template #body>
       <div class="grid gap-3 px-4 py-3">
         <UFormField size="sm" :label="t('user.twoStep.password')" required>
@@ -98,11 +98,11 @@
     </template>
   </UModal>
 
-  <UModal :open="recoveryOpen" :title="t('user.twoStep.recoveryTitle')" :content="recoveryModalContent" :ui="compactModalUi" @update:open="recoveryOpen = $event">
+  <UModal :open="recoveryOpen" :title="t('user.twoStep.recoveryTitle')" :ui="recoveryModalUi" @update:open="recoveryOpen = $event">
     <template #body>
       <div class="px-4 py-3">
-        <div class="grid grid-cols-2 gap-px overflow-hidden rounded-md border border-slate-200 bg-slate-200 text-center font-mono text-sm dark:border-slate-700 dark:bg-slate-700">
-          <span v-for="code in recoveryCodes" :key="code" class="bg-white px-3 py-2.5 dark:bg-slate-900">{{ code }}</span>
+        <div class="grid grid-cols-2 gap-px overflow-hidden rounded-md border border-neutral-200 bg-neutral-200 text-center font-mono text-sm dark:border-neutral-700 dark:bg-neutral-700">
+          <span v-for="code in recoveryCodes" :key="code" class="bg-white px-3 py-2.5 dark:bg-neutral-900">{{ code }}</span>
         </div>
       </div>
     </template>
@@ -125,19 +125,8 @@ const { t } = useI18n()
 const toast = useToast()
 const { user, setupTwoStep, confirmTwoStep, createTwoStepRecoveryCodes, disableTwoStep } = useAuth()
 
-const compactModalContent = {
-  style: {
-    width: 'min(calc(100vw - 2rem), 22rem)',
-    maxWidth: '22rem'
-  }
-}
-const recoveryModalContent = {
-  style: {
-    width: 'min(calc(100vw - 2rem), 26rem)',
-    maxWidth: '26rem'
-  }
-}
 const compactModalUi = {
+  content: 'w-[calc(100vw-2rem)] max-w-[22rem] sm:max-w-[22rem]',
   header: 'min-h-0 p-0 sm:p-0 px-3 py-2.5 sm:px-3 sm:py-2.5',
   title: 'text-sm font-semibold',
   close: 'top-1.5 end-1.5',
@@ -164,12 +153,14 @@ const setupError = ref('')
 const regenerateError = ref('')
 const disableError = ref('')
 const recoveryCodes = ref<string[]>([])
-const setupModalContent = computed(() => ({
-  style: {
-    width: setupData.value ? 'min(calc(100vw - 2rem), 30rem)' : 'min(calc(100vw - 2rem), 22rem)',
-    maxWidth: setupData.value ? '30rem' : '22rem'
-  }
+const setupModalUi = computed(() => ({
+  ...compactModalUi,
+  content: setupData.value ? 'w-[calc(100vw-2rem)] max-w-[30rem] sm:max-w-[30rem]' : compactModalUi.content
 }))
+const recoveryModalUi = {
+  ...compactModalUi,
+  content: 'w-[calc(100vw-2rem)] max-w-[26rem] sm:max-w-[26rem]'
+}
 
 function setSetupOpen(value: boolean) {
   setupOpen.value = value

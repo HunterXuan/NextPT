@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] overflow-x-hidden bg-slate-50 py-6 lg:overflow-x-visible dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] overflow-x-hidden bg-neutral-50 py-6 lg:overflow-x-visible dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="pending" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div class="space-y-4">
-          <div class="h-44 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
-          <div class="h-64 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+          <div class="h-44 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
+          <div class="h-64 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
         </div>
-        <div class="h-80 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+        <div class="h-80 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
       </div>
 
-      <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
+      <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-        <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+        <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
       </div>
 
       <div v-else-if="torrent" class="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_44px_340px] lg:items-start">
@@ -33,12 +33,12 @@
               <UButton v-if="canResubmitTorrent" color="primary" size="sm" icon="i-lucide-send" :loading="resubmitPending" :disabled="resubmitPending" @click="handleResubmit">{{ $t('catalog.torrents.detail.review.resubmit') }}</UButton>
             </div>
           </section>
-          <section id="torrent-top" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <section id="torrent-top" class="scroll-mt-24 overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
             <div class="p-4 sm:p-5">
               <div class="space-y-4">
                 <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                   <div class="flex min-w-0 flex-wrap items-center gap-2">
-                    <span class="inline-flex h-6 max-w-full items-center rounded border border-slate-200 bg-slate-50 px-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+                    <span class="inline-flex h-6 max-w-full items-center rounded border border-neutral-200 bg-neutral-50 px-2 text-xs font-medium text-neutral-600 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300">
                       <span class="truncate">{{ categoryName }}</span>
                     </span>
                     <span
@@ -53,7 +53,7 @@
                     <span
                       v-for="tag in torrent.tags || []"
                       :key="`tag-${tag.id}`"
-                      class="inline-flex h-6 max-w-36 items-center truncate rounded border border-sky-200 bg-sky-50 px-2 text-xs font-medium text-sky-700 dark:border-sky-800 dark:bg-sky-950 dark:text-sky-300"
+                      class="inline-flex h-6 max-w-36 items-center truncate rounded border border-primary-200 bg-primary-50 px-2 text-xs font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950 dark:text-primary-300"
                     >
                       {{ tagName(tag) }}
                     </span>
@@ -107,18 +107,18 @@
                 </div>
 
                 <div class="min-w-0">
-                  <h1 class="break-words [overflow-wrap:anywhere] text-xl font-semibold leading-7 text-slate-950 md:text-2xl dark:text-white">
+                  <h1 class="break-words [overflow-wrap:anywhere] text-xl font-semibold leading-7 text-neutral-950 md:text-2xl dark:text-white">
                     {{ torrent.name || $t('catalog.torrents.detail.titleFallback', { id: torrent.id }) }}
                   </h1>
-                  <p v-if="torrent.subTitle" class="mt-2 break-words [overflow-wrap:anywhere] text-sm leading-6 text-slate-600 dark:text-slate-300">
+                  <p v-if="torrent.subTitle" class="mt-2 break-words [overflow-wrap:anywhere] text-sm leading-6 text-neutral-600 dark:text-neutral-300">
                     {{ torrent.subTitle }}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div class="border-t border-slate-200 bg-slate-50/70 dark:border-slate-800 dark:bg-slate-950/40">
-              <div class="grid grid-cols-2 divide-x divide-y divide-slate-200 sm:grid-cols-4 sm:divide-y-0 dark:divide-slate-800">
+            <div class="border-t border-neutral-200 bg-neutral-50/70 dark:border-neutral-800 dark:bg-neutral-950/40">
+              <div class="grid grid-cols-2 divide-x divide-y divide-neutral-200 sm:grid-cols-4 sm:divide-y-0 dark:divide-neutral-800">
                 <button
                   type="button"
                   :class="fileStatCardClass()"
@@ -126,11 +126,11 @@
                   @click="handleFileStatClick"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
-                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
                       <UIcon name="i-lucide-folder-tree" class="size-3.5 shrink-0 text-amber-500" />
                       <span class="truncate">{{ $t('catalog.torrents.fileCount', { count: numberFormatter.format(torrent.fileCount) }) }}</span>
                     </div>
-                    <p class="shrink-0 truncate text-right text-sm font-semibold text-slate-950 dark:text-white">
+                    <p class="shrink-0 truncate text-right text-sm font-semibold text-neutral-950 dark:text-white">
                       {{ formatBytes(torrent.size) }}
                     </p>
                   </div>
@@ -142,7 +142,7 @@
                   @click="handlePeerStatClick('seeders')"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
-                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
                       <UIcon name="i-lucide-users" class="size-3.5 shrink-0 text-emerald-500" />
                       <span class="truncate">{{ $t('catalog.torrents.detail.stats.seeders') }}</span>
                     </div>
@@ -156,8 +156,8 @@
                   @click="handlePeerStatClick('leechers')"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
-                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                      <UIcon name="i-lucide-loader-circle" class="size-3.5 shrink-0 text-sky-500" />
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+                      <UIcon name="i-lucide-loader-circle" class="size-3.5 shrink-0 text-primary-500" />
                       <span class="truncate">{{ $t('catalog.torrents.detail.stats.leechers') }}</span>
                     </div>
                     <p class="shrink-0 text-right text-sm font-semibold text-sky-600 dark:text-sky-400">{{ numberFormatter.format(torrent.leechers) }}</p>
@@ -170,23 +170,23 @@
                   @click="handlePeerStatClick('completed')"
                 >
                   <div class="flex min-w-0 items-center justify-between gap-3">
-                    <div class="flex min-w-0 items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                      <UIcon name="i-lucide-circle-check" class="size-3.5 shrink-0 text-slate-500 dark:text-slate-400" />
+                    <div class="flex min-w-0 items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+                      <UIcon name="i-lucide-circle-check" class="size-3.5 shrink-0 text-neutral-500 dark:text-neutral-400" />
                       <span class="truncate">{{ $t('catalog.torrents.detail.stats.completed') }}</span>
                     </div>
-                    <p class="shrink-0 text-right text-sm font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(torrent.snatched) }}</p>
+                    <p class="shrink-0 text-right text-sm font-semibold text-neutral-950 dark:text-white">{{ numberFormatter.format(torrent.snatched) }}</p>
                   </div>
                 </button>
               </div>
             </div>
 
-            <div v-if="filePanelOpen" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div v-if="filePanelOpen" class="border-t border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
               <div v-if="filesError" class="flex flex-col items-center justify-center px-4 py-10 text-center">
                 <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
-                <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ filesError }}</p>
+                <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ filesError }}</p>
               </div>
 
-              <div v-else-if="fileTree.length === 0" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+              <div v-else-if="fileTree.length === 0" class="px-4 py-10 text-center text-sm text-neutral-500 dark:text-neutral-400">
                 {{ $t('catalog.torrents.detail.files.empty') }}
               </div>
 
@@ -194,13 +194,13 @@
                 <div
                   v-for="row in visibleFileTreeRows"
                   :key="row.node.id"
-                  class="grid min-h-11 gap-2 border-b border-slate-100 px-4 py-2 text-sm last:border-b-0 sm:grid-cols-[minmax(0,1fr)_120px] sm:items-center dark:border-slate-800"
-                  :class="row.node.id === fileTreeRootId ? 'bg-slate-50/70 dark:bg-slate-950/40' : ''"
+                  class="grid min-h-11 gap-2 border-b border-neutral-100 px-4 py-2 text-sm last:border-b-0 sm:grid-cols-[minmax(0,1fr)_120px] sm:items-center dark:border-neutral-800"
+                  :class="row.node.id === fileTreeRootId ? 'bg-neutral-50/70 dark:bg-neutral-950/40' : ''"
                 >
                   <button
                     v-if="row.node.type === 'directory'"
                     type="button"
-                    class="flex min-w-0 items-center gap-2 rounded-md py-1 pr-2 text-left text-slate-700 transition-colors hover:bg-white dark:text-slate-200 dark:hover:bg-slate-950"
+                    class="flex min-w-0 items-center gap-2 rounded-md py-1 pr-2 text-left text-neutral-700 transition-colors hover:bg-white dark:text-neutral-200 dark:hover:bg-neutral-950"
                     :style="fileTreeIndent(row.depth)"
                     :aria-expanded="expandedFileNodeIds.has(row.node.id)"
                     :disabled="filesPending"
@@ -209,29 +209,29 @@
                     <UIcon
                       v-if="filesPending && !filesLoaded && row.node.id === fileTreeRootId"
                       name="i-lucide-loader-circle"
-                      class="size-4 shrink-0 animate-spin text-slate-400"
+                      class="size-4 shrink-0 animate-spin text-neutral-400"
                     />
                     <UIcon
                       v-else
                       :name="expandedFileNodeIds.has(row.node.id) ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
-                      class="size-4 shrink-0 text-slate-400"
+                      class="size-4 shrink-0 text-neutral-400"
                     />
                     <UIcon
                       :name="expandedFileNodeIds.has(row.node.id) ? 'i-lucide-folder-open' : 'i-lucide-folder'"
                       class="size-4 shrink-0 text-amber-500"
                     />
                     <span class="min-w-0 truncate font-medium">{{ row.node.name }}</span>
-                    <span v-if="row.node.id !== fileTreeRootId" class="shrink-0 text-xs text-slate-500 dark:text-slate-400">
+                    <span v-if="row.node.id !== fileTreeRootId" class="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">
                       {{ $t('catalog.torrents.fileCount', { count: numberFormatter.format(row.node.fileCount) }) }}
                     </span>
                   </button>
                   <div
                     v-else
-                    class="flex min-w-0 items-center gap-2 py-1 pr-2 text-slate-700 dark:text-slate-200"
+                    class="flex min-w-0 items-center gap-2 py-1 pr-2 text-neutral-700 dark:text-neutral-200"
                     :style="fileTreeIndent(row.depth)"
                   >
                     <span class="size-4 shrink-0" />
-                    <UIcon name="i-lucide-file" class="size-4 shrink-0 text-slate-400" />
+                    <UIcon name="i-lucide-file" class="size-4 shrink-0 text-neutral-400" />
                     <span class="min-w-0 truncate font-mono text-xs">{{ row.node.name }}</span>
                   </div>
                   <div v-if="row.node.id === fileTreeRootId" class="flex items-center justify-end gap-1">
@@ -267,70 +267,70 @@
                       />
                     </UTooltip>
                   </div>
-                  <span v-else class="text-slate-500 sm:text-right dark:text-slate-400">{{ formatBytes(row.node.size) }}</span>
+                  <span v-else class="text-neutral-500 sm:text-right dark:text-neutral-400">{{ formatBytes(row.node.size) }}</span>
                 </div>
               </div>
             </div>
 
-            <div v-if="peerView" class="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div v-if="peerView" class="border-t border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
               <div v-if="peerView === 'completed'" class="px-4 py-3">
                 <p v-if="completionsError" class="py-5 text-center text-sm text-red-500">{{ completionsError }}</p>
                 <div v-else-if="completionsPending && !completionsLoaded" class="space-y-2 py-2">
-                  <div v-for="item in 3" :key="item" class="h-12 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+                  <div v-for="item in 3" :key="item" class="h-12 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800" />
                 </div>
-                <p v-else-if="completions.length === 0" class="py-5 text-center text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.noCompletions') }}</p>
-                <div v-else class="max-h-80 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
+                <p v-else-if="completions.length === 0" class="py-5 text-center text-sm text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.peers.noCompletions') }}</p>
+                <div v-else class="max-h-80 divide-y divide-neutral-100 overflow-auto dark:divide-neutral-800">
                   <div v-for="item in completions" :key="item.user?.id || item.completedAt" class="grid gap-3 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
                     <div class="min-w-0">
-                      <IamUserPopover :user="item.user" :fallback="item.user?.username || '-'" class="truncate font-medium text-slate-950 dark:text-white" />
-                      <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-500 dark:text-slate-400">
+                      <IamUserPopover :user="item.user" :fallback="item.user?.username || '-'" class="truncate font-medium text-neutral-950 dark:text-white" />
+                      <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                         <span v-if="item.startedAt">{{ $t('catalog.torrents.detail.peers.startedAt') }} {{ formatDateTime(item.startedAt, locale) }}</span>
                         <span>{{ $t('catalog.torrents.detail.peers.completedAt') }} {{ formatDateTime(item.completedAt, locale) }}</span>
                       </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-xs sm:text-right">
                       <div>
-                        <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.uploaded') }}</p>
-                        <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(item.uploaded) }}</p>
+                        <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.peers.uploaded') }}</p>
+                        <p class="mt-1 font-medium text-neutral-950 dark:text-white">{{ formatBytes(item.uploaded) }}</p>
                       </div>
                       <div>
-                        <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.downloaded') }}</p>
-                        <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(item.downloaded) }}</p>
+                        <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.peers.downloaded') }}</p>
+                        <p class="mt-1 font-medium text-neutral-950 dark:text-white">{{ formatBytes(item.downloaded) }}</p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <AppPager v-if="completionsTotal > completionSize" class="mt-3 border-t border-slate-200 pt-3 dark:border-slate-800" size="xs" :page="completionPage" :total="completionsTotal" :page-size="completionSize" :disabled="completionsPending" @page-change="loadCompletionsPage" />
+                <AppPager v-if="completionsTotal > completionSize" class="mt-3 border-t border-neutral-200 pt-3 dark:border-neutral-800" size="xs" :page="completionPage" :total="completionsTotal" :page-size="completionSize" :disabled="completionsPending" @page-change="loadCompletionsPage" />
               </div>
               <div v-else-if="peersError" class="flex flex-col items-center justify-center px-4 py-8 text-center">
                 <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
-                <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ peersError }}</p>
+                <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ peersError }}</p>
               </div>
               <div v-else-if="peersPending && !peersLoaded" class="space-y-2 px-4 py-4">
-                <div v-for="item in 3" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+                <div v-for="item in 3" :key="item" class="h-16 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
               </div>
-              <div v-else-if="visiblePeers.length === 0" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+              <div v-else-if="visiblePeers.length === 0" class="px-4 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
                 {{ $t('catalog.torrents.detail.peers.empty') }}
               </div>
-              <div v-else class="max-h-80 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
+              <div v-else class="max-h-80 divide-y divide-neutral-100 overflow-auto dark:divide-neutral-800">
                 <div v-for="peer in visiblePeers" :key="`${peer.user?.id || 0}-${peer.startedAt}-${peer.isSeeder}`" class="grid gap-3 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
                   <div class="min-w-0">
                     <div class="flex min-w-0 items-center gap-2">
-                      <IamUserPopover :user="peer.user" :fallback="peerUserName(peer)" class="truncate font-medium text-slate-950 dark:text-white" />
+                      <IamUserPopover :user="peer.user" :fallback="peerUserName(peer)" class="truncate font-medium text-neutral-950 dark:text-white" />
                       <UBadge :color="peer.isSeeder ? 'success' : 'primary'" variant="soft">
                         {{ peer.isSeeder ? $t('catalog.torrents.detail.peers.seeder') : $t('catalog.torrents.detail.peers.leecher') }}
                       </UBadge>
                     </div>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(peer.startedAt, locale) }}</p>
+                    <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ formatDateTime(peer.startedAt, locale) }}</p>
                   </div>
                   <div class="grid grid-cols-2 gap-2 text-xs sm:text-right">
                     <div>
-                      <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.uploaded') }}</p>
-                      <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(peer.uploaded) }}</p>
+                      <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.peers.uploaded') }}</p>
+                      <p class="mt-1 font-medium text-neutral-950 dark:text-white">{{ formatBytes(peer.uploaded) }}</p>
                     </div>
                     <div>
-                      <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.peers.downloaded') }}</p>
-                      <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(peer.downloaded) }}</p>
+                      <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.peers.downloaded') }}</p>
+                      <p class="mt-1 font-medium text-neutral-950 dark:text-white">{{ formatBytes(peer.downloaded) }}</p>
                     </div>
                   </div>
                 </div>
@@ -338,28 +338,28 @@
             </div>
           </section>
 
-          <section id="torrent-subtitles" class="scroll-mt-24 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <section id="torrent-subtitles" class="scroll-mt-24 overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
             <button
               type="button"
-              class="flex w-full items-center justify-between gap-4 px-4 py-3 text-left transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:hover:bg-slate-950 dark:focus-visible:ring-sky-900"
+              class="flex w-full items-center justify-between gap-4 px-4 py-3 text-left transition hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-200 dark:hover:bg-neutral-950 dark:focus-visible:ring-primary-900"
               :aria-expanded="subtitlesPanelOpen"
               @click="toggleSubtitlesPanel"
             >
               <div class="min-w-0">
-                <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.subtitles.title') }}</h2>
+                <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.detail.subtitles.title') }}</h2>
               </div>
               <div class="flex shrink-0 items-center gap-2">
                 <UBadge v-if="subtitlesLoaded" color="neutral" variant="soft">
                   {{ $t('catalog.torrents.detail.subtitles.summary', { count: numberFormatter.format(subtitleTotal) }) }}
                 </UBadge>
-                <UIcon :name="subtitlesPanelOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" class="size-4 text-slate-400" />
+                <UIcon :name="subtitlesPanelOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" class="size-4 text-neutral-400" />
               </div>
             </button>
 
-            <div v-if="subtitlesPanelOpen" class="border-t border-slate-200 p-4 dark:border-slate-800">
-              <form class="grid grid-cols-1 gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 lg:grid-cols-[minmax(0,1fr)_180px_auto_auto] lg:items-center dark:border-slate-800 dark:bg-slate-950" @submit.prevent="handleSubtitleUpload">
-                <label class="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600">
-                  <UIcon name="i-lucide-file-up" class="size-4 shrink-0 text-slate-400" />
+            <div v-if="subtitlesPanelOpen" class="border-t border-neutral-200 p-4 dark:border-neutral-800">
+              <form class="grid grid-cols-1 gap-3 rounded-md border border-neutral-200 bg-neutral-50 p-3 lg:grid-cols-[minmax(0,1fr)_180px_auto_auto] lg:items-center dark:border-neutral-800 dark:bg-neutral-950" @submit.prevent="handleSubtitleUpload">
+                <label class="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-700 transition hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-neutral-600">
+                  <UIcon name="i-lucide-file-up" class="size-4 shrink-0 text-neutral-400" />
                   <span class="min-w-0 truncate">{{ selectedSubtitleFile?.name || $t('catalog.torrents.detail.subtitles.choose') }}</span>
                   <input :key="subtitleFileInputKey" class="sr-only" type="file" :disabled="!canCreateSubtitle || subtitleUploadPending" @change="handleSubtitleFileChange">
                 </label>
@@ -372,12 +372,12 @@
                   value-key="value"
                   :disabled="!canCreateSubtitle || subtitleUploadPending"
                 />
-                <label class="flex h-10 items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                <label class="flex h-10 items-center justify-between gap-3 rounded-md border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
                   <span>{{ $t('catalog.torrents.detail.subtitles.anonymous') }}</span>
                   <input
                     v-model="subtitleForm.anonymous"
                     type="checkbox"
-                    class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
+                    class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
                     :disabled="!canCreateSubtitle || subtitleUploadPending"
                   >
                 </label>
@@ -399,20 +399,20 @@
               </div>
 
               <div v-if="subtitlesPending && subtitles.length === 0" class="mt-4 space-y-2">
-                <div v-for="item in 3" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+                <div v-for="item in 3" :key="item" class="h-14 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
               </div>
-              <div v-else-if="subtitles.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+              <div v-else-if="subtitles.length === 0" class="mt-4 rounded-md border border-dashed border-neutral-200 px-4 py-8 text-center text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
                 {{ $t('catalog.torrents.detail.subtitles.empty') }}
               </div>
-              <div v-else class="mt-4 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
-                <div v-for="subtitle in subtitles" :key="subtitle.id" class="grid gap-3 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-slate-800">
+              <div v-else class="mt-4 overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
+                <div v-for="subtitle in subtitles" :key="subtitle.id" class="grid gap-3 border-b border-neutral-100 px-3 py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-neutral-800">
                   <div class="min-w-0">
                     <div class="flex min-w-0 items-center gap-2">
-                      <UIcon name="i-lucide-captions" class="size-4 shrink-0 text-sky-500" />
-                      <p class="truncate text-sm font-medium text-slate-950 dark:text-white">{{ subtitle.fileName }}</p>
+                      <UIcon name="i-lucide-captions" class="size-4 shrink-0 text-primary-500" />
+                      <p class="truncate text-sm font-medium text-neutral-950 dark:text-white">{{ subtitle.fileName }}</p>
                       <UBadge color="neutral" variant="soft">{{ subtitleLanguageLabel(subtitle.language) }}</UBadge>
                     </div>
-                    <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                    <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
                       <IamUserPopover
                         v-if="!subtitle.anonymous && subtitle.uploader?.id"
                         :user="subtitle.uploader"
@@ -443,10 +443,10 @@
                       {{ $t('catalog.torrents.detail.actions.report') }}
                     </UButton>
                   </div>
-                  <form v-if="activeSubtitleReportId === subtitle.id" class="sm:col-span-2 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleSubtitleReport(subtitle.id)">
+                  <form v-if="activeSubtitleReportId === subtitle.id" class="sm:col-span-2 grid gap-2 rounded-md bg-neutral-50 p-3 dark:bg-neutral-950" @submit.prevent="handleSubtitleReport(subtitle.id)">
                     <UTextarea v-model="subtitleReportReason" :rows="2" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
                     <div class="flex justify-end gap-2">
-                      <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeSubtitleReportId = 0">{{ $t('common.cancel') }}</UButton>
+                      <UButton color="neutral" variant="ghost" size="xs" type="button" @click="() => { activeSubtitleReportId = 0 }">{{ $t('common.cancel') }}</UButton>
                       <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="subtitleReportReason.trim().length < 5">
                         {{ $t('catalog.torrents.detail.report.submit') }}
                       </UButton>
@@ -457,7 +457,7 @@
 
               <AppPager
                 v-if="subtitleTotal > subtitleSize"
-                class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+                class="mt-4 border-t border-neutral-200 pt-4 dark:border-neutral-800"
                 size="xs"
                 :page="subtitlePage"
                 :total="subtitleTotal"
@@ -470,9 +470,9 @@
 
           <CatalogTorrentMetadataDetail v-if="hasTorrentMetadata && torrent.metadata" :metadata="torrent.metadata" />
 
-          <section id="torrent-description" class="scroll-mt-24 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 pb-4 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.description.title') }}</h2>
+          <section id="torrent-description" class="scroll-mt-24 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 pb-4 dark:border-neutral-800">
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.detail.description.title') }}</h2>
             </div>
             <div class="mt-4">
               <div
@@ -480,7 +480,7 @@
                 class="rich-text"
                 v-html="renderedDescription"
               />
-              <p v-else class="text-sm text-slate-500 dark:text-slate-400">
+              <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">
                 {{ $t('catalog.torrents.detail.description.empty') }}
               </p>
             </div>
@@ -518,7 +518,7 @@
           :aria-label="$t('catalog.torrents.detail.navigation.title')"
         >
           <div class="relative flex min-h-56 w-full justify-center">
-            <div class="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-slate-200 dark:bg-slate-800" />
+            <div class="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-neutral-200 dark:bg-neutral-800" />
             <div class="relative z-10 flex flex-col items-center gap-2">
               <UTooltip
                 v-for="item in sectionNavItems"
@@ -548,40 +548,40 @@
             @reviewed="handleTorrentReviewed"
           />
 
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
             <div class="flex items-center justify-between gap-3">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.detail.info.title') }}</h2>
               <div class="flex shrink-0 items-center gap-1">
-                <span class="rounded border border-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                <span class="rounded border border-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
                   #{{ torrent.id }}
                 </span>
               </div>
             </div>
-            <dl class="mt-3 divide-y divide-slate-100 text-sm dark:divide-slate-800">
+            <dl class="mt-3 divide-y divide-neutral-100 text-sm dark:divide-neutral-800">
               <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.category') }}</dt>
-                <dd class="min-w-0 truncate text-right font-medium text-slate-950 dark:text-white">{{ categoryName }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.info.category') }}</dt>
+                <dd class="min-w-0 truncate text-right font-medium text-neutral-950 dark:text-white">{{ categoryName }}</dd>
               </div>
               <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publisher') }}</dt>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.info.publisher') }}</dt>
                 <dd class="min-w-0 truncate text-right font-medium">
                   <IamUserPopover
                     v-if="publisherUser"
                     :user="publisherUser"
                     :fallback="publisherName"
-                    class="text-slate-950 dark:text-white"
+                    class="text-neutral-950 dark:text-white"
                   />
-                  <span v-else class="text-slate-950 dark:text-white">{{ publisherName }}</span>
+                  <span v-else class="text-neutral-950 dark:text-white">{{ publisherName }}</span>
                 </dd>
               </div>
               <div class="grid grid-cols-[88px_minmax(0,1fr)] gap-3 py-2.5">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.detail.info.publishedAt') }}</dt>
-                <dd class="text-right font-medium text-slate-950 dark:text-white">{{ formatDateTime(torrent.createdAt, locale) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.detail.info.publishedAt') }}</dt>
+                <dd class="text-right font-medium text-neutral-950 dark:text-white">{{ formatDateTime(torrent.createdAt, locale) }}</dd>
               </div>
             </dl>
 
             <div
-              class="mt-3 grid gap-2 border-t border-slate-100 pt-3 dark:border-slate-800"
+              class="mt-3 grid gap-2 border-t border-neutral-100 pt-3 dark:border-neutral-800"
               :class="canOwnerEditTorrent ? 'grid-cols-3' : 'grid-cols-2'"
             >
               <UButton
@@ -615,16 +615,16 @@
                 size="sm"
                 icon="i-lucide-flag"
                 block
-                @click="showTorrentReport = !showTorrentReport"
+                @click="() => { showTorrentReport = !showTorrentReport }"
               >
                 {{ $t('catalog.torrents.detail.actions.report') }}
               </UButton>
             </div>
 
-            <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-950" @submit.prevent="handleTorrentReport">
+            <form v-if="showTorrentReport" class="mt-3 grid gap-2 rounded-md bg-neutral-50 p-3 dark:bg-neutral-950" @submit.prevent="handleTorrentReport">
               <UTextarea v-model="torrentReportReason" :rows="3" :placeholder="$t('catalog.torrents.detail.report.reason')" :disabled="reportPending" />
               <div class="flex justify-end gap-2">
-                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="showTorrentReport = false">{{ $t('common.cancel') }}</UButton>
+                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="() => { showTorrentReport = false }">{{ $t('common.cancel') }}</UButton>
                 <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="torrentReportReason.trim().length < 5">
                   {{ $t('catalog.torrents.detail.report.submit') }}
                 </UButton>
@@ -643,16 +643,16 @@
             :submit-reward="submitTorrentReward"
           />
 
-          <details v-if="canManageCatalogTorrent" class="group overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 transition hover:bg-slate-50 [&::-webkit-details-marker]:hidden dark:hover:bg-slate-800/60">
-              <span class="flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-950 dark:text-white">
-                <UIcon name="i-lucide-settings-2" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
+          <details v-if="canManageCatalogTorrent" class="group overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 transition hover:bg-neutral-50 [&::-webkit-details-marker]:hidden dark:hover:bg-neutral-800/60">
+              <span class="flex min-w-0 items-center gap-2 text-sm font-semibold text-neutral-950 dark:text-white">
+                <UIcon name="i-lucide-settings-2" class="size-4 shrink-0 text-neutral-500 dark:text-neutral-400" />
                 {{ $t('catalog.torrents.detail.actions.managementTitle') }}
               </span>
-              <UIcon name="i-lucide-chevron-down" class="size-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" />
+              <UIcon name="i-lucide-chevron-down" class="size-4 shrink-0 text-neutral-400 transition-transform group-open:rotate-180" />
             </summary>
 
-            <div class="border-t border-slate-100 p-4 dark:border-slate-800">
+            <div class="border-t border-neutral-100 p-4 dark:border-neutral-800">
 
             <div class="grid grid-cols-2 gap-2">
               <UButton
@@ -687,10 +687,10 @@
                 <template #content="{ close }">
                   <div class="space-y-3">
                     <div>
-                      <p class="text-sm font-medium text-slate-950 dark:text-white">
+                      <p class="text-sm font-medium text-neutral-950 dark:text-white">
                         {{ $t('catalog.torrents.detail.actions.confirmAdminDelete') }}
                       </p>
-                      <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                      <p class="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">
                         {{ $t('catalog.torrents.detail.actions.deleteWarning') }}
                       </p>
                     </div>
@@ -707,12 +707,12 @@
               </UPopover>
             </div>
 
-            <div class="mt-3 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
-              <div class="space-y-3 border-b border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
+            <div class="mt-3 overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
+              <div class="space-y-3 border-b border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-950/50">
                 <div class="flex items-center justify-between gap-3">
                   <div class="flex min-w-0 items-center gap-2">
-                    <UIcon name="i-lucide-pin" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
-                    <span class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.pin') }}</span>
+                    <UIcon name="i-lucide-pin" class="size-4 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                    <span class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.pin') }}</span>
                     <UBadge :color="torrent.isPinned ? 'primary' : 'neutral'" variant="soft" size="sm">
                       {{ torrent.isPinned ? $t('catalog.torrents.status.pinned') : $t('catalog.torrents.detail.admin.inactive') }}
                     </UBadge>
@@ -731,15 +731,15 @@
                   </UButton>
                 </div>
                 <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-                  <div class="grid grid-cols-3 gap-1 rounded-md bg-white p-1 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-700" :aria-label="$t('catalog.torrents.detail.admin.pinWeight')">
+                  <div class="grid grid-cols-3 gap-1 rounded-md bg-white p-1 ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-700" :aria-label="$t('catalog.torrents.detail.admin.pinWeight')">
                     <button
                       v-for="weight in adminPinWeightOptions"
                       :key="weight"
                       type="button"
                       class="h-8 rounded text-xs font-semibold transition"
                       :class="adminPinWeight === weight
-                        ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-950'
-                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white'"
+                        ? 'bg-neutral-900 text-white shadow-sm dark:bg-white dark:text-neutral-950'
+                        : 'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white'"
                       :disabled="adminActionPending === 'pin'"
                       @click="adminPinWeight = weight"
                     >
@@ -760,10 +760,10 @@
                 </div>
               </div>
 
-              <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+              <div class="flex items-center justify-between gap-3 border-b border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
                 <div class="flex min-w-0 items-center gap-2">
-                  <UIcon name="i-lucide-star" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
-                  <span class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.feature') }}</span>
+                  <UIcon name="i-lucide-star" class="size-4 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                  <span class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.feature') }}</span>
                   <UBadge :color="torrent.isFeatured ? 'warning' : 'neutral'" variant="soft" size="sm">
                     {{ torrent.isFeatured ? $t('catalog.torrents.status.featured') : $t('catalog.torrents.detail.admin.inactive') }}
                   </UBadge>
@@ -781,11 +781,11 @@
                 </UButton>
               </div>
 
-              <div class="space-y-3 bg-slate-50/70 p-3 dark:bg-slate-950/50">
+              <div class="space-y-3 bg-neutral-50/70 p-3 dark:bg-neutral-950/50">
                 <div class="flex items-center justify-between gap-3">
                   <div class="flex min-w-0 items-center gap-2">
-                    <UIcon name="i-lucide-badge-percent" class="size-4 shrink-0 text-slate-500 dark:text-slate-400" />
-                    <span class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.promotion') }}</span>
+                    <UIcon name="i-lucide-badge-percent" class="size-4 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                    <span class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.torrents.detail.admin.promotion') }}</span>
                     <UBadge :color="isPromotionActive(torrent) ? 'success' : 'neutral'" variant="soft" size="sm">
                       {{ isPromotionActive(torrent) ? torrentPromotionLabel(torrent.spState) : $t('catalog.torrents.detail.admin.inactive') }}
                     </UBadge>
@@ -1088,11 +1088,11 @@ function renderRichText(content: string) {
 }
 
 function sectionRailButtonClass(id: string) {
-  const base = 'flex size-9 items-center justify-center rounded-full border text-slate-400 shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  const base = 'flex size-9 items-center justify-center rounded-full border text-neutral-400 shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 dark:focus-visible:ring-primary-900'
   if (activeSectionId.value === id) {
-    return `${base} border-sky-200 bg-sky-50 text-sky-600 shadow-sky-950/5 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300`
+    return `${base} border-primary-200 bg-primary-50 text-primary-600 shadow-primary-950/5 dark:border-primary-900 dark:bg-primary-950 dark:text-primary-300`
   }
-  return `${base} border-slate-200 bg-white hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-sky-900 dark:hover:bg-sky-950 dark:hover:text-sky-300`
+  return `${base} border-neutral-200 bg-white hover:border-primary-200 hover:bg-primary-50 hover:text-primary-600 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-primary-900 dark:hover:bg-primary-950 dark:hover:text-primary-300`
 }
 
 async function scrollToSection(id: string) {
@@ -1142,7 +1142,7 @@ function torrentStatusBadges(torrent: TorrentDetail) {
     badges.push({
       key: 'pinned',
       label: t('catalog.torrents.status.pinned'),
-      class: 'bg-slate-900 text-white dark:bg-white dark:text-slate-950',
+      class: 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950',
       title: t('catalog.torrents.status.pinned')
     })
   }
@@ -1212,7 +1212,7 @@ function normalizeAdminPinWeight(value?: number | null) {
   if (!Number.isFinite(weight) || weight <= 0) return defaultAdminPinWeight
   return adminPinWeightOptions.reduce((closest, option) => {
     return Math.abs(option - weight) < Math.abs(closest - weight) ? option : closest
-  }, adminPinWeightOptions[0])
+  }, defaultAdminPinWeight)
 }
 
 function formatDateTimeLocalInput(value?: string | null) {
@@ -1556,19 +1556,19 @@ async function handleFileStatClick() {
 }
 
 function fileStatCardClass() {
-  const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-200 dark:focus-visible:ring-primary-900'
   if (filePanelOpen.value) {
     return `${base} bg-amber-50 dark:bg-amber-950/30`
   }
-  return `${base} hover:bg-white dark:hover:bg-slate-950`
+  return `${base} hover:bg-white dark:hover:bg-neutral-950`
 }
 
 function peerStatCardClass(view: PeerView) {
-  const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-200 dark:focus-visible:ring-sky-900'
+  const base = 'min-w-0 px-3 py-3 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-200 dark:focus-visible:ring-primary-900'
   if (peerView.value === view) {
-    return `${base} bg-sky-50 dark:bg-sky-950/40`
+    return `${base} bg-primary-50 dark:bg-primary-950/40`
   }
-  return `${base} hover:bg-white dark:hover:bg-slate-950`
+  return `${base} hover:bg-white dark:hover:bg-neutral-950`
 }
 
 async function handleDownload() {
@@ -2034,7 +2034,7 @@ function fileTreeIndent(depth: number) {
   }
 }
 
-function buildFileTree(items: TorrentFileItem[]) {
+function buildFileTree(items: TorrentFileItem[]): FileTreeNode[] {
   const roots: FileTreeNode[] = []
   const nodeMap = new Map<string, FileTreeNode>()
 
@@ -2045,8 +2045,7 @@ function buildFileTree(items: TorrentFileItem[]) {
     let siblings = roots
     let path = ''
 
-    for (let index = 0; index < parts.length; index += 1) {
-      const name = parts[index]
+    for (const [index, name] of parts.entries()) {
       const isFile = index === parts.length - 1
       path = path ? `${path}/${name}` : name
       const id = `${isFile ? 'file' : 'dir'}:${path}`
@@ -2091,7 +2090,7 @@ function buildFileTree(items: TorrentFileItem[]) {
   }]
 }
 
-function buildFileTreePlaceholder() {
+function buildFileTreePlaceholder(): FileTreeNode[] {
   if (!torrent.value || torrent.value.fileCount <= 0) return []
 
   return [{

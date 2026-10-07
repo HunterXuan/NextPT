@@ -1,6 +1,6 @@
 <template>
   <UApp :locale="uiLocale">
-    <NuxtLoadingIndicator color="#0ea5e9" />
+    <NuxtLoadingIndicator color="var(--ui-primary)" />
     <NuxtLayout>
       <NuxtPage
         :key="isLoggedIn ? 'workspace' : 'public'"
@@ -14,10 +14,19 @@
 
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
+import { siteThemeStyles, siteThemeBootstrap } from '~/utils/siteTheme'
+
+const { defaultTheme, restoreTheme } = useSiteTheme()
+useHead({
+  style: [{ key: 'site-themes', innerHTML: siteThemeStyles }],
+  script: [{ key: 'site-theme-init', innerHTML: siteThemeBootstrap(defaultTheme.value), tagPosition: 'head' }]
+})
+onMounted(restoreTheme)
 
 const { locale } = useI18n()
 const { isLoggedIn } = useAuth()
 const { pageKey } = useWorkspacePageCache()
+const { siteName, siteFavicon } = useSiteBranding()
 
 const uiLocale = computed(() => {
   if (locale.value === 'zh-CN') return locales.zh_cn
@@ -28,15 +37,16 @@ const uiLocale = computed(() => {
 const htmlLang = computed(() => locale.value)
 
 useHead({
-  titleTemplate: (title) => (title ? `${title} | NextPT` : 'NextPT'),
+  titleTemplate: (title) => (title ? `${title} | ${siteName.value}` : siteName.value),
   htmlAttrs: {
     lang: htmlLang
-  }
+  },
+  link: [{ key: 'icon', rel: 'icon', href: siteFavicon }]
 })
 
 useSeoMeta({
   ogType: 'website',
-  ogSiteName: 'NextPT',
+  ogSiteName: () => siteName.value,
   twitterCard: 'summary'
 })
 </script>

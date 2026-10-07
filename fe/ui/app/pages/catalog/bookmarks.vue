@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div class="hidden grid-cols-[86px_minmax(0,1fr)_88px_48px_48px_56px_96px_110px_64px] items-center gap-2 border-b border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+      <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <div class="hidden grid-cols-[86px_minmax(0,1fr)_88px_48px_48px_56px_96px_110px_64px] items-center gap-2 border-b border-neutral-200 bg-neutral-50 px-2.5 py-2 text-xs font-semibold text-neutral-500 lg:grid dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-400">
           <span>{{ $t('catalog.torrents.table.category') }}</span>
           <span>{{ $t('catalog.torrents.table.torrent') }}</span>
           <span class="text-right">{{ $t('catalog.torrents.table.size') }}</span>
@@ -14,45 +14,45 @@
           <span class="text-center">{{ $t('catalog.torrents.table.actions') }}</span>
         </div>
 
-        <div v-if="pending" class="divide-y divide-slate-200 dark:divide-slate-800">
+        <div v-if="pending" class="divide-y divide-neutral-200 dark:divide-neutral-800">
           <div v-for="index in 8" :key="index" class="grid gap-2 px-2.5 py-2.5 lg:grid-cols-[86px_minmax(0,1fr)_88px_48px_48px_56px_96px_110px_64px] lg:items-center">
-            <div class="h-5 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+            <div class="h-5 w-16 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
             <div class="space-y-2">
-              <div class="h-4 w-4/5 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-              <div class="h-3 w-2/5 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+              <div class="h-4 w-4/5 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+              <div class="h-3 w-2/5 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
             </div>
-            <div class="h-4 w-16 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-4 w-8 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-4 w-8 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-4 w-8 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-4 w-24 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-4 w-20 animate-pulse rounded bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
-            <div class="h-8 w-14 animate-pulse rounded-md bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
+            <div class="h-4 w-16 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-4 w-8 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-4 w-8 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-4 w-8 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-4 w-24 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-4 w-20 animate-pulse rounded bg-neutral-100 lg:justify-self-center dark:bg-neutral-800/70" />
+            <div class="h-8 w-14 animate-pulse rounded-md bg-neutral-100 lg:justify-self-center dark:bg-neutral-800/70" />
           </div>
         </div>
 
         <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
           <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
         </div>
 
         <div v-else-if="torrents.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <UIcon name="i-lucide-bookmark-x" class="size-9 text-slate-400" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.bookmarks.empty.title') }}</p>
-          <p class="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.bookmarks.empty.description') }}</p>
+          <UIcon name="i-lucide-bookmark-x" class="size-9 text-neutral-400" />
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.bookmarks.empty.title') }}</p>
+          <p class="mt-1 max-w-md text-sm text-neutral-500 dark:text-neutral-400">{{ $t('catalog.bookmarks.empty.description') }}</p>
           <UButton class="mt-5" color="primary" variant="soft" icon="i-lucide-search" :to="localePath('/catalog/torrents')">
             {{ $t('catalog.bookmarks.empty.action') }}
           </UButton>
         </div>
 
-        <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
+        <div v-else class="divide-y divide-neutral-200 dark:divide-neutral-800">
           <article
             v-for="torrent in torrents"
             :key="torrent.id"
-            class="grid gap-3 px-3 py-3 transition-colors hover:bg-slate-50 lg:grid-cols-[86px_minmax(0,1fr)_88px_48px_48px_56px_96px_110px_64px] lg:items-center lg:gap-2 lg:px-2.5 lg:py-2 dark:hover:bg-slate-950/70"
+            class="grid gap-3 px-3 py-3 transition-colors hover:bg-neutral-50 lg:grid-cols-[86px_minmax(0,1fr)_88px_48px_48px_56px_96px_110px_64px] lg:items-center lg:gap-2 lg:px-2.5 lg:py-2 dark:hover:bg-neutral-950/70"
           >
             <div class="flex flex-wrap items-center gap-2 lg:block">
-              <span class="inline-flex h-6 max-w-full items-center rounded border border-slate-200 bg-slate-50 px-2 text-[11px] font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+              <span class="inline-flex h-6 max-w-full items-center rounded border border-neutral-200 bg-neutral-50 px-2 text-[11px] font-medium text-neutral-600 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300">
                 <span class="truncate">{{ categoryName(torrent.categoryId) }}</span>
               </span>
             </div>
@@ -63,7 +63,7 @@
                   <h2 class="flex min-w-0 items-center gap-1.5 text-sm font-medium leading-5">
                     <NuxtLink
                       :to="localePath(`/catalog/torrents/${torrent.id}`)"
-                      class="min-w-0 truncate text-slate-950 hover:text-sky-700 dark:text-white dark:hover:text-sky-300"
+                      class="min-w-0 truncate text-neutral-950 hover:text-primary-700 dark:text-white dark:hover:text-primary-300"
                     >
                       {{ torrent.name || `#${torrent.id}` }}
                     </NuxtLink>
@@ -77,7 +77,7 @@
                       {{ badge.label }}
                     </span>
                   </h2>
-                  <p v-if="torrent.subTitle" class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+                  <p v-if="torrent.subTitle" class="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">
                     {{ torrent.subTitle }}
                   </p>
                 </div>
@@ -108,7 +108,7 @@
                   />
                 </div>
               </div>
-              <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+              <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
                 <IamUserPopover
                   v-if="!torrent.anonymous && torrent.owner?.id"
                   :user="torrent.owner"
@@ -121,7 +121,7 @@
             </div>
 
             <div class="hidden text-right tabular-nums lg:block">
-              <p class="text-sm font-medium text-slate-950 dark:text-white">{{ formatBytes(torrent.size) }}</p>
+              <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ formatBytes(torrent.size) }}</p>
             </div>
 
             <div class="hidden text-right text-sm font-semibold tabular-nums text-emerald-600 lg:block dark:text-emerald-400">
@@ -130,10 +130,10 @@
             <div class="hidden text-right text-sm font-semibold tabular-nums text-sky-600 lg:block dark:text-sky-400">
               {{ numberFormatter.format(torrent.leechers) }}
             </div>
-            <div class="hidden text-right text-sm font-semibold tabular-nums text-slate-700 lg:block dark:text-slate-200">
+            <div class="hidden text-right text-sm font-semibold tabular-nums text-neutral-700 lg:block dark:text-neutral-200">
               {{ numberFormatter.format(torrent.snatched) }}
             </div>
-            <p class="hidden text-right text-sm text-slate-500 lg:block dark:text-slate-400" :title="formatDateTime(torrent.createdAt, locale)">
+            <p class="hidden text-right text-sm text-neutral-500 lg:block dark:text-neutral-400" :title="formatDateTime(torrent.createdAt, locale)">
               {{ relativeDateTime(torrent.createdAt) }}
             </p>
             <div class="hidden min-w-0 text-center lg:block" :title="torrentOwnerName(torrent)">
@@ -141,17 +141,17 @@
                 v-if="!torrent.anonymous && torrent.owner?.id"
                 :user="torrent.owner"
                 :fallback="torrentOwnerPrimary(torrent)"
-                class="truncate text-sm leading-5 text-slate-600 dark:text-slate-300"
+                class="truncate text-sm leading-5 text-neutral-600 dark:text-neutral-300"
               />
-              <p v-else class="truncate text-sm leading-5 text-slate-600 dark:text-slate-300">{{ torrentOwnerPrimary(torrent) }}</p>
-              <p v-if="torrentOwnerSecondary(torrent)" class="truncate text-xs leading-4 text-slate-400 dark:text-slate-500">
+              <p v-else class="truncate text-sm leading-5 text-neutral-600 dark:text-neutral-300">{{ torrentOwnerPrimary(torrent) }}</p>
+              <p v-if="torrentOwnerSecondary(torrent)" class="truncate text-xs leading-4 text-neutral-400 dark:text-neutral-500">
                 {{ torrentOwnerSecondary(torrent) }}
               </p>
             </div>
             <div class="hidden justify-center gap-1 lg:flex">
               <AppPermissionButton
                 :permission="Permission.CatalogTorrentDownload"
-                class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                class="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
                 color="neutral"
                 variant="ghost"
                 size="xs"
@@ -176,22 +176,22 @@
               />
             </div>
 
-            <div class="grid grid-cols-4 gap-2 rounded-md bg-slate-50 px-3 py-2 text-xs lg:hidden dark:bg-slate-950">
+            <div class="grid grid-cols-4 gap-2 rounded-md bg-neutral-50 px-3 py-2 text-xs lg:hidden dark:bg-neutral-950">
               <div>
-                <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.table.size') }}</p>
-                <p class="mt-1 font-medium text-slate-950 dark:text-white">{{ formatBytes(torrent.size) }}</p>
+                <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.table.size') }}</p>
+                <p class="mt-1 font-medium text-neutral-950 dark:text-white">{{ formatBytes(torrent.size) }}</p>
               </div>
               <div>
-                <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.table.seeders') }}</p>
+                <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.table.seeders') }}</p>
                 <p class="mt-1 font-semibold text-emerald-600 dark:text-emerald-400">{{ numberFormatter.format(torrent.seeders) }}</p>
               </div>
               <div>
-                <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.table.leechers') }}</p>
+                <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.table.leechers') }}</p>
                 <p class="mt-1 font-semibold text-sky-600 dark:text-sky-400">{{ numberFormatter.format(torrent.leechers) }}</p>
               </div>
               <div>
-                <p class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.table.completed') }}</p>
-                <p class="mt-1 font-semibold text-slate-700 dark:text-slate-200">{{ numberFormatter.format(torrent.snatched) }}</p>
+                <p class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.table.completed') }}</p>
+                <p class="mt-1 font-semibold text-neutral-700 dark:text-neutral-200">{{ numberFormatter.format(torrent.snatched) }}</p>
               </div>
             </div>
           </article>
@@ -406,7 +406,7 @@ function torrentStatusBadges(torrent: TorrentListItem) {
     badges.push({
       key: 'pinned',
       label: t('catalog.torrents.status.pinned'),
-      class: 'bg-slate-900 text-white dark:bg-white dark:text-slate-950',
+      class: 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950',
       title: t('catalog.torrents.status.pinned')
     })
   }

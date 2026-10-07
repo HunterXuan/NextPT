@@ -1,6 +1,27 @@
 {
+  "appearance": {
+    "title": "外觀",
+    "description": "配色主題與明暗模式",
+    "palette": "配色主題",
+    "siteDefault": "使用站點預設 · {name}",
+    "mode": "明暗模式",
+    "themes": {
+      "teal": "青嵐",
+      "green": "翠林",
+      "sky": "碧空",
+      "indigo": "靛青",
+      "violet": "紫藤",
+      "rose": "薔薇",
+      "amber": "琥珀",
+      "graphite": "石墨"
+    },
+    "modes": {
+      "light": "淺色",
+      "dark": "深色",
+      "system": "跟隨系統"
+    }
+  },
   "common": {
-    "brand": "NextPT",
     "cancel": "取消",
     "confirm": "確認",
     "copy": "複製",
@@ -140,10 +161,10 @@
   },
   "home": {
     "metaTitle": "首頁",
-    "metaDescription": "NextPT 私有資源社群，圍繞高品質資源、長期做種和站內交流建立分享秩序。",
+    "metaDescription": "{siteName} 私有資源社群，圍繞高品質資源、長期做種和站內交流建立分享秩序。",
     "guest": {
       "eyebrow": "為認真收藏與分享而生的私有資源社群",
-      "title": "NextPT",
+      "title": "{siteName}",
       "description": "在這裡，資源不只是被下載，也會被整理、補充和長期保種。找到想看的內容，也把自己擁有的內容留給後來的人。",
       "primaryAction": "申請加入",
       "secondaryAction": "已有帳號登入",
@@ -315,7 +336,7 @@
       "action": "登入",
       "eyebrow": "歡迎回來",
       "metaTitle": "登入",
-      "title": "登入 NextPT",
+      "title": "登入 {siteName}",
       "subtitle": "回到資源庫、收藏夾和站內討論，繼續你的瀏覽與分享。",
       "heroTitle": "回到你的私有資源社群",
       "heroDescription": "繼續查看關注的資源、維護自己的做種和分享資料，也看看社群裡最近有哪些補充、求助和討論。",
@@ -359,7 +380,7 @@
       "metaTitle": "設定新密碼",
       "title": "設定新密碼",
       "subtitle": "為帳號設定一個新的密碼，完成後使用新密碼重新登入。",
-      "heroTitle": "重新保護你的 NextPT 帳號",
+      "heroTitle": "重新保護你的 {siteName} 帳號",
       "heroDescription": "重設連結只能使用一次。密碼更新後，目前帳號在其他裝置上的登入狀態也會失效。",
       "submit": "確認重設密碼",
       "passwordMismatch": "兩次輸入的密碼不一致",
@@ -377,7 +398,7 @@
       "metaTitle": "驗證信箱",
       "title": "檢查你的信箱",
       "subtitle": "我們已向註冊信箱傳送驗證連結。沒有收到時，可以在這裡重新傳送。",
-      "heroTitle": "驗證信箱後開始使用 NextPT",
+      "heroTitle": "驗證信箱後開始使用 {siteName}",
       "heroDescription": "信箱驗證用於確認帳號歸屬。驗證連結只能使用一次，並會在 24 小時後失效。",
       "verifyingTitle": "正在驗證信箱",
       "verifyingDescription": "正在確認驗證連結，請稍候。",
@@ -395,7 +416,7 @@
       "action": "註冊",
       "eyebrow": "加入社群",
       "metaTitle": "註冊",
-      "title": "建立 NextPT 帳號",
+      "title": "建立 {siteName} 帳號",
       "subtitle": "填寫基礎資料，加入一個靠整理、做種和互助維持運轉的資源社群。",
       "heroTitle": "加入一個願意把好資源留住的社群",
       "heroDescription": "在這裡，下載只是開始。持續做種、補充資訊、回饋問題和參與討論，都會讓資源對更多人保持可用。",

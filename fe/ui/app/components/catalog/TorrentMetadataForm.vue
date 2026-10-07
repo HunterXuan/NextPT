@@ -1,8 +1,8 @@
 <template>
-  <section class="space-y-4 rounded-md border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/40">
+  <section class="space-y-4 rounded-md border border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-950/40">
     <div class="min-w-0">
-      <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.metadata.title') }}</h3>
-      <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.metadata.description') }}</p>
+      <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.metadata.title') }}</h3>
+      <p class="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.metadata.description') }}</p>
     </div>
 
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_140px_40px] sm:items-end">
@@ -49,51 +49,51 @@
       {{ searchError }}
     </div>
 
-    <div v-if="results.length > 0" class="divide-y divide-slate-200 overflow-hidden rounded-md border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900">
+    <div v-if="results.length > 0" class="divide-y divide-neutral-200 overflow-hidden rounded-md border border-neutral-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
       <button
         v-for="item in results"
         :key="`${item.tmdbType}-${item.providerId}`"
         type="button"
-        class="flex w-full min-w-0 gap-3 px-3 py-2.5 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/70"
+        class="flex w-full min-w-0 gap-3 px-3 py-2.5 text-left transition hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
         :disabled="disabled"
         @click="selectResult(item)"
       >
         <img v-if="item.posterUrl" :src="item.posterUrl" :alt="item.title" class="size-12 shrink-0 rounded object-cover" loading="lazy" referrerpolicy="no-referrer">
-        <span v-else class="flex size-12 shrink-0 items-center justify-center rounded bg-slate-100 text-slate-400 dark:bg-slate-800">
+        <span v-else class="flex size-12 shrink-0 items-center justify-center rounded bg-neutral-100 text-neutral-400 dark:bg-neutral-800">
           <UIcon name="i-lucide-image-off" class="size-4" />
         </span>
         <span class="min-w-0 flex-1">
           <span class="flex min-w-0 items-center gap-2">
-            <span class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ item.title || item.originalTitle }}</span>
-            <span v-if="item.year" class="shrink-0 text-xs text-slate-500 dark:text-slate-400">{{ item.year }}</span>
+            <span class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ item.title || item.originalTitle }}</span>
+            <span v-if="item.year" class="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">{{ item.year }}</span>
           </span>
-          <span class="mt-1 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <span class="mt-1 flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
             <span v-if="item.originalTitle" class="truncate">{{ item.originalTitle }}</span>
             <span v-if="item.rating > 0" class="shrink-0 text-amber-600 dark:text-amber-400">★ {{ item.rating.toFixed(1) }}</span>
           </span>
         </span>
-        <UIcon name="i-lucide-arrow-up-right" class="mt-1 size-4 shrink-0 text-slate-400" />
+        <UIcon name="i-lucide-arrow-up-right" class="mt-1 size-4 shrink-0 text-neutral-400" />
       </button>
     </div>
 
-    <div v-if="binding.tmdbId" class="flex w-full items-start gap-3 rounded-md border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900 sm:gap-4">
+    <div v-if="binding.tmdbId" class="flex w-full items-start gap-3 rounded-md border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900 sm:gap-4">
       <img v-if="boundMetadata?.posterUrl" :src="boundMetadata.posterUrl" :alt="boundMetadata.title" class="h-20 w-14 shrink-0 rounded object-cover" loading="lazy" referrerpolicy="no-referrer">
-      <span v-else class="flex h-20 w-14 shrink-0 items-center justify-center rounded bg-slate-100 text-slate-400 dark:bg-slate-800">
+      <span v-else class="flex h-20 w-14 shrink-0 items-center justify-center rounded bg-neutral-100 text-neutral-400 dark:bg-neutral-800">
         <UIcon name="i-lucide-image-off" class="size-4" />
       </span>
       <div class="min-w-0 flex-1 py-0.5">
         <div class="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ boundMetadata?.title || `TMDB #${binding.tmdbId}` }}</p>
-          <span v-if="boundMetadata?.year" class="shrink-0 text-xs text-slate-500 dark:text-slate-400">{{ boundMetadata.year }}</span>
+          <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ boundMetadata?.title || `TMDB #${binding.tmdbId}` }}</p>
+          <span v-if="boundMetadata?.year" class="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">{{ boundMetadata.year }}</span>
         </div>
-        <p v-if="boundMetadata?.originalTitle && boundMetadata.originalTitle !== boundMetadata.title" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+        <p v-if="boundMetadata?.originalTitle && boundMetadata.originalTitle !== boundMetadata.title" class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">
           {{ boundMetadata.originalTitle }}
         </p>
-        <p v-if="boundMetadata?.overview" class="mt-1.5 line-clamp-1 text-xs leading-5 text-slate-600 dark:text-slate-300">
+        <p v-if="boundMetadata?.overview" class="mt-1.5 line-clamp-1 text-xs leading-5 text-neutral-600 dark:text-neutral-300">
           {{ boundMetadata.overview }}
         </p>
-        <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-          <span class="font-medium text-slate-700 dark:text-slate-200">TMDB #{{ binding.tmdbId }}</span>
+        <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
+          <span class="font-medium text-neutral-700 dark:text-neutral-200">TMDB #{{ binding.tmdbId }}</span>
           <span class="inline-flex items-center gap-1"><UIcon name="i-lucide-film" class="size-3.5" />{{ binding.tmdbType === 'tv' ? $t('catalog.torrents.metadata.tv') : $t('catalog.torrents.metadata.movie') }}</span>
           <span v-if="boundMetadata?.rating" class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400"><UIcon name="i-lucide-star" class="size-3.5" />{{ boundMetadata.rating.toFixed(1) }}</span>
         </div>

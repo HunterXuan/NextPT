@@ -1,24 +1,24 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="border-b border-neutral-200 px-5 py-4 dark:border-neutral-800">
       <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div class="min-w-0">
-          <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.torrents.title') }}</h2>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.torrents.title') }}</h2>
+          <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             {{ $t('user.torrents.summary', { total: numberFormatter.format(total) }) }}
           </p>
         </div>
 
         <div class="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div class="inline-flex min-w-max rounded-md bg-slate-100 p-1 dark:bg-slate-800/80">
+          <div class="inline-flex min-w-max rounded-md bg-neutral-100 p-1 dark:bg-neutral-800/80">
             <button
               v-for="filter in filters"
               :key="filter.value"
               type="button"
               class="inline-flex h-8 items-center rounded px-3 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60"
               :class="status === filter.value
-                ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white'
-                : 'text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'"
+                ? 'app-selected shadow-sm'
+                : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white'"
               :disabled="pending"
               @click="setStatus(filter.value)"
             >
@@ -34,14 +34,14 @@
       <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ errorMessage }}</p>
     </div>
     <div v-else-if="pending && items.length === 0" class="space-y-3 p-5">
-      <div v-for="item in 4" :key="item" class="h-20 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+      <div v-for="item in 4" :key="item" class="h-20 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
     </div>
-    <div v-else-if="items.length === 0" class="m-5 rounded-md border border-dashed border-slate-200 px-4 py-12 text-center dark:border-slate-800">
-      <UIcon name="i-lucide-upload-cloud" class="mx-auto size-8 text-slate-400" />
-      <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.torrents.empty') }}</p>
+    <div v-else-if="items.length === 0" class="m-5 rounded-md border border-dashed border-neutral-200 px-4 py-12 text-center dark:border-neutral-800">
+      <UIcon name="i-lucide-upload-cloud" class="mx-auto size-8 text-neutral-400" />
+      <p class="mt-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.torrents.empty') }}</p>
     </div>
     <div v-else>
-      <div class="hidden grid-cols-[minmax(0,1fr)_112px_120px_168px_88px] gap-4 border-b border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-medium text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+      <div class="hidden grid-cols-[minmax(0,1fr)_112px_120px_168px_88px] gap-4 border-b border-neutral-200 bg-neutral-50 px-5 py-2.5 text-xs font-medium text-neutral-500 lg:grid dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-400">
         <span>{{ $t('user.torrents.columns.torrent') }}</span>
         <span class="text-center">{{ $t('user.torrents.columns.status') }}</span>
         <span class="text-right">{{ $t('user.torrents.columns.size') }}</span>
@@ -49,44 +49,44 @@
         <span class="text-right">{{ $t('user.torrents.columns.actions') }}</span>
       </div>
 
-      <div class="divide-y divide-slate-100 dark:divide-slate-800">
+      <div class="divide-y divide-neutral-100 dark:divide-neutral-800">
         <article
           v-for="item in items"
           :key="item.id"
           class="grid gap-3 px-5 py-4 outline-none transition lg:grid-cols-[minmax(0,1fr)_112px_120px_168px_88px] lg:items-center lg:gap-4"
-          :class="item.banned ? 'cursor-default opacity-75' : 'cursor-pointer hover:bg-slate-50/70 focus-visible:bg-slate-50/70 dark:hover:bg-slate-950/50 dark:focus-visible:bg-slate-950/50'"
+          :class="item.banned ? 'cursor-default opacity-75' : 'cursor-pointer hover:bg-neutral-50/70 focus-visible:bg-neutral-50/70 dark:hover:bg-neutral-950/50 dark:focus-visible:bg-neutral-950/50'"
           :tabindex="item.banned ? -1 : 0"
           :role="item.banned ? undefined : 'link'"
           @click="openTorrent(item)"
           @keydown.enter.prevent="openTorrent(item)"
         >
           <div class="min-w-0">
-            <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ item.name }}</p>
-            <p v-if="item.subTitle" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.subTitle }}</p>
+            <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ item.name }}</p>
+            <p v-if="item.subTitle" class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.subTitle }}</p>
             <p v-if="item.status === TorrentStatus.Rejected && item.reviewComment" class="mt-1.5 truncate text-xs text-red-600 dark:text-red-300">
               {{ item.reviewComment }}
             </p>
-            <p class="mt-1.5 text-xs text-slate-500 lg:hidden dark:text-slate-400">
+            <p class="mt-1.5 text-xs text-neutral-500 lg:hidden dark:text-neutral-400">
               {{ $t('user.torrents.files', { count: numberFormatter.format(item.fileCount) }) }}
             </p>
           </div>
 
           <div class="flex items-center justify-between gap-3 lg:justify-center">
-            <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.torrents.columns.status') }}</span>
+            <span class="text-xs text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.torrents.columns.status') }}</span>
             <UBadge :color="statusColor(item)" variant="soft" size="sm">{{ statusLabel(item) }}</UBadge>
           </div>
           <div class="flex items-center justify-between gap-3 text-sm lg:block lg:text-right">
-            <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.torrents.columns.size') }}</span>
+            <span class="text-xs text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.torrents.columns.size') }}</span>
             <div>
-              <p class="font-medium tabular-nums text-slate-950 dark:text-white">{{ formatBytes(item.size) }}</p>
-              <p class="mt-0.5 hidden text-xs text-slate-500 lg:block dark:text-slate-400">{{ $t('user.torrents.files', { count: numberFormatter.format(item.fileCount) }) }}</p>
+              <p class="font-medium tabular-nums text-neutral-950 dark:text-white">{{ formatBytes(item.size) }}</p>
+              <p class="mt-0.5 hidden text-xs text-neutral-500 lg:block dark:text-neutral-400">{{ $t('user.torrents.files', { count: numberFormatter.format(item.fileCount) }) }}</p>
             </div>
           </div>
           <div class="flex items-center justify-between gap-3 text-sm lg:block lg:text-right">
-            <span class="text-xs text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.torrents.columns.time') }}</span>
+            <span class="text-xs text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.torrents.columns.time') }}</span>
             <div>
-              <p class="font-medium tabular-nums text-slate-950 dark:text-white">{{ formatDateTime(itemTime(item), locale) }}</p>
-              <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ timeLabel(item) }}</p>
+              <p class="font-medium tabular-nums text-neutral-950 dark:text-white">{{ formatDateTime(itemTime(item), locale) }}</p>
+              <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ timeLabel(item) }}</p>
             </div>
           </div>
           <div class="flex items-center justify-end gap-1" @click.stop @keydown.stop>
@@ -119,7 +119,7 @@
 
     <AppPager
       v-if="total > 0"
-      class="border-t border-slate-200 px-5 py-4 dark:border-slate-800"
+      class="border-t border-neutral-200 px-5 py-4 dark:border-neutral-800"
       size="sm"
       :page="page"
       :total="total"

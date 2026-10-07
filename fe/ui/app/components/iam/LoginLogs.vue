@@ -1,19 +1,19 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="flex flex-col gap-3 border-b border-neutral-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
       <div class="min-w-0">
-        <h2 class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ titleText }}</h2>
-        <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ $t('user.loginLogs.subtitle') }}</p>
+        <h2 class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ titleText }}</h2>
+        <p class="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ $t('user.loginLogs.subtitle') }}</p>
       </div>
-      <div class="inline-flex h-8 shrink-0 items-center rounded-md bg-slate-100 p-0.5 dark:bg-slate-800">
+      <div class="inline-flex h-8 shrink-0 items-center rounded-md bg-neutral-100 p-0.5 dark:bg-neutral-800">
         <button
           v-for="option in resultOptions"
           :key="option.value"
           type="button"
           class="h-7 rounded px-2.5 text-xs font-medium transition"
           :class="resultFilter === option.value
-            ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white'
-            : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'"
+            ? 'app-selected shadow-sm'
+            : 'text-neutral-500 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white'"
           @click="changeResultFilter(option.value)"
         >
           {{ option.label }}
@@ -22,20 +22,20 @@
     </div>
 
     <div v-if="pending" class="space-y-2 p-4">
-      <div v-for="item in 4" :key="item" class="h-[72px] animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+      <div v-for="item in 4" :key="item" class="h-[72px] animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
     </div>
 
     <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-10 text-center">
       <UIcon name="i-lucide-circle-alert" class="size-8 text-red-500" />
-      <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+      <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
     </div>
 
     <div v-else-if="logs.length === 0" class="flex flex-col items-center justify-center px-4 py-10 text-center">
-      <UIcon name="i-lucide-inbox" class="size-8 text-slate-400" />
-      <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('user.loginLogs.empty') }}</p>
+      <UIcon name="i-lucide-inbox" class="size-8 text-neutral-400" />
+      <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('user.loginLogs.empty') }}</p>
     </div>
 
-    <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
+    <div v-else class="divide-y divide-neutral-200 dark:divide-neutral-800">
       <article
         v-for="item in logs"
         :key="item.id"
@@ -50,32 +50,32 @@
           </span>
           <div class="min-w-0 flex-1">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ loginResultLabel(item.result) }}</span>
+              <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ loginResultLabel(item.result) }}</span>
               <IamUserPopover
                 v-if="admin && item.userId > 0"
                 :id="item.userId"
-                class="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs font-medium text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400"
               />
-              <span class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ item.ip || '-' }}</span>
+              <span class="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">{{ item.ip || '-' }}</span>
               <span v-if="item.result !== 1" class="text-xs font-medium text-red-600 dark:text-red-300">
                 {{ failReasonLabel(item.failReason) }}
               </span>
             </div>
             <UTooltip :text="item.userAgent || '-'" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
-              <p class="mt-1.5 truncate text-xs leading-5 text-slate-500 dark:text-slate-400">{{ item.userAgent || '-' }}</p>
+              <p class="mt-1.5 truncate text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ item.userAgent || '-' }}</p>
             </UTooltip>
           </div>
         </div>
 
         <UTooltip :text="formatDateTime(item.createdAt, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
-          <time class="text-left text-xs text-slate-500 sm:pt-1 sm:text-right dark:text-slate-400">
+          <time class="text-left text-xs text-neutral-500 sm:pt-1 sm:text-right dark:text-neutral-400">
             {{ formatDateTime(item.createdAt, locale) }}
           </time>
         </UTooltip>
       </article>
     </div>
 
-    <div class="border-t border-slate-200 px-4 py-3 dark:border-slate-800">
+    <div class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800">
       <AppPager
         size="sm"
         :page="query.page"

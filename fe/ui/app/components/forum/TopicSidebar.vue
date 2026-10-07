@@ -2,25 +2,25 @@
   <aside class="app-sticky-offset space-y-6 lg:sticky">
     <UCard class="rounded-lg">
       <template #header>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('forum.detail.info.title') }}</h2>
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ t('forum.detail.info.title') }}</h2>
       </template>
 
       <dl class="space-y-3 text-sm">
         <div class="flex items-center justify-between gap-3">
-          <dt class="text-slate-500 dark:text-slate-400">{{ t('forum.detail.info.topic') }}</dt>
-          <dd class="font-medium text-slate-950 dark:text-white">#{{ topic.id }}</dd>
+          <dt class="text-neutral-500 dark:text-neutral-400">{{ t('forum.detail.info.topic') }}</dt>
+          <dd class="font-medium text-neutral-950 dark:text-white">#{{ topic.id }}</dd>
         </div>
         <div class="flex items-center justify-between gap-3">
-          <dt class="text-slate-500 dark:text-slate-400">{{ t('forum.detail.info.views') }}</dt>
-          <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(topic.views) }}</dd>
+          <dt class="text-neutral-500 dark:text-neutral-400">{{ t('forum.detail.info.views') }}</dt>
+          <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(topic.views) }}</dd>
         </div>
         <div class="flex items-center justify-between gap-3">
-          <dt class="text-slate-500 dark:text-slate-400">{{ t('forum.detail.info.replies') }}</dt>
-          <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(topic.replyCount) }}</dd>
+          <dt class="text-neutral-500 dark:text-neutral-400">{{ t('forum.detail.info.replies') }}</dt>
+          <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(topic.replyCount) }}</dd>
         </div>
         <div class="flex items-center justify-between gap-3">
-          <dt class="text-slate-500 dark:text-slate-400">{{ t('forum.detail.info.status') }}</dt>
-          <dd class="font-medium text-slate-950 dark:text-white">{{ topicStatusText }}</dd>
+          <dt class="text-neutral-500 dark:text-neutral-400">{{ t('forum.detail.info.status') }}</dt>
+          <dd class="font-medium text-neutral-950 dark:text-white">{{ topicStatusText }}</dd>
         </div>
       </dl>
     </UCard>
@@ -35,7 +35,7 @@
 
     <UCard v-if="canManageTopic" class="rounded-lg">
       <template #header>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ t('forum.detail.admin.title') }}</h2>
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ t('forum.detail.admin.title') }}</h2>
       </template>
 
       <div class="grid grid-cols-2 gap-2">
@@ -61,7 +61,7 @@
         </UButton>
       </div>
 
-      <form class="mt-4 grid gap-2 border-t border-slate-200 pt-4 dark:border-slate-800" @submit.prevent="$emit('move')">
+      <form class="mt-4 grid gap-2 border-t border-neutral-200 pt-4 dark:border-neutral-800" @submit.prevent="$emit('move')">
         <UFormField :label="t('forum.detail.admin.moveTo')">
           <USelect
             :model-value="moveNodeIdValue"
@@ -80,7 +80,7 @@
         <p v-if="adminError" class="text-sm text-red-600 dark:text-red-300">{{ adminError }}</p>
       </form>
 
-      <div class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800">
+      <div class="mt-4 border-t border-neutral-200 pt-4 dark:border-neutral-800">
         <UPopover
           :open="deleteConfirmOpen"
           :content="{ side: 'top', align: 'center', sideOffset: 8 }"
@@ -93,7 +93,7 @@
 
           <template #content="{ close }">
             <div class="space-y-3">
-              <p class="text-sm font-medium text-slate-950 dark:text-white">
+              <p class="text-sm font-medium text-neutral-950 dark:text-white">
                 {{ t('forum.detail.admin.confirmDelete') }}
               </p>
               <div class="flex justify-end gap-2">

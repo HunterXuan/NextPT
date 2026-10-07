@@ -1,5 +1,5 @@
 <template>
-  <div class="border-t border-slate-200 bg-slate-50/92 dark:border-slate-800 dark:bg-slate-950/92">
+  <div class="border-t border-neutral-200 bg-neutral-50/92 dark:border-neutral-800 dark:bg-neutral-950/92">
     <div class="flex h-10 items-center gap-1 px-2 sm:px-3 lg:px-5">
       <UTooltip
         :text="$t('workspaceTabs.scrollLeft')"
@@ -29,7 +29,7 @@
           >
             <span
               v-if="index > 0"
-              class="mx-1 h-5 w-px shrink-0 bg-slate-200/90 transition-opacity dark:bg-slate-800"
+              class="mx-1 h-5 w-px shrink-0 bg-neutral-200/90 transition-opacity dark:bg-neutral-800"
               :class="tab.id === activeId || tabs[index - 1]?.id === activeId ? 'opacity-0' : 'opacity-100'"
               aria-hidden="true"
             />
@@ -41,8 +41,8 @@
                 :ref="(el) => setTabElement(tab.id, el)"
                 class="group flex h-8 max-w-[220px] shrink-0 items-center overflow-hidden rounded-md border transition"
                 :class="tab.id === activeId
-                  ? 'border-slate-300 bg-white text-slate-950 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-white'
-                  : 'border-transparent bg-transparent text-slate-600 hover:border-slate-200 hover:bg-white/80 dark:text-slate-300 dark:hover:border-slate-800 dark:hover:bg-slate-900/80'"
+                  ? 'app-selected border-primary/30'
+                  : 'border-transparent bg-transparent text-neutral-600 hover:border-neutral-200 hover:bg-white/80 dark:text-neutral-300 dark:hover:border-neutral-800 dark:hover:bg-neutral-900/80'"
                 draggable="true"
                 @dragstart="handleDragStart(index)"
                 @dragover.prevent
@@ -56,11 +56,11 @@
                 >
                   <button
                     type="button"
-                    class="flex min-w-0 flex-1 items-center gap-1.5 px-2 py-1 text-left text-xs"
+                    class="flex min-w-0 flex-1 items-center gap-1.5 px-2 py-1 text-left text-xs focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
                     :aria-current="tab.id === activeId ? 'page' : undefined"
                     @click="activateTab(tab)"
                   >
-                    <UIcon :name="tabIcon(tab)" class="size-3.5 shrink-0 text-slate-400" />
+                    <UIcon :name="tabIcon(tab)" class="size-3.5 shrink-0" :class="tab.id === activeId ? 'text-primary' : 'text-neutral-400'" />
                     <span class="truncate">{{ tabTitle(tab) }}</span>
                   </button>
                 </UTooltip>
@@ -73,7 +73,7 @@
                   <button
                     type="button"
                     draggable="false"
-                    class="mr-1 flex size-5 shrink-0 items-center justify-center rounded text-slate-400 opacity-80 transition hover:bg-slate-100 hover:text-slate-700 group-hover:opacity-100 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                    class="mr-1 flex size-5 shrink-0 items-center justify-center rounded text-neutral-400 opacity-80 transition hover:bg-neutral-100 hover:text-neutral-700 group-hover:opacity-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                     :aria-label="$t('workspaceTabs.close')"
                     @pointerdown.stop
                     @mousedown.stop
@@ -105,7 +105,7 @@
         />
       </UTooltip>
 
-      <div class="h-5 w-px bg-slate-200 dark:bg-slate-800" />
+      <div class="h-5 w-px bg-neutral-200 dark:bg-neutral-800" />
 
       <UTooltip
         :text="$t('workspaceTabs.refresh')"
@@ -139,6 +139,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
 import type { ContextMenuItem, DropdownMenuItem } from '@nuxt/ui'
 import type { WorkspaceTabItem, WorkspaceTabMode } from '~/composables/useWorkspaceTabs'
 
@@ -421,7 +422,7 @@ function handleDrop(index: number) {
   draggingIndex.value = -1
 }
 
-function setTabElement(id: string, element: Element | null) {
+function setTabElement(id: string, element: Element | ComponentPublicInstance | null) {
   if (element instanceof HTMLElement) {
     tabElements.set(id, element)
   } else {

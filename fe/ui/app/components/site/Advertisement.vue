@@ -5,7 +5,7 @@
     :title="item.title"
     :target="isExternal ? '_blank' : undefined"
     :rel="isExternal ? 'noopener noreferrer' : undefined"
-    class="block overflow-hidden rounded-lg border border-slate-200 bg-slate-100 outline-none transition hover:border-sky-300 focus-visible:ring-2 focus-visible:ring-sky-400 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-sky-700 dark:focus-visible:ring-sky-600"
+    class="block overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100 outline-none transition hover:border-primary-300 focus-visible:ring-2 focus-visible:ring-primary-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-primary-700 dark:focus-visible:ring-primary-600"
     :style="advertisementStyle"
   >
     <img :src="item.image" :alt="item.title" class="h-full w-full object-cover" loading="lazy" @error="imageFailed = true">

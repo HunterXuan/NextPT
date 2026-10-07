@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
         <IamLoginLogs
@@ -9,9 +9,9 @@
           :title="$t('admin.iam.loginLogs.title')"
         />
 
-        <aside class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.loginLogs.filters.title') }}</h2>
+        <aside class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.loginLogs.filters.title') }}</h2>
           </div>
 
           <form class="space-y-3 p-4" @submit.prevent="applyFilters">
@@ -20,7 +20,7 @@
               <input
                 v-model.trim="userIdInput"
                 inputmode="numeric"
-                class="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                class="h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950"
                 :placeholder="$t('admin.iam.loginLogs.filters.userIdPlaceholder')"
               >
             </label>

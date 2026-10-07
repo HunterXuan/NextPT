@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <div v-if="pending" class="h-96 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+      <div v-if="pending" class="h-96 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
 
-      <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
+      <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-        <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+        <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
       </div>
 
       <form v-else class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]" @submit.prevent="handleSubmit">
         <div class="space-y-6">
           <UCard class="rounded-lg">
             <template #header>
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.edit.sections.info') }}</h2>
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.edit.sections.info') }}</h2>
             </template>
 
             <div class="grid grid-cols-1 gap-4">
@@ -51,11 +51,11 @@
 
               <div id="edit-title" :class="finalTitleCardClass">
                 <div class="flex items-center justify-between gap-3">
-                  <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.finalTitle') }}</p>
+                  <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.upload.finalTitle') }}</p>
                   <UBadge v-if="isGeneratedTitleMode && generatedTitle && generatedTitle === finalTitle" color="neutral" variant="soft">{{ $t('catalog.torrents.upload.generatedTitle') }}</UBadge>
                 </div>
-                <p class="mt-1 break-words text-sm font-semibold text-slate-950 dark:text-white">{{ finalTitle || $t('catalog.torrents.upload.finalTitleEmpty') }}</p>
-                <p v-if="isGeneratedTitleMode && generatedTitle && generatedTitle !== finalTitle" class="mt-2 break-words text-xs text-slate-500 dark:text-slate-400">
+                <p class="mt-1 break-words text-sm font-semibold text-neutral-950 dark:text-white">{{ finalTitle || $t('catalog.torrents.upload.finalTitleEmpty') }}</p>
+                <p v-if="isGeneratedTitleMode && generatedTitle && generatedTitle !== finalTitle" class="mt-2 break-words text-xs text-neutral-500 dark:text-neutral-400">
                   {{ $t('catalog.torrents.upload.generatedTitle') }}: {{ generatedTitle }}
                 </p>
                 <p v-if="submitAttempted && titleError" class="mt-2 text-xs text-red-600 dark:text-red-300">{{ titleError }}</p>
@@ -75,28 +75,28 @@
         <aside class="space-y-6">
           <UCard class="rounded-lg">
             <template #header>
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.edit.sections.publish') }}</h2>
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.edit.sections.publish') }}</h2>
             </template>
 
             <div class="space-y-4">
-              <label class="flex items-center justify-between gap-4 rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.upload.fields.anonymous') }}</span>
+              <label class="flex items-center justify-between gap-4 rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('catalog.torrents.upload.fields.anonymous') }}</span>
                 <input
                   v-model="form.anonymous"
                   type="checkbox"
-                  class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
+                  class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
                   :disabled="savePending"
                 >
               </label>
 
               <dl class="space-y-3 text-sm">
                 <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.edit.summary.torrentId') }}</dt>
-                  <dd class="font-medium text-slate-950 dark:text-white">#{{ torrentId }}</dd>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.edit.summary.torrentId') }}</dt>
+                  <dd class="font-medium text-neutral-950 dark:text-white">#{{ torrentId }}</dd>
                 </div>
                 <div class="flex items-center justify-between gap-3">
-                  <dt class="text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.edit.summary.category') }}</dt>
-                  <dd class="min-w-0 truncate font-medium text-slate-950 dark:text-white">{{ selectedCategoryName }}</dd>
+                  <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.edit.summary.category') }}</dt>
+                  <dd class="min-w-0 truncate font-medium text-neutral-950 dark:text-white">{{ selectedCategoryName }}</dd>
                 </div>
               </dl>
 
@@ -104,7 +104,7 @@
                 {{ submitError }}
               </div>
 
-              <div v-if="initialEditSnapshot && !hasChanges" class="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+              <div v-if="initialEditSnapshot && !hasChanges" class="rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-300">
                 {{ $t('catalog.torrents.edit.noChanges') }}
               </div>
 
@@ -208,10 +208,10 @@ const currentEditSnapshot = computed(() => editSnapshot())
 const hasChanges = computed(() => Boolean(!initialSnapshotPending.value && initialEditSnapshot.value && currentEditSnapshot.value !== initialEditSnapshot.value))
 const canSubmit = computed(() => Boolean(hasChanges.value && !submitError.value && torrent.value && canEditTorrent.value && !savePending.value))
 const finalTitleCardClass = computed(() => [
-  'rounded-md border bg-white px-3 py-2.5 dark:bg-slate-950',
+  'rounded-md border bg-white px-3 py-2.5 dark:bg-neutral-950',
   submitAttempted.value && titleError.value
     ? 'border-red-200 dark:border-red-900'
-    : 'border-slate-200 dark:border-slate-800'
+    : 'border-neutral-200 dark:border-neutral-800'
 ].join(' '))
 
 useHead(() => ({

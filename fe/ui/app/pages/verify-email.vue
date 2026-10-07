@@ -1,47 +1,45 @@
 <template>
-  <div class="flex min-h-screen items-center bg-slate-50 px-4 py-6 pt-16 sm:py-8 sm:pt-20 lg:py-10 dark:bg-slate-950">
-    <div class="mx-auto grid min-h-[620px] w-full max-w-5xl overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:grid-cols-[minmax(0,1fr)_420px] dark:border-slate-800 dark:bg-slate-900">
+  <div class="flex min-h-screen items-center bg-neutral-50 px-4 py-6 pt-16 sm:py-8 sm:pt-20 lg:py-10 dark:bg-neutral-950">
+    <div class="mx-auto grid min-h-[620px] w-full max-w-5xl overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm lg:grid-cols-[minmax(0,1fr)_420px] dark:border-neutral-800 dark:bg-neutral-900">
       <section class="relative hidden min-h-full overflow-hidden lg:block">
         <img src="/images/home-hero.png" alt="" class="absolute inset-0 h-full w-full object-cover">
-        <div class="absolute inset-0 bg-slate-950/72" />
+        <div class="absolute inset-0 bg-neutral-950/72" />
         <div class="relative flex h-full flex-col justify-between p-10 text-white">
           <NuxtLink :to="localePath('/')" class="flex w-fit items-center gap-3">
-            <span class="flex size-9 items-center justify-center rounded-lg bg-white text-slate-950">
-              <UIcon name="i-lucide-radio-tower" class="size-5" />
-            </span>
-            <span class="text-base font-semibold">NextPT</span>
+            <AppLogo dark />
+            <span class="text-base font-semibold">{{ siteName }}</span>
           </NuxtLink>
 
           <div>
-            <span class="flex size-10 items-center justify-center rounded-lg bg-white/10 text-sky-200">
+            <span class="flex size-10 items-center justify-center rounded-lg bg-white/10 text-primary-200">
               <UIcon name="i-lucide-mail-check" class="size-5" />
             </span>
-            <h1 class="mt-5 max-w-lg text-3xl font-semibold leading-tight">{{ $t('auth.verifyEmail.heroTitle') }}</h1>
-            <p class="mt-4 max-w-xl text-sm leading-7 text-slate-200">{{ $t('auth.verifyEmail.heroDescription') }}</p>
+            <h1 class="mt-5 max-w-lg text-3xl font-semibold leading-tight">{{ $t('auth.verifyEmail.heroTitle', { siteName }) }}</h1>
+            <p class="mt-4 max-w-xl text-sm leading-7 text-neutral-200">{{ $t('auth.verifyEmail.heroDescription') }}</p>
           </div>
         </div>
       </section>
 
       <section class="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-        <NuxtLink :to="localePath('/login')" class="mb-8 flex w-fit items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white">
+        <NuxtLink :to="localePath('/login')" class="mb-8 flex w-fit items-center gap-2 text-sm font-medium text-neutral-500 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white">
           <UIcon name="i-lucide-arrow-left" class="size-4" />
           {{ $t('auth.verifyEmail.backToLogin') }}
         </NuxtLink>
 
         <div v-if="state === 'verifying'" class="flex flex-col items-start">
-          <span class="flex size-11 items-center justify-center rounded-lg bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-300">
+          <span class="flex size-11 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-300">
             <UIcon name="i-lucide-loader-circle" class="size-5 animate-spin" />
           </span>
-          <h2 class="mt-5 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('auth.verifyEmail.verifyingTitle') }}</h2>
-          <p class="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400">{{ $t('auth.verifyEmail.verifyingDescription') }}</p>
+          <h2 class="mt-5 text-2xl font-semibold text-neutral-950 dark:text-white">{{ $t('auth.verifyEmail.verifyingTitle') }}</h2>
+          <p class="mt-3 text-sm leading-6 text-neutral-500 dark:text-neutral-400">{{ $t('auth.verifyEmail.verifyingDescription') }}</p>
         </div>
 
         <div v-else-if="state === 'verified'" class="flex flex-col items-start">
           <span class="flex size-11 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-300">
             <UIcon name="i-lucide-badge-check" class="size-5" />
           </span>
-          <h2 class="mt-5 text-2xl font-semibold text-slate-950 dark:text-white">{{ $t('auth.verifyEmail.successTitle') }}</h2>
-          <p class="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400">{{ $t('auth.verifyEmail.successDescription') }}</p>
+          <h2 class="mt-5 text-2xl font-semibold text-neutral-950 dark:text-white">{{ $t('auth.verifyEmail.successTitle') }}</h2>
+          <p class="mt-3 text-sm leading-6 text-neutral-500 dark:text-neutral-400">{{ $t('auth.verifyEmail.successDescription') }}</p>
           <UButton class="mt-7" color="primary" :to="localePath('/login')">
             {{ $t('auth.verifyEmail.login') }}
           </UButton>
@@ -49,13 +47,13 @@
 
         <template v-else>
           <div>
-            <p class="text-sm font-medium" :class="state === 'invalid' ? 'text-red-600 dark:text-red-400' : 'text-sky-600 dark:text-sky-400'">
+            <p class="text-sm font-medium" :class="state === 'invalid' ? 'text-red-600 dark:text-red-400' : 'text-primary-600 dark:text-primary-400'">
               {{ $t(state === 'invalid' ? 'auth.verifyEmail.invalidEyebrow' : 'auth.verifyEmail.eyebrow') }}
             </p>
-            <h2 class="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">
+            <h2 class="mt-2 text-2xl font-semibold text-neutral-950 dark:text-white">
               {{ $t(state === 'invalid' ? 'auth.verifyEmail.invalidTitle' : 'auth.verifyEmail.title') }}
             </h2>
-            <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+            <p class="mt-2 text-sm leading-6 text-neutral-500 dark:text-neutral-400">
               {{ $t(state === 'invalid' ? 'auth.verifyEmail.invalidDescription' : 'auth.verifyEmail.subtitle') }}
             </p>
           </div>
@@ -101,6 +99,8 @@
 
 <script setup lang="ts">
 import { ApiError } from '~/composables/useApi'
+
+const { siteName } = useSiteBranding()
 
 definePageMeta({
   layout: 'auth',

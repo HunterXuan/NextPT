@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div class="hidden grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] items-center gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+      <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <div class="hidden grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] items-center gap-2 border-b border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-semibold text-neutral-500 lg:grid dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-400">
           <span>{{ $t('catalog.subtitles.table.file') }}</span>
           <span class="text-center">{{ $t('catalog.subtitles.table.language') }}</span>
           <span class="text-center">{{ $t('catalog.subtitles.table.torrent') }}</span>
@@ -12,44 +12,44 @@
           <span class="text-center">{{ $t('catalog.subtitles.table.actions') }}</span>
         </div>
 
-        <div v-if="pending" class="divide-y divide-slate-200 dark:divide-slate-800">
+        <div v-if="pending" class="divide-y divide-neutral-200 dark:divide-neutral-800">
           <div v-for="index in 8" :key="index" class="grid gap-3 px-3 py-3 lg:grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] lg:items-center lg:gap-2">
             <div class="space-y-2">
-              <div class="h-4 w-3/4 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-              <div class="h-3 w-1/2 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+              <div class="h-4 w-3/4 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+              <div class="h-3 w-1/2 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
             </div>
-            <div class="h-5 w-14 animate-pulse rounded bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
-            <div class="h-4 w-16 animate-pulse rounded bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
-            <div class="h-4 w-24 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
-            <div class="h-4 w-16 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-4 w-20 animate-pulse rounded bg-slate-100 lg:justify-self-end dark:bg-slate-800/70" />
-            <div class="h-8 w-16 animate-pulse rounded-md bg-slate-100 lg:justify-self-center dark:bg-slate-800/70" />
+            <div class="h-5 w-14 animate-pulse rounded bg-neutral-100 lg:justify-self-center dark:bg-neutral-800/70" />
+            <div class="h-4 w-16 animate-pulse rounded bg-neutral-100 lg:justify-self-center dark:bg-neutral-800/70" />
+            <div class="h-4 w-24 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
+            <div class="h-4 w-16 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-4 w-20 animate-pulse rounded bg-neutral-100 lg:justify-self-end dark:bg-neutral-800/70" />
+            <div class="h-8 w-16 animate-pulse rounded-md bg-neutral-100 lg:justify-self-center dark:bg-neutral-800/70" />
           </div>
         </div>
 
         <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
           <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
         </div>
 
         <div v-else-if="subtitles.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <UIcon name="i-lucide-captions-off" class="size-9 text-slate-400" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('catalog.subtitles.empty.title') }}</p>
-          <p class="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.subtitles.empty.description') }}</p>
+          <UIcon name="i-lucide-captions-off" class="size-9 text-neutral-400" />
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('catalog.subtitles.empty.title') }}</p>
+          <p class="mt-1 max-w-md text-sm text-neutral-500 dark:text-neutral-400">{{ $t('catalog.subtitles.empty.description') }}</p>
         </div>
 
-        <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
+        <div v-else class="divide-y divide-neutral-200 dark:divide-neutral-800">
           <article
             v-for="subtitle in subtitles"
             :key="subtitle.id"
-            class="grid gap-3 px-3 py-3 transition-colors hover:bg-slate-50 lg:grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] lg:items-center lg:gap-2 lg:py-2.5 dark:hover:bg-slate-950/70"
+            class="grid gap-3 px-3 py-3 transition-colors hover:bg-neutral-50 lg:grid-cols-[minmax(0,1fr)_86px_92px_126px_96px_112px_76px] lg:items-center lg:gap-2 lg:py-2.5 dark:hover:bg-neutral-950/70"
           >
             <div class="min-w-0">
-              <h2 class="truncate text-sm font-medium leading-5 text-slate-950 dark:text-white" :title="subtitleFileName(subtitle)">
+              <h2 class="truncate text-sm font-medium leading-5 text-neutral-950 dark:text-white" :title="subtitleFileName(subtitle)">
                 {{ subtitleFileName(subtitle) }}
               </h2>
-              <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 lg:hidden dark:text-slate-400">
-                <span class="inline-flex items-center rounded border border-slate-200 px-1.5 py-0.5 font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">
+              <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-500 lg:hidden dark:text-neutral-400">
+                <span class="inline-flex items-center rounded border border-neutral-200 px-1.5 py-0.5 font-medium text-neutral-600 dark:border-neutral-700 dark:text-neutral-300">
                   {{ subtitleLanguage(subtitle) }}
                 </span>
                 <span>{{ formatBytes(subtitle.size) }}</span>
@@ -65,7 +65,7 @@
 
             <NuxtLink
               :to="localePath(`/catalog/torrents/${subtitle.torrentId}`)"
-              class="hidden min-w-0 justify-center gap-1 text-sm font-medium text-sky-700 hover:text-sky-800 lg:inline-flex dark:text-sky-300 dark:hover:text-sky-200"
+              class="hidden min-w-0 justify-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-800 lg:inline-flex dark:text-primary-300 dark:hover:text-primary-200"
               :title="$t('catalog.subtitles.actions.openTorrent')"
             >
               <UIcon name="i-lucide-arrow-up-right" class="size-4" />
@@ -76,11 +76,11 @@
               v-if="!subtitle.anonymous && subtitle.uploader?.id"
               :user="subtitle.uploader"
               :fallback="uploaderName(subtitle)"
-              class="hidden truncate text-sm text-slate-600 lg:block dark:text-slate-300"
+              class="hidden truncate text-sm text-neutral-600 lg:block dark:text-neutral-300"
             />
-            <p v-else class="hidden truncate text-sm text-slate-600 lg:block dark:text-slate-300" :title="uploaderName(subtitle)">{{ uploaderName(subtitle) }}</p>
-            <p class="hidden text-right text-sm font-medium tabular-nums text-slate-950 lg:block dark:text-white">{{ formatBytes(subtitle.size) }}</p>
-            <p class="hidden text-right text-sm text-slate-500 lg:block dark:text-slate-400" :title="formatDateTime(subtitle.createdAt, locale)">
+            <p v-else class="hidden truncate text-sm text-neutral-600 lg:block dark:text-neutral-300" :title="uploaderName(subtitle)">{{ uploaderName(subtitle) }}</p>
+            <p class="hidden text-right text-sm font-medium tabular-nums text-neutral-950 lg:block dark:text-white">{{ formatBytes(subtitle.size) }}</p>
+            <p class="hidden text-right text-sm text-neutral-500 lg:block dark:text-neutral-400" :title="formatDateTime(subtitle.createdAt, locale)">
               {{ formatDateOnly(subtitle.createdAt, locale) }}
             </p>
 
@@ -135,10 +135,10 @@
               </UButton>
             </div>
 
-            <form v-if="activeReportId === subtitle.id" class="grid gap-2 rounded-md border border-slate-200 bg-slate-50 p-3 lg:col-span-7 dark:border-slate-800 dark:bg-slate-950" @submit.prevent="handleReport(subtitle.id)">
+            <form v-if="activeReportId === subtitle.id" class="grid gap-2 rounded-md border border-neutral-200 bg-neutral-50 p-3 lg:col-span-7 dark:border-neutral-800 dark:bg-neutral-950" @submit.prevent="handleReport(subtitle.id)">
               <UTextarea v-model="reportReason" :rows="2" :placeholder="$t('catalog.subtitles.report.reason')" :disabled="reportPending" />
               <div class="flex justify-end gap-2">
-                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="activeReportId = 0">{{ $t('common.cancel') }}</UButton>
+                <UButton color="neutral" variant="ghost" size="xs" type="button" @click="() => { activeReportId = 0 }">{{ $t('common.cancel') }}</UButton>
                 <UButton color="error" variant="soft" size="xs" type="submit" :loading="reportPending" :disabled="reportReason.trim().length < 5">
                   {{ $t('catalog.subtitles.report.submit') }}
                 </UButton>

@@ -35,3 +35,7 @@ coverage
 
 # Misc
 .cache
+
+# Keep local site branding out of the shared image
+public/branding/*
+!public/branding/.gitkeep

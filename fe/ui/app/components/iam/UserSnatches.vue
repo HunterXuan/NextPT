@@ -1,23 +1,23 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="border-b border-neutral-200 px-5 py-4 dark:border-neutral-800">
       <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div class="min-w-0">
-          <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.snatches.title') }}</h2>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.snatches.title') }}</h2>
+          <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             {{ $t('user.snatches.summary', { total: numberFormatter.format(snatchTotal) }) }}
           </p>
         </div>
 
-        <div class="flex rounded-md border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-950">
+        <div class="flex rounded-md border border-neutral-200 bg-neutral-50 p-1 dark:border-neutral-800 dark:bg-neutral-950">
           <button
             v-for="filter in snatchFilters"
             :key="filter.value"
             type="button"
             class="inline-flex h-8 items-center gap-1.5 rounded px-3 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60"
             :class="snatchStatus === filter.value
-              ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
-              : 'text-slate-600 hover:bg-white/70 dark:text-slate-300 dark:hover:bg-slate-900'"
+              ? 'app-selected shadow-sm'
+              : 'text-neutral-600 hover:bg-white/70 dark:text-neutral-300 dark:hover:bg-neutral-900'"
             :disabled="snatchesPending"
             @click="setSnatchStatus(filter.value)"
           >
@@ -33,14 +33,14 @@
       <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ snatchesError }}</p>
     </div>
     <div v-else-if="snatchesPending && snatches.length === 0" class="space-y-3 p-5">
-      <div v-for="item in 6" :key="item" class="h-20 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+      <div v-for="item in 6" :key="item" class="h-20 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
     </div>
-    <div v-else-if="snatches.length === 0" class="m-5 rounded-md border border-dashed border-slate-200 px-4 py-12 text-center dark:border-slate-800">
-      <UIcon name="i-lucide-inbox" class="mx-auto size-8 text-slate-400" />
-      <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.snatches.empty') }}</p>
+    <div v-else-if="snatches.length === 0" class="m-5 rounded-md border border-dashed border-neutral-200 px-4 py-12 text-center dark:border-neutral-800">
+      <UIcon name="i-lucide-inbox" class="mx-auto size-8 text-neutral-400" />
+      <p class="mt-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.snatches.empty') }}</p>
     </div>
     <div v-else>
-      <div class="hidden grid-cols-[minmax(0,1fr)_88px_112px_112px_148px_140px] gap-4 border-b border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-medium text-slate-500 lg:grid dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+      <div class="hidden grid-cols-[minmax(0,1fr)_88px_112px_112px_148px_140px] gap-4 border-b border-neutral-200 bg-neutral-50 px-5 py-2.5 text-xs font-medium text-neutral-500 lg:grid dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-400">
         <span>{{ $t('user.snatches.torrent') }}</span>
         <span class="text-center">{{ $t('user.snatches.status') }}</span>
         <span class="text-right">{{ $t('user.snatches.uploaded') }}</span>
@@ -49,47 +49,47 @@
         <span class="text-right">{{ $t('user.snatches.lastAction') }}</span>
       </div>
 
-      <div class="divide-y divide-slate-100 dark:divide-slate-800">
+      <div class="divide-y divide-neutral-100 dark:divide-neutral-800">
         <article
           v-for="snatch in snatches"
           :key="snatch.id"
-          class="grid gap-3 px-5 py-4 transition hover:bg-slate-50/70 lg:grid-cols-[minmax(0,1fr)_88px_112px_112px_148px_140px] lg:items-center lg:gap-4 dark:hover:bg-slate-950/50"
+          class="grid gap-3 px-5 py-4 transition hover:bg-neutral-50/70 lg:grid-cols-[minmax(0,1fr)_88px_112px_112px_148px_140px] lg:items-center lg:gap-4 dark:hover:bg-neutral-950/50"
         >
           <div class="min-w-0">
             <NuxtLink
               :to="localePath(`/catalog/torrents/${snatch.torrentId}`)"
-              class="block truncate text-sm font-semibold text-slate-950 hover:text-sky-700 dark:text-white dark:hover:text-sky-300"
+              class="block truncate text-sm font-semibold text-neutral-950 hover:text-primary-700 dark:text-white dark:hover:text-primary-300"
             >
               {{ snatch.torrentName || $t('catalog.torrents.detail.titleFallback', { id: snatch.torrentId }) }}
             </NuxtLink>
-            <div class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <div class="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
               <span class="tabular-nums">{{ formatBytes(snatch.torrentSize) }}</span>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-xs sm:grid-cols-3 lg:contents">
             <div class="lg:text-center">
-              <p class="text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.snatches.status') }}</p>
+              <p class="text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.snatches.status') }}</p>
               <UBadge :color="snatch.isFinished ? 'success' : 'primary'" variant="soft" size="sm">
                 {{ snatch.isFinished ? $t('user.snatches.finished') : $t('user.snatches.unfinished') }}
               </UBadge>
             </div>
             <div class="lg:text-right">
-              <p class="text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.snatches.uploaded') }}</p>
-              <p class="mt-1 font-medium tabular-nums text-slate-950 lg:mt-0 dark:text-white">{{ formatBytes(snatch.uploaded) }}</p>
+              <p class="text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.snatches.uploaded') }}</p>
+              <p class="mt-1 font-medium tabular-nums text-neutral-950 lg:mt-0 dark:text-white">{{ formatBytes(snatch.uploaded) }}</p>
             </div>
             <div class="lg:text-right">
-              <p class="text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.snatches.downloaded') }}</p>
-              <p class="mt-1 font-medium tabular-nums text-slate-950 lg:mt-0 dark:text-white">{{ formatBytes(snatch.downloaded) }}</p>
+              <p class="text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.snatches.downloaded') }}</p>
+              <p class="mt-1 font-medium tabular-nums text-neutral-950 lg:mt-0 dark:text-white">{{ formatBytes(snatch.downloaded) }}</p>
             </div>
             <div class="lg:text-right">
-              <p class="text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.snatches.duration') }}</p>
-              <p class="mt-1 font-medium tabular-nums text-slate-950 lg:mt-0 dark:text-white">{{ $t('user.snatches.seed') }} {{ formatDuration(snatch.seedTime) }}</p>
-              <p class="mt-0.5 tabular-nums text-slate-500 dark:text-slate-400">{{ $t('user.snatches.leech') }} {{ formatDuration(snatch.leechTime) }}</p>
+              <p class="text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.snatches.duration') }}</p>
+              <p class="mt-1 font-medium tabular-nums text-neutral-950 lg:mt-0 dark:text-white">{{ $t('user.snatches.seed') }} {{ formatDuration(snatch.seedTime) }}</p>
+              <p class="mt-0.5 tabular-nums text-neutral-500 dark:text-neutral-400">{{ $t('user.snatches.leech') }} {{ formatDuration(snatch.leechTime) }}</p>
             </div>
             <div class="lg:text-right">
-              <p class="text-slate-500 lg:hidden dark:text-slate-400">{{ $t('user.snatches.lastAction') }}</p>
-              <p class="mt-1 font-medium text-slate-950 lg:mt-0 dark:text-white">{{ formatDateTime(snatch.lastActionAt, locale) }}</p>
+              <p class="text-neutral-500 lg:hidden dark:text-neutral-400">{{ $t('user.snatches.lastAction') }}</p>
+              <p class="mt-1 font-medium text-neutral-950 lg:mt-0 dark:text-white">{{ formatDateTime(snatch.lastActionAt, locale) }}</p>
             </div>
           </div>
         </article>
@@ -98,7 +98,7 @@
 
     <AppPager
       v-if="snatchTotal > 0"
-      class="border-t border-slate-200 px-5 py-4 dark:border-slate-800"
+      class="border-t border-neutral-200 px-5 py-4 dark:border-neutral-800"
       size="sm"
       :page="snatchPage"
       :total="snatchTotal"

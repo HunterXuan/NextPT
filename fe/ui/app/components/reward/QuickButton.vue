@@ -39,8 +39,8 @@
           </button>
         </div>
 
-        <div v-if="selectedAmount > 0" class="rounded-md bg-slate-50 p-2 dark:bg-slate-950">
-          <p class="text-sm font-medium text-slate-950 dark:text-white">
+        <div v-if="selectedAmount > 0" class="rounded-md bg-neutral-50 p-2 dark:bg-neutral-950">
+          <p class="text-sm font-medium text-neutral-950 dark:text-white">
             {{ t(confirmTitleKey, { amount: formatRewardAmount(selectedAmount) }) }}
           </p>
           <div class="mt-3 flex justify-end gap-2">
@@ -150,7 +150,7 @@ function amountButtonClass(amount: number) {
   if (selectedAmount.value === amount) {
     return `${base} border-primary bg-primary/10 text-primary`
   }
-  return `${base} border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-sky-900 dark:hover:bg-sky-950 dark:hover:text-sky-300`
+  return `${base} border-neutral-200 bg-white text-neutral-700 hover:border-primary-200 hover:bg-primary-50 hover:text-primary-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-primary-900 dark:hover:bg-primary-950 dark:hover:text-primary-300`
 }
 
 function formatRewardAmount(value: number) {

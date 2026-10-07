@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <form class="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start" @submit.prevent="handleSubmit">
         <main class="min-w-0 space-y-4">
-          <section id="upload-file" class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.file') }}</h2>
+          <section id="upload-file" class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.file') }}</h2>
               <UBadge :color="selectedFile ? 'success' : 'neutral'" variant="soft">
                 {{ selectedFile ? $t('catalog.torrents.upload.file.selected') : $t('catalog.torrents.upload.file.required') }}
               </UBadge>
@@ -14,22 +14,22 @@
             <div class="p-4">
               <div
                 v-if="selectedFile"
-                class="grid gap-3 rounded-md border border-sky-200 bg-sky-50 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-sky-800 dark:bg-sky-950/40"
+                class="grid gap-3 rounded-md border border-primary-200 bg-primary-50 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center dark:border-primary-800 dark:bg-primary-950/40"
                 @dragover.prevent
                 @drop.prevent="handleDrop"
               >
                 <div class="flex min-w-0 items-center gap-3">
-                  <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-sky-600 ring-1 ring-sky-200 dark:bg-slate-900 dark:text-sky-300 dark:ring-sky-800">
+                  <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-primary-600 ring-1 ring-primary-200 dark:bg-neutral-900 dark:text-primary-300 dark:ring-primary-800">
                     <UIcon name="i-lucide-file-check-2" class="size-5" />
                   </span>
                   <div class="min-w-0">
-                    <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ selectedFile.name }}</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatBytes(selectedFile.size) }}</p>
+                    <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ selectedFile.name }}</p>
+                    <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ formatBytes(selectedFile.size) }}</p>
                   </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end">
-                  <label class="inline-flex h-8 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                  <label class="inline-flex h-8 cursor-pointer items-center justify-center rounded-md border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800">
                     {{ $t('catalog.torrents.upload.file.replace') }}
                     <input
                       :key="fileInputKey"
@@ -48,7 +48,7 @@
 
               <label
                 v-else
-                class="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center transition hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-600"
+                class="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center transition hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:hover:border-neutral-600"
                 @dragover.prevent
                 @drop.prevent="handleDrop"
               >
@@ -60,17 +60,17 @@
                   :disabled="pending"
                   @change="handleFileChange"
                 >
-                <UIcon name="i-lucide-file-up" class="size-9 text-slate-400" />
-                <span class="mt-3 text-sm font-medium text-slate-950 dark:text-white">
+                <UIcon name="i-lucide-file-up" class="size-9 text-neutral-400" />
+                <span class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">
                   {{ $t('catalog.torrents.upload.file.choose') }}
                 </span>
               </label>
             </div>
           </section>
 
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.info') }}</h2>
+          <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.info') }}</h2>
             </div>
 
             <div class="grid grid-cols-1 gap-4 p-4">
@@ -113,10 +113,10 @@
 
               <div id="upload-title" :class="finalTitleCardClass">
                 <div class="flex items-center justify-between gap-3">
-                  <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('catalog.torrents.upload.finalTitle') }}</p>
+                  <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('catalog.torrents.upload.finalTitle') }}</p>
                   <UBadge v-if="isGeneratedTitleMode" color="neutral" variant="soft">{{ $t('catalog.torrents.upload.generatedTitle') }}</UBadge>
                 </div>
-                <p class="mt-1 break-words text-sm font-semibold text-slate-950 dark:text-white">{{ finalTitle || $t('catalog.torrents.upload.finalTitleEmpty') }}</p>
+                <p class="mt-1 break-words text-sm font-semibold text-neutral-950 dark:text-white">{{ finalTitle || $t('catalog.torrents.upload.finalTitleEmpty') }}</p>
                 <p v-if="submitAttempted && titleError" class="mt-2 text-xs text-red-600 dark:text-red-300">{{ titleError }}</p>
               </div>
 
@@ -132,31 +132,31 @@
         </main>
 
         <aside class="app-sticky-offset min-w-0 space-y-4 lg:sticky">
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.publish') }}</h2>
+          <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.torrents.upload.sections.publish') }}</h2>
 
             <div class="mt-3 space-y-4">
-              <label class="flex items-center justify-between gap-4 rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.upload.fields.anonymous') }}</span>
+              <label class="flex items-center justify-between gap-4 rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('catalog.torrents.upload.fields.anonymous') }}</span>
                 <input
                   v-model="form.anonymous"
                   type="checkbox"
-                  class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
+                  class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
                   :disabled="pending"
                 >
               </label>
 
-              <div class="divide-y divide-slate-100 rounded-md border border-slate-200 dark:divide-slate-800 dark:border-slate-800">
+              <div class="divide-y divide-neutral-100 rounded-md border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
                 <div
                   v-for="check in publishChecks"
                   :key="check.key"
                   class="flex items-center justify-between gap-3 px-3 py-2.5 text-sm"
                 >
                   <div class="flex min-w-0 items-center gap-2">
-                    <UIcon :name="check.passed ? 'i-lucide-circle-check' : 'i-lucide-circle'" :class="check.passed ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600'" class="size-4 shrink-0" />
-                    <span class="text-slate-600 dark:text-slate-300">{{ check.label }}</span>
+                    <UIcon :name="check.passed ? 'i-lucide-circle-check' : 'i-lucide-circle'" :class="check.passed ? 'text-emerald-500' : 'text-neutral-300 dark:text-neutral-600'" class="size-4 shrink-0" />
+                    <span class="text-neutral-600 dark:text-neutral-300">{{ check.label }}</span>
                   </div>
-                  <span class="min-w-0 truncate text-right text-xs font-medium text-slate-500 dark:text-slate-400">{{ check.value }}</span>
+                  <span class="min-w-0 truncate text-right text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ check.value }}</span>
                 </div>
               </div>
 
@@ -285,10 +285,10 @@ const submitError = computed(() => {
 })
 const canSubmit = computed(() => Boolean(!submitError.value && !categoriesPending.value && !pending.value))
 const finalTitleCardClass = computed(() => [
-  'rounded-md border bg-white px-3 py-2.5 dark:bg-slate-950',
+  'rounded-md border bg-white px-3 py-2.5 dark:bg-neutral-950',
   submitAttempted.value && titleError.value
     ? 'border-red-200 dark:border-red-900'
-    : 'border-slate-200 dark:border-slate-800'
+    : 'border-neutral-200 dark:border-neutral-800'
 ].join(' '))
 const publishChecks = computed(() => [
   {

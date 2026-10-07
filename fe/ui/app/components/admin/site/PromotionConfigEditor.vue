@@ -1,15 +1,15 @@
 <template>
   <div class="space-y-4">
-    <div class="flex flex-col gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950/70">
+    <div class="flex flex-col gap-3 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800 dark:bg-neutral-950/70">
       <div>
-        <p class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.promotion.editMode') }}</p>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.editModeHint') }}</p>
+        <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.promotion.editMode') }}</p>
+        <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.editModeHint') }}</p>
       </div>
-      <div class="inline-flex h-9 rounded-md border border-slate-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-950">
+      <div class="inline-flex h-9 rounded-md border border-neutral-200 bg-white p-0.5 dark:border-neutral-700 dark:bg-neutral-950">
         <button
           type="button"
           class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded px-3 text-sm font-medium transition"
-          :class="editorMode === 'form' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'"
+          :class="editorMode === 'form' ? 'bg-indigo-600 text-white shadow-sm' : 'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800'"
           :disabled="disabled"
           @click="setEditorMode('form')"
         >
@@ -19,7 +19,7 @@
         <button
           type="button"
           class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded px-3 text-sm font-medium transition"
-          :class="editorMode === 'json' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'"
+          :class="editorMode === 'json' ? 'bg-indigo-600 text-white shadow-sm' : 'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800'"
           :disabled="disabled"
           @click="setEditorMode('json')"
         >
@@ -31,17 +31,17 @@
 
     <div v-if="editorMode === 'form'" class="space-y-4">
       <div v-if="isGlobalPromotion" class="space-y-4">
-        <label class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
+        <label class="flex items-center justify-between gap-3 rounded-md border border-neutral-200 px-3 py-3 dark:border-neutral-800">
           <span>
-            <span class="block text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.promotion.enabled') }}</span>
-            <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.globalEnabledHint') }}</span>
+            <span class="block text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.promotion.enabled') }}</span>
+            <span class="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.globalEnabledHint') }}</span>
           </span>
           <button
             type="button"
             role="switch"
             :aria-checked="globalForm.enabled"
             class="relative h-6 w-11 rounded-full transition disabled:cursor-not-allowed disabled:opacity-60"
-            :class="globalForm.enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'"
+            :class="globalForm.enabled ? 'bg-indigo-600' : 'bg-neutral-300 dark:bg-neutral-700'"
             :disabled="disabled"
             @click="globalForm.enabled = !globalForm.enabled"
           >
@@ -54,7 +54,7 @@
 
         <div class="grid gap-3 sm:grid-cols-2">
           <label class="block">
-            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.promotion.state') }}</span>
+            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.promotion.state') }}</span>
             <USelect
               v-model="globalForm.state"
               class="mt-1 w-full"
@@ -66,31 +66,31 @@
             />
           </label>
           <label class="block">
-            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.promotion.expireAt') }}</span>
+            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.promotion.expireAt') }}</span>
             <input
               v-model="globalForm.expireAt"
               type="datetime-local"
               step="1"
-              class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-slate-900 dark:disabled:text-slate-500"
+              class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-500"
               :disabled="disabled || !globalForm.enabled"
             >
-            <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.expireAtHint') }}</span>
+            <span class="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.expireAtHint') }}</span>
           </label>
         </div>
       </div>
 
       <div v-else class="space-y-4">
-        <label class="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
+        <label class="flex items-center justify-between gap-3 rounded-md border border-neutral-200 px-3 py-3 dark:border-neutral-800">
           <span>
-            <span class="block text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.promotion.enabled') }}</span>
-            <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.newEnabledHint') }}</span>
+            <span class="block text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.promotion.enabled') }}</span>
+            <span class="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.newEnabledHint') }}</span>
           </span>
           <button
             type="button"
             role="switch"
             :aria-checked="newForm.enabled"
             class="relative h-6 w-11 rounded-full transition disabled:cursor-not-allowed disabled:opacity-60"
-            :class="newForm.enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'"
+            :class="newForm.enabled ? 'bg-indigo-600' : 'bg-neutral-300 dark:bg-neutral-700'"
             :disabled="disabled"
             @click="newForm.enabled = !newForm.enabled"
           >
@@ -103,8 +103,8 @@
 
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.configs.promotion.rules') }}</h3>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.rulesHint') }}</p>
+            <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.site.configs.promotion.rules') }}</h3>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.rulesHint') }}</p>
           </div>
           <UTooltip :text="$t('admin.site.configs.promotion.addRule')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="120">
             <UButton
@@ -124,12 +124,12 @@
           <div
             v-for="(rule, ruleIndex) in newForm.rules"
             :key="rule.uid"
-            class="rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/40"
+            class="rounded-md border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950/40"
           >
-            <div class="flex flex-col gap-3 border-b border-slate-200 px-3 py-3 sm:flex-row sm:items-start sm:justify-between dark:border-slate-800">
+            <div class="flex flex-col gap-3 border-b border-neutral-200 px-3 py-3 sm:flex-row sm:items-start sm:justify-between dark:border-neutral-800">
               <div class="min-w-0">
-                <p class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.configs.promotion.ruleTitle', { index: ruleIndex + 1 }) }}</p>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ ruleSummary(rule) }}</p>
+                <p class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.site.configs.promotion.ruleTitle', { index: ruleIndex + 1 }) }}</p>
+                <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ ruleSummary(rule) }}</p>
               </div>
               <UButton
                 type="button"
@@ -147,40 +147,40 @@
             <div class="space-y-3 px-3 py-3">
               <div class="grid gap-3 sm:grid-cols-2">
                 <label class="block">
-                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.promotion.minGiB') }}</span>
+                  <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.promotion.minGiB') }}</span>
                   <input
                     v-model="rule.minGiB"
                     type="number"
                     min="0"
                     step="any"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-slate-900 dark:disabled:text-slate-500"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-500"
                     :disabled="disabled"
                   >
                 </label>
                 <label class="block">
-                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.site.configs.promotion.durationHours') }}</span>
+                  <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.site.configs.promotion.durationHours') }}</span>
                   <input
                     v-model="rule.durationHours"
                     type="number"
                     min="0"
                     step="1"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-slate-900 dark:disabled:text-slate-500"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-500"
                     :disabled="disabled"
                   >
-                  <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.durationHint') }}</span>
+                  <span class="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.durationHint') }}</span>
                 </label>
               </div>
 
-              <div class="rounded-md border border-slate-200 dark:border-slate-800">
-                <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-900/60">
+              <div class="rounded-md border border-neutral-200 dark:border-neutral-800">
+                <div class="flex items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-900/60">
                   <div>
-                    <p class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.promotion.options') }}</p>
-                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.promotion.optionsHint') }}</p>
+                    <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.promotion.options') }}</p>
+                    <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.promotion.optionsHint') }}</p>
                   </div>
                   <UBadge color="neutral" variant="soft">{{ $t('admin.site.configs.promotion.totalWeight', { total: ruleTotalWeight(rule) }) }}</UBadge>
                 </div>
 
-                <div class="divide-y divide-slate-200 dark:divide-slate-800">
+                <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
                   <div
                     v-for="(option, optionIndex) in rule.options"
                     :key="option.uid"
@@ -200,7 +200,7 @@
                       type="number"
                       min="1"
                       step="1"
-                      class="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-slate-900 dark:disabled:text-slate-500"
+                      class="h-9 w-full rounded-md border border-neutral-200 bg-white px-2 text-sm text-neutral-950 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-indigo-500 dark:focus:ring-indigo-950 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-500"
                       :disabled="disabled"
                       :aria-label="$t('admin.site.configs.promotion.weight')"
                     >
@@ -217,7 +217,7 @@
                   </div>
                 </div>
 
-                <div class="border-t border-slate-200 px-3 py-2 dark:border-slate-800">
+                <div class="border-t border-neutral-200 px-3 py-2 dark:border-neutral-800">
                   <UButton type="button" color="neutral" variant="soft" size="xs" icon="i-lucide-plus" :disabled="disabled" @click="addOption(rule)">
                     {{ $t('admin.site.configs.promotion.addOption') }}
                   </UButton>

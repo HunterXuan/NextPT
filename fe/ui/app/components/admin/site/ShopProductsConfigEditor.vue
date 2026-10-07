@@ -1,17 +1,17 @@
 <template>
   <div class="space-y-4">
-    <div class="flex flex-col gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950/70">
+    <div class="flex flex-col gap-3 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800 dark:bg-neutral-950/70">
       <div>
-        <p class="text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.configs.shop.editMode') }}</p>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.shop.editModeHint') }}</p>
+        <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.configs.shop.editMode') }}</p>
+        <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.shop.editModeHint') }}</p>
       </div>
-      <div class="inline-flex h-9 rounded-md border border-slate-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-950">
+      <div class="inline-flex h-9 rounded-md border border-neutral-200 bg-white p-0.5 dark:border-neutral-700 dark:bg-neutral-950">
         <button
           v-for="mode in editorModes"
           :key="mode.value"
           type="button"
           class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded px-3 text-sm font-medium transition"
-          :class="editorMode === mode.value ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'"
+          :class="editorMode === mode.value ? 'bg-indigo-600 text-white shadow-sm' : 'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800'"
           :disabled="disabled"
           @click="setEditorMode(mode.value)"
         >
@@ -37,15 +37,15 @@
         </UButton>
       </div>
 
-      <div v-if="products.length === 0" class="rounded-md border border-dashed border-slate-300 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+      <div v-if="products.length === 0" class="rounded-md border border-dashed border-neutral-300 px-4 py-10 text-center text-sm text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
         {{ $t('admin.site.configs.shop.empty') }}
       </div>
 
-      <div v-for="product in products" :key="product.key" class="overflow-hidden rounded-md border border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950/60">
+      <div v-for="product in products" :key="product.key" class="overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
+        <div class="flex items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-3 py-2.5 dark:border-neutral-800 dark:bg-neutral-950/60">
           <div class="min-w-0">
-            <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ productTitle(product.type, product.key) }}</p>
-            <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{{ product.key }} / {{ product.type }}</p>
+            <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ productTitle(product.type, product.key) }}</p>
+            <p class="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ product.key }} / {{ product.type }}</p>
           </div>
           <USwitch v-model="product.enabled" :disabled="disabled" />
         </div>
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <p class="text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('admin.site.configs.shop.structureHint') }}</p>
+      <p class="text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('admin.site.configs.shop.structureHint') }}</p>
     </div>
 
     <div v-else class="space-y-3">

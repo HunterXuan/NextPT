@@ -1,12 +1,12 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-      <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ t('user.sessions.title') }}</h2>
-      <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ t('user.sessions.subtitle') }}</p>
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+      <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ t('user.sessions.title') }}</h2>
+      <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ t('user.sessions.subtitle') }}</p>
     </div>
 
     <div v-if="pending" class="space-y-2 p-4">
-      <div v-for="item in 2" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+      <div v-for="item in 2" :key="item" class="h-16 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
     </div>
 
     <div v-else-if="errorMessage" class="flex items-center gap-3 px-4 py-6 text-sm text-red-600 dark:text-red-300">
@@ -15,35 +15,35 @@
     </div>
 
     <div v-else-if="sessions.length === 0" class="flex flex-col items-center justify-center px-4 py-8 text-center">
-      <UIcon name="i-lucide-monitor-off" class="size-7 text-slate-400" />
-      <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ t('user.sessions.empty') }}</p>
+      <UIcon name="i-lucide-monitor-off" class="size-7 text-neutral-400" />
+      <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">{{ t('user.sessions.empty') }}</p>
     </div>
 
-    <div v-else class="divide-y divide-slate-200 dark:divide-slate-800">
+    <div v-else class="divide-y divide-neutral-200 dark:divide-neutral-800">
       <article v-for="item in sessions" :key="item.id" class="flex items-center gap-3 px-4 py-3">
         <span
           class="flex size-9 shrink-0 items-center justify-center rounded-md"
           :class="item.current
-            ? 'bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300'
-            : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'"
+            ? 'bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300'
+            : 'bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400'"
         >
           <UIcon :name="deviceIcon(item.userAgent)" class="size-4" />
         </span>
 
         <div class="min-w-0 flex-1">
           <div class="flex flex-wrap items-center gap-2">
-            <span class="text-sm font-medium text-slate-950 dark:text-white">{{ sessionLabel(item.userAgent) }}</span>
+            <span class="text-sm font-medium text-neutral-950 dark:text-white">{{ sessionLabel(item.userAgent) }}</span>
             <UBadge v-if="item.current" color="primary" variant="subtle" size="sm">{{ t('user.sessions.current') }}</UBadge>
-            <span class="font-mono text-xs text-slate-500 dark:text-slate-400">{{ item.ip || '-' }}</span>
+            <span class="font-mono text-xs text-neutral-500 dark:text-neutral-400">{{ item.ip || '-' }}</span>
           </div>
           <UTooltip :text="item.userAgent || '-'" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
-            <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.userAgent || '-' }}</p>
+            <p class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.userAgent || '-' }}</p>
           </UTooltip>
         </div>
 
         <div class="hidden shrink-0 text-right sm:block">
-          <p class="text-xs text-slate-500 dark:text-slate-400">{{ t('user.sessions.lastSeen') }}</p>
-          <time class="mt-1 block text-xs text-slate-600 dark:text-slate-300">{{ formatDateTime(item.lastSeenAt, locale) }}</time>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ t('user.sessions.lastSeen') }}</p>
+          <time class="mt-1 block text-xs text-neutral-600 dark:text-neutral-300">{{ formatDateTime(item.lastSeenAt, locale) }}</time>
         </div>
 
         <UPopover
@@ -64,7 +64,7 @@
           </UTooltip>
           <template #content="{ close }">
             <div class="space-y-3">
-              <p class="text-sm font-medium text-slate-950 dark:text-white">{{ item.current ? t('user.sessions.logoutCurrentConfirm') : t('user.sessions.revokeConfirm') }}</p>
+              <p class="text-sm font-medium text-neutral-950 dark:text-white">{{ item.current ? t('user.sessions.logoutCurrentConfirm') : t('user.sessions.revokeConfirm') }}</p>
               <div class="flex justify-end gap-2">
                 <UButton color="neutral" variant="ghost" size="xs" @click="closeConfirm(close)">{{ t('common.cancel') }}</UButton>
                 <UButton color="error" size="xs" :loading="deletingSessionId === item.id" @click="removeSession(item, close)">{{ t('common.confirm') }}</UButton>

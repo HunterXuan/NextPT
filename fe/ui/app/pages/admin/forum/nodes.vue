@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(760px,940px)_minmax(560px,1fr)] 2xl:grid-cols-[minmax(820px,1020px)_minmax(600px,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div class="flex items-center gap-2">
                 <UIcon name="i-lucide-git-branch" class="size-5 text-cyan-600 dark:text-cyan-300" />
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.nodes.list') }}</h2>
+                <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.forum.nodes.list') }}</h2>
               </div>
               <div class="flex flex-wrap items-center gap-2 text-xs">
-                <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-slate-100 px-2.5 font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-neutral-100 px-2.5 font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
                   <span>{{ $t('admin.forum.nodes.stats.total') }}</span>
-                  <span class="font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(nodes.length) }}</span>
+                  <span class="font-semibold text-neutral-950 dark:text-white">{{ numberFormatter.format(nodes.length) }}</span>
                 </span>
                 <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-cyan-50 px-2.5 font-medium text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300">
                   <span>{{ $t('admin.forum.nodes.stats.categories') }}</span>
@@ -24,25 +24,25 @@
 
           <div v-if="pending" class="overflow-x-auto">
             <table class="min-w-[980px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[24%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.name') }}</th>
-                  <th class="w-[16%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.category') }}</th>
-                  <th class="w-[15%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.slug') }}</th>
-                  <th class="w-[31%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.permissions') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.nodes.table.counts') }}</th>
+                  <th class="w-[24%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.name') }}</th>
+                  <th class="w-[16%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.category') }}</th>
+                  <th class="w-[15%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.slug') }}</th>
+                  <th class="w-[31%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.permissions') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.forum.nodes.table.counts') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="index in 5" :key="index" class="border-b border-slate-200 last:border-b-0 dark:border-slate-800">
+                <tr v-for="index in 5" :key="index" class="border-b border-neutral-200 last:border-b-0 dark:border-neutral-800">
                   <td class="px-3 py-3">
-                    <div class="h-4 w-44 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-                    <div class="mt-2 h-3 w-32 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="h-4 w-44 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+                    <div class="mt-2 h-3 w-32 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
-                  <td class="px-3 py-3"><div class="h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="h-4 w-24 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="ml-auto h-4 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="ml-auto h-4 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-28 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-24 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="ml-auto h-4 w-20 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="ml-auto h-4 w-16 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
                 </tr>
               </tbody>
             </table>
@@ -50,31 +50,31 @@
 
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
           </div>
 
           <div v-else-if="nodes.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.forum.nodes.empty') }}</p>
+            <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.forum.nodes.empty') }}</p>
           </div>
 
           <div v-else class="overflow-x-auto">
             <table class="min-w-[980px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[24%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.name') }}</th>
-                  <th class="w-[16%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.category') }}</th>
-                  <th class="w-[15%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.slug') }}</th>
-                  <th class="w-[31%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.forum.nodes.table.permissions') }}</th>
-                  <th class="w-[14%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.forum.nodes.table.counts') }}</th>
+                  <th class="w-[24%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.name') }}</th>
+                  <th class="w-[16%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.category') }}</th>
+                  <th class="w-[15%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.slug') }}</th>
+                  <th class="w-[31%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.forum.nodes.table.permissions') }}</th>
+                  <th class="w-[14%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.forum.nodes.table.counts') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="node in nodes"
                   :key="node.id"
-                  class="cursor-pointer border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
-                  :class="selectedId === node.id ? 'bg-cyan-50/70 dark:bg-cyan-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+                  class="cursor-pointer border-b border-neutral-200 transition-colors last:border-b-0 dark:border-neutral-800"
+                  :class="selectedId === node.id ? 'bg-cyan-50/70 dark:bg-cyan-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
                   role="button"
                   tabindex="0"
                   @click="selectNode(node)"
@@ -83,35 +83,35 @@
                 >
                   <td class="px-3 py-2.5 align-middle">
                     <div class="block max-w-full text-left">
-                      <span class="block truncate text-sm font-semibold text-slate-950 hover:text-cyan-700 dark:text-white dark:hover:text-cyan-300">
+                      <span class="block truncate text-sm font-semibold text-neutral-950 hover:text-cyan-700 dark:text-white dark:hover:text-cyan-300">
                         {{ nodeName(node) }}
                       </span>
-                      <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">
+                      <span class="mt-1 block truncate text-xs text-neutral-500 dark:text-neutral-400">
                         {{ nodeDescription(node) || '-' }}
                       </span>
                     </div>
                   </td>
-                  <td class="px-3 py-2.5 align-middle text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-3 py-2.5 align-middle text-sm text-neutral-600 dark:text-neutral-300">
                     <span class="block truncate">{{ categoryName(node.categoryId) }}</span>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
-                    <code class="block truncate text-xs text-slate-600 dark:text-slate-300">{{ node.slug }}</code>
+                    <code class="block truncate text-xs text-neutral-600 dark:text-neutral-300">{{ node.slug }}</code>
                   </td>
-                  <td class="px-3 py-2.5 align-middle text-xs text-slate-600 dark:text-slate-300">
+                  <td class="px-3 py-2.5 align-middle text-xs text-neutral-600 dark:text-neutral-300">
                     <div class="flex flex-wrap items-center gap-1.5">
                       <span
                         v-for="item in nodePermissionSummary(node)"
                         :key="item.key"
                         class="inline-flex shrink-0 items-center gap-1.5"
                       >
-                        <span class="shrink-0 text-slate-400 dark:text-slate-500">{{ item.label }}</span>
-                        <span class="whitespace-nowrap rounded-md bg-slate-100 px-1.5 py-0.5 font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                        <span class="shrink-0 text-neutral-400 dark:text-neutral-500">{{ item.label }}</span>
+                        <span class="whitespace-nowrap rounded-md bg-neutral-100 px-1.5 py-0.5 font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                           {{ item.role }}
                         </span>
                       </span>
                     </div>
                   </td>
-                  <td class="px-3 py-2.5 text-right align-middle text-xs text-slate-600 dark:text-slate-300">
+                  <td class="px-3 py-2.5 text-right align-middle text-xs text-neutral-600 dark:text-neutral-300">
                     {{ numberFormatter.format(node.topicCount) }} / {{ numberFormatter.format(node.replyCount) }}
                   </td>
                 </tr>
@@ -120,10 +120,10 @@
           </div>
         </section>
 
-        <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex items-center justify-between gap-3">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">
                 {{ selectedId ? $t('admin.forum.nodes.form.edit') : $t('admin.forum.nodes.form.create') }}
               </h2>
               <div class="flex h-8 min-w-20 items-center justify-end">
@@ -136,12 +136,12 @@
 
           <form class="space-y-5 p-4" @submit.prevent="saveNode">
             <div>
-              <div class="border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.nodes.form.basic') }}</span>
+              <div class="border-b border-neutral-200 pb-2 dark:border-neutral-800">
+                <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.forum.nodes.form.basic') }}</span>
               </div>
               <div class="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_112px]">
                 <label class="block">
-                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.forum.nodes.form.category') }}</span>
+                  <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.forum.nodes.form.category') }}</span>
                   <USelect
                     v-model="form.categoryId"
                     class="mt-1 w-full"
@@ -154,20 +154,20 @@
                 </label>
 
                 <label class="block">
-                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.forum.nodes.form.slug') }}</span>
+                  <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.forum.nodes.form.slug') }}</span>
                   <input
                     v-model="form.slug"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
                     :disabled="saving"
                   >
                 </label>
 
                 <label class="block">
-                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.forum.nodes.form.sortOrder') }}</span>
+                  <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.forum.nodes.form.sortOrder') }}</span>
                   <input
                     v-model.number="form.sortOrder"
                     type="number"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
                     :disabled="saving"
                   >
                 </label>
@@ -175,21 +175,21 @@
             </div>
 
             <div>
-              <div class="flex items-center justify-between gap-3 border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.nodes.form.name') }}</span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">
+              <div class="flex items-center justify-between gap-3 border-b border-neutral-200 pb-2 dark:border-neutral-800">
+                <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.forum.nodes.form.name') }}</span>
+                <span class="text-xs text-neutral-500 dark:text-neutral-400">
                   {{ $t('admin.forum.nodes.form.primaryLocale', { locale: primaryLocaleLabel }) }}
                 </span>
               </div>
               <div class="mt-3 grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
                 <label v-for="item in localeOptions" :key="item.code" class="block">
-                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
                     <span>{{ item.name }}</span>
-                    <span class="text-xs font-normal text-slate-400 dark:text-slate-500">{{ item.code }}</span>
+                    <span class="text-xs font-normal text-neutral-400 dark:text-neutral-500">{{ item.code }}</span>
                   </span>
                   <input
                     v-model="form.names[item.code]"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
                     :disabled="saving"
                   >
                 </label>
@@ -197,19 +197,19 @@
             </div>
 
             <div>
-              <div class="border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.nodes.form.description') }}</span>
+              <div class="border-b border-neutral-200 pb-2 dark:border-neutral-800">
+                <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.forum.nodes.form.description') }}</span>
               </div>
               <div class="mt-3 grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
                 <label v-for="item in localeOptions" :key="item.code" class="block">
-                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
                     <span>{{ item.name }}</span>
-                    <span class="text-xs font-normal text-slate-400 dark:text-slate-500">{{ item.code }}</span>
+                    <span class="text-xs font-normal text-neutral-400 dark:text-neutral-500">{{ item.code }}</span>
                   </span>
                   <textarea
                     v-model="form.descs[item.code]"
                     rows="3"
-                    class="mt-1 w-full resize-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                    class="mt-1 w-full resize-none rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
                     :disabled="saving"
                   />
                 </label>
@@ -217,12 +217,12 @@
             </div>
 
             <div>
-              <div class="border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.forum.nodes.form.permissions') }}</span>
+              <div class="border-b border-neutral-200 pb-2 dark:border-neutral-800">
+                <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.forum.nodes.form.permissions') }}</span>
               </div>
               <div class="mt-3 grid gap-3 sm:grid-cols-3">
                 <label v-for="field in permissionFields" :key="field.key" class="block">
-                  <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ field.label }}</span>
+                  <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ field.label }}</span>
                   <AdminIamRoleLevelSelect
                     v-model.number="form[field.key]"
                     :roles="roles"
@@ -233,10 +233,10 @@
             </div>
 
             <label class="block">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.forum.nodes.form.moderators') }}</span>
+              <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.forum.nodes.form.moderators') }}</span>
               <input
                 v-model="form.moderators"
-                class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
+                class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-cyan-500 dark:focus:ring-cyan-950"
                 :disabled="saving"
                 placeholder="1,2,3"
               >
@@ -246,7 +246,7 @@
               {{ formError }}
             </p>
 
-            <div class="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+            <div class="flex flex-col gap-3 border-t border-neutral-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
               <div class="flex justify-start">
                 <UPopover
                   v-if="selectedNode"
@@ -265,10 +265,10 @@
 
                   <template #content="{ close }">
                     <div class="space-y-3">
-                      <p class="text-sm font-medium text-slate-950 dark:text-white">
+                      <p class="text-sm font-medium text-neutral-950 dark:text-white">
                         {{ $t('admin.actions.confirmDeleteTitle') }}
                       </p>
-                      <p class="text-xs text-slate-500 dark:text-slate-400">
+                      <p class="text-xs text-neutral-500 dark:text-neutral-400">
                         {{ $t('admin.actions.deleteIrreversible') }}
                       </p>
                       <div class="flex justify-end gap-2">
@@ -395,7 +395,7 @@ async function loadAll() {
     nodes.value = (nodeData.nodes || []).sort((a, b) => a.categoryId - b.categoryId || a.sortOrder - b.sortOrder || a.id - b.id)
     roles.value = roleData.roles || []
     if (!selectedId.value && !form.categoryId && categories.value.length > 0) {
-      form.categoryId = categories.value[0].id
+      form.categoryId = categories.value[0]?.id || 0
       originalFormSnapshot.value = formSnapshot()
     }
   } catch (error: unknown) {

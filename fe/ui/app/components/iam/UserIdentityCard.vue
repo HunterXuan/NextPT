@@ -1,5 +1,5 @@
 <template>
-  <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+  <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
     <div class="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div class="flex min-w-0 items-start gap-4">
         <IamUserAvatar
@@ -11,7 +11,7 @@
         />
         <div class="min-w-0 pt-0.5">
           <div class="flex flex-wrap items-center gap-2">
-            <p class="truncate text-xl font-semibold text-slate-950 dark:text-white">{{ displayName }}</p>
+            <p class="truncate text-xl font-semibold text-neutral-950 dark:text-white">{{ displayName }}</p>
             <UBadge :color="user?.role.isStaff ? 'primary' : 'neutral'" variant="soft">
               {{ roleDisplayName }}
             </UBadge>
@@ -19,14 +19,14 @@
               {{ $t('user.status.normal') }}
             </UBadge>
           </div>
-          <p class="mt-1 truncate text-sm text-slate-500 dark:text-slate-400">{{ user?.user.email || '-' }}</p>
+          <p class="mt-1 truncate text-sm text-neutral-500 dark:text-neutral-400">{{ user?.user.email || '-' }}</p>
         </div>
       </div>
 
       <dl class="grid gap-2 text-sm sm:grid-cols-2 lg:w-[min(380px,36vw)]">
-        <div v-for="item in identityItems" :key="item.label" class="rounded-md bg-slate-50 px-3 py-2 dark:bg-slate-950/60">
-          <dt class="text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</dt>
-          <dd class="mt-1 truncate font-medium text-slate-950 dark:text-white">{{ item.value }}</dd>
+        <div v-for="item in identityItems" :key="item.label" class="rounded-md bg-neutral-50 px-3 py-2 dark:bg-neutral-950/60">
+          <dt class="text-xs text-neutral-500 dark:text-neutral-400">{{ item.label }}</dt>
+          <dd class="mt-1 truncate font-medium text-neutral-950 dark:text-white">{{ item.value }}</dd>
         </div>
       </dl>
     </div>

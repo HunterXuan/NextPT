@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <form class="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start" @submit.prevent="handleSubmit">
         <main class="min-w-0 space-y-3">
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
             <div v-if="nodesPending" class="grid gap-3 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
-              <div class="h-10 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
-              <div class="h-10 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+              <div class="h-10 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
+              <div class="h-10 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
             </div>
             <template v-else>
               <div class="grid gap-3 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
@@ -36,14 +36,14 @@
                 </UFormField>
               </div>
 
-              <div v-if="!selectedNode" class="mt-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+              <div v-if="!selectedNode" class="mt-3 flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
                 <UIcon name="i-lucide-circle-slash" class="size-4" />
                 <span>{{ $t('forum.empty.nodes') }}</span>
               </div>
             </template>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
             <div class="grid grid-cols-1 gap-4">
               <UFormField :label="$t('forum.create.fields.subject')" required>
                 <UInput v-model="form.subject" class="w-full" :disabled="pending" :placeholder="$t('forum.create.placeholders.subject')" />
@@ -58,13 +58,13 @@
                   :disabled="pending"
                   :placeholder="$t('forum.create.placeholders.content')"
                 />
-                <div v-else class="min-h-[22rem] rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+                <div v-else class="min-h-[22rem] rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2.5 dark:border-neutral-800 dark:bg-neutral-950">
                   <div v-if="renderedContentPreview" class="rich-text" v-html="renderedContentPreview" />
-                  <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ $t('forum.create.preview.empty') }}</p>
+                  <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">{{ $t('forum.create.preview.empty') }}</p>
                 </div>
 
                 <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+                  <div class="inline-flex w-fit rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-800 dark:bg-neutral-950">
                     <button type="button" :class="editorModeButtonClass('write')" @click="editorMode = 'write'">
                       {{ $t('forum.create.preview.write') }}
                     </button>
@@ -72,7 +72,7 @@
                       {{ $t('forum.create.preview.preview') }}
                     </button>
                   </div>
-                  <span class="text-xs text-slate-500 dark:text-slate-400">
+                  <span class="text-xs text-neutral-500 dark:text-neutral-400">
                     {{ $t('forum.create.summary.contentLength', { count: numberFormatter.format(form.content.trim().length) }) }}
                   </span>
                 </div>
@@ -82,7 +82,7 @@
         </main>
 
         <aside class="app-sticky-offset space-y-3 xl:sticky">
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
             <AppPermissionButton
               :permission="Permission.ForumTopicCreate"
               type="submit"
@@ -97,19 +97,19 @@
             </AppPermissionButton>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.create.guide.title') }}</h2>
-            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('forum.create.guide.title') }}</h2>
+            <ul class="mt-3 space-y-2 text-sm leading-6 text-neutral-600 dark:text-neutral-300">
               <li class="flex gap-2">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" />
                 <span>{{ $t('forum.create.guide.search') }}</span>
               </li>
               <li class="flex gap-2">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" />
                 <span>{{ $t('forum.create.guide.titleTip') }}</span>
               </li>
               <li class="flex gap-2">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" />
                 <span>{{ $t('forum.create.guide.kindness') }}</span>
               </li>
               <li class="flex gap-2 rounded-md bg-amber-50 px-2 py-1.5 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
@@ -119,15 +119,15 @@
             </ul>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
             <dl class="space-y-2 text-sm">
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.create.summary.subjectLength') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(form.subject.trim().length) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.create.summary.subjectLength') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(form.subject.trim().length) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.create.summary.content') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(form.content.trim().length) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.create.summary.content') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(form.content.trim().length) }}</dd>
               </div>
             </dl>
           </section>
@@ -315,8 +315,8 @@ function editorModeButtonClass(mode: EditorMode) {
   return [
     'h-7 rounded px-3 text-xs font-medium transition-colors',
     active
-      ? 'bg-white text-slate-950 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:text-white dark:ring-slate-700'
-      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
+      ? 'app-selected shadow-sm ring-1 ring-primary/20'
+      : 'text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100'
   ].join(' ')
 }
 </script>

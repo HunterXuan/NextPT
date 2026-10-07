@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+    <div class="flex flex-wrap items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
       <span v-if="showTotal">{{ t('common.pagination.total', { total: numberFormatter.format(safeTotal) }) }}</span>
       <div v-if="normalizedPageSizeOptions.length > 0" class="flex items-center gap-2">
         <span>{{ t('common.pagination.pageSize') }}</span>
@@ -42,7 +42,7 @@
       <template v-for="item in pageItems" :key="item.key">
         <span
           v-if="item.type === 'ellipsis'"
-          class="flex h-9 min-w-9 items-center justify-center px-2 text-sm text-slate-400 dark:text-slate-500"
+          class="flex h-9 min-w-9 items-center justify-center px-2 text-sm text-neutral-400 dark:text-neutral-500"
         >
           ...
         </span>

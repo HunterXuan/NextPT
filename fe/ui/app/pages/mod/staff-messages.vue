@@ -1,15 +1,15 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+      <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <div class="flex flex-col gap-3 border-b border-neutral-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
           <div class="flex min-w-0 items-center gap-3">
-            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-300">
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-300">
               <UIcon name="i-lucide-mail-question" class="size-4" />
             </span>
             <div class="min-w-0">
-              <h1 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('mod.staffMessages.title') }}</h1>
-              <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('mod.staffMessages.description') }}</p>
+              <h1 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('mod.staffMessages.title') }}</h1>
+              <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('mod.staffMessages.description') }}</p>
             </div>
           </div>
           <AppPermissionButton
@@ -25,13 +25,13 @@
           </AppPermissionButton>
         </div>
 
-        <div class="flex gap-1 overflow-x-auto border-b border-slate-200 px-3 py-2 dark:border-slate-800">
+        <div class="flex gap-1 overflow-x-auto border-b border-neutral-200 px-3 py-2 dark:border-neutral-800">
           <button
             v-for="option in filterOptions"
             :key="option.key"
             type="button"
             class="shrink-0 rounded-md px-3 py-1.5 text-sm font-medium transition"
-            :class="filter === option.key ? 'bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white'"
+            :class="filter === option.key ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/40 dark:text-primary-300' : 'text-neutral-500 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white'"
             @click="changeFilter(option.key)"
           >
             {{ option.label }}
@@ -39,31 +39,31 @@
         </div>
 
         <div v-if="pending" class="grid min-h-[520px] gap-0 lg:grid-cols-[380px_minmax(0,1fr)]">
-          <div class="space-y-2 border-r border-slate-200 p-3 dark:border-slate-800">
-            <div v-for="item in 7" :key="item" class="h-20 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+          <div class="space-y-2 border-r border-neutral-200 p-3 dark:border-neutral-800">
+            <div v-for="item in 7" :key="item" class="h-20 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
           </div>
-          <div class="p-5"><div class="h-5 w-1/3 animate-pulse rounded bg-slate-100 dark:bg-slate-800" /></div>
+          <div class="p-5"><div class="h-5 w-1/3 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800" /></div>
         </div>
 
         <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
           <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
         </div>
 
         <div v-else-if="messages.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <UIcon name="i-lucide-mail-open" class="size-9 text-slate-400" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('mod.staffMessages.empty') }}</p>
+          <UIcon name="i-lucide-mail-open" class="size-9 text-neutral-400" />
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('mod.staffMessages.empty') }}</p>
         </div>
 
         <div v-else class="grid min-h-[520px] gap-0 lg:grid-cols-[380px_minmax(0,1fr)]">
-          <div class="border-r border-slate-200 dark:border-slate-800">
-            <div class="divide-y divide-slate-100 dark:divide-slate-800">
+          <div class="border-r border-neutral-200 dark:border-neutral-800">
+            <div class="divide-y divide-neutral-100 dark:divide-neutral-800">
               <button
                 v-for="item in messages"
                 :key="item.id"
                 type="button"
                 class="flex w-full gap-3 px-4 py-3 text-left transition"
-                :class="selectedMessageId === item.id ? 'bg-sky-50/80 dark:bg-sky-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/60'"
+                :class="selectedMessageId === item.id ? 'bg-primary-50/80 dark:bg-primary-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/60'"
                 @click="selectedMessageId = item.id"
               >
                 <span class="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md" :class="statusTone(item.status)">
@@ -71,12 +71,12 @@
                 </span>
                 <span class="min-w-0 flex-1">
                   <span class="flex min-w-0 items-center justify-between gap-3">
-                    <span class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ item.subject }}</span>
-                    <span class="shrink-0 text-xs text-slate-500 dark:text-slate-400">{{ formatRelativeDateTime(item.createdAt, locale) }}</span>
+                    <span class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ item.subject }}</span>
+                    <span class="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">{{ formatRelativeDateTime(item.createdAt, locale) }}</span>
                   </span>
-                  <span class="mt-1 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                  <span class="mt-1 flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
                     <span>{{ statusLabel(item.status) }}</span>
-                    <span class="text-slate-300 dark:text-slate-700">/</span>
+                    <span class="text-neutral-300 dark:text-neutral-700">/</span>
                     <span class="truncate">{{ messageExcerpt(item.content) }}</span>
                   </span>
                 </span>
@@ -85,36 +85,36 @@
           </div>
 
           <article v-if="selectedMessage" class="min-w-0 p-5">
-            <div class="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-start sm:justify-between dark:border-slate-800">
+            <div class="flex flex-col gap-3 border-b border-neutral-100 pb-4 sm:flex-row sm:items-start sm:justify-between dark:border-neutral-800">
               <div class="min-w-0">
                 <div class="flex items-center gap-2">
-                  <h2 class="break-words text-base font-semibold text-slate-950 dark:text-white">{{ selectedMessage.subject }}</h2>
+                  <h2 class="break-words text-base font-semibold text-neutral-950 dark:text-white">{{ selectedMessage.subject }}</h2>
                   <UBadge :color="statusColor(selectedMessage.status)" variant="soft" class="shrink-0">{{ statusLabel(selectedMessage.status) }}</UBadge>
                 </div>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(selectedMessage.createdAt, locale) }}</p>
+                <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ formatDateTime(selectedMessage.createdAt, locale) }}</p>
               </div>
             </div>
 
             <div class="mt-5 space-y-5">
               <section>
-                <p class="mb-2 text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('mod.staffMessages.detail.message') }}</p>
-                <div class="rich-text rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950" v-html="renderUserMarkdown(selectedMessage.content)" />
+                <p class="mb-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('mod.staffMessages.detail.message') }}</p>
+                <div class="rich-text rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950" v-html="renderUserMarkdown(selectedMessage.content)" />
               </section>
               <section v-if="selectedMessage.answer" class="border-l-2 border-emerald-400 pl-4 dark:border-emerald-500">
                 <div class="flex items-center justify-between gap-3">
                   <p class="text-xs font-medium text-emerald-700 dark:text-emerald-300">{{ $t('mod.staffMessages.detail.reply') }}</p>
-                  <span class="text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(selectedMessage.answeredAt, locale) }}</span>
+                  <span class="text-xs text-neutral-500 dark:text-neutral-400">{{ formatDateTime(selectedMessage.answeredAt, locale) }}</span>
                 </div>
                 <div class="rich-text mt-2 text-sm" v-html="renderUserMarkdown(selectedMessage.answer)" />
               </section>
-              <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ selectedMessage.status === ModStaffMessageStatus.Processed ? $t('mod.staffMessages.detail.processedNoReply') : $t('mod.staffMessages.detail.waiting') }}</p>
+              <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">{{ selectedMessage.status === ModStaffMessageStatus.Processed ? $t('mod.staffMessages.detail.processedNoReply') : $t('mod.staffMessages.detail.waiting') }}</p>
             </div>
           </article>
         </div>
 
         <AppPager
           v-if="!pending && messages.length > 0"
-          class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+          class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800"
           :page="page"
           :total="total"
           :page-size="size"
@@ -143,7 +143,7 @@
           </UFormField>
           <p v-if="formError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">{{ formError }}</p>
           <div class="flex justify-end gap-2">
-            <UButton type="button" color="neutral" variant="ghost" :disabled="submitting" @click="composeOpen = false">{{ $t('common.cancel') }}</UButton>
+            <UButton type="button" color="neutral" variant="ghost" :disabled="submitting" @click="() => { composeOpen = false }">{{ $t('common.cancel') }}</UButton>
             <UButton type="submit" color="primary" icon="i-lucide-send" :loading="submitting">{{ $t('mod.staffMessages.compose.submit') }}</UButton>
           </div>
         </form>

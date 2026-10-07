@@ -1,18 +1,18 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+  <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <div class="border-b border-neutral-200 px-5 py-4 dark:border-neutral-800">
       <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div class="min-w-0">
           <div v-if="topic.isSticky || topic.isLocked" class="mb-3 flex flex-wrap items-center gap-2">
             <UBadge v-if="topic.isSticky" color="primary" variant="soft">{{ t('forum.topicList.badges.sticky') }}</UBadge>
             <UBadge v-if="topic.isLocked" color="neutral" variant="outline">{{ t('forum.topicList.badges.locked') }}</UBadge>
           </div>
-          <h1 class="break-words [overflow-wrap:anywhere] text-2xl font-semibold leading-8 text-slate-950 dark:text-white">
+          <h1 class="break-words [overflow-wrap:anywhere] text-2xl font-semibold leading-8 text-neutral-950 dark:text-white">
             {{ topic.subject || t('forum.detail.titleFallback', { id: topic.id }) }}
           </h1>
-          <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
-            <IamUserPopover :user="topic.author" :fallback="userDisplayName(topic.author)" class="font-medium text-slate-600 dark:text-slate-300" />
-            <span class="text-slate-300 dark:text-slate-700">/</span>
+          <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-neutral-500 dark:text-neutral-400">
+            <IamUserPopover :user="topic.author" :fallback="userDisplayName(topic.author)" class="font-medium text-neutral-600 dark:text-neutral-300" />
+            <span class="text-neutral-300 dark:text-neutral-700">/</span>
             <UTooltip
               :text="formatDateTime(topic.createdAt, locale)"
               :content="{ side: 'top', sideOffset: 8 }"
@@ -20,7 +20,7 @@
             >
               <span>{{ relativeDateTime(topic.createdAt) }}</span>
             </UTooltip>
-            <span class="text-slate-300 dark:text-slate-700">/</span>
+            <span class="text-neutral-300 dark:text-neutral-700">/</span>
             <span>{{ t('forum.topicList.meta.views', { count: numberFormatter.format(topic.views) }) }}</span>
           </p>
         </div>
@@ -63,22 +63,22 @@
     </div>
 
     <div class="px-5 py-5">
-      <div class="rich-text text-sm leading-6 text-slate-700 dark:text-slate-200" v-html="renderRichText(topic.content)" />
+      <div class="rich-text text-sm leading-6 text-neutral-700 dark:text-neutral-200" v-html="renderRichText(topic.content)" />
     </div>
 
-    <div v-if="appends.length > 0" class="space-y-3 border-t border-slate-200 px-5 py-4 dark:border-slate-800">
-      <article v-for="(append, index) in appends" :key="`${append.created_at || append.createdAt || index}`" class="rounded-md bg-slate-50 px-3 py-3 dark:bg-slate-950">
+    <div v-if="appends.length > 0" class="space-y-3 border-t border-neutral-200 px-5 py-4 dark:border-neutral-800">
+      <article v-for="(append, index) in appends" :key="`${append.created_at || append.createdAt || index}`" class="rounded-md bg-neutral-50 px-3 py-3 dark:bg-neutral-950">
         <div class="flex items-center justify-between gap-3">
-          <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400">
             {{ t('forum.detail.append.index', { index: index + 1 }) }}
           </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">{{ formatDateTime(append.created_at || append.createdAt, locale) }}</p>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ formatDateTime(append.created_at || append.createdAt, locale) }}</p>
         </div>
-        <div class="rich-text rich-text-compact mt-2 text-sm leading-6 text-slate-700 dark:text-slate-200" v-html="renderRichText(append.content || '')" />
+        <div class="rich-text rich-text-compact mt-2 text-sm leading-6 text-neutral-700 dark:text-neutral-200" v-html="renderRichText(append.content || '')" />
       </article>
     </div>
 
-    <div v-if="activePanel === 'append'" class="border-t border-slate-200 bg-slate-50/60 px-5 py-4 dark:border-slate-800 dark:bg-slate-950/40">
+    <div v-if="activePanel === 'append'" class="border-t border-neutral-200 bg-neutral-50/60 px-5 py-4 dark:border-neutral-800 dark:bg-neutral-950/40">
       <RichTextComposer
         v-model="appendContentValue"
         v-model:mode="appendEditorModeValue"
@@ -106,7 +106,7 @@
       </RichTextComposer>
     </div>
 
-    <div class="flex flex-col gap-3 border-t border-slate-200 bg-slate-50/70 px-5 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950/50">
+    <div class="flex flex-col gap-3 border-t border-neutral-200 bg-neutral-50/70 px-5 py-3 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800 dark:bg-neutral-950/50">
       <UButton color="neutral" :variant="activePanel === 'report' ? 'soft' : 'ghost'" size="sm" icon="i-lucide-flag" class="w-fit" @click="$emit('openPanel', 'report')">
         {{ t('forum.detail.actions.report') }}
       </UButton>
@@ -120,7 +120,7 @@
       </div>
     </div>
 
-    <div v-if="activePanel === 'report'" class="border-t border-slate-200 bg-slate-50/60 px-5 py-4 dark:border-slate-800 dark:bg-slate-950/40">
+    <div v-if="activePanel === 'report'" class="border-t border-neutral-200 bg-neutral-50/60 px-5 py-4 dark:border-neutral-800 dark:bg-neutral-950/40">
       <form class="space-y-3" @submit.prevent="$emit('report')">
         <UTextarea v-model="reportReasonValue" class="w-full" :rows="3" :placeholder="t('forum.detail.report.reason')" :disabled="actionPending === 'report'" />
         <div class="flex justify-end gap-2">

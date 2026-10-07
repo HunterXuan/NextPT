@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div class="flex flex-col gap-3 border-b border-slate-200 p-3 xl:flex-row xl:items-center dark:border-slate-800">
+      <section class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <div class="flex flex-col gap-3 border-b border-neutral-200 p-3 xl:flex-row xl:items-center dark:border-neutral-800">
           <div class="flex min-w-0 gap-2 overflow-x-auto pb-1 xl:pb-0">
             <button v-for="item in viewOptions" :key="item.value" type="button" :class="filterButtonClass(view === item.value)" :disabled="pending" @click="setView(item.value)">
               {{ item.label }}
@@ -65,18 +65,18 @@
           {{ errorMessage }}
         </div>
 
-        <div v-if="pending && requests.length === 0" class="divide-y divide-slate-100 dark:divide-slate-800">
-          <div v-for="index in 6" :key="index" class="h-16 animate-pulse bg-slate-50/70 dark:bg-slate-950/40" />
+        <div v-if="pending && requests.length === 0" class="divide-y divide-neutral-100 dark:divide-neutral-800">
+          <div v-for="index in 6" :key="index" class="h-16 animate-pulse bg-neutral-50/70 dark:bg-neutral-950/40" />
         </div>
 
         <div v-else-if="requests.length === 0" class="px-4 py-16 text-center">
-          <UIcon name="i-lucide-inbox" class="mx-auto size-9 text-slate-300 dark:text-slate-600" />
-          <h2 class="mt-3 text-sm font-semibold text-slate-950 dark:text-white">{{ $t('catalog.requests.empty.title') }}</h2>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $t('catalog.requests.empty.description') }}</p>
+          <UIcon name="i-lucide-inbox" class="mx-auto size-9 text-neutral-300 dark:text-neutral-600" />
+          <h2 class="mt-3 text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('catalog.requests.empty.title') }}</h2>
+          <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('catalog.requests.empty.description') }}</p>
         </div>
 
         <div v-else>
-          <div class="hidden grid-cols-[minmax(280px,1fr)_120px_130px_140px_180px_170px] items-center gap-4 border-b border-slate-200 bg-slate-50/70 px-4 py-2 text-xs font-medium text-slate-500 xl:grid dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-400">
+          <div class="hidden grid-cols-[minmax(280px,1fr)_120px_130px_140px_180px_170px] items-center gap-4 border-b border-neutral-200 bg-neutral-50/70 px-4 py-2 text-xs font-medium text-neutral-500 xl:grid dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-400">
             <span>{{ $t('catalog.requests.fields.title') }}</span>
             <span class="text-center">{{ $t('catalog.requests.fields.status') }}</span>
             <span class="text-center">{{ $t('catalog.requests.fields.reward') }}</span>
@@ -85,32 +85,32 @@
             <span class="text-right">{{ $t('catalog.requests.fields.claimer') }}</span>
           </div>
 
-          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+          <div class="divide-y divide-neutral-100 dark:divide-neutral-800">
             <NuxtLink
               v-for="item in requests"
               :key="item.id"
               :to="localePath(`/catalog/requests/${item.id}`)"
-              class="group grid gap-2 px-4 py-2.5 outline-none transition-colors hover:bg-slate-50/70 focus-visible:bg-sky-50/70 xl:grid-cols-[minmax(280px,1fr)_120px_130px_140px_180px_170px] xl:items-center xl:gap-4 dark:hover:bg-slate-950/50 dark:focus-visible:bg-sky-950/30"
+              class="group grid gap-2 px-4 py-2.5 outline-none transition-colors hover:bg-neutral-50/70 focus-visible:bg-primary-50/70 xl:grid-cols-[minmax(280px,1fr)_120px_130px_140px_180px_170px] xl:items-center xl:gap-4 dark:hover:bg-neutral-950/50 dark:focus-visible:bg-primary-950/30"
             >
               <div class="min-w-0">
                 <div class="flex min-w-0 items-center gap-2">
                   <UBadge :color="item.requestType === CatalogRequestType.Reseed ? 'warning' : 'primary'" variant="soft" size="sm">
                     {{ requestTypeLabel(item.requestType) }}
                   </UBadge>
-                  <span class="min-w-0 flex-1 truncate text-sm font-semibold text-slate-950 transition-colors group-hover:text-sky-600 dark:text-white dark:group-hover:text-sky-400">
+                  <span class="min-w-0 flex-1 truncate text-sm font-semibold text-neutral-950 transition-colors group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400">
                     {{ item.title }}
                   </span>
                 </div>
               </div>
 
-              <div class="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-slate-100 pt-2 xl:contents dark:border-slate-800">
+              <div class="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-neutral-100 pt-2 xl:contents dark:border-neutral-800">
                 <div class="flex items-center justify-between xl:justify-center">
-                  <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.status') }}</span>
+                  <span class="text-xs text-neutral-500 xl:hidden dark:text-neutral-400">{{ $t('catalog.requests.fields.status') }}</span>
                   <UBadge :color="requestStatusColor(item.status)" variant="soft" size="sm">{{ requestStatusLabel(item.status) }}</UBadge>
                 </div>
 
                 <div class="flex items-center justify-between xl:flex xl:justify-center">
-                  <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.reward') }}</span>
+                  <span class="text-xs text-neutral-500 xl:hidden dark:text-neutral-400">{{ $t('catalog.requests.fields.reward') }}</span>
                   <span class="inline-flex items-center gap-1 text-sm font-semibold text-amber-600 dark:text-amber-400">
                     <UIcon name="i-lucide-coins" class="size-4" />
                     {{ numberFormatter.format(item.rewardAmount) }}
@@ -118,21 +118,21 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-2 xl:justify-start">
-                  <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.publishedAt') }}</span>
+                  <span class="text-xs text-neutral-500 xl:hidden dark:text-neutral-400">{{ $t('catalog.requests.fields.publishedAt') }}</span>
                   <UTooltip :text="formatDateTime(item.createdAt, locale)" :delay-duration="600">
-                    <span class="text-sm text-slate-600 dark:text-slate-300">{{ formatRelativeDateTime(item.createdAt, locale) }}</span>
+                    <span class="text-sm text-neutral-600 dark:text-neutral-300">{{ formatRelativeDateTime(item.createdAt, locale) }}</span>
                   </UTooltip>
                 </div>
 
                 <div class="flex min-w-0 items-center justify-between gap-2 xl:justify-start">
-                  <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.publisher') }}</span>
-                  <IamUserPopover :user="item.requester" show-avatar avatar-size="xs" class="truncate text-sm text-slate-700 dark:text-slate-200" />
+                  <span class="text-xs text-neutral-500 xl:hidden dark:text-neutral-400">{{ $t('catalog.requests.fields.publisher') }}</span>
+                  <IamUserPopover :user="item.requester" show-avatar avatar-size="xs" class="truncate text-sm text-neutral-700 dark:text-neutral-200" />
                 </div>
 
                 <div class="col-span-2 flex min-w-0 items-center justify-between gap-2 xl:col-span-1 xl:justify-end">
-                  <span class="text-xs text-slate-500 xl:hidden dark:text-slate-400">{{ $t('catalog.requests.fields.claimer') }}</span>
-                  <IamUserPopover v-if="item.claimer" :user="item.claimer" show-avatar avatar-size="xs" class="truncate text-sm text-slate-700 dark:text-slate-200" />
-                  <span v-else class="text-sm text-slate-400">{{ $t('catalog.requests.list.unclaimed') }}</span>
+                  <span class="text-xs text-neutral-500 xl:hidden dark:text-neutral-400">{{ $t('catalog.requests.fields.claimer') }}</span>
+                  <IamUserPopover v-if="item.claimer" :user="item.claimer" show-avatar avatar-size="xs" class="truncate text-sm text-neutral-700 dark:text-neutral-200" />
+                  <span v-else class="text-sm text-neutral-400">{{ $t('catalog.requests.list.unclaimed') }}</span>
                 </div>
               </div>
             </NuxtLink>
@@ -312,8 +312,8 @@ function filterButtonClass(active: boolean) {
   return [
     'h-8 shrink-0 rounded-md border px-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60',
     active
-      ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
-      : 'border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-950'
+      ? 'app-selected border-primary/30'
+      : 'border-neutral-200 text-neutral-600 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-950'
   ]
 }
 </script>

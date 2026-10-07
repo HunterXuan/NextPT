@@ -1,32 +1,32 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="pending" class="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
-        <div v-for="index in 6" :key="index" class="h-52 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+        <div v-for="index in 6" :key="index" class="h-52 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
       </div>
       <div v-else-if="errorMessage" class="border-y border-red-200 bg-red-50 px-4 py-10 text-center text-sm text-red-700 dark:border-red-950 dark:bg-red-950/30 dark:text-red-200">{{ errorMessage }}</div>
-      <div v-else-if="tasks.length === 0" class="flex items-center justify-center gap-2 border-y border-slate-200 px-4 py-10 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
-        <UIcon name="i-lucide-clipboard-list" class="size-4 text-slate-400 dark:text-slate-500" />
+      <div v-else-if="tasks.length === 0" class="flex items-center justify-center gap-2 border-y border-neutral-200 px-4 py-10 text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+        <UIcon name="i-lucide-clipboard-list" class="size-4 text-neutral-400 dark:text-neutral-500" />
         <p>{{ $t('site.tasks.empty') }}</p>
       </div>
       <div v-else :class="taskCategories.length > 2 ? 'items-start lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-4' : ''">
-        <nav v-if="taskCategories.length > 2" class="mb-4 flex gap-2 overflow-x-auto rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-900 lg:mb-0 lg:block lg:space-y-1 lg:overflow-visible">
+        <nav v-if="taskCategories.length > 2" class="mb-4 flex gap-2 overflow-x-auto rounded-lg border border-neutral-200 bg-white p-1 dark:border-neutral-800 dark:bg-neutral-900 lg:mb-0 lg:block lg:space-y-1 lg:overflow-visible">
           <button
             v-for="category in taskCategories"
             :key="category"
             type="button"
             class="flex min-w-max items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition lg:w-full lg:min-w-0"
             :class="activeCategory === category
-              ? 'bg-slate-100 text-slate-950 dark:bg-slate-800 dark:text-white'
-              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-950 dark:hover:text-white'"
+              ? 'app-selected'
+              : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-300 dark:hover:bg-neutral-950 dark:hover:text-white'"
             :aria-pressed="activeCategory === category"
             @click="activeCategory = category"
           >
             <span
               class="flex size-8 shrink-0 items-center justify-center rounded-md"
               :class="activeCategory === category
-                ? 'bg-white text-slate-950 dark:bg-slate-950 dark:text-white'
-                : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'"
+                ? 'bg-default text-primary'
+                : 'bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400'"
             >
               <UIcon :name="categoryIcon(category)" class="size-4" />
             </span>
@@ -35,15 +35,15 @@
         </nav>
 
         <div class="grid items-start gap-3 md:grid-cols-2 2xl:grid-cols-3">
-          <article v-for="task in filteredTasks" :key="task.key" class="rounded-lg border border-slate-200 bg-white p-4 transition-shadow hover:shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <article v-for="task in filteredTasks" :key="task.key" class="rounded-lg border border-neutral-200 bg-white p-4 transition-shadow hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
-                <p class="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">{{ categoryLabel(taskCategory(task)) }}</p>
+                <p class="mb-1 text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ categoryLabel(taskCategory(task)) }}</p>
                 <div class="flex flex-wrap items-center gap-2">
-                  <h2 class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ taskName(task) }}</h2>
+                  <h2 class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ taskName(task) }}</h2>
                   <UBadge :color="statusColor(task)" variant="soft" size="sm">{{ statusLabel(task) }}</UBadge>
                 </div>
-                <p v-if="taskDescription(task)" class="mt-1 line-clamp-2 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ taskDescription(task) }}</p>
+                <p v-if="taskDescription(task)" class="mt-1 line-clamp-2 text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ taskDescription(task) }}</p>
               </div>
               <div class="flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-semibold tabular-nums text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
                 <UIcon name="i-lucide-coins" class="size-3.5" />
@@ -53,16 +53,16 @@
 
             <div v-if="task.userTask" class="mt-4">
               <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs">
-                <span class="font-medium tabular-nums text-slate-700 dark:text-slate-200">{{ progressLabel(task) }}</span>
-                <span v-if="task.userTask.cycleEndedAt" class="text-slate-500 dark:text-slate-400">{{ $t('site.tasks.endsAt', { time: formatDateTime(task.userTask.cycleEndedAt, locale) }) }}</span>
+                <span class="font-medium tabular-nums text-neutral-700 dark:text-neutral-200">{{ progressLabel(task) }}</span>
+                <span v-if="task.userTask.cycleEndedAt" class="text-neutral-500 dark:text-neutral-400">{{ $t('site.tasks.endsAt', { time: formatDateTime(task.userTask.cycleEndedAt, locale) }) }}</span>
               </div>
-              <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+              <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
                 <div class="h-full rounded-full bg-emerald-500 transition-[width]" :style="{ width: `${progressPercent(task)}%` }" />
               </div>
             </div>
-            <div v-else class="mt-4 text-xs text-slate-500 dark:text-slate-400">{{ taskRuleLabel(task) }}</div>
+            <div v-else class="mt-4 text-xs text-neutral-500 dark:text-neutral-400">{{ taskRuleLabel(task) }}</div>
 
-            <div v-if="!task.userTask || task.userTask.status === 1" class="mt-4 flex justify-end border-t border-slate-100 pt-3 dark:border-slate-800">
+            <div v-if="!task.userTask || task.userTask.status === 1" class="mt-4 flex justify-end border-t border-neutral-100 pt-3 dark:border-neutral-800">
               <UButton v-if="!task.userTask" color="primary" variant="soft" size="sm" icon="i-lucide-hand" :loading="workingKey === task.key" :disabled="!task.enabled || workingKey !== ''" @click="claim(task)">{{ $t('site.tasks.claim') }}</UButton>
               <UButton v-else color="success" variant="soft" size="sm" icon="i-lucide-gift" :loading="workingKey === task.key" :disabled="workingKey !== ''" @click="claimReward(task)">{{ $t('site.tasks.claimReward') }}</UButton>
             </div>

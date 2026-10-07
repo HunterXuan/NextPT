@@ -27,14 +27,14 @@
     <template #content>
       <div class="flex items-center gap-2">
         <UIcon name="i-lucide-rss" class="size-4 text-orange-500" />
-        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
+        <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">
           {{ $t('catalog.torrents.rss.title') }}
         </h2>
       </div>
 
       <div class="mt-4 grid items-end gap-3" :class="props.promotion === 'all' ? 'grid-cols-[minmax(0,1fr)_116px]' : 'grid-cols-1'">
-        <div v-if="props.promotion === 'all'" class="flex h-9 items-center justify-between rounded-md border border-slate-200 px-3 dark:border-slate-700">
-          <span class="text-sm text-slate-700 dark:text-slate-200">{{ $t('catalog.torrents.rss.promotionOnly') }}</span>
+        <div v-if="props.promotion === 'all'" class="flex h-9 items-center justify-between rounded-md border border-neutral-200 px-3 dark:border-neutral-700">
+          <span class="text-sm text-neutral-700 dark:text-neutral-200">{{ $t('catalog.torrents.rss.promotionOnly') }}</span>
           <USwitch v-model="promotionOnly" size="sm" />
         </div>
         <UFormField :label="$t('catalog.torrents.rss.size')">
@@ -48,14 +48,14 @@
       </div>
 
       <div class="mt-4">
-        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400">
           {{ $t('catalog.torrents.rss.url') }}
         </p>
         <div class="mt-1.5 flex items-center gap-1.5">
           <input
             :value="rssUrl"
             readonly
-            class="h-9 min-w-0 flex-1 truncate rounded-md border border-slate-200 bg-slate-50 px-2.5 font-mono text-xs text-slate-700 outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300"
+            class="h-9 min-w-0 flex-1 truncate rounded-md border border-neutral-200 bg-neutral-50 px-2.5 font-mono text-xs text-neutral-700 outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300"
             @focus="selectInput"
           >
           <UTooltip :text="$t('common.copy')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="120">

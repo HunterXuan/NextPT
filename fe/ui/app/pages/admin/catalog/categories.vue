@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div class="grid gap-4 xl:grid-cols-[minmax(660px,800px)_minmax(560px,1fr)] 2xl:grid-cols-[minmax(700px,840px)_minmax(600px,1fr)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div class="flex items-center gap-2">
-                <UIcon name="i-lucide-tags" class="size-5 text-sky-600 dark:text-sky-300" />
-                <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.categories.list') }}</h2>
+                <UIcon name="i-lucide-tags" class="size-5 text-primary-600 dark:text-primary-300" />
+                <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.catalog.categories.list') }}</h2>
               </div>
               <div class="flex flex-wrap items-center gap-2 text-xs">
-                <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-slate-100 px-2.5 font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-neutral-100 px-2.5 font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
                   <span>{{ $t('admin.catalog.categories.stats.total') }}</span>
-                  <span class="font-semibold text-slate-950 dark:text-white">{{ numberFormatter.format(categories.length) }}</span>
+                  <span class="font-semibold text-neutral-950 dark:text-white">{{ numberFormatter.format(categories.length) }}</span>
                 </span>
                 <span class="inline-flex h-7 items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 font-medium text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
                   <span>{{ $t('admin.catalog.categories.stats.enabled') }}</span>
@@ -28,36 +28,36 @@
 
           <div v-if="pending" class="overflow-x-auto">
             <table class="min-w-[760px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[27%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.name') }}</th>
-                  <th class="w-[18%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.slug') }}</th>
-                  <th class="w-[18%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.rule') }}</th>
-                  <th class="w-[10%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.catalog.categories.table.sort') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.status') }}</th>
-                  <th class="w-[15%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.catalog.categories.table.actions') }}</th>
+                  <th class="w-[27%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.name') }}</th>
+                  <th class="w-[18%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.slug') }}</th>
+                  <th class="w-[18%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.rule') }}</th>
+                  <th class="w-[10%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.catalog.categories.table.sort') }}</th>
+                  <th class="w-[12%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.status') }}</th>
+                  <th class="w-[15%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.catalog.categories.table.actions') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="index in 5" :key="index" class="border-b border-slate-200 last:border-b-0 dark:border-slate-800">
+                <tr v-for="index in 5" :key="index" class="border-b border-neutral-200 last:border-b-0 dark:border-neutral-800">
                   <td class="px-3 py-3">
-                    <div class="h-4 w-48 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-                    <div class="mt-2 h-3 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="h-4 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+                    <div class="mt-2 h-3 w-28 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
                   <td class="px-3 py-3">
-                    <div class="h-4 w-24 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="h-4 w-24 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
                   <td class="px-3 py-3">
-                    <div class="h-5 w-24 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="h-5 w-24 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
                   <td class="px-3 py-3">
-                    <div class="ml-auto h-4 w-12 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="ml-auto h-4 w-12 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
                   <td class="px-3 py-3">
-                    <div class="h-4 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="h-4 w-16 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
                   <td class="px-3 py-3">
-                    <div class="ml-auto h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" />
+                    <div class="ml-auto h-4 w-28 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" />
                   </td>
                 </tr>
               </tbody>
@@ -66,45 +66,45 @@
 
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
           </div>
 
           <div v-else-if="categories.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.catalog.categories.empty') }}</p>
+            <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.catalog.categories.empty') }}</p>
           </div>
 
           <div v-else class="overflow-x-auto">
             <table class="min-w-[760px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[27%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.name') }}</th>
-                  <th class="w-[18%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.slug') }}</th>
-                  <th class="w-[18%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.rule') }}</th>
-                  <th class="w-[10%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.catalog.categories.table.sort') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.catalog.categories.table.status') }}</th>
-                  <th class="w-[15%] border-b border-slate-200 px-3 py-2.5 text-right dark:border-slate-800">{{ $t('admin.catalog.categories.table.actions') }}</th>
+                  <th class="w-[27%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.name') }}</th>
+                  <th class="w-[18%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.slug') }}</th>
+                  <th class="w-[18%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.rule') }}</th>
+                  <th class="w-[10%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.catalog.categories.table.sort') }}</th>
+                  <th class="w-[12%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.catalog.categories.table.status') }}</th>
+                  <th class="w-[15%] border-b border-neutral-200 px-3 py-2.5 text-right dark:border-neutral-800">{{ $t('admin.catalog.categories.table.actions') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="category in categories"
                   :key="category.id"
-                  class="border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
-                  :class="selectedId === category.id ? 'bg-sky-50/70 dark:bg-sky-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+                  class="border-b border-neutral-200 transition-colors last:border-b-0 dark:border-neutral-800"
+                  :class="selectedId === category.id ? 'bg-primary-50/70 dark:bg-primary-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
                 >
                   <td class="px-3 py-2.5 align-middle">
                     <button class="block max-w-full text-left" type="button" @click="selectCategory(category)">
-                      <span class="block truncate text-sm font-semibold text-slate-950 hover:text-sky-700 dark:text-white dark:hover:text-sky-300">
+                      <span class="block truncate text-sm font-semibold text-neutral-950 hover:text-primary-700 dark:text-white dark:hover:text-primary-300">
                         {{ categoryDisplayName(category) }}
                       </span>
-                      <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">
+                      <span class="mt-1 block truncate text-xs text-neutral-500 dark:text-neutral-400">
                         {{ formatDateTime(category.updatedAt || category.createdAt, locale) }}
                       </span>
                     </button>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
-                    <code class="block truncate text-xs text-slate-600 dark:text-slate-300">
+                    <code class="block truncate text-xs text-neutral-600 dark:text-neutral-300">
                       {{ category.slug }}
                     </code>
                   </td>
@@ -113,7 +113,7 @@
                       {{ uploadRuleLabel(category) }}
                     </UBadge>
                   </td>
-                  <td class="px-3 py-2.5 text-right align-middle text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-3 py-2.5 text-right align-middle text-sm text-neutral-600 dark:text-neutral-300">
                     {{ numberFormatter.format(category.sortOrder) }}
                   </td>
                   <td class="px-3 py-2.5 align-middle">
@@ -153,10 +153,10 @@
 
                         <template #content="{ close }">
                           <div class="space-y-3">
-                            <p class="text-sm font-medium text-slate-950 dark:text-white">
+                            <p class="text-sm font-medium text-neutral-950 dark:text-white">
                               {{ $t('admin.actions.confirmDeleteTitle') }}
                             </p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
                               {{ $t('admin.actions.deleteIrreversible') }}
                             </p>
                             <div class="flex justify-end gap-2">
@@ -178,10 +178,10 @@
           </div>
         </section>
 
-        <section class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex items-center justify-between gap-3">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">
                 {{ selectedId ? $t('admin.catalog.categories.form.edit') : $t('admin.catalog.categories.form.create') }}
               </h2>
               <div class="flex h-8 min-w-20 items-center justify-end">
@@ -194,21 +194,21 @@
 
           <form class="space-y-5 p-4" @submit.prevent="saveCategory">
             <div>
-              <div class="flex items-center justify-between gap-3 border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.categories.form.name') }}</span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">
+              <div class="flex items-center justify-between gap-3 border-b border-neutral-200 pb-2 dark:border-neutral-800">
+                <span class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.catalog.categories.form.name') }}</span>
+                <span class="text-xs text-neutral-500 dark:text-neutral-400">
                   {{ $t('admin.catalog.categories.form.primaryLocale', { locale: primaryLocaleLabel }) }}
                 </span>
               </div>
               <div class="mt-3 grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
                 <label v-for="item in localeOptions" :key="item.code" class="block">
-                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <span class="flex items-center justify-between gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
                     <span>{{ item.name }}</span>
-                    <span class="text-xs font-normal text-slate-400 dark:text-slate-500">{{ item.code }}</span>
+                    <span class="text-xs font-normal text-neutral-400 dark:text-neutral-500">{{ item.code }}</span>
                   </span>
                   <input
                     v-model="form.names[item.code]"
-                    class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                    class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950"
                     :disabled="saving"
                   >
                 </label>
@@ -217,24 +217,24 @@
 
             <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_120px_112px] sm:items-end">
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.catalog.categories.form.slug') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.catalog.categories.form.slug') }}</span>
                 <input
                   v-model="form.slug"
-                  class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950"
                   :disabled="saving"
                 >
               </label>
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.catalog.categories.form.sortOrder') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.catalog.categories.form.sortOrder') }}</span>
                 <input
                   v-model.number="form.sortOrder"
                   type="number"
-                  class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                  class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950"
                   :disabled="saving"
                 >
               </label>
 
-              <label class="flex h-10 items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200">
+              <label class="flex h-10 items-center justify-between gap-3 rounded-md border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-200">
                 <span>{{ $t('admin.catalog.categories.form.enabled') }}</span>
                 <input
                   v-model="form.enabled"
@@ -242,15 +242,15 @@
                   class="peer sr-only"
                   :disabled="saving"
                 >
-                <span class="relative h-5 w-9 rounded-full bg-slate-200 transition-colors after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:bg-sky-500 peer-checked:after:translate-x-4 peer-disabled:opacity-60 dark:bg-slate-700" />
+                <span class="relative h-5 w-9 rounded-full bg-neutral-200 transition-colors after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:bg-primary-500 peer-checked:after:translate-x-4 peer-disabled:opacity-60 dark:bg-neutral-700" />
               </label>
             </div>
 
-            <div class="border-t border-slate-200 pt-4 dark:border-slate-800">
+            <div class="border-t border-neutral-200 pt-4 dark:border-neutral-800">
               <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.categories.form.uploadRule') }}</h3>
-                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.catalog.categories.form.uploadRuleDescription') }}</p>
+                  <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.catalog.categories.form.uploadRule') }}</h3>
+                  <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.catalog.categories.form.uploadRuleDescription') }}</p>
                 </div>
                 <div class="flex shrink-0 flex-wrap items-center gap-2">
                   <UButton type="button" color="neutral" variant="soft" size="xs" icon="i-lucide-eraser" :disabled="saving || !form.uploadConfigText.trim()" @click="clearUploadConfig">
@@ -266,10 +266,10 @@
                 <div
                   v-for="item in uploadConfigSummaryItems"
                   :key="item.key"
-                  class="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950/50"
+                  class="rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-950/50"
                 >
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ item.label }}</p>
-                  <p class="mt-1 truncate text-sm font-semibold text-slate-950 dark:text-white">{{ item.value }}</p>
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ item.label }}</p>
+                  <p class="mt-1 truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ item.value }}</p>
                 </div>
               </div>
 
@@ -297,7 +297,7 @@
               {{ formError }}
             </p>
 
-            <div class="flex flex-col gap-2 border-t border-slate-200 pt-4 sm:flex-row sm:justify-end dark:border-slate-800">
+            <div class="flex flex-col gap-2 border-t border-neutral-200 pt-4 sm:flex-row sm:justify-end dark:border-neutral-800">
               <UButton type="button" color="neutral" variant="outline" icon="i-lucide-rotate-ccw" :disabled="saving || !isFormDirty" @click="resetFormChanges">
                 {{ selectedId ? $t('admin.actions.discardChanges') : $t('admin.actions.reset') }}
               </UButton>

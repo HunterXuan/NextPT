@@ -1,24 +1,24 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-          <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.site.audits.list') }}</h2>
+      <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+          <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.site.audits.list') }}</h2>
           <form class="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-[130px_150px_170px_120px_minmax(280px,320px)_auto] xl:items-center" @submit.prevent="applyFilters">
             <USelect v-model="filters.level" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="levelOptions" value-key="value" :aria-label="$t('admin.site.audits.filters.level')" />
             <USelect v-model="filters.action" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="actionOptions" value-key="value" :aria-label="$t('admin.site.audits.filters.action')" />
             <USelect v-model="filters.targetType" class="w-full" size="lg" :ui="{ base: 'h-9 w-full' }" :items="targetTypeOptions" value-key="value" :aria-label="$t('admin.site.audits.filters.targetType')" />
-            <input v-model.trim="filters.userId" inputmode="numeric" class="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus:border-sky-700" :placeholder="$t('admin.site.audits.filters.userIdPlaceholder')" :aria-label="$t('admin.site.audits.filters.userId')">
-            <div class="flex h-9 min-w-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-sky-300 dark:border-slate-700 dark:bg-slate-950 dark:focus-within:border-sky-700" :aria-label="`${$t('admin.site.audits.filters.startAt')} / ${$t('admin.site.audits.filters.endAt')}`" role="group">
+            <input v-model.trim="filters.userId" inputmode="numeric" class="h-9 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm outline-none transition focus:border-primary-300 dark:border-neutral-700 dark:bg-neutral-950 dark:focus:border-primary-700" :placeholder="$t('admin.site.audits.filters.userIdPlaceholder')" :aria-label="$t('admin.site.audits.filters.userId')">
+            <div class="flex h-9 min-w-0 items-center overflow-hidden rounded-md border border-neutral-200 bg-white transition focus-within:border-primary-300 dark:border-neutral-700 dark:bg-neutral-950 dark:focus-within:border-primary-700" :aria-label="`${$t('admin.site.audits.filters.startAt')} / ${$t('admin.site.audits.filters.endAt')}`" role="group">
               <input v-model="filters.startAt" type="date" class="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none [color-scheme:light] dark:[color-scheme:dark]" :aria-label="$t('admin.site.audits.filters.startAt')">
-              <span class="h-4 w-px shrink-0 bg-slate-200 dark:bg-slate-700" />
+              <span class="h-4 w-px shrink-0 bg-neutral-200 dark:bg-neutral-700" />
               <input v-model="filters.endAt" type="date" class="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none [color-scheme:light] dark:[color-scheme:dark]" :aria-label="$t('admin.site.audits.filters.endAt')">
             </div>
             <div class="flex items-center gap-2">
-              <button type="submit" class="inline-flex h-9 items-center justify-center rounded-md bg-slate-950 px-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200" :disabled="pending">
+              <button type="submit" class="inline-flex h-9 items-center justify-center rounded-md bg-neutral-950 px-3 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200" :disabled="pending">
                 {{ $t('admin.site.audits.filters.apply') }}
               </button>
-              <button type="button" class="inline-flex h-9 items-center justify-center rounded-md border border-slate-200 px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800" :disabled="pending || !hasFilters" @click="clearFilters">
+              <button type="button" class="inline-flex h-9 items-center justify-center rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-600 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800" :disabled="pending || !hasFilters" @click="clearFilters">
                 {{ $t('common.clear') }}
               </button>
             </div>
@@ -26,82 +26,82 @@
         </div>
 
         <div v-if="pending" class="space-y-2 p-4">
-          <div v-for="item in 8" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+          <div v-for="item in 8" :key="item" class="h-16 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
         </div>
 
         <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
           <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
         </div>
 
         <div v-else-if="audits.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-          <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.site.audits.empty') }}</p>
+          <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+          <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.audits.empty') }}</p>
         </div>
 
         <div v-else class="overflow-x-auto">
           <table class="min-w-[940px] w-full table-fixed border-collapse text-left">
-            <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+            <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
               <tr>
-                <th class="w-[32%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.audits.table.event') }}</th>
-                <th class="w-[17%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.audits.table.user') }}</th>
-                <th class="w-[29%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.audits.table.detail') }}</th>
-                <th class="w-[10%] border-b border-slate-200 px-4 py-3 dark:border-slate-800">{{ $t('admin.site.audits.table.level') }}</th>
-                <th class="w-[12%] border-b border-slate-200 px-4 py-3 text-right dark:border-slate-800">{{ $t('admin.site.audits.table.time') }}</th>
+                <th class="w-[32%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.audits.table.event') }}</th>
+                <th class="w-[17%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.audits.table.user') }}</th>
+                <th class="w-[29%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.audits.table.detail') }}</th>
+                <th class="w-[10%] border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">{{ $t('admin.site.audits.table.level') }}</th>
+                <th class="w-[12%] border-b border-neutral-200 px-4 py-3 text-right dark:border-neutral-800">{{ $t('admin.site.audits.table.time') }}</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in audits" :key="item.id" class="border-b border-slate-200 last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-950/70">
+              <tr v-for="item in audits" :key="item.id" class="border-b border-neutral-200 last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950/70">
                 <td class="px-4 py-3">
                   <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-300">
                       <UIcon :name="auditActionIcon(item.action)" class="size-4" />
                     </span>
                     <div class="min-w-0">
                       <div class="flex min-w-0 items-center gap-2">
-                        <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ auditActionLabel(item.action) }}</p>
+                        <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ auditActionLabel(item.action) }}</p>
                       </div>
-                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                      <p class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">
                         {{ auditTargetLabel(item.targetType) }}<span v-if="item.targetId"> #{{ item.targetId }}</span>
-                        <span class="mx-2 text-slate-300 dark:text-slate-700">/</span>
+                        <span class="mx-2 text-neutral-300 dark:text-neutral-700">/</span>
                         {{ $t('admin.site.audits.recordId', { id: item.id }) }}
                       </p>
                     </div>
                   </div>
                 </td>
-                <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
+                <td class="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
                   <div v-if="item.userId" class="flex min-w-0 items-center gap-2.5">
                     <IamUserAvatar :user="auditActor(item)" size="sm" />
                     <div class="min-w-0">
-                      <IamUserPopover :id="item.userId" :user="auditActor(item)" :fallback="actorDisplayName(item)" class="truncate font-medium text-slate-950 dark:text-white" />
-                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.ip || '-' }}</p>
+                      <IamUserPopover :id="item.userId" :user="auditActor(item)" :fallback="actorDisplayName(item)" class="truncate font-medium text-neutral-950 dark:text-white" />
+                      <p class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.ip || '-' }}</p>
                     </div>
                   </div>
                   <div v-else class="flex min-w-0 items-center gap-2.5">
-                    <span class="flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-slate-100 text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    <span class="flex size-8 shrink-0 items-center justify-center rounded-md border border-neutral-200 bg-neutral-100 text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
                       <UIcon name="i-lucide-cpu" class="size-4" />
                     </span>
                     <div class="min-w-0">
-                      <p class="truncate font-medium text-slate-950 dark:text-white">{{ $t('admin.site.audits.systemUser') }}</p>
-                      <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.ip || '-' }}</p>
+                      <p class="truncate font-medium text-neutral-950 dark:text-white">{{ $t('admin.site.audits.systemUser') }}</p>
+                      <p class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.ip || '-' }}</p>
                     </div>
                   </div>
                 </td>
-                <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
+                <td class="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
                   <div v-if="item.detail" class="flex min-w-0 items-start gap-2">
-                    <button type="button" class="line-clamp-2 min-w-0 flex-1 break-all text-left font-mono text-xs leading-5 text-slate-500 underline-offset-2 transition hover:text-slate-950 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 dark:text-slate-400 dark:hover:text-white dark:focus-visible:ring-sky-700" @click="openDetail(item)">
+                    <button type="button" class="line-clamp-2 min-w-0 flex-1 break-all text-left font-mono text-xs leading-5 text-neutral-500 underline-offset-2 transition hover:text-neutral-950 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 dark:text-neutral-400 dark:hover:text-white dark:focus-visible:ring-primary-700" @click="openDetail(item)">
                       {{ item.detail }}
                     </button>
                     <UTooltip :text="$t('admin.site.audits.viewDetail')" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="300">
                       <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-maximize-2" :aria-label="$t('admin.site.audits.viewDetail')" @click="openDetail(item)" />
                     </UTooltip>
                   </div>
-                  <p v-else class="text-slate-400 dark:text-slate-500">{{ $t('admin.site.audits.emptyDetail') }}</p>
+                  <p v-else class="text-neutral-400 dark:text-neutral-500">{{ $t('admin.site.audits.emptyDetail') }}</p>
                 </td>
                 <td class="px-4 py-3">
                   <UBadge :color="auditLevelColor(item.level)" variant="soft">{{ auditLevelLabel(item.level) }}</UBadge>
                 </td>
-                <td class="px-4 py-3 text-right text-sm text-slate-600 dark:text-slate-300">
+                <td class="px-4 py-3 text-right text-sm text-neutral-600 dark:text-neutral-300">
                   <UTooltip :text="formatDateTime(item.createdAt, locale)" :content="{ side: 'top', sideOffset: 8 }" :delay-duration="600">
                     <span>{{ formatDateTime(item.createdAt, locale) }}</span>
                   </UTooltip>
@@ -112,7 +112,7 @@
         </div>
 
         <AppPager
-          class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+          class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800"
           size="sm"
           :page="query.page"
           :total="total"
@@ -133,24 +133,24 @@
         content: 'sm:max-w-2xl overflow-hidden',
         header: 'min-h-0 px-5 py-4 sm:px-5',
         body: 'p-0 sm:p-0',
-        title: 'text-base font-semibold text-slate-950 dark:text-white',
-        description: 'mt-1 text-sm text-slate-500 dark:text-slate-400',
+        title: 'text-base font-semibold text-neutral-950 dark:text-white',
+        description: 'mt-1 text-sm text-neutral-500 dark:text-neutral-400',
         close: 'top-4 end-4'
       }"
       @update:open="setDetailModalOpen"
     >
       <template #body>
         <div>
-          <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-5 py-2.5 dark:border-slate-800 dark:bg-slate-950/70">
-            <span class="inline-flex h-6 items-center rounded border border-slate-200 bg-white px-2 font-mono text-[11px] font-semibold tracking-wide text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+          <div class="flex items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-2.5 dark:border-neutral-800 dark:bg-neutral-950/70">
+            <span class="inline-flex h-6 items-center rounded border border-neutral-200 bg-white px-2 font-mono text-[11px] font-semibold tracking-wide text-neutral-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
               {{ selectedAuditDetailType }}
             </span>
             <UButton color="neutral" variant="soft" size="xs" icon="i-lucide-copy" :disabled="!selectedAudit?.detail" @click="copyDetail">
               {{ $t('common.copy') }}
             </UButton>
           </div>
-          <div class="max-h-[62vh] overflow-auto bg-slate-950">
-            <pre class="min-h-56 whitespace-pre-wrap break-words px-5 py-4 font-mono text-xs leading-5 text-slate-100 selection:bg-sky-500/30">{{ selectedAuditDetailText }}</pre>
+          <div class="max-h-[62vh] overflow-auto bg-neutral-950">
+            <pre class="min-h-56 whitespace-pre-wrap break-words px-5 py-4 font-mono text-xs leading-5 text-neutral-100 selection:bg-primary-500/30">{{ selectedAuditDetailText }}</pre>
           </div>
         </div>
       </template>

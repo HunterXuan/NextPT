@@ -2,10 +2,10 @@
   <section
     v-if="schemaFields.length > 0"
     id="upload-release-fields"
-    class="rounded-md border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/40"
+    class="rounded-md border border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-950/40"
   >
     <div class="mb-3 flex items-center justify-between gap-3">
-      <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ t('catalog.torrents.upload.sections.release') }}</h3>
+      <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ t('catalog.torrents.upload.sections.release') }}</h3>
       <UBadge color="neutral" variant="soft">{{ selectedCategoryName }}</UBadge>
     </div>
 
@@ -31,22 +31,22 @@
           @update:model-value="setReleaseField(field.key, String($event || ''))"
         />
 
-        <div v-else-if="field.type === 'multiSelect'" class="grid gap-2 rounded-md border border-slate-200 bg-white p-2 sm:grid-cols-2 dark:border-slate-700 dark:bg-slate-950">
+        <div v-else-if="field.type === 'multiSelect'" class="grid gap-2 rounded-md border border-neutral-200 bg-white p-2 sm:grid-cols-2 dark:border-neutral-700 dark:bg-neutral-950">
           <label
             v-for="option in fieldOptions(field)"
             :key="option.value"
-            class="flex min-h-8 cursor-pointer items-center gap-2 rounded px-2 text-sm text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
+            class="flex min-h-8 cursor-pointer items-center gap-2 rounded px-2 text-sm text-neutral-700 transition hover:bg-neutral-50 dark:text-neutral-200 dark:hover:bg-neutral-900"
           >
             <input
               type="checkbox"
-              class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
+              class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
               :checked="releaseFieldListValue(field.key).includes(option.value)"
               :disabled="disabled || optionsPending"
               @change="toggleReleaseFieldOption(field.key, option.value)"
             >
             <span class="min-w-0 truncate">{{ optionLabel(option) }}</span>
           </label>
-          <p v-if="fieldOptions(field).length === 0" class="px-2 py-1 text-sm text-slate-500 dark:text-slate-400">
+          <p v-if="fieldOptions(field).length === 0" class="px-2 py-1 text-sm text-neutral-500 dark:text-neutral-400">
             {{ t('catalog.torrents.upload.fields.noOptions') }}
           </p>
         </div>

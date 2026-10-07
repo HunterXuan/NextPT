@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-950 antialiased dark:bg-slate-950 dark:text-white" style="--app-sticky-top: 7.5rem;">
+  <div class="min-h-screen bg-neutral-50 text-neutral-950 antialiased dark:bg-neutral-950 dark:text-white" style="--app-sticky-top: 7.5rem;">
     <div
       v-if="mobileSidebarOpen"
-      class="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden"
+      class="fixed inset-0 z-40 bg-neutral-950/40 backdrop-blur-sm lg:hidden"
       @click="mobileSidebarOpen = false"
     />
 
     <aside
-      class="fixed inset-y-0 left-0 z-50 hidden border-r border-slate-200 transition-[width] duration-200 lg:block dark:border-slate-800"
+      class="fixed inset-y-0 left-0 z-50 hidden border-r border-neutral-200 transition-[width] duration-200 lg:block dark:border-neutral-800"
       :class="sidebarCollapsed ? 'w-16' : 'w-64'"
     >
       <AppShellSidebar
@@ -22,7 +22,7 @@
     </aside>
 
     <aside
-      class="fixed inset-y-0 left-0 z-50 w-72 max-w-[86vw] border-r border-slate-200 shadow-2xl transition-transform duration-200 lg:hidden dark:border-slate-800"
+      class="fixed inset-y-0 left-0 z-50 w-72 max-w-[86vw] border-r border-neutral-200 shadow-2xl transition-transform duration-200 lg:hidden dark:border-neutral-800"
       :class="mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     >
       <AppShellSidebar
@@ -38,7 +38,7 @@
     </aside>
 
     <div class="min-w-0 transition-[padding-left] duration-200" :class="sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-64'">
-      <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/88 backdrop-blur dark:border-slate-800 dark:bg-slate-950/88">
+      <header class="sticky top-0 z-30 border-b border-neutral-200 bg-white/88 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/88">
         <div class="flex h-16 items-center justify-between gap-3 px-3 sm:px-4 lg:px-5">
           <div class="flex min-w-0 items-center gap-3">
             <UButton
@@ -47,7 +47,7 @@
               variant="ghost"
               icon="i-lucide-menu"
               :aria-label="activeItemLabel"
-              @click="mobileSidebarOpen = true"
+              @click="() => { mobileSidebarOpen = true }"
             />
             <UButton
               class="hidden lg:inline-flex"
@@ -59,7 +59,7 @@
               @click="toggleSidebar"
             />
             <div class="min-w-0">
-              <p class="truncate text-sm font-semibold text-slate-950 dark:text-white">{{ activeItemLabel }}</p>
+              <p class="truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ activeItemLabel }}</p>
             </div>
           </div>
 
@@ -90,7 +90,7 @@
                 variant="ghost"
                 icon="i-lucide-message-circle-more"
                 :aria-label="$t('site.chat.title')"
-                @click="chatOpen = true"
+                @click="() => { chatOpen = true }"
               />
             </UTooltip>
 
@@ -388,7 +388,8 @@ function routeSpecificTitle(path: string) {
   return ''
 }
 const routeSpecificLabel = computed(() => routeSpecificTitle(currentAppPath.value))
-const activeItemLabel = computed(() => routeSpecificLabel.value || activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : t('common.brand')))
+const { siteName } = useSiteBranding()
+const activeItemLabel = computed(() => routeSpecificLabel.value || activeItem.value?.label || (props.mode === 'admin' ? t('nav.admin') : siteName.value))
 
 function resolveTabTitle(to: string) {
   const path = appPath(to.split(/[?#]/, 1)[0] || '/')
@@ -443,7 +444,7 @@ const userMenuItems = computed<DropdownMenuItem[][]>(() => {
 })
 
 async function handleLanguageSwitch(code: string) {
-  const supportedCodes = (locales.value as any[]).map((item) => item.code).filter(Boolean)
+  const supportedCodes = locales.value.map((item) => item.code)
   const normalized = normalizeLocaleCode(code, supportedCodes, supportedCodes[0] || locale.value)
   if (locale.value === normalized) return
   await setLocale(normalized)

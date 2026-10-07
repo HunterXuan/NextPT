@@ -2,46 +2,46 @@
   <UCard class="rounded-lg">
     <template #header>
       <div>
-        <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('user.bonusLogs.title') }}</h2>
+        <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           {{ $t('user.bonusLogs.description') }}
         </p>
       </div>
     </template>
 
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/50">
+      <div class="rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950/50">
         <div class="flex items-center justify-between gap-3">
-          <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.balance') }}</p>
-          <UIcon name="i-lucide-wallet-cards" class="size-4 text-slate-400" />
+          <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('user.bonusLogs.balance') }}</p>
+          <UIcon name="i-lucide-wallet-cards" class="size-4 text-neutral-400" />
         </div>
-        <p class="mt-1.5 text-xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ formatBonus(user?.stat.bonus || 0) }}</p>
+        <p class="mt-1.5 text-xl font-semibold tabular-nums text-neutral-950 dark:text-white">{{ formatBonus(user?.stat.bonus || 0) }}</p>
       </div>
-      <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/50">
+      <div class="rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950/50">
         <div class="flex items-center justify-between gap-3">
           <div class="flex items-center gap-1.5">
-            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.hourly') }}</p>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('user.bonusLogs.hourly') }}</p>
             <UPopover :content="{ side: 'top', align: 'start', sideOffset: 8 }" :ui="{ content: 'w-80 p-4' }">
               <UButton
                 color="neutral"
                 variant="ghost"
                 size="xs"
                 icon="i-lucide-info"
-                class="size-6 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                class="size-6 rounded-full text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
                 :aria-label="$t('user.bonusLogs.formula.title')"
               />
               <template #content>
                 <div class="space-y-3 text-sm">
                   <div>
-                    <p class="font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.formula.title') }}</p>
-                    <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.formula.description') }}</p>
+                    <p class="font-semibold text-neutral-950 dark:text-white">{{ $t('user.bonusLogs.formula.title') }}</p>
+                    <p class="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">{{ $t('user.bonusLogs.formula.description') }}</p>
                   </div>
-                  <div class="space-y-2 rounded-md bg-slate-50 p-3 font-mono text-xs leading-5 text-slate-700 dark:bg-slate-950 dark:text-slate-200">
+                  <div class="space-y-2 rounded-md bg-neutral-50 p-3 font-mono text-xs leading-5 text-neutral-700 dark:bg-neutral-950 dark:text-neutral-200">
                     <p>{{ $t('user.bonusLogs.formula.score') }}</p>
                     <p>{{ $t('user.bonusLogs.formula.volume') }}</p>
                     <p>{{ $t('user.bonusLogs.formula.total') }}</p>
                   </div>
-                  <ul class="space-y-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                  <ul class="space-y-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">
                     <li>{{ $t('user.bonusLogs.formula.variables.size') }}</li>
                     <li>{{ $t('user.bonusLogs.formula.variables.age') }}</li>
                     <li>{{ $t('user.bonusLogs.formula.variables.seeders') }}</li>
@@ -51,16 +51,16 @@
               </template>
             </UPopover>
           </div>
-          <UIcon name="i-lucide-clock-3" class="size-4 text-slate-400" />
+          <UIcon name="i-lucide-clock-3" class="size-4 text-neutral-400" />
         </div>
-        <p class="mt-1.5 text-xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ formatBonus(hourlyBonus) }}</p>
+        <p class="mt-1.5 text-xl font-semibold tabular-nums text-neutral-950 dark:text-white">{{ formatBonus(hourlyBonus) }}</p>
       </div>
     </div>
 
-    <div class="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
+    <div class="mt-5 border-t border-neutral-200 pt-4 dark:border-neutral-800">
       <div class="flex items-center justify-between gap-3">
         <div>
-          <h3 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.bonusLogs.detailTitle') }}</h3>
+          <h3 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('user.bonusLogs.detailTitle') }}</h3>
         </div>
       </div>
 
@@ -69,21 +69,21 @@
         <p class="mt-3 text-sm font-medium text-red-700 dark:text-red-200">{{ bonusLogsError }}</p>
       </div>
       <div v-else-if="bonusLogsPending && bonusLogs.length === 0" class="mt-4 space-y-3">
-        <div v-for="item in 6" :key="item" class="h-14 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+        <div v-for="item in 6" :key="item" class="h-14 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
       </div>
-      <div v-else-if="bonusLogs.length === 0" class="mt-4 rounded-md border border-dashed border-slate-200 px-4 py-12 text-center dark:border-slate-800">
-        <UIcon name="i-lucide-coins" class="mx-auto size-8 text-slate-400" />
-        <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.empty') }}</p>
+      <div v-else-if="bonusLogs.length === 0" class="mt-4 rounded-md border border-dashed border-neutral-200 px-4 py-12 text-center dark:border-neutral-800">
+        <UIcon name="i-lucide-coins" class="mx-auto size-8 text-neutral-400" />
+        <p class="mt-3 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('user.bonusLogs.empty') }}</p>
       </div>
-      <div v-else class="mt-2 divide-y divide-slate-100 dark:divide-slate-800">
+      <div v-else class="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
         <article v-for="log in bonusLogs" :key="log.id" class="grid gap-3 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
           <div class="flex min-w-0 items-center gap-3">
             <div class="flex size-8 shrink-0 items-center justify-center rounded-md" :class="bonusActionIconClass(log)">
               <UIcon :name="bonusActionIcon(log.action)" class="size-4" />
             </div>
             <div class="min-w-0">
-              <p class="truncate font-medium text-slate-950 dark:text-white">{{ bonusActionLabel(log) }}</p>
-              <p v-if="bonusLogDescription(log)" class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+              <p class="truncate font-medium text-neutral-950 dark:text-white">{{ bonusActionLabel(log) }}</p>
+              <p v-if="bonusLogDescription(log)" class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">
                 {{ bonusLogDescription(log) }}
               </p>
             </div>
@@ -95,20 +95,20 @@
             >
               {{ log.amount >= 0 ? '+' : '' }}{{ formatBonus(log.amount) }}
             </p>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('user.bonusLogs.after', { balance: formatBonus(log.balanceAfter) }) }}</p>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('user.bonusLogs.after', { balance: formatBonus(log.balanceAfter) }) }}</p>
             <UTooltip
               :text="formatDateTime(log.createdAt, locale)"
               :content="{ side: 'top', sideOffset: 8 }"
               :delay-duration="120"
             >
-              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ formatDateOnly(log.createdAt, locale) }}</p>
+              <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ formatDateOnly(log.createdAt, locale) }}</p>
             </UTooltip>
           </div>
         </article>
       </div>
 
       <AppPager
-        class="mt-4 border-t border-slate-200 pt-4 dark:border-slate-800"
+        class="mt-4 border-t border-neutral-200 pt-4 dark:border-neutral-800"
         size="sm"
         :page="bonusLogPage"
         :total="bonusLogTotal"

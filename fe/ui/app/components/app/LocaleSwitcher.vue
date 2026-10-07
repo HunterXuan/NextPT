@@ -15,14 +15,14 @@ import { normalizeLocaleCode } from '~/utils/locale'
 const { locale, locales, setLocale } = useI18n()
 
 const languageItems = computed(() => [
-  (locales.value as any[]).map((item) => ({
+  locales.value.map((item) => ({
     label: item.name,
     onSelect: () => handleLanguageSwitch(item.code)
   }))
 ])
 
 async function handleLanguageSwitch(code: string) {
-  const supportedCodes = (locales.value as any[]).map((item) => item.code).filter(Boolean)
+  const supportedCodes = locales.value.map((item) => item.code)
   const normalized = normalizeLocaleCode(code, supportedCodes, supportedCodes[0] || locale.value)
   if (locale.value === normalized) return
   await setLocale(normalized)

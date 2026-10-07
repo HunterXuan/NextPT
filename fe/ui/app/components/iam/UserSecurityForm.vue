@@ -8,8 +8,8 @@
   >
     <template #header>
       <div>
-        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('user.security.title') }}</h2>
-        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $t('user.security.subtitle') }}</p>
+        <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('user.security.title') }}</h2>
+        <p class="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('user.security.subtitle') }}</p>
       </div>
     </template>
 
@@ -32,7 +32,7 @@
               :icon="showOldPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
               :aria-label="showOldPassword ? $t('common.hidePassword') : $t('common.showPassword')"
               :disabled="passwordPending"
-              @click="showOldPassword = !showOldPassword"
+              @click="() => { showOldPassword = !showOldPassword }"
             />
           </template>
         </UInput>
@@ -57,7 +57,7 @@
                 :icon="showNewPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                 :aria-label="showNewPassword ? $t('common.hidePassword') : $t('common.showPassword')"
                 :disabled="passwordPending"
-                @click="showNewPassword = !showNewPassword"
+                @click="() => { showNewPassword = !showNewPassword }"
               />
             </template>
           </UInput>
@@ -81,7 +81,7 @@
                 :icon="showConfirmPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                 :aria-label="showConfirmPassword ? $t('common.hidePassword') : $t('common.showPassword')"
                 :disabled="passwordPending"
-                @click="showConfirmPassword = !showConfirmPassword"
+                @click="() => { showConfirmPassword = !showConfirmPassword }"
               />
             </template>
           </UInput>

@@ -1,14 +1,14 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
-      <div class="mb-4 rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+      <div class="mb-4 rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
         <form class="flex flex-col gap-2 lg:flex-row lg:items-center" @submit.prevent="submitSearch">
           <div class="relative min-w-0 flex-1">
-            <UIcon name="i-lucide-search" class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <UIcon name="i-lucide-search" class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
             <input
               v-model="searchInput"
               type="search"
-              class="h-10 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+              class="h-10 w-full rounded-md border border-neutral-200 bg-white pl-9 pr-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950"
               :placeholder="$t('admin.iam.users.searchPlaceholder')"
             >
           </div>
@@ -28,32 +28,32 @@
       </div>
 
       <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_clamp(620px,36vw,760px)]">
-        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+        <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-users" class="size-5 text-sky-600 dark:text-sky-300" />
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.list') }}</h2>
+              <UIcon name="i-lucide-users" class="size-5 text-primary-600 dark:text-primary-300" />
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.list') }}</h2>
             </div>
           </div>
 
           <div v-if="pending" class="overflow-x-auto">
             <table class="min-w-[900px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.user') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.role') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.status') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.lastLogin') }}</th>
-                  <th class="w-[16%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.createdAt') }}</th>
+                  <th class="w-[32%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.user') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.role') }}</th>
+                  <th class="w-[12%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.status') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.lastLogin') }}</th>
+                  <th class="w-[16%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.createdAt') }}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="index in 6" :key="index" class="border-b border-slate-200 last:border-b-0 dark:border-slate-800">
-                  <td class="px-3 py-3"><div class="h-4 w-44 animate-pulse rounded bg-slate-200 dark:bg-slate-800" /></td>
-                  <td class="px-3 py-3"><div class="h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="h-4 w-16 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="h-4 w-32 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
-                  <td class="px-3 py-3"><div class="h-4 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-800/70" /></td>
+                <tr v-for="index in 6" :key="index" class="border-b border-neutral-200 last:border-b-0 dark:border-neutral-800">
+                  <td class="px-3 py-3"><div class="h-4 w-44 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-28 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-16 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-32 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
+                  <td class="px-3 py-3"><div class="h-4 w-28 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800/70" /></td>
                 </tr>
               </tbody>
             </table>
@@ -61,31 +61,31 @@
 
           <div v-else-if="errorMessage" class="flex flex-col items-center justify-center px-4 py-16 text-center">
             <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
           </div>
 
           <div v-else-if="users.length === 0" class="flex flex-col items-center justify-center px-4 py-16 text-center">
-            <UIcon name="i-lucide-inbox" class="size-9 text-slate-400" />
-            <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ $t('admin.iam.users.empty') }}</p>
+            <UIcon name="i-lucide-inbox" class="size-9 text-neutral-400" />
+            <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ $t('admin.iam.users.empty') }}</p>
           </div>
 
           <div v-else class="overflow-x-auto">
             <table class="min-w-[900px] w-full table-fixed border-collapse text-left">
-              <thead class="bg-slate-50 text-xs font-medium uppercase text-slate-500 dark:bg-slate-950/70 dark:text-slate-400">
+              <thead class="bg-neutral-50 text-xs font-medium uppercase text-neutral-500 dark:bg-neutral-950/70 dark:text-neutral-400">
                 <tr>
-                  <th class="w-[32%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.user') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.role') }}</th>
-                  <th class="w-[12%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.status') }}</th>
-                  <th class="w-[20%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.lastLogin') }}</th>
-                  <th class="w-[16%] border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">{{ $t('admin.iam.users.table.createdAt') }}</th>
+                  <th class="w-[32%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.user') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.role') }}</th>
+                  <th class="w-[12%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.status') }}</th>
+                  <th class="w-[20%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.lastLogin') }}</th>
+                  <th class="w-[16%] border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">{{ $t('admin.iam.users.table.createdAt') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="item in users"
                   :key="item.id"
-                  class="cursor-pointer border-b border-slate-200 transition-colors last:border-b-0 dark:border-slate-800"
-                  :class="selectedId === item.id ? 'bg-sky-50/70 dark:bg-sky-950/30' : 'hover:bg-slate-50 dark:hover:bg-slate-950/70'"
+                  class="cursor-pointer border-b border-neutral-200 transition-colors last:border-b-0 dark:border-neutral-800"
+                  :class="selectedId === item.id ? 'bg-primary-50/70 dark:bg-primary-950/30' : 'hover:bg-neutral-50 dark:hover:bg-neutral-950/70'"
                   role="button"
                   tabindex="0"
                   @click="selectUser(item)"
@@ -96,13 +96,13 @@
                     <div class="flex min-w-0 items-center gap-3">
                       <IamUserAvatar :id="item.id" :username="item.username" :avatar="item.avatar" size="sm" />
                       <div class="block min-w-0 text-left">
-                        <IamUserPopover :id="item.id" :username="item.username" :avatar="item.avatar" class="block truncate text-sm font-semibold text-slate-950 dark:text-white" />
-                        <span class="mt-1 block truncate text-xs text-slate-500 dark:text-slate-400">#{{ item.id }} · {{ item.email }}</span>
+                        <IamUserPopover :id="item.id" :username="item.username" :avatar="item.avatar" class="block truncate text-sm font-semibold text-neutral-950 dark:text-white" />
+                        <span class="mt-1 block truncate text-xs text-neutral-500 dark:text-neutral-400">#{{ item.id }} · {{ item.email }}</span>
                       </div>
                     </div>
                   </td>
-                  <td class="px-3 py-2.5 align-middle text-sm text-slate-600 dark:text-slate-300">
-                    <span class="inline-flex max-w-full rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                  <td class="px-3 py-2.5 align-middle text-sm text-neutral-600 dark:text-neutral-300">
+                    <span class="inline-flex max-w-full rounded-md bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                       <span class="truncate">{{ roleName(item.role) }}</span>
                     </span>
                   </td>
@@ -110,10 +110,10 @@
                     <UBadge :color="statusColor(item.status)" variant="soft">{{ statusLabel(item.status) }}</UBadge>
                   </td>
                   <td class="px-3 py-2.5 align-middle">
-                    <p class="truncate text-sm text-slate-600 dark:text-slate-300">{{ formatDateTime(item.lastLogin, locale) }}</p>
-                    <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ item.lastIp || '-' }}</p>
+                    <p class="truncate text-sm text-neutral-600 dark:text-neutral-300">{{ formatDateTime(item.lastLogin, locale) }}</p>
+                    <p class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ item.lastIp || '-' }}</p>
                   </td>
-                  <td class="px-3 py-2.5 align-middle text-sm text-slate-600 dark:text-slate-300">
+                  <td class="px-3 py-2.5 align-middle text-sm text-neutral-600 dark:text-neutral-300">
                     {{ formatDateTime(item.createdAt, locale) }}
                   </td>
                 </tr>
@@ -122,7 +122,7 @@
           </div>
 
           <AppPager
-            class="border-t border-slate-200 px-4 py-3 dark:border-slate-800"
+            class="border-t border-neutral-200 px-4 py-3 dark:border-neutral-800"
             size="sm"
             :page="query.page"
             :total="total"
@@ -135,19 +135,19 @@
         </section>
 
         <section class="space-y-4">
-          <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
             <div v-if="selectedUser" class="p-4">
               <div class="flex min-w-0 items-start gap-3">
                 <IamUserAvatar :id="selectedUser.id" :username="selectedUser.username" :avatar="selectedUser.avatar" size="lg" />
                 <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2">
-                    <IamUserPopover :id="selectedUser.id" :username="selectedUser.username" :avatar="selectedUser.avatar" class="truncate text-base font-semibold text-slate-950 dark:text-white" />
+                    <IamUserPopover :id="selectedUser.id" :username="selectedUser.username" :avatar="selectedUser.avatar" class="truncate text-base font-semibold text-neutral-950 dark:text-white" />
                     <UBadge :color="statusColor(selectedUser.status)" variant="soft">{{ statusLabel(selectedUser.status) }}</UBadge>
                   </div>
-                  <p class="mt-1 truncate text-sm text-slate-500 dark:text-slate-400">#{{ selectedUser.id }} · {{ selectedUser.email }}</p>
+                  <p class="mt-1 truncate text-sm text-neutral-500 dark:text-neutral-400">#{{ selectedUser.id }} · {{ selectedUser.email }}</p>
                   <div class="mt-3 flex flex-wrap items-center gap-2 text-xs">
-                    <span class="inline-flex max-w-full items-center gap-1.5 rounded-md bg-slate-100 px-2 py-1 font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                      <UIcon name="i-lucide-shield" class="size-3.5 text-slate-400" />
+                    <span class="inline-flex max-w-full items-center gap-1.5 rounded-md bg-neutral-100 px-2 py-1 font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                      <UIcon name="i-lucide-shield" class="size-3.5 text-neutral-400" />
                       <span class="truncate">{{ roleName(selectedUser.role) }}</span>
                     </span>
                     <span
@@ -163,15 +163,15 @@
                 </div>
               </div>
 
-              <div class="mt-4 grid grid-cols-2 gap-1 rounded-md bg-slate-100 p-1 sm:grid-cols-5 dark:bg-slate-800/80">
+              <div class="mt-4 grid grid-cols-2 gap-1 rounded-md bg-neutral-100 p-1 sm:grid-cols-5 dark:bg-neutral-800/80">
                 <button
                   v-for="panel in userPanelOptions"
                   :key="panel.value"
                   type="button"
                   class="inline-flex h-8 items-center justify-center gap-1.5 rounded px-2 text-xs font-medium transition"
                   :class="activeUserPanel === panel.value
-                    ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white'
-                    : 'text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'"
+                    ? 'app-selected shadow-sm'
+                    : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white'"
                   @click="activeUserPanel = panel.value"
                 >
                   <UIcon :name="panel.icon" class="size-3.5" />
@@ -181,24 +181,24 @@
             </div>
 
             <div v-else class="flex flex-col items-center justify-center px-4 py-14 text-center">
-              <div class="flex size-12 items-center justify-center rounded-lg bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500">
+              <div class="flex size-12 items-center justify-center rounded-lg bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500">
                 <UIcon name="i-lucide-user-round-check" class="size-6" />
               </div>
-              <p class="mt-3 text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.form.empty') }}</p>
-              <p class="mt-1 max-w-64 text-sm text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.panels.selectHint') }}</p>
+              <p class="mt-3 text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.form.empty') }}</p>
+              <p class="mt-1 max-w-64 text-sm text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.panels.selectHint') }}</p>
             </div>
           </div>
 
-          <div v-if="selectedUser && activeUserPanel === 'profile'" class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">
+          <div v-if="selectedUser && activeUserPanel === 'profile'" class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">
                 {{ $t('admin.iam.users.panels.profile') }}
               </h2>
             </div>
 
             <form class="space-y-4 p-4" @submit.prevent="saveUser">
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.form.status') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.users.form.status') }}</span>
                 <USelect
                   v-model="form.status"
                   class="mt-1 w-full"
@@ -211,7 +211,7 @@
               </label>
 
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.form.role') }}</span>
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.users.form.role') }}</span>
                 <USelect
                   v-model="form.role"
                   class="mt-1 w-full"
@@ -224,8 +224,8 @@
               </label>
 
               <label class="block">
-                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.form.passkey') }}</span>
-                <input v-model="form.passkey" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 font-mono text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || saving">
+                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.users.form.passkey') }}</span>
+                <input v-model="form.passkey" class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 font-mono text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950" :disabled="!selectedUser || saving">
               </label>
 
               <p v-if="formError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
@@ -249,10 +249,10 @@
 
                   <template #content="{ close }">
                     <div class="space-y-3">
-                      <p class="text-sm font-medium text-slate-950 dark:text-white">
+                      <p class="text-sm font-medium text-neutral-950 dark:text-white">
                         {{ $t('admin.iam.users.form.confirmKickTitle') }}
                       </p>
-                      <p class="text-xs text-slate-500 dark:text-slate-400">
+                      <p class="text-xs text-neutral-500 dark:text-neutral-400">
                         {{ $t('admin.iam.users.form.confirmKickDescription') }}
                       </p>
                       <div class="flex justify-end gap-2">
@@ -270,33 +270,33 @@
             </form>
           </div>
 
-          <div v-if="selectedUser && activeUserPanel === 'stat'" class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.stat.title') }}</h2>
+          <div v-if="selectedUser && activeUserPanel === 'stat'" class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.stat.title') }}</h2>
             </div>
 
             <div class="space-y-4 p-4">
               <div v-if="statPending" class="grid grid-cols-2 gap-2">
-                <div v-for="item in 4" :key="item" class="h-16 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+                <div v-for="item in 4" :key="item" class="h-16 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
               </div>
               <p v-else-if="statError" class="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
                 {{ statError }}
               </p>
               <div v-else class="grid grid-cols-2 gap-2">
-                <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.uploaded') }}</p>
-                  <p class="mt-1 truncate text-sm font-semibold text-slate-950 dark:text-white">{{ formatBytes(userStat?.uploaded || 0) }}</p>
+                <div class="rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.uploaded') }}</p>
+                  <p class="mt-1 truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ formatBytes(userStat?.uploaded || 0) }}</p>
                 </div>
-                <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.downloaded') }}</p>
-                  <p class="mt-1 truncate text-sm font-semibold text-slate-950 dark:text-white">{{ formatBytes(userStat?.downloaded || 0) }}</p>
+                <div class="rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.downloaded') }}</p>
+                  <p class="mt-1 truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ formatBytes(userStat?.downloaded || 0) }}</p>
                 </div>
-                <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.seedTime') }}</p>
-                  <p class="mt-1 truncate text-sm font-semibold text-slate-950 dark:text-white">{{ durationLabel(userStat?.seedTime || 0) }}</p>
+                <div class="rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.seedTime') }}</p>
+                  <p class="mt-1 truncate text-sm font-semibold text-neutral-950 dark:text-white">{{ durationLabel(userStat?.seedTime || 0) }}</p>
                 </div>
-                <div class="rounded-md border border-slate-200 px-3 py-2 dark:border-slate-800">
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.bonus') }}</p>
+                <div class="rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.bonus') }}</p>
                   <p class="mt-1 truncate text-sm font-semibold text-amber-600 dark:text-amber-300">{{ numberFormatter.format(userStat?.bonus || 0) }}</p>
                 </div>
               </div>
@@ -304,16 +304,16 @@
               <form class="space-y-3" @submit.prevent="saveStatDiff">
                 <div class="grid gap-2 sm:grid-cols-3">
                   <label class="block">
-                    <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.uploadedDiff') }}</span>
-                    <input v-model="statForm.uploadedDiff" type="number" step="1" class="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" :disabled="!selectedUser || statSaving">
+                    <span class="text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.uploadedDiff') }}</span>
+                    <input v-model="statForm.uploadedDiff" type="number" step="1" class="mt-1 h-9 w-full rounded-md border border-neutral-200 bg-white px-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950" :disabled="!selectedUser || statSaving">
                   </label>
                   <label class="block">
-                    <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.downloadedDiff') }}</span>
-                    <input v-model="statForm.downloadedDiff" type="number" step="1" class="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" :disabled="!selectedUser || statSaving">
+                    <span class="text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.downloadedDiff') }}</span>
+                    <input v-model="statForm.downloadedDiff" type="number" step="1" class="mt-1 h-9 w-full rounded-md border border-neutral-200 bg-white px-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950" :disabled="!selectedUser || statSaving">
                   </label>
                   <label class="block">
-                    <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.stat.bonusDiff') }}</span>
-                    <input v-model="statForm.bonusDiff" type="number" step="0.01" class="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-950" :disabled="!selectedUser || statSaving">
+                    <span class="text-xs font-medium text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.stat.bonusDiff') }}</span>
+                    <input v-model="statForm.bonusDiff" type="number" step="0.01" class="mt-1 h-9 w-full rounded-md border border-neutral-200 bg-white px-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950" :disabled="!selectedUser || statSaving">
                   </label>
                 </div>
                 <div class="flex justify-end">
@@ -326,11 +326,11 @@
           </div>
 
           <template v-if="selectedUser && activeUserPanel === 'mod'">
-            <div class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+            <div class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+              <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
                 <div>
-                  <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.mod.title') }}</h2>
-                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.mod.title') }}</h2>
+                  <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                     {{ $t('admin.iam.users.mod.activeSummary', { count: numberFormatter.format(activeUserMods.length) }) }}
                   </p>
                 </div>
@@ -339,7 +339,7 @@
               <div class="space-y-4 p-4">
                 <form class="space-y-3" @submit.prevent="applyUserMod">
                   <label class="block">
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.mod.type') }}</span>
+                    <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.users.mod.type') }}</span>
                     <USelect
                       v-model="modForm.type"
                       class="mt-1 w-full"
@@ -352,14 +352,14 @@
                   </label>
 
                   <label class="block">
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.mod.durationDays') }}</span>
-                    <input v-model.number="modForm.durationDays" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || modApplying">
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.mod.permanentHint') }}</p>
+                    <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.users.mod.durationDays') }}</span>
+                    <input v-model.number="modForm.durationDays" type="number" min="0" class="mt-1 h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950" :disabled="!selectedUser || modApplying">
+                    <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.mod.permanentHint') }}</p>
                   </label>
 
                   <label class="block">
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.iam.users.mod.reason') }}</span>
-                    <textarea v-model="modForm.reason" rows="3" class="mt-1 w-full resize-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950" :disabled="!selectedUser || modApplying" />
+                    <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.iam.users.mod.reason') }}</span>
+                    <textarea v-model="modForm.reason" rows="3" class="mt-1 w-full resize-none rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950" :disabled="!selectedUser || modApplying" />
                   </label>
 
                   <p v-if="modsError" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
@@ -371,15 +371,15 @@
                   </UButton>
                 </form>
 
-              <div class="border-t border-slate-200 pt-4 dark:border-slate-800">
+              <div class="border-t border-neutral-200 pt-4 dark:border-neutral-800">
                 <div v-if="modsPending && userMods.length === 0" class="space-y-2">
-                  <div v-for="item in 3" :key="item" class="h-20 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+                  <div v-for="item in 3" :key="item" class="h-20 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
                 </div>
-                <div v-else-if="userMods.length === 0" class="rounded-md border border-dashed border-slate-200 px-3 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                <div v-else-if="userMods.length === 0" class="rounded-md border border-dashed border-neutral-200 px-3 py-8 text-center text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
                   {{ $t('admin.iam.users.mod.empty') }}
                 </div>
                 <div v-else class="space-y-2">
-                  <article v-for="item in sortedUserMods" :key="item.id" class="rounded-md border border-slate-200 px-3 py-3 dark:border-slate-800">
+                  <article v-for="item in sortedUserMods" :key="item.id" class="rounded-md border border-neutral-200 px-3 py-3 dark:border-neutral-800">
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
                         <div class="flex flex-wrap items-center gap-2">
@@ -388,8 +388,8 @@
                             {{ item.isActive ? $t('admin.iam.users.mod.status.active') : $t('admin.iam.users.mod.status.inactive') }}
                           </UBadge>
                         </div>
-                        <p class="mt-2 whitespace-pre-wrap break-words text-sm text-slate-700 dark:text-slate-200">{{ item.reason || '-' }}</p>
-                        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                        <p class="mt-2 whitespace-pre-wrap break-words text-sm text-neutral-700 dark:text-neutral-200">{{ item.reason || '-' }}</p>
+                        <p class="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                           {{ formatDateTime(item.createdAt, locale) }} · {{ $t('admin.iam.users.mod.expireAt') }} {{ modExpireLabel(item) }}
                         </p>
                       </div>
@@ -411,10 +411,10 @@
 
                         <template #content="{ close }">
                           <div class="space-y-3">
-                            <p class="text-sm font-medium text-slate-950 dark:text-white">
+                            <p class="text-sm font-medium text-neutral-950 dark:text-white">
                               {{ $t('admin.iam.users.mod.confirmRemoveTitle') }}
                             </p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
                               {{ $t('admin.iam.users.mod.confirmRemoveDescription', { type: modTypeLabel(item.modType) }) }}
                             </p>
                             <div class="flex justify-end gap-2">
@@ -436,17 +436,17 @@
           </div>
           </template>
 
-          <div v-if="selectedUser && activeUserPanel === 'permission'" class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-              <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.permission.title') }}</h2>
+          <div v-if="selectedUser && activeUserPanel === 'permission'" class="rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+              <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.permission.title') }}</h2>
             </div>
 
             <div class="space-y-4 p-4">
               <div v-if="permissionPending" class="space-y-3">
                 <div class="grid gap-3 2xl:grid-cols-2">
-                  <div v-for="item in 2" :key="item" class="h-36 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+                  <div v-for="item in 2" :key="item" class="h-36 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
                 </div>
-                <div class="h-48 animate-pulse rounded-md bg-slate-100 dark:bg-slate-800" />
+                <div class="h-48 animate-pulse rounded-md bg-neutral-100 dark:bg-neutral-800" />
               </div>
 
               <template v-else>
@@ -455,11 +455,11 @@
                 </p>
 
                 <div class="grid gap-3 2xl:grid-cols-2">
-                  <section class="min-w-0 rounded-md border border-slate-200 dark:border-slate-800">
-                    <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">
+                  <section class="min-w-0 rounded-md border border-neutral-200 dark:border-neutral-800">
+                    <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">
                       <div class="min-w-0">
-                        <p class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.permission.roleTitle') }}</p>
-                        <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ roleName(selectedUser.role) }}</p>
+                        <p class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.permission.roleTitle') }}</p>
+                        <p class="mt-1 truncate text-xs text-neutral-500 dark:text-neutral-400">{{ roleName(selectedUser.role) }}</p>
                       </div>
                       <UBadge color="neutral" variant="soft">{{ rolePermissions.length }}</UBadge>
                     </div>
@@ -467,21 +467,21 @@
                       <code
                         v-for="permission in rolePermissions"
                         :key="permission"
-                        class="mb-1 block truncate rounded bg-slate-50 px-2 py-1.5 text-xs font-semibold text-slate-600 last:mb-0 dark:bg-slate-950 dark:text-slate-300"
+                        class="mb-1 block truncate rounded bg-neutral-50 px-2 py-1.5 text-xs font-semibold text-neutral-600 last:mb-0 dark:bg-neutral-950 dark:text-neutral-300"
                       >
                         {{ permission }}
                       </code>
                     </div>
-                    <div v-else class="px-3 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                    <div v-else class="px-3 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
                       {{ $t('admin.iam.users.permission.noRolePermissions') }}
                     </div>
                   </section>
 
-                  <section class="min-w-0 rounded-md border border-slate-200 dark:border-slate-800">
-                    <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">
+                  <section class="min-w-0 rounded-md border border-neutral-200 dark:border-neutral-800">
+                    <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">
                       <div>
-                        <p class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.permission.userTitle') }}</p>
-                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.permission.manualHint') }}</p>
+                        <p class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.permission.userTitle') }}</p>
+                        <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.permission.manualHint') }}</p>
                       </div>
                       <UBadge color="neutral" variant="soft">{{ userAcls.length }}</UBadge>
                     </div>
@@ -490,45 +490,45 @@
                         v-for="acl in userAcls"
                         :key="acl.id"
                         class="mb-1 flex items-center gap-2 rounded px-2 py-1.5 last:mb-0"
-                        :class="acl.sourceType === manualPermissionSource ? 'hover:bg-slate-50 dark:hover:bg-slate-950' : 'opacity-70'"
+                        :class="acl.sourceType === manualPermissionSource ? 'hover:bg-neutral-50 dark:hover:bg-neutral-950' : 'opacity-70'"
                       >
                         <input
                           v-model="selectedUserAclIds"
                           type="checkbox"
-                          class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
+                          class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
                           :value="acl.id"
                           :disabled="permissionSaving || acl.sourceType !== manualPermissionSource"
                         >
-                        <code class="min-w-0 flex-1 truncate text-xs font-semibold" :class="acl.isDeny ? 'text-red-600 dark:text-red-300' : 'text-slate-700 dark:text-slate-200'">
+                        <code class="min-w-0 flex-1 truncate text-xs font-semibold" :class="acl.isDeny ? 'text-red-600 dark:text-red-300' : 'text-neutral-700 dark:text-neutral-200'">
                           {{ acl.rawPermKey }}
                         </code>
                         <UBadge :color="permissionSourceColor(acl.sourceType)" variant="soft">{{ permissionSourceLabel(acl.sourceType) }}</UBadge>
                       </label>
                     </div>
-                    <div v-else class="px-3 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                    <div v-else class="px-3 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
                       {{ $t('admin.iam.users.permission.noUserPermissions') }}
                     </div>
                   </section>
                 </div>
 
-                <section class="rounded-md border border-slate-200 dark:border-slate-800">
-                  <div class="border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">
+                <section class="rounded-md border border-neutral-200 dark:border-neutral-800">
+                  <div class="border-b border-neutral-200 px-3 py-2.5 dark:border-neutral-800">
                     <div class="flex items-center justify-between gap-3">
-                      <p class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.iam.users.permission.availableTitle') }}</p>
-                      <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('admin.iam.users.permission.selectedCount', { count: selectedPermissionKeys.length }) }}</p>
+                      <p class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.iam.users.permission.availableTitle') }}</p>
+                      <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $t('admin.iam.users.permission.selectedCount', { count: selectedPermissionKeys.length }) }}</p>
                     </div>
                     <div class="relative mt-2">
-                      <UIcon name="i-lucide-search" class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                      <UIcon name="i-lucide-search" class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
                       <input
                         v-model="permissionForm.permKey"
-                        class="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-9 font-mono text-sm text-slate-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-500 dark:focus:ring-sky-950"
+                        class="h-9 w-full rounded-md border border-neutral-200 bg-white pl-9 pr-9 font-mono text-sm text-neutral-950 outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-950"
                         :placeholder="$t('admin.iam.users.permission.placeholder')"
                         :disabled="!selectedUser || permissionSaving"
                       >
                       <button
                         v-if="permissionForm.permKey"
                         type="button"
-                        class="absolute right-1 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                        class="absolute right-1 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                         :disabled="permissionSaving"
                         @click="clearPermissionSearch"
                       >
@@ -541,20 +541,20 @@
                     <label
                       v-for="permission in filteredPermissions"
                       :key="permission"
-                      class="mb-1 flex items-center gap-2 rounded px-2 py-1.5 transition last:mb-0 hover:bg-slate-50 dark:hover:bg-slate-950"
+                      class="mb-1 flex items-center gap-2 rounded px-2 py-1.5 transition last:mb-0 hover:bg-neutral-50 dark:hover:bg-neutral-950"
                     >
-                      <input v-model="selectedPermissionKeys" type="checkbox" class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600" :value="permission" :disabled="permissionSaving">
-                      <code class="min-w-0 flex-1 truncate text-xs font-semibold text-slate-700 dark:text-slate-200">{{ permission }}</code>
+                      <input v-model="selectedPermissionKeys" type="checkbox" class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600" :value="permission" :disabled="permissionSaving">
+                      <code class="min-w-0 flex-1 truncate text-xs font-semibold text-neutral-700 dark:text-neutral-200">{{ permission }}</code>
                     </label>
                   </div>
-                  <div v-else class="px-3 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                  <div v-else class="px-3 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
                     {{ $t('admin.iam.users.permission.empty') }}
                   </div>
                 </section>
 
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <label class="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
-                    <input v-model="permissionForm.isDeny" type="checkbox" class="size-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600" :disabled="!selectedUser || permissionSaving">
+                  <label class="flex items-center gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                    <input v-model="permissionForm.isDeny" type="checkbox" class="size-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600" :disabled="!selectedUser || permissionSaving">
                     <span>{{ $t('admin.iam.users.permission.deny') }}</span>
                   </label>
 

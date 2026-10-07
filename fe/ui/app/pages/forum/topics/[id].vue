@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-6 dark:bg-slate-950">
+  <div class="min-h-[calc(100vh-4rem)] bg-neutral-50 py-6 dark:bg-neutral-950">
     <div class="w-full px-3 sm:px-4 lg:px-5">
       <div v-if="pending" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div class="space-y-4">
-          <div class="h-64 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
-          <div class="h-80 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+          <div class="h-64 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
+          <div class="h-80 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
         </div>
-        <div class="h-64 animate-pulse rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+        <div class="h-64 animate-pulse rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900" />
       </div>
 
-      <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-16 text-center dark:border-slate-800 dark:bg-slate-900">
+      <div v-else-if="errorMessage" class="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
         <UIcon name="i-lucide-circle-alert" class="size-9 text-red-500" />
-        <p class="mt-3 text-sm font-medium text-slate-950 dark:text-white">{{ errorMessage }}</p>
+        <p class="mt-3 text-sm font-medium text-neutral-950 dark:text-white">{{ errorMessage }}</p>
       </div>
 
       <div v-else-if="topic && topicEditOpen" class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
@@ -35,19 +35,19 @@
         </main>
 
         <aside class="app-sticky-offset space-y-3 xl:sticky">
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.edit.guide.title') }}</h2>
-            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('forum.detail.edit.guide.title') }}</h2>
+            <ul class="mt-3 space-y-2 text-sm leading-6 text-neutral-600 dark:text-neutral-300">
               <li class="flex gap-2">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" />
                 <span>{{ $t('forum.detail.edit.guide.window') }}</span>
               </li>
               <li class="flex gap-2">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" />
                 <span>{{ $t('forum.detail.edit.guide.markdown') }}</span>
               </li>
               <li class="flex gap-2">
-                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" />
                 <span>{{ $t('forum.detail.edit.guide.node') }}</span>
               </li>
               <li class="flex gap-2 rounded-md bg-amber-50 px-2 py-1.5 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
@@ -57,10 +57,10 @@
             </ul>
           </section>
 
-          <section class="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900">
+          <section class="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
             <dl class="space-y-2 text-sm">
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.detail.edit.windowStatus') }}</dt>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.detail.edit.windowStatus') }}</dt>
                 <dd>
                   <UBadge :color="topicEditStatusColor" variant="soft">
                     {{ topicEditStatusText }}
@@ -68,12 +68,12 @@
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.create.summary.subjectLength') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(editForm.subject.trim().length) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.create.summary.subjectLength') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(editForm.subject.trim().length) }}</dd>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <dt class="text-slate-500 dark:text-slate-400">{{ $t('forum.create.summary.content') }}</dt>
-                <dd class="font-medium text-slate-950 dark:text-white">{{ numberFormatter.format(editForm.content.trim().length) }}</dd>
+                <dt class="text-neutral-500 dark:text-neutral-400">{{ $t('forum.create.summary.content') }}</dt>
+                <dd class="font-medium text-neutral-950 dark:text-white">{{ numberFormatter.format(editForm.content.trim().length) }}</dd>
               </div>
             </dl>
           </section>
@@ -102,10 +102,10 @@
             @report="handleReportTopic"
           />
 
-          <section class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+          <section class="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
               <div class="flex min-w-0 items-center gap-2">
-                <h2 class="text-base font-semibold text-slate-950 dark:text-white">{{ $t('forum.detail.replies.title') }}</h2>
+                <h2 class="text-base font-semibold text-neutral-950 dark:text-white">{{ $t('forum.detail.replies.title') }}</h2>
                 <UBadge color="neutral" variant="soft">
                   {{ $t('forum.detail.replies.summary', { count: numberFormatter.format(replyTotal) }) }}
                 </UBadge>
@@ -148,7 +148,7 @@
               id="forum-reply-composer"
               v-model="replyContent"
               v-model:mode="replyEditorMode"
-              class="scroll-mt-32 border-t border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40"
+              class="scroll-mt-32 border-t border-neutral-200 bg-neutral-50/60 p-4 dark:border-neutral-800 dark:bg-neutral-950/40"
               :placeholder="$t('forum.detail.replyForm.placeholder')"
               :disabled="replyCreatePending || topic.isLocked || !canCreateForumReply"
               :pending="replyCreatePending"

@@ -1,9 +1,9 @@
 <template>
-  <section class="overflow-hidden rounded-lg border border-amber-200 bg-white dark:border-amber-900/70 dark:bg-slate-900">
+  <section class="overflow-hidden rounded-lg border border-amber-200 bg-white dark:border-amber-900/70 dark:bg-neutral-900">
     <div class="flex items-center justify-between gap-3 border-b border-amber-100 bg-amber-50/70 px-4 py-3 dark:border-amber-900/60 dark:bg-amber-950/20">
       <div class="flex min-w-0 items-center gap-2">
         <UIcon name="i-lucide-clipboard-check" class="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">{{ $t('admin.catalog.reviews.title') }}</h2>
+        <h2 class="text-sm font-semibold text-neutral-950 dark:text-white">{{ $t('admin.catalog.reviews.title') }}</h2>
       </div>
       <div class="flex shrink-0 items-center gap-1.5">
         <UBadge color="warning" variant="soft" size="sm">{{ $t('admin.catalog.reviews.status.pending') }}</UBadge>
@@ -22,7 +22,7 @@
 
     <form class="space-y-3 p-4" @submit.prevent="resolveReview('approve')">
       <label class="block">
-        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $t('admin.catalog.reviews.fields.comment') }}</span>
+        <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.catalog.reviews.fields.comment') }}</span>
         <UTextarea
           v-model="comment"
           class="mt-2 w-full"

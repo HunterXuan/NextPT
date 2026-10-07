@@ -8,13 +8,13 @@
       :placeholder="placeholder"
       :disabled="disabled"
     />
-    <div v-else class="min-h-28 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+    <div v-else class="min-h-28 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2.5 dark:border-neutral-800 dark:bg-neutral-950">
       <div v-if="renderedPreview" class="rich-text rich-text-compact" v-html="renderedPreview" />
-      <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ previewEmpty }}</p>
+      <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">{{ previewEmpty }}</p>
     </div>
 
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+      <div class="inline-flex w-fit rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-800 dark:bg-neutral-950">
         <button type="button" :class="tabClass('write')" @click="modeValue = 'write'">
           {{ writeLabel }}
         </button>
@@ -23,7 +23,7 @@
         </button>
       </div>
       <div v-if="showActions" class="flex items-center justify-end gap-3">
-        <span v-if="lockedText" class="text-xs text-slate-500 dark:text-slate-400">
+        <span v-if="lockedText" class="text-xs text-neutral-500 dark:text-neutral-400">
           {{ lockedText }}
         </span>
         <slot name="actions">
@@ -110,8 +110,8 @@ function handleSubmit() {
 function tabClass(mode: EditorMode) {
   const base = 'rounded px-3 py-1.5 text-xs font-medium transition-colors'
   if (modeValue.value === mode) {
-    return `${base} bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white`
+    return `${base} app-selected shadow-sm`
   }
-  return `${base} text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white`
+  return `${base} text-neutral-500 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white`
 }
 </script>

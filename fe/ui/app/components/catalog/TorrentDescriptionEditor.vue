@@ -8,13 +8,13 @@
       :disabled="disabled"
       @update:model-value="emit('update:modelValue', String($event || ''))"
     />
-    <div v-else class="min-h-72 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+    <div v-else class="min-h-72 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2.5 dark:border-neutral-800 dark:bg-neutral-950">
       <div v-if="renderedDescriptionPreview" class="rich-text" v-html="renderedDescriptionPreview" />
-      <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ t('catalog.torrents.upload.preview.empty') }}</p>
+      <p v-else class="text-sm text-neutral-500 dark:text-neutral-400">{{ t('catalog.torrents.upload.preview.empty') }}</p>
     </div>
 
     <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div class="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+      <div class="inline-flex w-fit rounded-md border border-neutral-200 bg-neutral-50 p-0.5 dark:border-neutral-800 dark:bg-neutral-950">
         <button
           type="button"
           :class="descriptionModeButtonClass('write')"
@@ -30,7 +30,7 @@
           {{ t('catalog.torrents.upload.preview.preview') }}
         </button>
       </div>
-      <span class="text-xs text-slate-500 dark:text-slate-400">
+      <span class="text-xs text-neutral-500 dark:text-neutral-400">
         {{ t('catalog.torrents.upload.summary.descriptionLength', { count: numberFormatter.format(modelValue.trim().length) }) }}
       </span>
     </div>
@@ -65,8 +65,8 @@ function descriptionModeButtonClass(mode: DescriptionMode) {
   return [
     'h-7 rounded px-3 text-xs font-medium transition-colors',
     active
-      ? 'bg-white text-slate-950 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:text-white dark:ring-slate-700'
-      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
+      ? 'app-selected shadow-sm ring-1 ring-primary/20'
+      : 'text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100'
   ].join(' ')
 }
 </script>
