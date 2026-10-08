@@ -89,9 +89,14 @@
                 color="neutral"
                 variant="ghost"
                 icon="i-lucide-message-circle-more"
+                class="relative"
                 :aria-label="$t('site.chat.title')"
                 @click="() => { chatOpen = true }"
-              />
+              >
+                <span v-if="unreadChatCount > 0" class="absolute -right-0.5 -top-0.5 flex min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-4 text-white">
+                  {{ unreadChatCount > 99 ? '99+' : unreadChatCount }}
+                </span>
+              </UButton>
             </UTooltip>
 
             <UDropdownMenu :items="languageItems" :content="{ align: 'end' }">
@@ -118,6 +123,7 @@
       v-if="props.mode === 'app' && hasPermission(Permission.SiteChatMessageRead)"
       v-model:open="chatOpen"
       :can-send="hasPermission(Permission.SiteChatMessageCreate)"
+      @update:unread-count="unreadChatCount = $event"
     />
   </div>
 </template>
@@ -159,6 +165,7 @@ const loggingOut = ref(false)
 const { invalidatePage } = useWorkspacePageCache()
 const unreadMessageCount = ref(0)
 const chatOpen = ref(false)
+const unreadChatCount = ref(0)
 const sidebarStorageKey = 'nextpt_sidebar_collapsed'
 
 onMounted(() => {

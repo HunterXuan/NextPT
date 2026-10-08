@@ -137,7 +137,9 @@
       "imageUrl": "Image URL",
       "imageSummary": "[image]",
       "invalidImageUrl": "Enter a valid HTTP or HTTPS image URL",
-      "messageTooLong": "The message would exceed 1000 characters. Shorten its content."
+      "messageTooLong": "The message would exceed 1000 characters. Shorten its content.",
+      "notificationSettings": "Notification settings",
+      "notifyNewMessages": "New message reminders"
     },
     "tasks": {
       "title": "Tasks", "empty": "No tasks are available right now", "claim": "Claim", "claimed": "Task claimed", "claimReward": "Claim reward", "rewarded": "Reward claimed", "endsAt": "Ends {time}", "hours": "{value} hours",

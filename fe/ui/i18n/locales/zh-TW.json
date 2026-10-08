@@ -137,7 +137,9 @@
       "imageUrl": "圖片連結",
       "imageSummary": "[圖片]",
       "invalidImageUrl": "請輸入有效的 HTTP 或 HTTPS 圖片連結",
-      "messageTooLong": "插入後訊息超過 1000 字，請縮短內容"
+      "messageTooLong": "插入後訊息超過 1000 字，請縮短內容",
+      "notificationSettings": "提醒設定",
+      "notifyNewMessages": "新訊息提醒"
     },
     "tasks": {
       "title": "站點任務", "empty": "暫無可參與的任務", "claim": "認領", "claimed": "任務已認領", "claimReward": "領取獎勵", "rewarded": "獎勵已領取", "endsAt": "截止 {time}", "hours": "{value} 小時",

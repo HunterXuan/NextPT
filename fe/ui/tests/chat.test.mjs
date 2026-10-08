@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { composeChatMessage, createChatImage, createChatQuote, splitChatMessage } from '../app/utils/chat.ts'
+import { composeChatMessage, countNewChatMessages, createChatImage, createChatQuote, splitChatMessage } from '../app/utils/chat.ts'
 import { renderUserMarkdown } from '../app/utils/richText.ts'
 
 test('quote replies survive a plain-text send/read round trip', () => {
@@ -60,4 +60,16 @@ test('chat image rendering reuses safe Markdown and BBCode rendering', () => {
   }
   assert.doesNotMatch(renderUserMarkdown('<img src=x onerror=alert(1)>'), /<img/)
   assert.doesNotMatch(renderUserMarkdown('![](javascript:alert(1))'), /<img/)
+})
+
+test('new message counts exclude old messages, duplicates and the current user', () => {
+  assert.equal(countNewChatMessages([
+    { id: 10, user: { id: 2 } },
+    { id: 11, user: { id: 1 } },
+    { id: 12, user: { id: 2 } },
+    { id: 12, user: { id: 2 } },
+    { id: 13, user: { id: 3 } }
+  ], 10, 1), 2)
+  assert.equal(countNewChatMessages([], 10, 1), 0)
+  assert.equal(countNewChatMessages(Array.from({ length: 120 }, (_, index) => ({ id: index + 1, user: { id: 2 } })), 0, 1), 120)
 })

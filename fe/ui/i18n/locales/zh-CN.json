@@ -137,7 +137,9 @@
       "imageUrl": "图片链接",
       "imageSummary": "[图片]",
       "invalidImageUrl": "请输入有效的 HTTP 或 HTTPS 图片链接",
-      "messageTooLong": "插入后消息超过 1000 字，请缩短内容"
+      "messageTooLong": "插入后消息超过 1000 字，请缩短内容",
+      "notificationSettings": "提醒设置",
+      "notifyNewMessages": "新消息提醒"
     },
     "tasks": {
       "title": "站点任务", "empty": "暂无可参与的任务", "claim": "认领", "claimed": "任务已认领", "claimReward": "领取奖励", "rewarded": "奖励已领取", "endsAt": "截止 {time}", "hours": "{value} 小时",

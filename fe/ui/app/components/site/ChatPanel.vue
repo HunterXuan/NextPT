@@ -84,6 +84,14 @@
           <div class="mt-2 flex items-center justify-between gap-3">
             <p class="text-xs" :class="draftLength > 1000 ? 'text-error' : 'text-neutral-400 dark:text-neutral-500'">{{ draftLength }}/1000</p>
             <div class="flex items-center gap-2">
+              <UPopover :content="{ side: 'top', align: 'end' }" :ui="{ content: 'p-3' }">
+                <UTooltip :text="$t('site.chat.notificationSettings')">
+                  <UButton type="button" color="neutral" variant="soft" icon="i-lucide-settings-2" size="sm" class="size-8 justify-center rounded-md p-0" :ui="{ leadingIcon: 'size-4' }" :aria-label="$t('site.chat.notificationSettings')" />
+                </UTooltip>
+                <template #content>
+                  <USwitch v-model="notificationsEnabled" :label="$t('site.chat.notifyNewMessages')" />
+                </template>
+              </UPopover>
               <UPopover v-if="canSend" v-model:open="imagePopoverOpen" :content="{ side: 'top', align: 'end' }" :ui="{ content: 'w-[min(20rem,calc(100vw-3rem))] p-3' }">
                 <UTooltip :text="$t('site.chat.insertImage')" :disabled="imagePopoverOpen">
                   <UButton type="button" color="neutral" variant="soft" icon="i-lucide-image" size="sm" class="size-8 justify-center rounded-md p-0" :ui="{ leadingIcon: 'size-4' }" :aria-label="$t('site.chat.insertImage')" :disabled="sending" />
@@ -93,8 +101,9 @@
                     <UFormField :label="$t('site.chat.imageUrl')" :error="imageError || undefined">
                       <UInput v-model="imageUrl" class="w-full" type="url" placeholder="https://" @keydown.enter.prevent="insertImage" />
                     </UFormField>
-                    <div class="flex justify-end">
-                      <UButton size="sm" :disabled="!imageUrl.trim() || sending" @click="insertImage">{{ $t('common.confirm') }}</UButton>
+                    <div class="flex justify-end gap-2">
+                      <UButton type="button" color="neutral" variant="soft" size="sm" @click="cancelImage">{{ $t('common.cancel') }}</UButton>
+                      <UButton type="button" size="sm" :disabled="!imageUrl.trim() || sending" @click="insertImage">{{ $t('common.confirm') }}</UButton>
                     </div>
                   </div>
                 </template>
@@ -124,7 +133,7 @@
 import { ApiError } from '~/composables/useApi'
 import type { SiteChatMessage } from '~/composables/useSite'
 import { formatDateTime, formatRelativeDateTime } from '~/utils/format'
-import { composeChatMessage, createChatImage, createChatQuote, splitChatMessage } from '~/utils/chat'
+import { composeChatMessage, countNewChatMessages, createChatImage, createChatQuote, splitChatMessage } from '~/utils/chat'
 import { renderUserMarkdown } from '~/utils/richText'
 
 const props = withDefaults(defineProps<{
@@ -136,6 +145,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   'update:open': [value: boolean]
+  'update:unreadCount': [value: number]
 }>()
 
 const { t, locale } = useI18n()
@@ -153,6 +163,10 @@ const loading = ref(false)
 const sending = ref(false)
 const errorMessage = ref('')
 const messageList = ref<HTMLElement | null>(null)
+const notificationsEnabled = ref(true)
+const unreadCount = ref(0)
+const notificationStorageKey = 'nextpt_chat_notifications'
+let lastMessageId: number | null = null
 let pollTimer: ReturnType<typeof setInterval> | undefined
 
 const modalUi = {
@@ -170,6 +184,14 @@ const draftMaxLength = computed(() => Math.max(0, 1000 - (quotedText.value ? Arr
 async function replyToMessage(message: SiteChatMessage) {
   if (!props.canSend || sending.value) return
   quotedText.value = createChatQuote(message.user.username || `#${message.user.id}`, message.content, t('site.chat.imageSummary'))
+  await nextTick()
+  composer.value?.textareaRef?.focus()
+}
+
+async function cancelImage() {
+  imagePopoverOpen.value = false
+  imageUrl.value = ''
+  imageError.value = ''
   await nextTick()
   composer.value?.textareaRef?.focus()
 }
@@ -203,21 +225,49 @@ async function clearQuote() {
 watch(() => props.open, (value) => {
   if (value) {
     void loadInitialMessages()
-    startPolling()
-    return
   }
-  stopPolling()
-}, { immediate: true })
+  startPolling()
+})
+
+watch(unreadCount, value => emit('update:unreadCount', value), { immediate: true })
+
+watch(notificationsEnabled, (value) => {
+  unreadCount.value = 0
+  lastMessageId = null
+  try {
+    localStorage.setItem(notificationStorageKey, value ? '1' : '0')
+  } catch {
+    // Keep the preference usable when browser storage is unavailable.
+  }
+  if (value) void pollMessages()
+  startPolling()
+})
+
+onMounted(() => {
+  try {
+    notificationsEnabled.value = localStorage.getItem(notificationStorageKey) !== '0'
+  } catch {
+    // Default to reminders when browser storage is unavailable.
+  }
+  if (props.open) void loadInitialMessages()
+  else void pollMessages()
+  startPolling()
+})
 
 onBeforeUnmount(stopPolling)
 
 async function loadInitialMessages() {
-  if (loading.value) return
+  if (loading.value) {
+    await scrollToLatest()
+    return
+  }
   loading.value = true
   errorMessage.value = ''
   try {
     const data = await siteApi.listChatMessages()
     messages.value = data.list || []
+    lastMessageId = Math.max(lastMessageId || 0, ...messages.value.map(message => message.id))
+    unreadCount.value = 0
     await scrollToLatest()
   } catch (error) {
     errorMessage.value = error instanceof ApiError ? error.message : t('common.requestFailed')
@@ -227,13 +277,22 @@ async function loadInitialMessages() {
 }
 
 async function pollMessages() {
-  if (!props.open || loading.value || sending.value) return
-  const afterId = messages.value.at(-1)?.id || 0
+  if ((!props.open && !notificationsEnabled.value) || loading.value || sending.value) return
+  const afterId = lastMessageId || 0
+  loading.value = true
   try {
     const data = await siteApi.listChatMessages(afterId)
-    appendMessages(data.list || [])
+    const items = data.list || []
+    if (props.open) unreadCount.value = 0
+    else if (notificationsEnabled.value && lastMessageId !== null) {
+      unreadCount.value += countNewChatMessages(items, lastMessageId, Number(user.value?.user.id || 0))
+    }
+    lastMessageId = Math.max(afterId, ...items.map(message => message.id))
+    appendMessages(items)
   } catch {
     // Keep the current conversation visible and retry on the next interval.
+  } finally {
+    loading.value = false
   }
 }
 
@@ -283,7 +342,8 @@ function isOwnMessage(message: SiteChatMessage) {
 
 function startPolling() {
   stopPolling()
-  pollTimer = setInterval(() => { void pollMessages() }, 8000)
+  if (!props.open && !notificationsEnabled.value) return
+  pollTimer = setInterval(() => { void pollMessages() }, props.open ? 8000 : 60000)
 }
 
 function stopPolling() {

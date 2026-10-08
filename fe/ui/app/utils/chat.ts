@@ -2,6 +2,10 @@ import MarkdownIt from 'markdown-it'
 
 const quoteMarkdown = new MarkdownIt({ html: false })
 
+export function countNewChatMessages(messages: { id: number, user: { id: number } }[], afterId: number, userId: number) {
+  return new Set(messages.filter(message => message.id > afterId && Number(message.user.id) !== userId).map(message => message.id)).size
+}
+
 export function splitChatMessage(content: string) {
   const lines = content.replace(/\r\n?/g, '\n').split('\n')
   let end = 0
