@@ -129,7 +129,15 @@
       "empty": "还没有消息，来聊点什么吧。",
       "placeholder": "输入消息，按 Enter 发送",
       "readOnly": "当前账号只能查看聊天内容",
-      "send": "发送"
+      "send": "发送",
+      "reply": "引用回复",
+      "cancelQuote": "取消引用",
+      "newMessages": "查看新消息",
+      "insertImage": "插入图片",
+      "imageUrl": "图片链接",
+      "imageSummary": "[图片]",
+      "invalidImageUrl": "请输入有效的 HTTP 或 HTTPS 图片链接",
+      "messageTooLong": "插入后消息超过 1000 字，请缩短内容"
     },
     "tasks": {
       "title": "站点任务", "empty": "暂无可参与的任务", "claim": "认领", "claimed": "任务已认领", "claimReward": "领取奖励", "rewarded": "奖励已领取", "endsAt": "截止 {time}", "hours": "{value} 小时",

@@ -129,7 +129,15 @@
       "empty": "還沒有訊息，來聊點什麼吧。",
       "placeholder": "輸入訊息，按 Enter 發送",
       "readOnly": "目前帳號只能查看聊天內容",
-      "send": "發送"
+      "send": "發送",
+      "reply": "引用回覆",
+      "cancelQuote": "取消引用",
+      "newMessages": "查看新訊息",
+      "insertImage": "插入圖片",
+      "imageUrl": "圖片連結",
+      "imageSummary": "[圖片]",
+      "invalidImageUrl": "請輸入有效的 HTTP 或 HTTPS 圖片連結",
+      "messageTooLong": "插入後訊息超過 1000 字，請縮短內容"
     },
     "tasks": {
       "title": "站點任務", "empty": "暫無可參與的任務", "claim": "認領", "claimed": "任務已認領", "claimReward": "領取獎勵", "rewarded": "獎勵已領取", "endsAt": "截止 {time}", "hours": "{value} 小時",

@@ -129,7 +129,15 @@
       "empty": "No messages yet. Start the conversation.",
       "placeholder": "Write a message, then press Enter to send",
       "readOnly": "This account can view chat but cannot send messages",
-      "send": "Send"
+      "send": "Send",
+      "reply": "Quote reply",
+      "cancelQuote": "Remove quote",
+      "newMessages": "View new messages",
+      "insertImage": "Insert image",
+      "imageUrl": "Image URL",
+      "imageSummary": "[image]",
+      "invalidImageUrl": "Enter a valid HTTP or HTTPS image URL",
+      "messageTooLong": "The message would exceed 1000 characters. Shorten its content."
     },
     "tasks": {
       "title": "Tasks", "empty": "No tasks are available right now", "claim": "Claim", "claimed": "Task claimed", "claimReward": "Claim reward", "rewarded": "Reward claimed", "endsAt": "Ends {time}", "hours": "{value} hours",
