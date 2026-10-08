@@ -2497,6 +2497,7 @@
         "request_reward": "請求完成獎勵",
         "request_refund": "請求獎勵退回",
         "shop_purchase": "商城兌換",
+        "task_reward": "任務獎勵",
         "forum_topic": "論壇主題",
         "forum_reply": "論壇回覆"
       },
@@ -2505,6 +2506,7 @@
         "catalog_comment": "種子評論",
         "catalog_request": "求種與續種請求",
         "economy_shop_order": "商城訂單",
+        "site_user_task": "站點任務",
         "forum_topic": "論壇主題",
         "forum_reply": "論壇回覆"
       },

@@ -2497,6 +2497,7 @@
         "request_reward": "Request completion reward",
         "request_refund": "Request reward refunded",
         "shop_purchase": "Shop redemption",
+        "task_reward": "Task reward",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
       },
@@ -2505,6 +2506,7 @@
         "catalog_comment": "Torrent comment",
         "catalog_request": "Torrent request",
         "economy_shop_order": "Shop order",
+        "site_user_task": "Site task",
         "forum_topic": "Forum topic",
         "forum_reply": "Forum reply"
       },

@@ -2497,6 +2497,7 @@
         "request_reward": "请求完成奖励",
         "request_refund": "请求奖励退回",
         "shop_purchase": "商城兑换",
+        "task_reward": "任务奖励",
         "forum_topic": "论坛主题",
         "forum_reply": "论坛回复"
       },
@@ -2505,6 +2506,7 @@
         "catalog_comment": "种子评论",
         "catalog_request": "求种与续种请求",
         "economy_shop_order": "商城订单",
+        "site_user_task": "站点任务",
         "forum_topic": "论坛主题",
         "forum_reply": "论坛回复"
       },
