@@ -1,8 +1,11 @@
 package model
 
 import (
+	"fmt"
+	"html"
 	"math"
 	"sort"
+	"strings"
 	"time"
 
 	"server/internal/model/entity"
@@ -71,7 +74,7 @@ type IamUserSummary struct {
 	Avatar   string `json:"avatar"`
 }
 
-type AccountActionMail struct {
+type IamAccountActionMail struct {
 	Kind      string
 	Recipient string
 	Subject   string
@@ -81,6 +84,16 @@ type AccountActionMail struct {
 	Action    string
 	Expiry    string
 	Note      string
+}
+
+func (m IamAccountActionMail) Bodies() (textBody, htmlBody string) {
+	textBody = strings.Join([]string{m.Greeting, m.Intro, m.Action, m.ActionURL, m.Expiry, m.Note}, "\n\n")
+	htmlBody = fmt.Sprintf(
+		`<!doctype html><html><body style="margin:0;background:#f8fafc;font-family:Arial,sans-serif;color:#0f172a"><div style="max-width:560px;margin:0 auto;padding:32px 20px"><div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:28px"><h1 style="margin:0 0 20px;font-size:20px">%s</h1><p style="margin:0 0 12px;line-height:1.7">%s</p><p style="margin:0 0 20px;line-height:1.7">%s</p><p style="margin:0 0 20px"><a href="%s" style="display:inline-block;border-radius:6px;background:#0284c7;padding:11px 18px;color:#fff;text-decoration:none;font-weight:600">%s</a></p><p style="margin:0 0 8px;color:#475569;line-height:1.7">%s</p><p style="margin:0;color:#64748b;line-height:1.7">%s</p></div></div></body></html>`,
+		html.EscapeString(m.Subject), html.EscapeString(m.Greeting), html.EscapeString(m.Intro),
+		html.EscapeString(m.ActionURL), html.EscapeString(m.Action), html.EscapeString(m.Expiry), html.EscapeString(m.Note),
+	)
+	return
 }
 
 type IamUserPermissionListOptions struct {

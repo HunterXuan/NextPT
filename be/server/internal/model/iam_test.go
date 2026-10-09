@@ -2,12 +2,24 @@ package model
 
 import (
 	"math"
+	"strings"
 	"testing"
 
 	"server/internal/model/entity"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
 )
+
+func TestIamAccountActionMailBodiesEscapeHTML(t *testing.T) {
+	mail := IamAccountActionMail{Subject: "Invite <test>", Greeting: "<script>alert(1)</script>", Intro: "Join us", ActionURL: "https://example.com/register?invite=abc&other=1", Action: "Register", Expiry: "No expiry", Note: "Ignore if unexpected"}
+	text, html := mail.Bodies()
+	if !strings.Contains(text, mail.ActionURL) || !strings.Contains(text, mail.Expiry) {
+		t.Fatal("plain text body missing link or expiry")
+	}
+	if strings.Contains(html, "<script>") || !strings.Contains(html, "&lt;script&gt;") || !strings.Contains(html, "invite=abc&amp;other=1") {
+		t.Fatal("HTML body did not escape content and link")
+	}
+}
 
 func TestIamRankChainSkipsStaffAndLinksRoles(t *testing.T) {
 	chain := NewIamRankChain([]entity.IamRole{

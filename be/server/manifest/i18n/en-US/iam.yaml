@@ -13,6 +13,13 @@ iam.invite.hash_len: Invite code length must be 32 characters
 iam.invite.hash_req: Please enter invite code
 iam.invite.id_req: Please select an invite code
 iam.invite.invalid_status: Invalid invite code status
+iam.invite.mail_action: Register now
+iam.invite.mail_expiry: This invitation expires at %s.
+iam.invite.mail_greeting: Hello!
+iam.invite.mail_ignore: If you do not wish to register, please ignore this email.
+iam.invite.mail_intro: You are invited to join %s. Register using the recipient email address %s.
+iam.invite.mail_permanent: This invitation does not expire and can only be used once.
+iam.invite.mail_subject: Invitation to %s
 iam.invite.not_found: Invite code not found
 iam.invite.page_min: Page number must be at least 1
 iam.invite.register_disabled: Registration is invite-only, but no invite code was provided

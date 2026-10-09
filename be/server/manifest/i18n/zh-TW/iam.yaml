@@ -13,6 +13,13 @@ iam.invite.hash_len: 邀請碼長度應為32位
 iam.invite.hash_req: 請輸入邀請碼
 iam.invite.id_req: 請選擇邀請碼
 iam.invite.invalid_status: 邀請碼狀態無效
+iam.invite.mail_action: 立即註冊
+iam.invite.mail_expiry: 邀請碼有效至 %s。
+iam.invite.mail_greeting: 你好！
+iam.invite.mail_ignore: 如果你不打算註冊，請忽略此郵件。
+iam.invite.mail_intro: 你受邀加入 %s。請使用本郵件收件地址 %s 註冊帳號。
+iam.invite.mail_permanent: 此邀請碼長期有效，使用後失效。
+iam.invite.mail_subject: "%s 註冊邀請"
 iam.invite.not_found: 邀請碼不存在
 iam.invite.page_min: 頁碼最小為1
 iam.invite.register_disabled: 全站開放註冊已關閉，必須使用邀請碼

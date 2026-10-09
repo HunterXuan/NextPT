@@ -7,7 +7,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"html"
 	"net/url"
 	"regexp"
 	"strings"
@@ -950,7 +949,7 @@ func (s *sIamUserUsecase) sendEmailVerificationMail(username, recipient, token s
 	action := gi18n.T(i18nCtx, "iam.user.email_verification_mail_action")
 	expiry := fmt.Sprintf(gi18n.T(i18nCtx, "iam.user.email_verification_mail_expiry"), int(consts.IamEmailVerificationTokenTTL.Hours()))
 	note := gi18n.T(i18nCtx, "iam.user.email_verification_mail_ignore")
-	s.sendAccountActionMail(mailCtx, model.AccountActionMail{
+	s.sendAccountActionMail(mailCtx, model.IamAccountActionMail{
 		Kind:      "email verification",
 		Recipient: recipient,
 		Subject:   subject,
@@ -983,7 +982,7 @@ func (s *sIamUserUsecase) sendPasswordResetMail(username, recipient, token strin
 	action := gi18n.T(i18nCtx, "iam.user.password_reset_mail_action")
 	expiry := fmt.Sprintf(gi18n.T(i18nCtx, "iam.user.password_reset_mail_expiry"), int(consts.IamPasswordResetTokenTTL.Minutes()))
 	note := gi18n.T(i18nCtx, "iam.user.password_reset_mail_ignore")
-	s.sendAccountActionMail(mailCtx, model.AccountActionMail{
+	s.sendAccountActionMail(mailCtx, model.IamAccountActionMail{
 		Kind:      "password reset",
 		Recipient: recipient,
 		Subject:   subject,
@@ -996,18 +995,8 @@ func (s *sIamUserUsecase) sendPasswordResetMail(username, recipient, token strin
 	})
 }
 
-func (s *sIamUserUsecase) sendAccountActionMail(ctx context.Context, mail model.AccountActionMail) {
-	textBody := strings.Join([]string{mail.Greeting, mail.Intro, mail.Action, mail.ActionURL, mail.Expiry, mail.Note}, "\n\n")
-	htmlBody := fmt.Sprintf(
-		`<!doctype html><html><body style="margin:0;background:#f8fafc;font-family:Arial,sans-serif;color:#0f172a"><div style="max-width:560px;margin:0 auto;padding:32px 20px"><div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:28px"><h1 style="margin:0 0 20px;font-size:20px">%s</h1><p style="margin:0 0 12px;line-height:1.7">%s</p><p style="margin:0 0 20px;line-height:1.7">%s</p><p style="margin:0 0 20px"><a href="%s" style="display:inline-block;border-radius:6px;background:#0284c7;padding:11px 18px;color:#fff;text-decoration:none;font-weight:600">%s</a></p><p style="margin:0 0 8px;color:#475569;line-height:1.7">%s</p><p style="margin:0;color:#64748b;line-height:1.7">%s</p></div></div></body></html>`,
-		html.EscapeString(mail.Subject),
-		html.EscapeString(mail.Greeting),
-		html.EscapeString(mail.Intro),
-		html.EscapeString(mail.ActionURL),
-		html.EscapeString(mail.Action),
-		html.EscapeString(mail.Expiry),
-		html.EscapeString(mail.Note),
-	)
+func (s *sIamUserUsecase) sendAccountActionMail(ctx context.Context, mail model.IamAccountActionMail) {
+	textBody, htmlBody := mail.Bodies()
 
 	go func() {
 		if err := service.SysMailgun().SendHtmlMail(ctx, mail.Subject, textBody, htmlBody, mail.Recipient); err != nil {

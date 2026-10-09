@@ -153,7 +153,7 @@ import { formatDateTime } from '~/utils/format'
 
 const { t, locale } = useI18n()
 const toast = useToast()
-const { fetchUser, hasPermission } = useAuth()
+const { hasPermission } = useAuth()
 const inviteService = useInvites()
 
 const invites = ref<InviteItem[]>([])
@@ -274,7 +274,7 @@ async function handleInviteSend() {
       icon: 'i-lucide-check-circle'
     })
     inviteEmail.value = ''
-    await Promise.all([loadInvites(), loadAvailableInvites(), fetchUser()])
+    await Promise.all([loadInvites(), loadAvailableInvites()])
   } catch (error) {
     toast.add({
       title: error instanceof ApiError ? error.message : t('common.requestFailed'),

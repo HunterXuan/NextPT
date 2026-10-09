@@ -2,6 +2,9 @@ package iam
 
 import (
 	"context"
+	"fmt"
+	"net/url"
+	"strings"
 
 	"server/internal/consts"
 	"server/internal/model"
@@ -11,8 +14,11 @@ import (
 	"server/internal/model/out/iamout"
 	"server/internal/service"
 
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
@@ -90,17 +96,67 @@ func (s *sIamInviteUsecase) Send(ctx context.Context, actor *model.Actor, in iam
 	if invite == nil {
 		return gerror.New(gi18n.T(ctx, "iam.invite.not_found"))
 	}
+	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		lockedInvite, err := service.IamInviteDomain().GetInviteByHashForUpdate(ctx, invite.Hash)
+		if err != nil {
+			return err
+		}
+		return s.markInviteSent(ctx, actor, in, lockedInvite)
+	})
+	if err != nil {
+		return err
+	}
+	s.sendInvitationMail(ctx, strings.TrimSpace(in.Email), invite)
+	return nil
+}
+
+func (s *sIamInviteUsecase) markInviteSent(ctx context.Context, actor *model.Actor, in iamin.InviteSendInp, invite *entity.IamInvite) error {
+	if invite == nil || invite.InviterId != actor.Id || invite.Id != in.Id {
+		return gerror.New(gi18n.T(ctx, "iam.invite.not_found"))
+	}
 	if invite.Status != consts.IamInviteStatusUnused {
 		return gerror.New(gi18n.T(ctx, "iam.invite.invalid_status"))
 	}
 	if invite.ExpireAt != nil && !invite.ExpireAt.After(gtime.Now()) {
 		return gerror.New(gi18n.T(ctx, "iam.invite.expired"))
 	}
-
 	return service.IamInviteDomain().UpdateInvite(ctx, invite.Id, do.IamInvite{
 		Status:       consts.IamInviteStatusSent,
-		InviteeEmail: in.Email,
+		InviteeEmail: strings.TrimSpace(in.Email),
 	})
+}
+
+func (s *sIamInviteUsecase) sendInvitationMail(ctx context.Context, recipient string, invite *entity.IamInvite) {
+	mail := s.invitationMail(ctx, recipient, invite)
+	textBody, htmlBody := mail.Bodies()
+	if err := service.SysMailgun().SendHtmlMail(ctx, mail.Subject, textBody, htmlBody, mail.Recipient); err != nil {
+		glog.Warningf(ctx, "send invitation mail failed: inviteId=%d error=%v", invite.Id, err)
+	}
+}
+
+func (s *sIamInviteUsecase) invitationMail(ctx context.Context, recipient string, invite *entity.IamInvite) model.IamAccountActionMail {
+	mailCtx := gi18n.WithLanguage(ctx, g.Cfg().MustGet(ctx, "i18n.default", "zh-CN").String())
+	siteName := strings.TrimSpace(g.Cfg().MustGet(ctx, "site.name", "NextPT").String())
+	siteURL := strings.TrimRight(strings.TrimSpace(g.Cfg().MustGet(ctx, "site.url", "http://localhost:3000").String()), "/")
+	if siteName == "" {
+		siteName = "NextPT"
+	}
+	if siteURL == "" {
+		siteURL = "http://localhost:3000"
+	}
+	expiry := gi18n.T(mailCtx, "iam.invite.mail_permanent")
+	if invite.ExpireAt != nil {
+		expiry = fmt.Sprintf(gi18n.T(mailCtx, "iam.invite.mail_expiry"), invite.ExpireAt.Format("Y-m-d H:i:s T"))
+	}
+	return model.IamAccountActionMail{
+		Kind: "invitation", Recipient: recipient,
+		Subject:   fmt.Sprintf(gi18n.T(mailCtx, "iam.invite.mail_subject"), siteName),
+		Greeting:  gi18n.T(mailCtx, "iam.invite.mail_greeting"),
+		Intro:     fmt.Sprintf(gi18n.T(mailCtx, "iam.invite.mail_intro"), siteName, recipient),
+		Action:    gi18n.T(mailCtx, "iam.invite.mail_action"),
+		ActionURL: siteURL + "/register?invite=" + url.QueryEscape(invite.Hash),
+		Expiry:    expiry, Note: gi18n.T(mailCtx, "iam.invite.mail_ignore"),
+	}
 }
 
 func (s *sIamInviteUsecase) Check(ctx context.Context, in iamin.InviteCheckInp) (*iamout.InviteCheckOut, error) {

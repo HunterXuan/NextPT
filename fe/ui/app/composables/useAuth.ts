@@ -299,8 +299,6 @@ export function useAuth() {
 
     const data = await fetchApi<AuthUser>('/api/iam/users/me')
     user.value = data
-    permissions.value = []
-    permissionsLoaded.value = false
     try {
       await fetchPermissions(true)
     } catch {
