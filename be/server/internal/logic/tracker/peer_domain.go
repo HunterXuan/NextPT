@@ -3,6 +3,7 @@ package tracker
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"server/internal/consts"
@@ -13,7 +14,6 @@ import (
 	"server/internal/service"
 
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -166,11 +166,11 @@ func (s *sTrackerPeerDomain) GetEnabledClientWhitelists(ctx context.Context) ([]
 }
 
 // calculateTrafficDiff 计算本次汇报的上传下载增量
-func (s *sTrackerPeerDomain) CalculateTrafficDiff(ctx context.Context, event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer) (diffUp, diffDn int64) {
+func (s *sTrackerPeerDomain) CalculateTrafficDiff(ctx context.Context, event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer) (diffUp, diffDn int64, rejectionReason string) {
 	if oldPeer == nil {
 		// 防刷核心：首次出现的 Peer，由于无法计算时间差（绕过防作弊限速），并且为了防止跨站偷流量，必须返回 0 增量。
 		// 此次汇报的绝对值只作为后续计算的基准水位线。
-		return 0, 0
+		return 0, 0, ""
 	}
 
 	diffUp = event.Uploaded - gconv.Int64(oldPeer.Uploaded)
@@ -200,14 +200,12 @@ func (s *sTrackerPeerDomain) CalculateTrafficDiff(ctx context.Context, event *tr
 		}
 
 		if currentSpeed > maxSpeedBytes {
-			glog.Warningf(context.Background(), "[Anti-Cheat] User %d Torrent %d Peer %s Exceeded 10MB/s limit. Up: %d, Dn: %d, timeDiff: %ds",
-				event.UserId, event.TorrentId, event.PeerId, diffUp, diffDn, timeDiff)
 			// 超速流量全部清零（静默丢弃，不报错，保护数据纯净）
-			return 0, 0
+			return 0, 0, fmt.Sprintf("Combined upload/download speed exceeded 10 MiB/s: uploaded_delta=%d, downloaded_delta=%d, interval=%ds", diffUp, diffDn, timeDiff)
 		}
 	}
 
-	return diffUp, diffDn
+	return diffUp, diffDn, ""
 }
 
 // 辅助方法：维护 Redis Peer 缓存与 ZSET 索引以及用户做种下载索引

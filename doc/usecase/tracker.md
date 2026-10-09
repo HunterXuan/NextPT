@@ -18,8 +18,8 @@
   * 从 `tracker:seeding_users` SET 获取所有当前有做种行为的用户 ID。
 * **GetUserSeedingPeers(ctx, userId) -> []Peer**
   * 获取指定用户当前所有做种中的 Peer 详情。
-* **CalculateTrafficDiff(ctx, event, oldPeer) -> (diffUp, diffDn)**
-  * 包含**防作弊引擎**逻辑：首次 Peer 增量归零、硬限速 10MB/s 校验、异常回退检测。
+* **CalculateTrafficDiff(ctx, event, oldPeer) -> (diffUp, diffDn, rejectionReason)**
+  * 首次 Peer 增量归零，客户端计数回退按重启后的计数计算；上传与下载增量合计超过 10 MiB/s 时，本次流量归零并返回原因。仅返回检测结果，不在 Domain 内跨域写作弊日志。
 * **UpsertPeer / RemovePeer**
   * 封装操作 Redis 的极度复杂的脏活累活：维护 `peer详情(JSON)`、`种子做种/下载队列(ZSET)`、`用户做种/下载反向索引(SET)`、`活跃种子池(SET)`、`活跃用户池(SET)` 等多级索引体系。
 
@@ -48,11 +48,12 @@
 ### 2.2 异步流水线: TrackerEventUsecase
 负责承接庞大的写入吞吐量，将写操作通过 Redis Stream 异步化。
 
+* **Start(ctx)** 由 `global.Init` 在服务启动时调用，初始化 Consumer Group 并启动消费者；构造函数只创建对象，不访问 Redis 或启动后台协程。
 * **10 个常驻协程** 从 Redis Stream Consumer Group 消费 `AnnounceEvent`，另有 pending watcher 通过 `XAUTOCLAIM` 处理超时未确认事件。
 * **handleAnnounceEvent(event)**: 
   1. 获取 Redis 分布式锁 `SET NX EX 5s` 防止双花
   2. 获取旧 Peer 快照
-  3. 调用 `PeerDomain.CalculateTrafficDiff()` 算流量
+  3. 调用 `PeerDomain.CalculateTrafficDiff()` 算流量并取得异常原因；账务事务提交后，首次处理的异常事件通过 `ModCheaterUsecase.Record()` 记录嫌疑日志。重放事件不重复记录；日志失败只写运行日志，不中断 Peer 状态更新，也不重试已提交的账务。
   4. 编排路由：调用 Accounting 记流量/快照 -> 调用 `PeerDomain.UpsertPeer / RemovePeer` 刷写 Redis 状态。
 
 ### 2.3 系统调度: TrackerSyncUsecase

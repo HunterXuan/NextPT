@@ -14,6 +14,7 @@ func Init(ctx context.Context) {
 		g.Log().Fatalf(ctx, "SetTimeZone fail: %+v", err)
 	}
 
+	service.TrackerEventUsecase().Start(ctx)
 	// 启动所有系统定时任务
 	service.SysCron().Start(ctx)
 }

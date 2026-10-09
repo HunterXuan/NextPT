@@ -21,6 +21,7 @@ type (
 		DeleteExpiredIdempotency(ctx context.Context, beforeTime *gtime.Time) (int64, error)
 	}
 	ITrackerEventUsecase interface {
+		Start(ctx context.Context)
 		// PushAnnounceEvent 接收并投递 Announce 事件到队列 (Redis Stream)
 		PushAnnounceEvent(event *trackerin.AnnounceEvent) error
 	}
@@ -33,7 +34,7 @@ type (
 		// GetEnabledClientWhitelists 获取所有启用的客户端白名单规则
 		GetEnabledClientWhitelists(ctx context.Context) ([]*entity.TrackerAgentWhitelist, error)
 		// calculateTrafficDiff 计算本次汇报的上传下载增量
-		CalculateTrafficDiff(ctx context.Context, event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer) (diffUp int64, diffDn int64)
+		CalculateTrafficDiff(ctx context.Context, event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer) (diffUp int64, diffDn int64, rejectionReason string)
 		// 辅助方法：维护 Redis Peer 缓存与 ZSET 索引以及用户做种下载索引
 		UpsertPeer(ctx context.Context, event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer, interval int) error
 		// RemovePeer 清理指定的 Peer 及所有相关索引

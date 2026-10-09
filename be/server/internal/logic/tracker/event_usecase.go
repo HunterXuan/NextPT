@@ -14,6 +14,7 @@ import (
 	"server/internal/model/do"
 	"server/internal/model/entity"
 	"server/internal/model/in/accountingin"
+	"server/internal/model/in/modin"
 	"server/internal/model/in/trackerin"
 	"server/internal/service"
 
@@ -49,12 +50,13 @@ func init() {
 }
 
 func NewTrackerEventUsecase() *sTrackerEventUsecase {
-	s := &sTrackerEventUsecase{
+	return &sTrackerEventUsecase{
 		consumerGroup: "accounting_group",
 	}
+}
 
+func (s *sTrackerEventUsecase) Start(ctx context.Context) {
 	// Initialize Consumer Group
-	ctx := context.Background()
 	queueKey := service.SysCache().KeyTrackerAnnounceQueue(ctx)
 	_, err := g.Redis().Do(ctx, "XGROUP", "CREATE", queueKey, s.consumerGroup, "0", "MKSTREAM")
 	if err != nil && !strings.Contains(err.Error(), "BUSYGROUP") {
@@ -70,7 +72,6 @@ func NewTrackerEventUsecase() *sTrackerEventUsecase {
 	// 启动死信/超时重试协程
 	go s.watchPendingEvents(fmt.Sprintf("pending_watcher-%s", instanceId))
 
-	return s
 }
 
 // PushAnnounceEvent 接收并投递 Announce 事件到队列 (Redis Stream)
@@ -285,7 +286,7 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 	}
 
 	// 3. 计算账务增量与时间增量
-	diffUp, diffDn := service.TrackerPeerDomain().CalculateTrafficDiff(ctx, event, oldPeer)
+	diffUp, diffDn, rejectionReason := service.TrackerPeerDomain().CalculateTrafficDiff(ctx, event, oldPeer)
 
 	timeDiff := 0
 	if oldPeer != nil && oldPeer.LastAction != nil {
@@ -293,6 +294,8 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 	}
 
 	// 3. MySQL 账务核心事务
+	processed := false
+	var torrent *entity.CatalogTorrent
 	err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		// 3.1 幂等写入，防重放
 		res, err := dao.TrackerEventIdempotency.Ctx(ctx).InsertIgnore(do.TrackerEventIdempotency{
@@ -303,10 +306,13 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 			return err
 		}
 		affected, err := res.RowsAffected()
-		if err != nil || affected == 0 {
+		if err != nil {
+			return err
+		}
+		if affected == 0 {
 			return nil // already processed
 		}
-		torrent, err := service.CatalogTorrentDomain().GetTorrentById(ctx, event.TorrentId)
+		torrent, err = service.CatalogTorrentDomain().GetTorrentById(ctx, event.TorrentId)
 		if err != nil {
 			return err
 		}
@@ -345,12 +351,16 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 				return err
 			}
 		}
+		processed = true
 		return nil
 	})
 
 	if err != nil {
 		glog.Errorf(ctx, "mysql accounting failed for announce event [torrent:%d, user:%d]: %v", event.TorrentId, event.UserId, err)
 		return err // Retry on failure
+	}
+	if processed {
+		s.recordTrafficAnomaly(ctx, event, torrent, timeDiff, rejectionReason)
 	}
 
 	// 5. Redis 节点与在线态维护
@@ -369,6 +379,24 @@ func (s *sTrackerEventUsecase) handleAnnounceEvent(msgId string, event *trackeri
 	}
 
 	return nil
+}
+
+func (s *sTrackerEventUsecase) recordTrafficAnomaly(ctx context.Context, event *trackerin.AnnounceEvent, torrent *entity.CatalogTorrent, interval int, reason string) {
+	if reason == "" {
+		return
+	}
+	glog.Warningf(ctx, "[Anti-Cheat] user=%d torrent=%d: %s", event.UserId, event.TorrentId, reason)
+	in := modin.RecordCheaterLogInp{
+		UserId: event.UserId, TorrentId: event.TorrentId,
+		Uploaded: uint64(event.Uploaded), Downloaded: uint64(event.Downloaded),
+		AnnounceTime: uint(max(interval, 0)), HitCount: 1, Comment: reason,
+	}
+	if torrent != nil {
+		in.Seeders, in.Leechers = torrent.Seeders, torrent.Leechers
+	}
+	if err := service.ModCheaterUsecase().Record(ctx, in); err != nil {
+		glog.Warningf(ctx, "record tracker traffic anomaly failed [torrent:%d, user:%d]: %v", event.TorrentId, event.UserId, err)
+	}
 }
 
 func (s *sTrackerEventUsecase) isStaleAnnounceEvent(event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer) bool {
