@@ -418,14 +418,11 @@ CREATE TABLE `tracker_snatch` (
 CREATE TABLE `tracker_agent_whitelist` (
     `id`              INT UNSIGNED    NOT NULL AUTO_INCREMENT,
     `family`          VARCHAR(60)     NOT NULL DEFAULT '' COMMENT '客户端家族名',
-    `peer_id_prefix`  VARCHAR(20)     NOT NULL DEFAULT '',
+    `peer_id_pattern` VARCHAR(200)    NOT NULL DEFAULT '',
     `agent_pattern`   VARCHAR(200)    NOT NULL DEFAULT '',
-    `min_version`     VARCHAR(20)     NOT NULL DEFAULT '',
-    `max_version`     VARCHAR(20)     NOT NULL DEFAULT '',
-    `allow_https`     BIT(1)      NOT NULL DEFAULT 0,
+    `exceptions`      JSON            NOT NULL,
     `enabled`         BIT(1)      NOT NULL DEFAULT 1,
     `comment`         VARCHAR(200)    NOT NULL DEFAULT '',
-    `hits`            INT UNSIGNED    NOT NULL DEFAULT 0,
     `created_at`      DATETIME        NULL,
     `updated_at`      DATETIME        NULL,
     PRIMARY KEY (`id`)

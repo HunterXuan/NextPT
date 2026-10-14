@@ -32,7 +32,12 @@ type (
 		GetUserSeedingPeers(ctx context.Context, userId uint64) ([]entity.TrackerPeer, error)
 		GetUserLeechingPeers(ctx context.Context, userId uint64) ([]entity.TrackerPeer, error)
 		// GetEnabledClientWhitelists 获取所有启用的客户端白名单规则
-		GetEnabledClientWhitelists(ctx context.Context) ([]*entity.TrackerAgentWhitelist, error)
+		GetEnabledClientWhitelists(ctx context.Context) ([]*model.TrackerClientWhitelist, error)
+		AdminListClientWhitelists(ctx context.Context) ([]model.TrackerClientWhitelist, error)
+		GetClientWhitelist(ctx context.Context, id uint) (*model.TrackerClientWhitelist, error)
+		CreateClientWhitelist(ctx context.Context, rule model.TrackerClientWhitelist) (uint, error)
+		UpdateClientWhitelist(ctx context.Context, rule model.TrackerClientWhitelist) error
+		DeleteClientWhitelist(ctx context.Context, id uint) error
 		// calculateTrafficDiff 计算本次汇报的上传下载增量
 		CalculateTrafficDiff(ctx context.Context, event *trackerin.AnnounceEvent, oldPeer *entity.TrackerPeer) (diffUp int64, diffDn int64, rejectionReason string)
 		// 辅助方法：维护 Redis Peer 缓存与 ZSET 索引以及用户做种下载索引

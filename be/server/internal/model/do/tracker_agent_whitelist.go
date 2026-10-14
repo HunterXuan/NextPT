@@ -5,23 +5,21 @@
 package do
 
 import (
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
 // TrackerAgentWhitelist is the golang structure of table tracker_agent_whitelist for DAO operations like Where/Data.
 type TrackerAgentWhitelist struct {
-	g.Meta       `orm:"table:tracker_agent_whitelist, do:true"`
-	Id           any         //
-	Family       any         // 客户端家族名
-	PeerIdPrefix any         //
-	AgentPattern any         //
-	MinVersion   any         //
-	MaxVersion   any         //
-	AllowHttps   any         //
-	Enabled      any         //
-	Comment      any         //
-	Hits         any         //
-	CreatedAt    *gtime.Time //
-	UpdatedAt    *gtime.Time //
+	g.Meta        `orm:"table:tracker_agent_whitelist, do:true"`
+	Id            any         //
+	Family        any         // 客户端家族名
+	PeerIdPattern any         //
+	AgentPattern  any         //
+	Exceptions    *gjson.Json //
+	Enabled       any         //
+	Comment       any         //
+	CreatedAt     *gtime.Time //
+	UpdatedAt     *gtime.Time //
 }

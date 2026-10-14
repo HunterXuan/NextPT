@@ -21,34 +21,28 @@ type TrackerAgentWhitelistDao struct {
 
 // TrackerAgentWhitelistColumns defines and stores column names for the table tracker_agent_whitelist.
 type TrackerAgentWhitelistColumns struct {
-	Id           string //
-	Family       string // 客户端家族名
-	PeerIdPrefix string //
-	AgentPattern string //
-	MinVersion   string //
-	MaxVersion   string //
-	AllowHttps   string //
-	Enabled      string //
-	Comment      string //
-	Hits         string //
-	CreatedAt    string //
-	UpdatedAt    string //
+	Id            string //
+	Family        string // 客户端家族名
+	PeerIdPattern string //
+	AgentPattern  string //
+	Exceptions    string //
+	Enabled       string //
+	Comment       string //
+	CreatedAt     string //
+	UpdatedAt     string //
 }
 
 // trackerAgentWhitelistColumns holds the columns for the table tracker_agent_whitelist.
 var trackerAgentWhitelistColumns = TrackerAgentWhitelistColumns{
-	Id:           "id",
-	Family:       "family",
-	PeerIdPrefix: "peer_id_prefix",
-	AgentPattern: "agent_pattern",
-	MinVersion:   "min_version",
-	MaxVersion:   "max_version",
-	AllowHttps:   "allow_https",
-	Enabled:      "enabled",
-	Comment:      "comment",
-	Hits:         "hits",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
+	Id:            "id",
+	Family:        "family",
+	PeerIdPattern: "peer_id_pattern",
+	AgentPattern:  "agent_pattern",
+	Exceptions:    "exceptions",
+	Enabled:       "enabled",
+	Comment:       "comment",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
 }
 
 // NewTrackerAgentWhitelistDao creates and returns a new DAO object for table data access.

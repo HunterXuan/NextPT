@@ -1,3 +1,13 @@
+admin.tracker.client_comment_length: "Comment must not exceed 200 characters"
+admin.tracker.client_exceptions_invalid: "Exceptions require a name and at least one valid pattern; limit 50 entries, names 60 characters, patterns and comments 200 characters"
+admin.tracker.client_family_length: "Client name must not exceed 60 characters"
+admin.tracker.client_family_required: "Enter a client name"
+admin.tracker.client_not_found: "Client rule not found"
+admin.tracker.client_pattern_invalid: "Invalid Peer ID or User-Agent regular expression"
+admin.tracker.client_pattern_length: "User-Agent pattern must not exceed 200 characters"
+admin.tracker.client_peer_pattern_length: "Peer ID pattern must not exceed 200 characters"
+admin.tracker.client_rule_required: "Enter a Peer ID pattern or User-Agent pattern"
+
 admin.config.group_req: Configuration group is required
 admin.config.key_req: Configuration key is required
 admin.config.value_req: Configuration value is required
@@ -35,4 +45,4 @@ admin.invite.role_required: Select roles to grant invite codes
 admin.invite.target_required: Select an invite grant target
 admin.permission.wildcard_only: Only wildcard permissions can be managed here
 admin.permission.empty: Select permissions to manage
-admin.role.delete_has_users: Cannot delete role: %d users are currently assigned to this role
+admin.role.delete_has_users: "Cannot delete role: %d users are currently assigned to this role"

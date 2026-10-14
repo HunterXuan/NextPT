@@ -86,4 +86,9 @@ type IAdminV1 interface {
 	SiteMessageCreate(ctx context.Context, req *v1.SiteMessageCreateReq) (res *v1.SiteMessageCreateRes, err error)
 	SysCronList(ctx context.Context, req *v1.SysCronListReq) (res *v1.SysCronListRes, err error)
 	SysCronLogList(ctx context.Context, req *v1.SysCronLogListReq) (res *v1.SysCronLogListRes, err error)
+	TrackerClientWhitelistList(ctx context.Context, req *v1.TrackerClientWhitelistListReq) (res *v1.TrackerClientWhitelistListRes, err error)
+	TrackerClientWhitelistCreate(ctx context.Context, req *v1.TrackerClientWhitelistCreateReq) (res *v1.TrackerClientWhitelistCreateRes, err error)
+	TrackerClientWhitelistUpdate(ctx context.Context, req *v1.TrackerClientWhitelistUpdateReq) (res *v1.TrackerClientWhitelistUpdateRes, err error)
+	TrackerClientWhitelistDelete(ctx context.Context, req *v1.TrackerClientWhitelistDeleteReq) (res *v1.TrackerClientWhitelistDeleteRes, err error)
+	TrackerClientWhitelistCheck(ctx context.Context, req *v1.TrackerClientWhitelistCheckReq) (res *v1.TrackerClientWhitelistCheckRes, err error)
 }

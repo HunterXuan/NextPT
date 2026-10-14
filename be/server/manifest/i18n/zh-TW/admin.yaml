@@ -1,3 +1,13 @@
+admin.tracker.client_comment_length: "備註不能超過 200 字"
+admin.tracker.client_exceptions_invalid: "例外需填寫名稱及至少一側正則；最多 50 條，名稱不超過 60 字，正則和備註不超過 200 字"
+admin.tracker.client_family_length: "客戶端名稱不能超過 60 字"
+admin.tracker.client_family_required: "請輸入客戶端名稱"
+admin.tracker.client_not_found: "客戶端規則不存在"
+admin.tracker.client_pattern_invalid: "Peer ID 或 User-Agent 正則無效"
+admin.tracker.client_pattern_length: "User-Agent 正則不能超過 200 字"
+admin.tracker.client_peer_pattern_length: "Peer ID 正則不能超過 200 字"
+admin.tracker.client_rule_required: "請至少填寫 Peer ID 正則或 User-Agent 正則"
+
 admin.config.group_req: 配置組不能為空
 admin.config.key_req: 配置項鍵名不能為空
 admin.config.value_req: 配置項值不能為空

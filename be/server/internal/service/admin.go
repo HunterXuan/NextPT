@@ -118,27 +118,35 @@ type (
 		List(ctx context.Context, actor *model.Actor) (*adminout.SysCronListOut, error)
 		LogList(ctx context.Context, actor *model.Actor, in adminin.SysCronLogListInp) (*adminout.SysCronLogListOut, error)
 	}
+	IAdminTrackerClientWhitelistUsecase interface {
+		List(ctx context.Context, actor *model.Actor) (*adminout.TrackerClientWhitelistListOut, error)
+		Create(ctx context.Context, actor *model.Actor, in adminin.TrackerClientWhitelistCreateInp) (*adminout.TrackerClientWhitelistCreateOut, error)
+		Update(ctx context.Context, actor *model.Actor, in adminin.TrackerClientWhitelistUpdateInp) error
+		Delete(ctx context.Context, actor *model.Actor, in adminin.TrackerClientWhitelistDeleteInp) error
+		Check(ctx context.Context, actor *model.Actor, in adminin.TrackerClientWhitelistCheckInp) (*adminout.TrackerClientWhitelistCheckOut, error)
+	}
 )
 
 var (
-	localAdminCatalogCategoryUsecase IAdminCatalogCategoryUsecase
-	localAdminCatalogRequestUsecase  IAdminCatalogRequestUsecase
-	localAdminCatalogTagUsecase      IAdminCatalogTagUsecase
-	localAdminCatalogTorrentUsecase  IAdminCatalogTorrentUsecase
-	localAdminForumCategoryUsecase   IAdminForumCategoryUsecase
-	localAdminForumNodeUsecase       IAdminForumNodeUsecase
-	localAdminForumTopicUsecase      IAdminForumTopicUsecase
-	localAdminIamInviteUsecase       IAdminIamInviteUsecase
-	localAdminIamPermissionUsecase   IAdminIamPermissionUsecase
-	localAdminIamRoleUsecase         IAdminIamRoleUsecase
-	localAdminIamSessionUsecase      IAdminIamSessionUsecase
-	localAdminIamUserUsecase         IAdminIamUserUsecase
-	localAdminModCheaterUsecase      IAdminModCheaterUsecase
-	localAdminModReportUsecase       IAdminModReportUsecase
-	localAdminModUserUsecase         IAdminModUserUsecase
-	localAdminSiteAuditUsecase       IAdminSiteAuditUsecase
-	localAdminSiteConfigUsecase      IAdminSiteConfigUsecase
-	localAdminSysCronUsecase         IAdminSysCronUsecase
+	localAdminCatalogCategoryUsecase        IAdminCatalogCategoryUsecase
+	localAdminCatalogRequestUsecase         IAdminCatalogRequestUsecase
+	localAdminCatalogTagUsecase             IAdminCatalogTagUsecase
+	localAdminCatalogTorrentUsecase         IAdminCatalogTorrentUsecase
+	localAdminForumCategoryUsecase          IAdminForumCategoryUsecase
+	localAdminForumNodeUsecase              IAdminForumNodeUsecase
+	localAdminForumTopicUsecase             IAdminForumTopicUsecase
+	localAdminIamInviteUsecase              IAdminIamInviteUsecase
+	localAdminIamPermissionUsecase          IAdminIamPermissionUsecase
+	localAdminIamRoleUsecase                IAdminIamRoleUsecase
+	localAdminIamSessionUsecase             IAdminIamSessionUsecase
+	localAdminIamUserUsecase                IAdminIamUserUsecase
+	localAdminModCheaterUsecase             IAdminModCheaterUsecase
+	localAdminModReportUsecase              IAdminModReportUsecase
+	localAdminModUserUsecase                IAdminModUserUsecase
+	localAdminSiteAuditUsecase              IAdminSiteAuditUsecase
+	localAdminSiteConfigUsecase             IAdminSiteConfigUsecase
+	localAdminSysCronUsecase                IAdminSysCronUsecase
+	localAdminTrackerClientWhitelistUsecase IAdminTrackerClientWhitelistUsecase
 )
 
 func AdminCatalogCategoryUsecase() IAdminCatalogCategoryUsecase {
@@ -337,4 +345,15 @@ func AdminSysCronUsecase() IAdminSysCronUsecase {
 
 func RegisterAdminSysCronUsecase(i IAdminSysCronUsecase) {
 	localAdminSysCronUsecase = i
+}
+
+func AdminTrackerClientWhitelistUsecase() IAdminTrackerClientWhitelistUsecase {
+	if localAdminTrackerClientWhitelistUsecase == nil {
+		panic("implement not found for interface IAdminTrackerClientWhitelistUsecase, forgot register?")
+	}
+	return localAdminTrackerClientWhitelistUsecase
+}
+
+func RegisterAdminTrackerClientWhitelistUsecase(i IAdminTrackerClientWhitelistUsecase) {
+	localAdminTrackerClientWhitelistUsecase = i
 }

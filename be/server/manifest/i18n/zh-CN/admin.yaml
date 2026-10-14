@@ -1,3 +1,13 @@
+admin.tracker.client_comment_length: "备注不能超过 200 字"
+admin.tracker.client_exceptions_invalid: "例外需填写名称及至少一侧正则；最多 50 条，名称不超过 60 字，正则和备注不超过 200 字"
+admin.tracker.client_family_length: "客户端名称不能超过 60 字"
+admin.tracker.client_family_required: "请输入客户端名称"
+admin.tracker.client_not_found: "客户端规则不存在"
+admin.tracker.client_pattern_invalid: "Peer ID 或 User-Agent 正则无效"
+admin.tracker.client_pattern_length: "User-Agent 正则不能超过 200 字"
+admin.tracker.client_peer_pattern_length: "Peer ID 正则不能超过 200 字"
+admin.tracker.client_rule_required: "请至少填写 Peer ID 正则或 User-Agent 正则"
+
 admin.config.group_req: 配置组不能为空
 admin.config.key_req: 配置项键名不能为空
 admin.config.value_req: 配置项值不能为空

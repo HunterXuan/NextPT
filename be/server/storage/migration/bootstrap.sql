@@ -113,7 +113,9 @@ SET @iam_permissions_admin = JSON_ARRAY_APPEND(
     '$',
     'admin:catalog/category:*',
     '$',
-    'admin:catalog/tag:*'
+    'admin:catalog/tag:*',
+    '$',
+    'admin:tracker/client-whitelist:*'
 );
 
 SET @iam_permissions_sysop = JSON_ARRAY_APPEND(
@@ -315,22 +317,23 @@ ON DUPLICATE KEY UPDATE
 -- ------------------------------------------------------------
 
 INSERT INTO `tracker_agent_whitelist`
-    (`id`, `family`, `peer_id_prefix`, `agent_pattern`, `min_version`, `max_version`, `allow_https`, `enabled`, `comment`, `created_at`, `updated_at`)
+    (`id`, `family`, `peer_id_pattern`, `agent_pattern`, `exceptions`, `enabled`, `comment`, `created_at`, `updated_at`)
 VALUES
-    (1, 'qBittorrent', '-qB', '^qBittorrent/', '', '', b'1', b'1', 'Default qBittorrent client rule', NOW(), NOW()),
-    (2, 'Transmission', '-TR', '^Transmission/', '', '', b'1', b'1', 'Default Transmission client rule', NOW(), NOW()),
-    (3, 'Deluge', '-DE', '^Deluge', '', '', b'1', b'1', 'Default Deluge client rule', NOW(), NOW())
-ON DUPLICATE KEY UPDATE
-    `family` = VALUES(`family`),
-    `peer_id_prefix` = VALUES(`peer_id_prefix`),
-    `agent_pattern` = VALUES(`agent_pattern`),
-    `min_version` = VALUES(`min_version`),
-    `max_version` = VALUES(`max_version`),
-    `allow_https` = VALUES(`allow_https`),
-    `enabled` = VALUES(`enabled`),
-    `comment` = VALUES(`comment`),
-    `updated_at` = NOW();
-
+    (1, 'qBittorrent 3.x', '^-qB3(?:[4-9A-F][0-9A-F][0-9A-F]-|3[0-9A-F][0-9A-F]-)', '^qBittorrent v3[.](?:0*(?:4|[5-9]|[1-9][0-9]{1,})[.][0-9]+|0*3[.][0-9]+)', '[]', b'1', 'Versions 3.3.0 and later within 3.x.', NOW(), NOW()),
+    (2, 'qBittorrent 4.x', '^-qB4(?:[1-9A-F][0-9A-F][0-9A-F]-|0(?:[2-9A-F][0-9A-F]-|1[0-9A-F]-))', '^qBittorrent/4[.](?:0*(?:1|[2-9]|[1-9][0-9]{1,})[.][0-9]+|0*0[.](?:0*(?:2|[3-9]|[1-9][0-9]{1,})|0*1))', '[{"name":"qBittorrent 4.5.0","peerIdPattern":"^-qB4500-","agentPattern":"^qBittorrent/4[.]5[.]0$","enabled":true,"comment":"buggy build (see https://github.com/qbittorrent/qbittorrent/issues/18618)"},{"name":"qBittorrent 4.5.1","peerIdPattern":"^-qB4510-","agentPattern":"^qBittorrent/4[.]5[.]1$","enabled":true,"comment":"buggy build (see https://github.com/qbittorrent/qbittorrent/issues/18618)"}]', b'1', 'Versions 4.0.1 and later within 4.x; excludes 4.5.0 and 4.5.1.', NOW(), NOW()),
+    (3, 'qBittorrent 5.x', '^-qB5[0-9][0-9A-Z][0-9]-', '^qBittorrent/5[.][0-9][.][0-9]+', '[]', b'1', 'Versions 5.x.', NOW(), NOW()),
+    (4, 'uTorrent 1.x', '^-UT18[0-9]{2}-', '^uTorrent/18[0-9]{2}($|[^0-9A-Za-z])', '[]', b'1', 'Stable 1.8.x releases only.', NOW(), NOW()),
+    (5, 'uTorrent 2.x', '^-UT2[0-9][0-9][0-9]-', '^uTorrent/2[0-9][0-9][0-9]', '[]', b'1', 'Versions 2.x.', NOW(), NOW()),
+    (6, 'uTorrent 3.x', '^-UT3(?:[0-9]{3}|5[0-9][A-Za-z])-', '^uTorrent/3[0-9]{3}($|[^0-9A-Za-z])', '[]', b'1', 'Stable 3.x; supports alphabetic build suffixes for 3.5.x.', NOW(), NOW()),
+    (7, 'uTorrent Mac 1.x', '^-UM187[0-9]-', '^uTorrentMac/187[0-9]', '[]', b'1', 'Mac version 1.8.7.', NOW(), NOW()),
+    (8, 'Transmission 2.x', '^-TR2[0-9][0-9][0-9]-', '^Transmission/2[.][0-9][0-9]', '[]', b'1', 'Versions 2.x using two-digit minor versions.', NOW(), NOW()),
+    (9, 'Transmission 3.x', '^-TR3[0-9][0-9][0-9]-', '^Transmission/3[.][0-9][0-9]', '[]', b'1', 'Versions 3.x using two-digit minor versions.', NOW(), NOW()),
+    (10, 'Transmission 4.x', '^-TR4[0-9][0-9][0-9]-', '^Transmission/4[.][0-9][.][0-9]', '[]', b'1', 'Versions 4.x using dotted minor and patch versions.', NOW(), NOW()),
+    (11, 'Deluge 2.x', '^-DE2(?:0[3-9A-Z]|[1-9A-Z][0-9A-Z])s-', '^Deluge/2[.](?:0[.](?:[3-9]|[1-9][0-9]+)|[1-9][0-9]*[.][0-9]+)($| libtorrent/)', '[]', b'1', 'Stable 2.x releases >= 2.0.3; supports letter-encoded versions and excludes pre-release builds.', NOW(), NOW()),
+    (12, 'RTorrent 0.x(with libtorrent 0.x)', '^-lt(?:[1-9A-E][0-9A-E][0-9A-E][0-9A-E]-|0(?:[DE][0-9A-E][0-9A-E]-|C[0-9A-E][0-9A-E]-))', '^rtorrent/0[.](?:(?:9[.][0-9]|8[.][1-9])/0[.][1-9][0-9]*|8[.]0/0[.](?:1[2-9]|[2-9][0-9]|[1-9][0-9]{2,}))[.](0|[1-9][0-9]*)', '[]', b'1', 'rTorrent 0.8.0 and later within 0.x; libtorrent Peer ID version >= 0.12.0.', NOW(), NOW()),
+    (13, 'Bittorrent 6.x', '^M6-(?:[1-9]-[0-9]--|0-(?:[2-9]--|1--))', '^BitTorrent/6(?:[1-9][0-9][0-9]|0(?:[2-9][0-9]|1[0-9]))', '[]', b'1', 'Versions 6.0.1 and later within 6.x; M6 Peer IDs.', NOW(), NOW()),
+    (14, 'BitTorrent 7.x', '^(?:M7-(?:[1-9]-[0-9]--|0-[1-9]--)|-BT7(?:[1-9][0-9]{2}|0[1-9][0-9])-)', '^BitTorrent/7(?:[1-9][0-9]{2}|0[1-9][0-9])', '[]', b'1', 'Versions 7.0.1 and later within 7.x; supports M7 and -BT Peer IDs.', NOW(), NOW()),
+    (15, 'Azureus 5.x', '^-AZ5(?:[7-9][0-9][0-9]-|6[0-9][0-9]-)', '^Azureus 5[.](?:[7-9][.][0-9][.][0-9]|6[.][0-9][.][0-9])', '[]', b'1', 'Versions 5.6.0.0 and later within 5.x.', NOW(), NOW());
 -- ------------------------------------------------------------
 -- Catalog categories
 -- ------------------------------------------------------------

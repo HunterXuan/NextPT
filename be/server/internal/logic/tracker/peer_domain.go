@@ -9,11 +9,14 @@ import (
 	"server/internal/consts"
 	"server/internal/dao"
 	libtracker "server/internal/library/tracker"
+	"server/internal/model"
 	"server/internal/model/entity"
 	"server/internal/model/in/trackerin"
 	"server/internal/service"
 
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -159,10 +162,57 @@ func (s *sTrackerPeerDomain) getUserPeersBySetKey(ctx context.Context, key strin
 }
 
 // GetEnabledClientWhitelists 获取所有启用的客户端白名单规则
-func (s *sTrackerPeerDomain) GetEnabledClientWhitelists(ctx context.Context) ([]*entity.TrackerAgentWhitelist, error) {
-	var list []*entity.TrackerAgentWhitelist
+func (s *sTrackerPeerDomain) GetEnabledClientWhitelists(ctx context.Context) ([]*model.TrackerClientWhitelist, error) {
+	var list []*model.TrackerClientWhitelist
 	err := dao.TrackerAgentWhitelist.Ctx(ctx).Where(dao.TrackerAgentWhitelist.Columns().Enabled, true).Scan(&list)
 	return list, err
+}
+
+func (s *sTrackerPeerDomain) AdminListClientWhitelists(ctx context.Context) ([]model.TrackerClientWhitelist, error) {
+	list := make([]model.TrackerClientWhitelist, 0)
+	err := dao.TrackerAgentWhitelist.Ctx(ctx).OrderAsc("id").Scan(&list)
+	return list, err
+}
+
+func (s *sTrackerPeerDomain) GetClientWhitelist(ctx context.Context, id uint) (*model.TrackerClientWhitelist, error) {
+	var rule *model.TrackerClientWhitelist
+	err := dao.TrackerAgentWhitelist.Ctx(ctx).WherePri(id).Scan(&rule)
+	return rule, err
+}
+
+func (s *sTrackerPeerDomain) CreateClientWhitelist(ctx context.Context, rule model.TrackerClientWhitelist) (uint, error) {
+	data, err := s.clientWhitelistData(rule)
+	if err != nil {
+		return 0, err
+	}
+	data["created_at"] = gtime.Now()
+	id, err := dao.TrackerAgentWhitelist.Ctx(ctx).Data(data).InsertAndGetId()
+	return uint(id), err
+}
+
+func (s *sTrackerPeerDomain) UpdateClientWhitelist(ctx context.Context, rule model.TrackerClientWhitelist) error {
+	data, err := s.clientWhitelistData(rule)
+	if err != nil {
+		return err
+	}
+	_, err = dao.TrackerAgentWhitelist.Ctx(ctx).WherePri(rule.Id).Data(data).Update()
+	return err
+}
+
+func (s *sTrackerPeerDomain) clientWhitelistData(rule model.TrackerClientWhitelist) (map[string]any, error) {
+	if rule.Exceptions == nil {
+		rule.Exceptions = []model.TrackerClientException{}
+	}
+	exceptions, err := gjson.Encode(rule.Exceptions)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]any{"family": rule.Family, "peer_id_pattern": rule.PeerIdPattern, "agent_pattern": rule.AgentPattern, "exceptions": string(exceptions), "enabled": rule.Enabled, "comment": rule.Comment, "updated_at": gtime.Now()}, nil
+}
+
+func (s *sTrackerPeerDomain) DeleteClientWhitelist(ctx context.Context, id uint) error {
+	_, err := dao.TrackerAgentWhitelist.Ctx(ctx).WherePri(id).Delete()
+	return err
 }
 
 // calculateTrafficDiff 计算本次汇报的上传下载增量

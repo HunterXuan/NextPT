@@ -33,6 +33,9 @@ const (
 	// Sys Management
 	IamPermissionAdminSysCronManage = "admin:sys/cron:*"
 
+	// Tracker Management
+	IamPermissionAdminTrackerClientWhitelistManage = "admin:tracker/client-whitelist:*"
+
 	// Forum Management
 	IamPermissionAdminForumCategoryManage = "admin:forum/category:*"
 	IamPermissionAdminForumNodeManage     = "admin:forum/node:*"
@@ -105,6 +108,7 @@ var (
 		IamPermissionAdminSiteMessage,
 
 		IamPermissionAdminSysCronManage,
+		IamPermissionAdminTrackerClientWhitelistManage,
 
 		IamPermissionAdminForumCategoryManage,
 		IamPermissionAdminForumNodeManage,

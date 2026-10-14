@@ -8,7 +8,6 @@ import (
 	"errors"
 	"math/rand"
 	"net"
-	"regexp"
 	"strings"
 	"time"
 
@@ -24,6 +23,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcache"
+	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
@@ -456,12 +456,6 @@ func (s *sTrackerPeerUsecase) Scrape(ctx context.Context, actor *model.Actor, in
 	return out, nil
 }
 
-// CachedAgentRule 用于缓存编译好的正则规则，避免每次请求都重新编译
-type CachedAgentRule struct {
-	PeerIdPrefix string
-	AgentRegex   *regexp.Regexp // 如果为空，表示不强制校验 Agent
-}
-
 // CheckClientWhitelist 检查客户端白名单 (内存全量缓存)
 func (s *sTrackerPeerUsecase) CheckClientWhitelist(ctx context.Context, peerId, userAgent string) bool {
 	// 获取全量白名单缓存 (1小时过期)
@@ -472,17 +466,14 @@ func (s *sTrackerPeerUsecase) CheckClientWhitelist(ctx context.Context, peerId, 
 			return nil, err
 		}
 
-		var compiledRules []CachedAgentRule
+		var compiledRules []libtracker.ClientWhitelist
 		for _, rule := range list {
-			var re *regexp.Regexp
-			if rule.AgentPattern != "" {
-				// 如果正则配置错误，则忽略该条规则或跳过正则解析
-				re, _ = regexp.Compile(rule.AgentPattern)
+			compiled, err := libtracker.CompileClientWhitelist(rule.PeerIdPattern, rule.AgentPattern, rule.Exceptions)
+			if err != nil {
+				glog.Warningf(ctx, "skip invalid client whitelist rule id=%d: %v", rule.Id, err)
+				continue
 			}
-			compiledRules = append(compiledRules, CachedAgentRule{
-				PeerIdPrefix: rule.PeerIdPrefix,
-				AgentRegex:   re,
-			})
+			compiledRules = append(compiledRules, compiled)
 		}
 
 		return compiledRules, nil
@@ -492,25 +483,16 @@ func (s *sTrackerPeerUsecase) CheckClientWhitelist(ctx context.Context, peerId, 
 		return false
 	}
 
-	var whitelist []CachedAgentRule
+	var whitelist []libtracker.ClientWhitelist
 	if err := val.Scan(&whitelist); err != nil {
 		return false
 	}
 
 	// 遍历白名单进行匹配
 	for _, rule := range whitelist {
-		// 1. PeerIdPrefix 匹配 (如果有)
-		if rule.PeerIdPrefix != "" && !strings.HasPrefix(peerId, rule.PeerIdPrefix) {
-			continue
+		if allowed, _ := rule.Check(peerId, userAgent); allowed {
+			return true
 		}
-
-		// 2. AgentPattern 匹配 (使用预编译正则)
-		if rule.AgentRegex != nil && !rule.AgentRegex.MatchString(userAgent) {
-			continue
-		}
-
-		// 只要有一条规则完全命中，就放行
-		return true
 	}
 
 	return false
