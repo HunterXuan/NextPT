@@ -80,3 +80,19 @@
 ### 6. AdminSiteConfigUsecase 和 AdminSiteAuditUsecase (站点后台)
 * **站点系统配置管理 (Configs)**
   * **Method/Path**: `GET /site/configs/{group}`, `PUT /site/configs/{group}/{key}`
+
+### 7. AdminTrackerClientWhitelistUsecase (客户端白名单)
+
+* **入口**：后台 → Tracker → 客户端白名单，使用左侧列表和右侧编辑区；支持客户端搜索、新建、编辑、启停、删除确认与折叠的匹配测试。
+* **权限**：所有接口使用 `admin:tracker/client-whitelist:*`，并由后台统一 Staff 中间件保护。Bootstrap 为 Admin 及继承其权限的角色添加此权限；已有站点需在角色管理中显式授予。
+* **接口**：
+  * `GET /tracker/client-whitelists`：返回全部规则，包括停用规则。
+  * `POST /tracker/client-whitelists`：创建规则并返回 ID。
+  * `PATCH /tracker/client-whitelists/{id}`：更新指定字段；未提交的字段保留。
+  * `DELETE /tracker/client-whitelists/{id}`：硬删除规则。
+  * `POST /tracker/client-whitelists:check`：测试当前草稿的 Peer ID / User-Agent 正则及自身例外，不写数据库或审计。返回 `matched` 与 `blockedBy`；父规则的启用开关不影响草稿测试，例外启用开关参与判断。这里只测试该记录，不代表全部白名单最终结果。
+* **配置**：客户端名称、Peer ID 正则、User-Agent 正则、启用开关、备注与 `exceptions` JSON。例外包含名称、两侧正则、启用和备注；不增加独立表。父规则和每个例外都至少填写一侧正则，两侧都填写时必须同时匹配。所有正则使用 Go regexp 语法，不带 PHP 的分隔符，不解析或比较版本。
+* **例外维护**：后台使用可增删、展开/收起的表单，最多 50 条；例外名称必填且不超过 60 字，两侧正则及备注各不超过 200 字。停用例外同样在保存时校验，启用后不会出现潜在的无效正则。
+* **匹配顺序**：只取启用父规则；逐条检查允许正则，不匹配则继续。匹配后检查该记录自身启用的例外；被例外排除则继续下一条，未被排除则允许。所有规则都未通过则拒绝。例外不是全局黑名单，因此另一条重叠允许规则仍可能放行该客户端，迁移时需关注重叠。
+* **生效与审计**：成功写入后清理 Tracker 白名单本地缓存并广播失效，记录操作及规则字段快照；失败不清缓存、不记录成功审计。广播失败写运行日志，其他实例依靠缓存 TTL 兜底。
+* **表结构初始化**：使用 `be/server/storage/migration/init.sql` 中的白名单表定义建表，并运行 `gf gen dao`。旧站 NexusPHP 白名单及例外另行整理导入，不通过重跑 bootstrap 覆盖。

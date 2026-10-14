@@ -632,6 +632,27 @@ function encodeI18n(value: I18nName) {
   return JSON.stringify(value)
 }
 
+export interface AdminTrackerClientWhitelistInput {
+  family: string
+  peerIdPattern: string
+  agentPattern: string
+  enabled: boolean
+  comment: string
+  exceptions: AdminTrackerClientException[]
+}
+
+export interface AdminTrackerClientException {
+  name: string
+  peerIdPattern: string
+  agentPattern: string
+  enabled: boolean
+  comment: string
+}
+
+export interface AdminTrackerClientWhitelist extends AdminTrackerClientWhitelistInput {
+  id: number
+}
+
 export function useAdmin() {
   async function listCatalogCategories() {
     return await fetchApi<AdminCatalogCategoryListOut>('/api/admin/catalog/categories')
@@ -1079,7 +1100,32 @@ export function useAdmin() {
     })
   }
 
+  async function listTrackerClientWhitelists() {
+    return await fetchApi<{ list: AdminTrackerClientWhitelist[] }>('/api/admin/tracker/client-whitelists')
+  }
+
+  async function createTrackerClientWhitelist(input: AdminTrackerClientWhitelistInput) {
+    return await fetchApi<{ id: number }>('/api/admin/tracker/client-whitelists', { method: 'POST', body: input })
+  }
+
+  async function updateTrackerClientWhitelist(id: number, input: Partial<AdminTrackerClientWhitelistInput>) {
+    await fetchApi(`/api/admin/tracker/client-whitelists/${id}`, { method: 'PATCH', body: input })
+  }
+
+  async function deleteTrackerClientWhitelist(id: number) {
+    await fetchApi(`/api/admin/tracker/client-whitelists/${id}`, { method: 'DELETE' })
+  }
+
+  async function checkTrackerClientWhitelist(input: { peerIdPattern: string; agentPattern: string; exceptions: AdminTrackerClientException[]; peerId: string; userAgent: string }) {
+    return await fetchApi<{ matched: boolean; blockedBy: string }>('/api/admin/tracker/client-whitelists:check', { method: 'POST', body: input })
+  }
+
   return {
+    listTrackerClientWhitelists,
+    createTrackerClientWhitelist,
+    updateTrackerClientWhitelist,
+    deleteTrackerClientWhitelist,
+    checkTrackerClientWhitelist,
     listCatalogCategories,
     createCatalogCategory,
     updateCatalogCategory,

@@ -347,6 +347,13 @@ const adminNavSections = computed<ShellNavSection[]>(() => compactNavSections([
     ])
   },
   {
+    key: 'tracker',
+    label: 'Tracker',
+    items: compactNavItems([
+      permissionNavItem(Permission.AdminTrackerClientWhitelistManage, { label: t('trackerAdmin.navTitle'), to: '/admin/tracker/client-whitelists', icon: 'i-lucide-list-checks', active: isActive('/admin/tracker/client-whitelists') })
+    ])
+  },
+  {
     key: 'system',
     label: t('admin.nav.system'),
     items: compactNavItems([

@@ -217,6 +217,7 @@ const auditActions = [
   'delete'
 ]
 const auditTargetTypes = [
+  'tracker_client_whitelist',
   'site_config',
   'catalog_category',
   'catalog_request',
