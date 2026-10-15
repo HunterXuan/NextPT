@@ -81,5 +81,6 @@ iam.user.password_reset_mail_expiry: 該連結將在 %d 分鐘後失效，且只
 iam.user.password_reset_mail_ignore: 如果不是你本人操作，可以忽略這封郵件。
 iam.user.signature_len: 簽名不能超過500個字元
 iam.user.username_exists: 用戶名已存在
+iam.user.username_fmt: 用戶名只能包含英文字母和數字
 iam.user.username_len: 用戶名長度應為3到20位
 iam.user.username_req: 請輸入用戶名

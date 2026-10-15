@@ -1,7 +1,7 @@
 package iamin
 
 type UserCreateInp struct {
-	Username   string `json:"username" v:"required|length:3,20#{#iam.user.username_req}|{#iam.user.username_len}"`
+	Username   string `json:"username" v:"required|length:3,20|regex:^[A-Za-z0-9]+$#{#iam.user.username_req}|{#iam.user.username_len}|{#iam.user.username_fmt}"`
 	Email      string `json:"email" v:"required|email#{#iam.user.email_req}|{#iam.user.email_fmt}"`
 	Password   string `json:"password" v:"required|length:6,30#{#iam.user.password_req}|{#iam.user.password_len}"`
 	InviteHash string `json:"inviteHash"`

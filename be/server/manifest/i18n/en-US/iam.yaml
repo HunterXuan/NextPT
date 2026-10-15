@@ -81,5 +81,6 @@ iam.user.password_reset_mail_expiry: This link expires in %d minutes and can onl
 iam.user.password_reset_mail_ignore: If you did not make this request, you can safely ignore this email.
 iam.user.signature_len: Signature cannot exceed 500 characters
 iam.user.username_exists: Username already exists
+iam.user.username_fmt: Username can only contain English letters and digits
 iam.user.username_len: Username length must be between 3 and 20 characters
 iam.user.username_req: Please enter a username
