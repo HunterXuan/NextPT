@@ -37,6 +37,7 @@
 * **注册 (Register)**
   * **Method/Path**: `POST /users`
   * **参数概述**: `username`, `password`, `email`, `invite_token`
+  * **用户名校验**: 注册用户名必填，长度 3–20 位，仅允许 ASCII 英文字母和数字（`A-Z`、`a-z`、`0-9`）。前端显示要求、限制输入长度并阻止无效提交；后端输入模型独立校验，拒绝空格、中文、全角字符及其它符号。此规则仅用于新注册，不收紧已有账号的登录条件。
   * **核心逻辑**: 校验邀请码 -> 创建待验证用户 -> 分配默认角色 -> 初始化用户资料和统计 -> 标记 invite 已使用 -> 异步发送邮箱验证邮件。
 * **申请邮箱验证 (CreateEmailVerificationRequest)**
   * **Method/Path**: `POST /email-verification-requests`

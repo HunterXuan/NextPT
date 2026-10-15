@@ -14,12 +14,18 @@
         </div>
 
         <form class="mt-8 space-y-4" @submit.prevent="handleSubmit">
-          <UFormField :label="$t('auth.fields.username')" required>
+          <UFormField :label="$t('auth.fields.username')" :description="usernameInvalid ? undefined : $t('auth.register.usernameHint')" :error="usernameInvalid ? $t('auth.register.usernameHint') : undefined" required>
             <UInput
               v-model="form.username"
               class="w-full"
               icon="i-lucide-user-round"
               autocomplete="username"
+              autocapitalize="none"
+              :spellcheck="false"
+              :minlength="3"
+              :maxlength="20"
+              pattern="[A-Za-z0-9]{3,20}"
+              required
               :disabled="pending"
             />
           </UFormField>
@@ -150,9 +156,11 @@ const form = reactive({
 const pending = ref(false)
 const showPassword = ref(false)
 const errorMessage = ref('')
+const usernameValid = computed(() => form.username.length >= 3 && form.username.length <= 20 && !/[^A-Za-z0-9]/.test(form.username))
+const usernameInvalid = computed(() => form.username.length > 0 && !usernameValid.value)
 
 const canSubmit = computed(() => (
-  form.username.trim().length >= 3 &&
+  usernameValid.value &&
   form.email.includes('@') &&
   form.password.length >= 6
 ))

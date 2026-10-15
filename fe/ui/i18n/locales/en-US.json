@@ -455,6 +455,7 @@
       "login": "Continue to log in"
     },
     "register": {
+      "usernameHint": "3–20 characters, English letters and digits only",
       "action": "Register",
       "eyebrow": "Join the community",
       "metaTitle": "Register",

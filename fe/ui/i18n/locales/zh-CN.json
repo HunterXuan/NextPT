@@ -455,6 +455,7 @@
       "login": "前往登录"
     },
     "register": {
+      "usernameHint": "3–20 位，仅限英文字母和数字",
       "action": "注册",
       "eyebrow": "加入社区",
       "metaTitle": "注册",
