@@ -14,7 +14,7 @@
         </div>
 
         <form class="mt-8 space-y-4" @submit.prevent="handleSubmit">
-          <UFormField :label="$t('auth.fields.username')" :description="usernameInvalid ? undefined : $t('auth.register.usernameHint')" :error="usernameInvalid ? $t('auth.register.usernameHint') : undefined" required>
+          <UFormField :label="$t('auth.fields.username')" :error="usernameInvalid ? $t('auth.register.usernameHint') : undefined" required>
             <UInput
               v-model="form.username"
               class="w-full"
