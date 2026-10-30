@@ -1,7 +1,7 @@
 # Multi-stage build for minimal image size
 
 # Stage 1: Build
-FROM node:24-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:24-alpine AS builder
 
 WORKDIR /app
 

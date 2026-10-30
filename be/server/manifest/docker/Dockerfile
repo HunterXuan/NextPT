@@ -2,13 +2,20 @@
 #                                  BUILD
 ###############################################################################
 
-FROM golang:1.25-bookworm AS builder
+FROM --platform=$BUILDPLATFORM golang:1.25-bookworm AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /app
 
+# Source edits should not invalidate the downloaded dependency layer.
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . /app
 
-RUN CGO_ENABLED=1 go build -o main main.go
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -o main main.go
 
 ###############################################################################
 #                                INSTALLATION
@@ -16,11 +23,7 @@ RUN CGO_ENABLED=1 go build -o main main.go
 
 FROM debian:bookworm-slim
 
-# Add Debian mirror and install CA certs
-# Using Debian slim instead of headless-shell to significantly reduce container size
-RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 ENV WORKDIR=/app
 ENV OMP_THREAD_LIMIT=1
@@ -30,7 +33,6 @@ ADD resource $WORKDIR/resource/
 ADD storage $WORKDIR/storage/
 
 COPY --from=builder /app/main $WORKDIR/main
-RUN chmod +x $WORKDIR/main
 
 ###############################################################################
 #                                   START
